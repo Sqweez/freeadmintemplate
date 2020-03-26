@@ -17,7 +17,6 @@ const store = new Store({
     mutations: {},
     actions: {
         async [ACTIONS.INIT] ({dispatch}) {
-            dispatch(ACTIONS.GET_PRODUCT);
             dispatch(ACTIONS.GET_CLIENTS);
             dispatch(ACTIONS.GET_MANUFACTURERS);
             dispatch(ACTIONS.GET_ATTRIBUTES);

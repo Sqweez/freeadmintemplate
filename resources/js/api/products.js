@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export async function getProducts(page = 1) {
-    const response = await axios.get(`/api/products?page=${page}`);
+export async function getProducts() {
+    const response = await axios.get(`/api/products`);
     return response;
 }
 

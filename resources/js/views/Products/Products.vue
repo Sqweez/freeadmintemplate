@@ -1,7 +1,18 @@
 <template>
     <v-card>
         <v-card-title>Все товары</v-card-title>
-        <v-card-text>
+        <v-card-text v-if="loading">
+            <div
+                class="text-center d-flex align-center justify-center"
+                style="min-height: 651px">
+                <v-progress-circular
+                    indeterminate
+                    size="65"
+                    color="primary"
+                ></v-progress-circular>
+            </div>
+        </v-card-text>
+        <v-card-text v-else>
             <v-btn color="error" @click="productModal = true">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
             <v-row>
                 <v-col>
@@ -33,12 +44,9 @@
                         no-data-text="Нет данных"
                         :headers="headers"
                         :items="products"
-                        :options.sync="options"
-                        :server-items-length="totalProducts"
-                        :loading="loading"
                         :items-per-page="10"
                         :footer-props="{
-                            'items-per-page-options': [10],
+                            'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
                         }">
                         <template v-slot:item.attributes="{ item }">
@@ -129,15 +137,10 @@
             ProductRangeModal
         },
         async mounted() {
+            this.loading = this.products.length === 0;
             await this.$store.dispatch(ACTIONS.GET_PRODUCT);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
-        },
-        watch: {
-            async options() {
-                this.loading = true;
-                await this.$store.dispatch(ACTIONS.GET_PRODUCT, this.options.page);
-                this.loading = false;
-            }
+            this.loading = false;
         },
         data: () => ({
             search: '',
@@ -217,7 +220,7 @@
                     return 0;
                 }
                 return quantity
-                    .filter(q => q.store_id === this.storeFilter)
+                    .filter(q => +q.store_id === +this.storeFilter)
                     .map(q => q.quantity)
                     .reduce((a, c) => {
                         return a + c;

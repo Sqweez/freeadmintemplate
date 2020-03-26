@@ -269,6 +269,9 @@
             ClientCart,
             WayBillModal
         },
+        mounted() {
+            this.$store.dispatch(ACTIONS.GET_PRODUCT);
+        },
         watch: {
             storeFilter() {
                 this.cart = [];

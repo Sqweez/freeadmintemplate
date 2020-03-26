@@ -72,13 +72,9 @@ const productsModule = {
         }
     },
     actions: {
-        async [ACTIONS.GET_PRODUCT] ({commit}, page = 1) {
-            commit('clearProducts');
-            const response = await getProducts(page);
+        async [ACTIONS.GET_PRODUCT] ({commit}) {
+            const response = await getProducts();
             const products = response.data.data;
-            const meta = response.data.meta;
-            const total = meta.total;
-            commit('setTotal', total);
             commit(MUTATIONS.SET_PRODUCTS, products);
         },
         async [ACTIONS.CREATE_PRODUCT] ({commit}, payload) {

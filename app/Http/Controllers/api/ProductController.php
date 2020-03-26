@@ -19,7 +19,7 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index() {
-        return ProductResource::collection(Product::paginate(10));
+        return ProductResource::collection(Product::all());
     }
 
     /**
