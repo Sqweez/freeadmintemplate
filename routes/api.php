@@ -24,4 +24,5 @@ Route::post('sales', 'api\SaleController@store');
 //ReportController
 Route::get('reports', 'api\SaleController@reports');
 
-Route::get('transfer', 'Services\TransferController@index');
+Route::get('transfer/products', 'Services\TransferController@transferProducts');
+Route::get('transfer/clients', 'Services\TransferController@transferClients');

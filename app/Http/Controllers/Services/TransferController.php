@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 
 class TransferController extends Controller
 {
-    public function index() {
+    public function transferProducts() {
         $file = json_decode(utf8_encode(file_get_contents('http://iron.ariesdev.kz/admin/transfer.php')), true);
         $products = $file['products'];
         $categories = $file['categories'];
@@ -53,5 +53,10 @@ class TransferController extends Controller
 
             }
         }
+    }
+
+
+    public function transferClients() {
+
     }
 }

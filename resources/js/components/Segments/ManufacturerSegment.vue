@@ -1,6 +1,6 @@
 <template>
     <div class="mt-5">
-        <v-btn color="error" class="float-right d-block" @click="createMode = true" v-if="!createMode">
+        <v-btn color="error" class="float-right d-block" @click="createMode = true">
             Добавить производителя
             <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -44,22 +44,6 @@
                         </div>
                     </td>
                 </tr>
-                <tr v-if="createMode">
-                    <td>
-                        <v-text-field
-                            label="Наименование"
-                            v-model="manufacturer.manufacturer_name"
-                        />
-                    </td>
-                    <td>
-                        <v-btn icon @click="cancelCreation">
-                            <v-icon>mdi-cancel</v-icon>
-                        </v-btn>
-                        <v-btn icon @click="createManufacturer">
-                            <v-icon>mdi-check</v-icon>
-                        </v-btn>
-                    </td>
-                </tr>
                 </tbody>
             </template>
         </v-simple-table>
@@ -69,6 +53,10 @@
             v-on:cancel="manufacturerId = null; deleteModal = false"
             :on-confirm="deleteManufacturer"
         />
+        <ManufacturerModal
+            v-on:cancel="createMode = false"
+            :state="createMode"
+        />
     </div>
 </template>
 
@@ -76,9 +64,11 @@
     import ACTIONS from "../../store/actions";
     import showToast from "../../utils/toast";
     import ConfirmationModal from "../Modal/ConfirmationModal";
+    import ManufacturerModal from "../Modal/ManufacturerModal";
 
     export default {
         components: {
+            ManufacturerModal,
             ConfirmationModal
         },
         data: () => ({

@@ -11,7 +11,7 @@
                     </v-btn>
                 </div>
             </v-card-title>
-            <v-card-text style="padding: 0; mt-5">
+            <v-card-text style="padding: 0;">
                 <v-simple-table v-slot:default class="mt-5">
                     <template>
                         <thead class="background-iron-darkgrey fz-18">
@@ -88,7 +88,18 @@
             <v-card-title>
                 Товары
             </v-card-title>
-            <v-card-text style="padding: 0;">
+            <v-card-text v-if="loading">
+                <div
+                    class="text-center d-flex align-center justify-center"
+                    style="min-height: 651px">
+                    <v-progress-circular
+                        indeterminate
+                        size="65"
+                        color="primary"
+                    ></v-progress-circular>
+                </div>
+            </v-card-text>
+            <v-card-text style="padding: 0;" v-if="!loading">
                 <v-row>
                     <v-col cols="12" xl="8">
                         <v-text-field
@@ -184,6 +195,7 @@
             wayBillModal: false,
             child_store: 1,
             overlay: false,
+            loading: false,
             headers: [
                 {
                     text: 'Наименование',
@@ -209,6 +221,11 @@
                 }
             ]
         }),
+        async mounted() {
+            this.loading = this.products.length === 0;
+            await this.$store.dispatch(ACTIONS.GET_PRODUCT);
+            this.loading = false;
+        },
         methods: {
             addToCart(item) {
                 if (!this.checkAvailability(item)) {

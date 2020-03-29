@@ -50,13 +50,19 @@
                         label="Штрихкод"
                         v-model.number="product.product_barcode"
                         type="text"/>
-                    <v-select
-                        label="Производитель"
-                        :items="manufacturers"
-                        item-text="manufacturer_name"
-                        item-value="id"
-                        v-model="product.manufacturer"
-                    />
+                    <div class="d-flex">
+                        <v-autocomplete
+                            label="Производитель"
+                            :items="manufacturers"
+                            item-text="manufacturer_name"
+                            item-value="id"
+                            v-model="product.manufacturer"
+                        />
+                        <v-btn icon @click="manufacturerModal = true">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </div>
+
                  <!--   <v-select
                         label="Склад"
                         :items="stores"
@@ -113,6 +119,10 @@
                 <v-btn color="success" text @click="onSubmit">{{ id === -1 ? 'Создать' : 'Редактировать' }} <v-icon>mdi-check</v-icon></v-btn>
             </v-card-actions>
         </v-card>
+        <ManufacturerModal
+            :state="manufacturerModal"
+            v-on:cancel="manufacturerModal = false; product.manufacturer = manufacturers[manufacturers.length - 1].id"
+        />
     </v-dialog>
 </template>
 
@@ -123,9 +133,10 @@
     import ThemeLark from '@ckeditor/ckeditor5-theme-lark';
     import showToast from "../../utils/toast";
     import ACTIONS from "../../store/actions";
+    import ManufacturerModal from "./ManufacturerModal";
 
     export default {
-        components: {VSelect},
+        components: {ManufacturerModal, VSelect},
         watch: {
             state() {
                 this.attributesSelect = [];
@@ -209,6 +220,7 @@
             },
             attributesSelect: [],
             groupProduct: false,
+            manufacturerModal: false,
         }),
         methods: {
             addAttributesSelect() {

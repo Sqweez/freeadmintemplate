@@ -145,8 +145,8 @@
             >
                 <template v-slot:item.products="{item}">
                     <ul>
-                        <li v-for="(product, index) of item.products" :key="index">
-                            {{ product.product_name }} | {{ product.count }} шт.
+                        <li v-for="(product, index) of item.products" :key="index" class="d-flex justify-space-between">
+                            <span>• {{ product.product_name }}</span> <b style="white-space: nowrap">{{ product.count }} шт.</b>
                         </li>
                     </ul>
                 </template>

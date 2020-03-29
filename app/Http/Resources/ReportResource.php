@@ -43,7 +43,7 @@ class ReportResource extends JsonResource
             'purchase_price' => $purchase_price,
             'fact_price' => $product_price,
             'final_price' => $final_price,
-            'margin' => $final_price - $purchase_price,
+            'margin' => $this->discount != 100 ? $final_price - $purchase_price : 0,
             'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s')
         ];
     }
@@ -62,7 +62,7 @@ class ReportResource extends JsonResource
         foreach ($_products as $product) {
             array_push($result, [
                 'count' => count($product),
-                'product_name' => $product[0]['product_name'],
+                'product_name' => $product[0]['product_name'] . " | " . $this->getAttributeString($product[0]['attributes']),
                 'attributes' => $product[0]['attributes'],
                 'manufacturer' => $product[0]['manufacturer'],
                 'product_id' => $product[0]['product_id']
@@ -70,5 +70,11 @@ class ReportResource extends JsonResource
         }
 
         return $result;
+    }
+
+    private function getAttributeString($attrs) {
+        return array_reduce($attrs->toArray($attrs), function ($a, $c) {
+            return $a . $c['attribute_value'] . " | ";
+        });
     }
 }
