@@ -9,6 +9,7 @@ use App\Http\Resources\ProductResource;
 use App\ManufacturerProducts;
 use App\Product;
 use App\ProductBatch;
+use App\ProductImage;
 use App\SubcategoryProduct;
 use Illuminate\Http\Request;
 
@@ -29,19 +30,21 @@ class ProductController extends Controller {
      * @return ProductResource
      */
     public function store(Request $request) {
-        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes']);
+        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images']);
         $_product = Product::create($product);
         $product_id = $_product['id'];
         $_product->update(['group_id' => $product_id]);
-        $categories = $request->get('categories');
-        $this->createCategoryProducts($categories, $product_id);
-        $subcategories = $request->get('subcategories');
-        $this->createSubcategoryProduct($subcategories, $product_id);
-        $attributes = $request->get('attributes');
-        $this->createAttributeProduct($attributes, $product_id);
-        $manufacturer = $request->get('manufacturer');
-        $this->createManufacturerProduct($manufacturer, $product_id);
+        $this->createAdditionalFields($request, $product_id);
         return new ProductResource($_product);
+    }
+
+    private function storeImages($images, $product_id) {
+        if (count($images) === 0) {
+            ProductImage::create(['product_image' => 'products/product_image_default.jpg', 'product_id' => $product_id]);
+        }
+        foreach ($images as $image) {
+            ProductImage::create(['product_image' => $image, 'product_id' => $product_id]);
+        }
     }
 
     private function createCategoryProducts($categories, $id) {
@@ -72,7 +75,7 @@ class ProductController extends Controller {
 
     public function createRange(Request $request) {
         $product_id = $request->get('id');
-        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'id', 'groupProduct']);
+        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'id', 'groupProduct', 'product_images']);
         $groupProduct = $request->get('groupProduct');
         if ($groupProduct === true) {
             $product['group_id'] = $product_id;
@@ -82,6 +85,13 @@ class ProductController extends Controller {
             $_product->update(['group_id' => $_product['id']]);
         }
         $product_id = $_product['id'];
+        $this->createAdditionalFields($request, $product_id);
+        return new ProductResource($_product);
+    }
+
+    private function createAdditionalFields(Request $request, $product_id) {
+        $product_images = $request->get('product_images');
+        $this->storeImages($product_images, $product_id);
         $categories = $request->get('categories');
         $this->createCategoryProducts($categories, $product_id);
         $subcategories = $request->get('subcategories');
@@ -90,9 +100,7 @@ class ProductController extends Controller {
         $this->createAttributeProduct($attributes, $product_id);
         $manufacturer = $request->get('manufacturer');
         $this->createManufacturerProduct($manufacturer, $product_id);
-        return new ProductResource($_product);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -102,18 +110,11 @@ class ProductController extends Controller {
      * @return void
      */
     public function update(Request $request, Product $product) {
-        $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes']);
+        $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images']);
         $product_id = $request->get('id');
         $product->update($_product);
         $this->deleteDuplicates($product_id);
-        $categories = $request->get('categories');
-        $this->createCategoryProducts($categories, $product_id);
-        $subcategories = $request->get('subcategories');
-        $this->createSubcategoryProduct($subcategories, $product_id);
-        $attributes = $request->get('attributes');
-        $this->createAttributeProduct($attributes, $product_id);
-        $manufacturer = $request->get('manufacturer');
-        $this->createManufacturerProduct($manufacturer, $product_id);
+        $this->createAdditionalFields($request, $product_id);
         return new ProductResource($product);
     }
 
@@ -134,6 +135,7 @@ class ProductController extends Controller {
     }
 
     private function deleteDuplicates($id) {
+        ProductImage::where('product_id', $id)->delete();
         AttributeProduct::where('product_id', $id)->delete();
         CategoryProduct::where('product_id', $id)->delete();
         ManufacturerProducts::where('product_id', $id)->delete();

@@ -25,6 +25,7 @@ class ProductResource extends JsonResource {
             'quantity' => $this->quantity,
             'product_barcode' => $this->product_barcode,
             'group_id' => $this->group_id,
+            'product_images' => $this->product_images->pluck('product_image')
         ];
     }
 }

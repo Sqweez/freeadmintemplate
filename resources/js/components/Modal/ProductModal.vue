@@ -21,11 +21,25 @@
                         v-model="product.product_name"
                     />
                     <froala v-model="product.product_description" :config="froalaConfig" v-if="state"/>
-                   <!-- <v-btn text class="mt-3" @click="$refs.fileInput.click()">
+                    <div class="d-flex" v-if="product.product_images.length">
+                        <div
+                            class="image-container"
+                            v-for="(image, idx) of product.product_images"
+                            :key="idx">
+                            <button class="delete-image" @click.prevent="deleteImage(idx)">&times;</button>
+                            <img
+                                :src="'../storage/' + image"
+                                width="150"
+                                height="150"
+                                alt="Изображение">
+                        </div>
+
+                    </div>
+                    <v-btn text class="mt-3" @click="$refs.fileInput.click()">
                         Загрузить фото
                         <v-icon>mdi-photo</v-icon>
-                    </v-btn>-->
-                  <!--  <input type="file" class="d-none" ref="fileInput">-->
+                    </v-btn>
+                    <input type="file" class="d-none" ref="fileInput" @change="uploadPhoto">
                     <v-select
                         :items="categories"
                         item-text="name"
@@ -62,14 +76,6 @@
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </div>
-
-                 <!--   <v-select
-                        label="Склад"
-                        :items="stores"
-                        item-text="city"
-                        item-value="id"
-                        v-model="product.store"
-                    />-->
                     <v-divider></v-divider>
                     <h5>Атрибуты:</h5>
                     <div class="d-flex">
@@ -134,6 +140,7 @@
     import showToast from "../../utils/toast";
     import ACTIONS from "../../store/actions";
     import ManufacturerModal from "./ManufacturerModal";
+    import uploadFile, {deleteFile} from "../../api/upload";
 
     export default {
         components: {ManufacturerModal, VSelect},
@@ -145,6 +152,7 @@
                     categories: [],
                     subcategories: [],
                     product_description: '',
+                    product_images: [],
                     attributes: [
                         {
                             attribute_id: null,
@@ -259,10 +267,42 @@
                     this.addRange();
                 }
                 this.$emit('cancel');
+            },
+            async uploadPhoto(e) {
+                const file = e.target.files[0];
+                const result = await uploadFile(file, 'file', 'products');
+                this.product.product_images.push(result.data);
+            },
+            async deleteImage(key) {
+                await deleteFile(this.product.product_images[key]);
+                this.product.product_images.splice(key, 1);
             }
         }
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    .image-container {
+        img {
+            object-fit: contain;
+            object-position: center;
+        }
+        position: relative;
+
+        .delete-image {
+            padding: 8px 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            position: absolute;
+            right: 14px;
+            top: 14px;
+            font-size: 2rem;
+            border: none;
+            transition: .3s;
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.6);
+            }
+        }
+    }
 </style>

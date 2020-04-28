@@ -11,6 +11,7 @@
                 <tr>
                     <th>Наименование категории</th>
                     <th>Список подкатегорий</th>
+                    <th>Изображение</th>
                     <th>Действие</th>
                 </tr>
                 </thead>
@@ -55,6 +56,17 @@
                             <v-btn icon text class="mt-4" @click="addSubcategoryField" v-if="editMode && newCategory.id === category.id">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
+                        </div>
+
+                    </td>
+                    <td>
+                        <div>
+                            <img v-if="!editMode || newCategory.id !== category.id" :src="'../storage/' + category.category_img" alt="" width="100" height="100">
+                            <img v-else :src="'../storage/' + newCategory.category_img" alt="" width="100" height="100">
+                        </div>
+                        <div v-if="editMode && newCategory.id === category.id">
+                            <v-btn color="primary" class="mt-2" @click="editPhoto">Изменить</v-btn>
+                            <input type="file" name="photo" class="d-none" ref="photoInput" @change="uploadPhoto">
                         </div>
 
                     </td>
@@ -111,6 +123,13 @@
                         </ul>
                     </td>
                     <td>
+                        <img v-if="newCategory.category_img" :src="'../storage/' + newCategory.category_img" alt="" width="100" height="100">
+                        <div>
+                            <v-btn color="primary" class="mt-2" @click="editPhoto">Выбрать фото</v-btn>
+                            <input type="file" name="photo" class="d-none" ref="photoInput" @change="uploadPhoto">
+                        </div>
+                    </td>
+                    <td>
                         <v-btn icon @click="cancelCreation">
                             <v-icon>mdi-cancel</v-icon>
                         </v-btn>
@@ -136,6 +155,7 @@
     import showToast from "../../utils/toast";
     import ACTIONS from '../../store/actions'
     import ConfirmationModal from "../Modal/ConfirmationModal";
+    import uploadFile from "../../api/upload";
 
     export default {
         components: {ConfirmationModal},
@@ -187,6 +207,8 @@
                 this.newCategory.subcategories.splice(idx + 1, 1);
             },
             async createCategory() {
+                this.newCategory.category_name = this.newCategory.name;
+                delete this.newCategory.name;
                 this.newCategory.subcategories = this.newCategory.subcategories.filter(s => s.length !== 0);
                 await this.$store.dispatch(ACTIONS.CREATE_CATEGORY, this.newCategory);
                 this.cancelCreation();
@@ -197,6 +219,19 @@
                 this.categoryId = null;
                 this.deleteModal = false;
                 showToast('Категория успешно удалена')
+            },
+            editPhoto() {
+                try {
+                    this.$refs.photoInput[0].click();
+                } catch(e) {
+                    this.$refs.photoInput.click();
+                }
+
+            },
+            async uploadPhoto(e) {
+                const file = e.target.files[0];
+                const result = await uploadFile(file, 'file', 'category');
+                this.newCategory.category_img = result.data;
             }
         }
     }

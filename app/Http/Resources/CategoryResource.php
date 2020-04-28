@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class CategoryResource extends JsonResource
 {
@@ -17,7 +19,8 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->category_name,
-            'subcategories' => $this->subcategories
+            'subcategories' => $this->subcategories,
+            'category_img' => $this->category_img,
         ];
     }
 }

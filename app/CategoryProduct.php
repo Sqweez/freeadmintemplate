@@ -11,4 +11,8 @@ class CategoryProduct extends Model
     protected $guarded = [];
 
     public $timestamps = false;
+
+    public function product() {
+        return $this->hasOne('App\Product', 'id', 'product_id');
+    }
 }

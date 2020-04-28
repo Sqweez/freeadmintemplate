@@ -19,6 +19,13 @@
                         label="Наименование"
                         v-model="manufacturer.manufacturer_name"
                     />
+                    <div>
+                        <img v-if="manufacturer.manufacturer_img" :src="'../storage/' . manufacturer.manufacturer_img" alt="" width="200" height="200">
+                        <div>
+                            <v-btn color="primary" @click="chooseFile">Выбрать изображение</v-btn>
+                            <input type="file" name="file" ref="fileInput" @change="uploadFile" class="d-none">
+                        </div>
+                    </div>
                 </v-form>
             </v-card-text>
             <v-divider />
@@ -37,6 +44,7 @@
 <script>
     import ACTIONS from "../../store/actions";
     import showToast from "../../utils/toast";
+    import uploadFile from "../../api/upload";
 
     export default {
         props: {
@@ -62,6 +70,14 @@
                 await this.$store.dispatch(ACTIONS.CREATE_MANUFACTURER, this.manufacturer);
                 showToast('Производитель добавлен');
                 this.$emit('cancel');
+            },
+            chooseFile() {
+                    this.$refs.fileInput.click();
+            },
+            async uploadFile (e) {
+                const file = e.target.files[0];
+                const result = await uploadFile(file, 'file', 'manufacturers');
+                this.manufacturer.manufacturer_img = result.data;
             }
         }
     }

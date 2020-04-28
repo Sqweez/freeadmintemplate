@@ -26,8 +26,8 @@ class CategoryController extends Controller {
      * @return CategoryResource
      */
     public function store(Request $request) {
-        $category_name = $request->get('name');
-        $category = Category::create(['category_name' => $category_name]);
+        $_category = $request->except('subcategories');
+        $category = Category::create($_category);
         $category_id = $category['id'];
         $subcategories = $request->input('subcategories');
         foreach ($subcategories as $subcategory) {
@@ -48,7 +48,7 @@ class CategoryController extends Controller {
     public function update(Request $request, Category $category) {
         $subcategories = $request->get('subcategories');
         $category_name = $request->get('name');
-        $category->update(['category_name' => $category_name]);
+        $category->update(['category_name' => $category_name, 'category_img' => $request->get('category_img')]);
         foreach ($subcategories as $subcategory) {
             if (gettype($subcategory) === 'string' && strlen($subcategory) > 0) {
                 Subcategory::create(['subcategory_name' => $subcategory, 'category_id' => $category['id']]);
@@ -65,14 +65,8 @@ class CategoryController extends Controller {
         return new CategoryResource($category);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Category $category
-     * @return void
-     * @throws \Exception
-     */
     public function destroy(Category $category) {
         $category->delete();
     }
+
 }

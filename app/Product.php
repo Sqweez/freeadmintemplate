@@ -30,4 +30,12 @@ class Product extends Model
     public function quantity() {
         return $this->hasMany('App\ProductBatch', 'product_id');
     }
+
+    public function product_images() {
+        return $this->hasMany('App\ProductImage', 'product_id');
+    }
+
+    public function scopeCategory($query, $category) {
+        //return $query->
+    }
 }
