@@ -191,6 +191,7 @@
                     subcategories: []
                 };
                 this.subcategoryFields = [];
+                this.subcategories = [];
                 this.editMode = false;
             },
             async editCategory() {
