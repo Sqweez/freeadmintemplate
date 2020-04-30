@@ -12,4 +12,8 @@ class SubcategoryProduct extends Model
 
     public $timestamps = false;
 
+    public function product() {
+        return $this->hasOne('App\Product', 'id', 'product_id');
+    }
+
 }

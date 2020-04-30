@@ -7,18 +7,18 @@ use App\CategoryProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\ProductsResource;
 use App\Subcategory;
+use App\SubcategoryProduct;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller {
     public function getProducts(Request $request) {
         $query = $request->all();
-        if (isset($query['search'])) {
-            return $this->getBySearch($query['search']);
+        if (isset($query['subcategory'])) {
+            $products = $this->getBySubcategory($query['subcategory']);
+            return $products;
         }
-
-        if (isset($query['category'])) {
-            return $this->getByCategory($query['category']);
-        }
+        $products = $this->getByCategory($query['category']);
+        return $products;
     }
 
     private function getBySearch($search) {
@@ -26,16 +26,30 @@ class ProductController extends Controller {
     }
 
     private function getByCategory($category) {
-        return ProductsResource::collection(CategoryProduct::where('category_id', $category)->paginate(12));
+        $categories = explode(',', $category);
+        return ProductsResource::collection(CategoryProduct::whereIn('category_id', $categories)->paginate(12));
+    }
+
+    private function getBySubcategory($subcategory) {
+        $subcategories = explode(',', $subcategory);
+        return ProductsResource::collection(SubcategoryProduct::whereIn('subcategory_id', $subcategories)->paginate(12));
+    }
+
+    private function getFilters($query) {
+
     }
 
     public function getHeading(Request $request) {
         $query = $request->all();
         if (isset($query['category'])) {
-            return Category::find($query['category'])->category_name;
+            return ['heading' => Category::find($query['category'])->category_name];
         }
         if (isset($query['subcategory'])) {
-            return Subcategory::find($query['subcategory'])->subcategory_name;
+            return ['heading' => Subcategory::find($query['subcategory'])->subcategory_name];
+        }
+
+        if (isset($query['search'])) {
+            return ['heading' => "Результаты поиска по запросу: '" . $query['search'] . "'"];
         }
     }
 }

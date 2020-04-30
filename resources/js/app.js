@@ -12,7 +12,11 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 
 // Import and use Vue Froala lib.
 import VueFroala from 'vue-froala-wysiwyg'
+
+import { VueEditor } from "vue2-editor";
+
 Vue.use(VueFroala);
+Vue.use(VueEditor);
 
 const app = new Vue({
     el: '#app',

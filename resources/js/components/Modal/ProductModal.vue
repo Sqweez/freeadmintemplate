@@ -20,7 +20,8 @@
                         label="Наименование"
                         v-model="product.product_name"
                     />
-                    <froala v-model="product.product_description" :config="froalaConfig" v-if="state"/>
+                    <!--<froala v-model="product.product_description" :config="froalaConfig" v-if="state"/> -->
+                    <vue-editor v-model="product.product_description"  v-if="state"></vue-editor>
                     <div class="d-flex" v-if="product.product_images.length">
                         <div
                             class="image-container"
@@ -134,16 +135,15 @@
 
 <script>
     import {VSelect} from 'vuetify/lib'
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-    import '@ckeditor/ckeditor5-build-classic/build/translations/ru';
-    import ThemeLark from '@ckeditor/ckeditor5-theme-lark';
     import showToast from "../../utils/toast";
     import ACTIONS from "../../store/actions";
     import ManufacturerModal from "./ManufacturerModal";
     import uploadFile, {deleteFile} from "../../api/upload";
+    import { VueEditor } from "vue2-editor";
+
 
     export default {
-        components: {ManufacturerModal, VSelect},
+        components: {ManufacturerModal, VSelect, VueEditor},
         watch: {
             state() {
                 this.attributesSelect = [];
@@ -282,6 +282,12 @@
 </script>
 
 <style scoped lang="scss">
+
+    .quillWrapper {
+        background-color: #fff;
+        color: #000;
+    }
+
     .image-container {
         img {
             object-fit: contain;

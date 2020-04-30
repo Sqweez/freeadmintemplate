@@ -15,10 +15,13 @@ class Category extends Model
     public static function boot() {
         parent::boot();
 
-        static::deleting(function($category) { // before delete() method call this
+        static::deleting(function($category) {
             $category->subcategories()->delete();
-            // do the rest of the cleanup...
         });
+    }
+
+    public function scopeOfSlug($query, $slug) {
+        return $query->where('category_slug', $slug);
     }
 
 }

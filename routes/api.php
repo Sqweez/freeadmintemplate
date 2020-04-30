@@ -6,7 +6,10 @@ Route::prefix('shop')->group(function () {
     Route::get('categories', 'api\CategoryController@indexShop');
     Route::get('products', 'api\shop\ProductController@getProducts');
     Route::get('heading', 'api\shop\ProductController@getHeading');
+    Route::get('slug', 'api\SlugController@index');
 });
+
+Route::get('setSlugs', 'api\CategoryController@slugs');
 
 Route::post('upload', 'Services\ImageService@upload');
 Route::post('delete', 'Services\ImageService@delete');

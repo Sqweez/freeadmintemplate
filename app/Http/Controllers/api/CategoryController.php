@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Subcategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller {
     /**
@@ -27,11 +28,16 @@ class CategoryController extends Controller {
      */
     public function store(Request $request) {
         $_category = $request->except('subcategories');
+        $_category['category_slug'] = Str::slug($_category['category_name']);
         $category = Category::create($_category);
         $category_id = $category['id'];
         $subcategories = $request->input('subcategories');
         foreach ($subcategories as $subcategory) {
-            Subcategory::create(['subcategory_name' => $subcategory, 'category_id' => $category_id,]);
+            Subcategory::create([
+                'subcategory_name' => $subcategory,
+                'category_id' => $category_id,
+                'subcategory_slug' => Str::slug($subcategory)
+            ]);
         }
 
         return new CategoryResource(Category::find($category_id));
@@ -67,6 +73,21 @@ class CategoryController extends Controller {
 
     public function destroy(Category $category) {
         $category->delete();
+    }
+
+    public function slugs() {
+        $categories = Category::all();
+        $subcategories = Subcategory::all();
+        foreach ($categories as $category) {
+            $category_slug = Str::slug($category['category_name'], '-');
+            $category->update(['category_slug' => $category_slug]);
+        }
+
+        foreach ($subcategories as $category) {
+            $category_slug = Str::slug($category['subcategory_name'], '-');
+            $category->update(['subcategory_slug' => $category_slug]);
+        }
+        return $categories;
     }
 
 }
