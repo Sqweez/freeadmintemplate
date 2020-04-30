@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\shop\ShopCategoryResource;
 use App\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -41,6 +42,10 @@ class CategoryController extends Controller {
         }
 
         return new CategoryResource(Category::find($category_id));
+    }
+
+    public function indexShop() {
+        return ShopCategoryResource::collection(Category::all());
     }
 
 

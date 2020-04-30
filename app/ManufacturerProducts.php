@@ -9,4 +9,8 @@ class ManufacturerProducts extends Model
     protected $guarded = [];
 
     public $timestamps = false;
+
+    public function manufacturer() {
+        return $this->hasOne('App\Manufacturer', 'id', 'manufacturer_id');
+    }
 }

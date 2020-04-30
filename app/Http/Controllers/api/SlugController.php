@@ -11,7 +11,7 @@ class SlugController extends Controller
 {
     public function index(Request $request) {
         $slug = $request->get('slug');
-        return http_build_query($this->getBySlug($slug));
+        return $this->getBySlug($slug);
     }
 
     private function getBySlug($slug) {

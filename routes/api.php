@@ -7,6 +7,8 @@ Route::prefix('shop')->group(function () {
     Route::get('products', 'api\shop\ProductController@getProducts');
     Route::get('heading', 'api\shop\ProductController@getHeading');
     Route::get('slug', 'api\SlugController@index');
+    Route::resource('manufacturers', 'api\ManufacturerController');
+    Route::get('filters', 'api\shop\ProductController@filters');
 });
 
 Route::get('setSlugs', 'api\CategoryController@slugs');
