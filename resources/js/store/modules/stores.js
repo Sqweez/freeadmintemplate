@@ -1,0 +1,62 @@
+import ACTIONS from "../actions";
+import MUTATIONS from "../mutations";
+import {createStore, deleteStore, editStore, getStores, getStoreTypes} from "../../api/stores";
+
+const storeModule = {
+    state: {
+        stores: [],
+        store_types: [],
+    },
+    getters: {
+        stores: state => state.stores,
+        store: state => id => state.stores.find(s => s.id === id),
+        store_types: state => state.store_types,
+    },
+    mutations: {
+        async [MUTATIONS.DELETE_STORE] (state, payload) {
+            state.stores = state.stores.filter(s => s.id !== payload);
+        },
+        async [MUTATIONS.CREATE_STORE] (state, payload) {
+            state.stores.push(payload);
+        },
+        async [MUTATIONS.EDIT_STORE] (state, payload) {
+            state.stores = state.stores.map(s => {
+                if (s.id === payload.id) {
+                    s = payload;
+                }
+                return s;
+            })
+        },
+        async [MUTATIONS.SET_STORE_TYPES] (state, payload) {
+            state.store_types = payload;
+        },
+        async [MUTATIONS.SET_STORES] (state, payload) {
+            state.stores = payload;
+        },
+    },
+    actions: {
+        async [ACTIONS.DELETE_STORE] ({commit}, payload) {
+            await deleteStore(payload);
+            await commit(MUTATIONS.DELETE_STORE, payload);
+        },
+        async [ACTIONS.CREATE_STORE] ({commit}, payload) {
+            const store = await createStore(payload);
+            await commit(MUTATIONS.CREATE_STORE, store);
+        },
+        async [ACTIONS.EDIT_STORE] ({commit}, payload) {
+            const store = await editStore(payload);
+            await commit(MUTATIONS.EDIT_STORE, store);
+        },
+        async [ACTIONS.GET_STORES] ({commit, dispatch}) {
+            await dispatch(ACTIONS.GET_STORE_TYPES);
+            const stores = await getStores();
+            commit(MUTATIONS.SET_STORES, stores);
+        },
+        async [ACTIONS.GET_STORE_TYPES] ({commit}) {
+            const store_types = await getStoreTypes();
+            commit(MUTATIONS.SET_STORE_TYPES, store_types);
+        }
+    }
+};
+
+export default storeModule;
