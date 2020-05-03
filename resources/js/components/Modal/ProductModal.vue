@@ -20,7 +20,6 @@
                         label="Наименование"
                         v-model="product.product_name"
                     />
-                    <!--<froala v-model="product.product_description" :config="froalaConfig" v-if="state"/> -->
                     <vue-editor v-model="product.product_description"  v-if="state"></vue-editor>
                     <div class="d-flex" v-if="product.product_images.length">
                         <div
@@ -165,6 +164,10 @@
                     this.product.categories = this.product.categories.map(c => c.id);
                     this.product.subcategories = this.product.subcategories.map(c => c.id);
                     this.product.manufacturer = this.product.manufacturer_id;
+                    this.product.attributes = this.product.attributes.map(a => {
+                        a.attribute_id = +a.attribute_id;
+                        return a;
+                    })
                     if (this.product.attributes.length > 1) {
                         this.attributesSelect = new Array(this.product.attributes.length - 1);
                         this.attributesSelect.fill(VSelect);
