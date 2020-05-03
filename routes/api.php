@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('shop')->group(function () {
     Route::get('categories', 'api\CategoryController@indexShop');
     Route::get('products', 'api\shop\ProductController@getProducts');
+    Route::get('products-test', 'api\shop\ProductController@getTestProducts');
+    Route::get('products/{product}', 'api\shop\ProductController@getProduct');
     Route::get('heading', 'api\shop\ProductController@getHeading');
     Route::get('slug', 'api\SlugController@index');
     Route::resource('manufacturers', 'api\ManufacturerController');

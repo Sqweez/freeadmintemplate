@@ -4,12 +4,23 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use \App\ManufacturerProducts;
+use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model
 {
     protected $guarded = [];
 
     public $timestamps = false;
+
+    public function parent()
+    {
+        return $this->belongsTo('App\Product', 'group_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany('App\Product', 'group_id');
+    }
 
     public function categories() {
         return $this->belongsToMany('App\Category', 'category_product');
@@ -34,6 +45,11 @@ class Product extends Model
 
     public function product_images() {
         return $this->hasMany('App\ProductImage', 'product_id');
+    }
+
+    public function scopeMain(Builder $query)
+    {
+        return $query->whereHas('children');
     }
 
     public function scopeOfCategory($query, $param) {

@@ -5,6 +5,7 @@ namespace App\Http\Resources\shop;
 use App\Http\Resources\AttributeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\shop\ProductRangeResource;
 
 class ProductsResource extends JsonResource
 {
@@ -29,7 +30,7 @@ class ProductsResource extends JsonResource
                 'manufacturer_id' => $this->manufacturer[0]->id ?? 0,
                 'product_price' => $this->product_price,
                 'product_image' => url('/') . Storage::url($this->product_images[0]->product_image ?? 'products/product_image_default.jpg'),
-                'in_stock' => $this->inStock($this->quantity->where('store_id', $store_id)),
+                'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
                 'attributes' => AttributeResource::collection($this->attributes),
         ];
     }

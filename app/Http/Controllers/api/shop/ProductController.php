@@ -5,12 +5,14 @@ namespace App\Http\Controllers\api\shop;
 use App\Category;
 use App\CategoryProduct;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\shop\ProductsResource;
 use App\Subcategory;
 use App\SubcategoryProduct;
 use App\Product;
 use App\ManufacturerProducts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ProductController extends Controller {
     public function getProducts(Request $request) {
@@ -30,11 +32,11 @@ class ProductController extends Controller {
 
     private function getFilters($query) {
         $filters = $this->getFilterParametrs($query);
-        $data = [
-            'brands' => array_filter($this->getBrands($filters), function ($i) { return $i; }),
+        return [
+            'brands' => array_filter($this->convertToArray($this->getBrands($filters)), function ($i) { return $i; }),
             'prices' => $this->getPrices($filters),
         ];
-        return $this->convertFilters($data);
+
     }
 
     private function getBrands($filters) {
@@ -49,18 +51,16 @@ class ProductController extends Controller {
         $_filters['prices'] = [];
         $productsPrices = $this->getProductWithFilter($_filters)->get()->pluck('product_price');
         return [
-            'min_price' => $productsPrices->min(),
-            'max_price' => $productsPrices->max()
+            $productsPrices->min(),
+            $productsPrices->max()
         ];
     }
 
-    private function convertFilters($filters) {
+    private function convertToArray($filters) {
         $array = [];
 
         foreach ($filters as $key => $filter) {
-            foreach ($filter as $item) {
-                $array[$key][] = $item;
-            }
+            $array[] = $filter;
         }
 
         return $array;
@@ -77,7 +77,7 @@ class ProductController extends Controller {
     }
 
     private function getProductWithFilter($filters) {
-        return Product::ofCategory($filters['categories'])->ofSubcategory($filters['subcategories'])->ofBrand($filters['brands'])->ofPrice($filters['prices']);
+        return Product::Main()->ofCategory($filters['categories'])->ofSubcategory($filters['subcategories'])->ofBrand($filters['brands'])->ofPrice($filters['prices']);
     }
 
     private function getFilteredProducts($query) {
@@ -98,5 +98,15 @@ class ProductController extends Controller {
         if (isset($query['search'])) {
             return ['heading' => "Результаты поиска по запросу: '" . $query['search'] . "'"];
         }
+    }
+
+    public function getProduct(Product $product) {
+        return new ProductResource($product);
+    }
+
+    public function getTestProducts()
+    {
+       // $products = Product::Main()->get();
+        // return $products;
     }
 }
