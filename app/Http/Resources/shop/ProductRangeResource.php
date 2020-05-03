@@ -23,7 +23,7 @@ class ProductRangeResource extends JsonResource
 
     private function getTaste($attributes) {
         return $attributes->filter(function ($i) {
-            return $i['attribute_id'] === 1;
+            return $i['attribute_id'] == 1;
         })->first()['attribute_value'] ?? '';
     }
 }

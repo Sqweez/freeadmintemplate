@@ -47,7 +47,7 @@ class ProductResource extends JsonResource
 
     private function getProductWeight($attributes) {
         return $attributes->filter(function ($i) {
-            return $i['attribute_id'] === 2;
+            return $i['attribute_id'] == 2;
         })->first()['attribute_value'] ?? '';
     }
 }
