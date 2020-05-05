@@ -29,7 +29,7 @@ class ProductsResource extends JsonResource
                 'subcategory_id' => $this->subcategories[0]->id ?? 0,
                 'manufacturer_id' => $this->manufacturer[0]->id ?? 0,
                 'product_price' => $this->product_price,
-                'product_image' => url('/') . Storage::url($this->product_images[0]->product_image ?? 'products/product_image_default.jpg'),
+                'product_image' => url('/') . Storage::url($this->product_thumbs[0]->product_image ?? 'product_thumbs/product_image_default.webp'),
                 'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
                 'attributes' => AttributeResource::collection($this->attributes),
         ];

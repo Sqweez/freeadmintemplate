@@ -10,10 +10,13 @@ use App\ManufacturerProducts;
 use App\Product;
 use App\ProductBatch;
 use App\ProductImage;
+use App\ProductThumb;
 use App\SubcategoryProduct;
 use App\SaleProduct;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 class ProductController extends Controller {
     /**
      * Display a listing of the resource.
@@ -31,7 +34,7 @@ class ProductController extends Controller {
      * @return ProductResource
      */
     public function store(Request $request) {
-        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images']);
+        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs']);
         $_product = Product::create($product);
         $product_id = $_product['id'];
         $_product->update(['group_id' => $product_id]);
@@ -45,6 +48,18 @@ class ProductController extends Controller {
         }
         foreach ($images as $image) {
             ProductImage::create(['product_image' => $image, 'product_id' => $product_id]);
+        }
+    }
+
+    private function storeThumbs($images, $product_id) {
+        if (count($images) === 0) {
+            ProductThumb::create(['product_image' => 'product_thumbs/product_image_default.webp', 'product_id' => $product_id]);
+            return;
+        }
+
+        $thumbs = $this->makeThumbs($images);
+        foreach ($thumbs as $image) {
+            ProductThumb::create(['product_image' => $image, 'product_id' => $product_id]);
         }
     }
 
@@ -76,7 +91,7 @@ class ProductController extends Controller {
 
     public function createRange(Request $request) {
         $product_id = $request->get('id');
-        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'id', 'groupProduct', 'product_images']);
+        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'id', 'groupProduct', 'product_images', 'product_thumbs']);
         $groupProduct = $request->get('groupProduct');
         if ($groupProduct === true) {
             $product['group_id'] = $product_id;
@@ -93,6 +108,7 @@ class ProductController extends Controller {
     private function createAdditionalFields(Request $request, $product_id) {
         $product_images = $request->get('product_images');
         $this->storeImages($product_images, $product_id);
+        $this->storeThumbs($product_images, $product_id);
         $categories = $request->get('categories');
         $this->createCategoryProducts($categories, $product_id);
         $subcategories = $request->get('subcategories');
@@ -111,7 +127,7 @@ class ProductController extends Controller {
      * @return void
      */
     public function update(Request $request, Product $product) {
-        $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images']);
+        $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs']);
         $product_id = $request->get('id');
         $product->update($_product);
         $this->deleteDuplicates($product_id);
@@ -133,6 +149,7 @@ class ProductController extends Controller {
         SubcategoryProduct::where('product_id', $product['id'])->delete();
         ProductBatch::where('product_id', $product['id'])->delete();
         SaleProduct::where('product_id', $product['id'])->delete();
+        ProductThumb::where('product_id', $product['id'])->delete();
         $product->delete();
     }
 
@@ -142,5 +159,46 @@ class ProductController extends Controller {
         CategoryProduct::where('product_id', $id)->delete();
         ManufacturerProducts::where('product_id', $id)->delete();
         SubcategoryProduct::where('product_id', $id)->delete();
+        ProductThumb::where('product_id', $id)->delete();
+    }
+
+    private function makeThumbs($images) {
+        $output = [];
+        foreach ($images as $image) {
+            $output[] = $this->generateThumb($image);
+        }
+
+        return $output;
+    }
+
+    private function generateThumb($image) {
+        try {
+            $img = Storage::get('public/' . $image);
+
+        } catch (\Exception $exception) {
+            return null;
+        }
+
+        $correctImage = Image::make($img);
+
+        $resizedImage = $correctImage->fit(170, 170);
+        $imagePath = public_path('storage/product_thumbs/');
+        $imageName = Str::random(40) . '.webp';
+        $resizedImage->save($imagePath . $imageName);
+        return 'product_thumbs/' . $imageName;
+    }
+
+    public function thumbs() {
+        $productImages = ProductImage::where('product_image', '!=', 'products/product_image_default.jpg')->get();
+
+        $productImages->map(function ($i) {
+            $thumbPath = $this->generateThumb($i['product_image']);
+            if ($thumbPath !== null) {
+                ProductThumb::create(['product_id' => $i['product_id'], 'product_image' => $thumbPath]);
+            }
+        });
+
+
+
     }
 }

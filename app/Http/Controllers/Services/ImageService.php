@@ -6,18 +6,12 @@ namespace App\Http\Controllers\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Image;
 
 class ImageService {
-    public static function upload(Request $request) {
-        $file = $request->file('file');
-        $path = $request->get('path');
-        $path = $file->store($path, 'public');
-        return $path;
-    }
-
-    public static function delete(Request $request) {
-        $file = $request->get('file');
-        Storage::disk('public')->delete($file);
-        return;
+    public static function makeThumb(Request $request) {
+        /*$file = $request->file('file');
+        $image = Image::make($file);
+        return $path;*/
     }
 }

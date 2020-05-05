@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\api\shop;
 
 use App\Category;
-use App\CategoryProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\shop\ProductsResource;
 use App\Subcategory;
-use App\SubcategoryProduct;
 use App\Product;
 use App\ManufacturerProducts;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class ProductController extends Controller {
     public function getProducts(Request $request) {
@@ -104,9 +102,24 @@ class ProductController extends Controller {
         return new ProductResource($product);
     }
 
-    public function getTestProducts()
+    public function groupProducts()
     {
-       // $products = Product::Main()->get();
-        // return $products;
+       $products = Product::all();
+       $products = $products->groupBy(['product_name', 'product_price']);
+
+       return $products;
+
+       foreach($products as $key => $product) {
+           foreach ($product as $key2 => $item) {
+               if (count ($item) > 1) {
+                   $group_id = $item[0]['id'];
+                   foreach ($item as $_i) {
+                       $pr = Product::find($_i['id']);
+                       $pr->update(['group_id' => $group_id]);
+                   }
+               }
+           }
+       }
+
     }
 }

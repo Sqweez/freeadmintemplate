@@ -17,6 +17,11 @@ use Illuminate\Http\Request;
 class TransferController extends Controller
 {
     public function transferProducts() {
+        Product::truncate();
+        ProductBatch::truncate();
+        CategoryProduct::truncate();
+        SubcategoryProduct::truncate();
+        ManufacturerProducts::truncate();
         $file = json_decode(utf8_encode(file_get_contents('http://iron.ariesdev.kz/admin/transfer.php')), true);
         $products = $file['products'];
         $categories = $file['categories'];

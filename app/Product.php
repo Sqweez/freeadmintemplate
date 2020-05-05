@@ -47,6 +47,10 @@ class Product extends Model
         return $this->hasMany('App\ProductImage', 'product_id');
     }
 
+    public function product_thumbs() {
+        return $this->hasMany('App\ProductThumb', 'product_id');
+    }
+
     public function scopeMain(Builder $query)
     {
         return $query->whereHas('children');

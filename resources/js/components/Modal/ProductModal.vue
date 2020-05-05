@@ -277,7 +277,10 @@
                 this.product.product_images.push(result.data);
             },
             async deleteImage(key) {
-                await deleteFile(this.product.product_images[key]);
+                if (this.product.product_images[key] !== 'products/product_image_default.jpg')
+                {
+                    await deleteFile(this.product.product_images[key]);
+                }
                 this.product.product_images.splice(key, 1);
             }
         }

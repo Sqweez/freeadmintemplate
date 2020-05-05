@@ -25,24 +25,23 @@ class ProductResource extends JsonResource
             'subcategory' => $this->subcategories[0]->subcategory_name ?? '',
             'product_name' => $this->product_name,
             'product_description' => $this->product_description,
-            'product_images' => $this->getProductImages($this->product_images),
+            'product_images' => $this->getProductImages($this->product_images, 'image'),
+            'product_thumbs' => $this->getProductImages($this->product_thumbs, 'thumb'),
             'children' => count($this->children) > 0 ? ProductRangeResource::collection($this->children) : ProductRangeResource::collection($this->parent->children),
             'product_weight' => $this->getProductWeight($this->attributes),
             'group_id' => $this->group_id,
         ];
     }
 
-    private function getProductImages($images) {
-        $images = array_map(function ($i) {
-            return url('/') . Storage::url($i->product_image ?? 'products/product_image_default.jpg');
-        }, $images->toArray($images));
-
-
-        if (count($images) === 0) {
-            $images[] = url('/') . Storage::url('products/product_image_default.jpg');
+    private function getProductImages($_images, $type) {
+        if ($_images->count() === 0) {
+            return [
+                url('/') . Storage::url($type === 'image' ? 'products/product_image_default.jpg': 'product_thumbs/product_image_default.jpg')
+            ];
         }
-
-        return $images;
+        return $_images->map(function ($i) use ($type) {
+            return url('/') . Storage::url($i->product_image ?? $type === 'image' ? 'products/product_image_default.jpg': 'product_thumbs/product_image_default.jpg');
+        });
     }
 
     private function getProductWeight($attributes) {
