@@ -11,6 +11,12 @@ Route::prefix('shop')->group(function () {
     Route::get('slug', 'api\SlugController@index');
     Route::resource('manufacturers', 'api\ManufacturerController');
     Route::get('filters', 'api\shop\ProductController@filters');
+    // Cart Controller
+    Route::post('cart/add', 'api\CartController@addCart');
+    Route::post('cart/increase', 'api\CartController@increaseCount');
+    Route::post('cart/decrease', 'api\CartController@decreaseCount');
+    Route::post('cart/delete', 'api\CartController@deleteCart');
+    Route::get('cart', 'api\CartController@getCart');
 });
 
 Route::get('setSlugs', 'api\CategoryController@slugs');
@@ -20,7 +26,7 @@ Route::post('delete', 'Services\FileService@delete');
 
 // helpers
 
-Route::get('thumbs', 'api\ProductController@thumbs');
+Route::get('setThumbsAll', 'api\ProductController@setThumbsAll');
 
 //
 

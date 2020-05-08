@@ -40,7 +40,7 @@ class ProductResource extends JsonResource
             ];
         }
         return $_images->map(function ($i) use ($type) {
-            return url('/') . Storage::url($i->product_image ?? $type === 'image' ? 'products/product_image_default.jpg': 'product_thumbs/product_image_default.jpg');
+            return url('/') . Storage::url($i->product_image ?? ($type === 'image' ? 'products/product_image_default.jpg': 'product_thumbs/product_image_default.jpg'));
         });
     }
 

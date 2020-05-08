@@ -124,7 +124,7 @@ class ProductController extends Controller {
      *
      * @param \Illuminate\Http\Request $request
      * @param Product $product
-     * @return void
+     * @return ProductResource
      */
     public function update(Request $request, Product $product) {
         $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs']);
@@ -188,9 +188,8 @@ class ProductController extends Controller {
         return 'product_thumbs/' . $imageName;
     }
 
-    public function thumbs() {
+    public function setThumbsAll() {
         $productImages = ProductImage::where('product_image', '!=', 'products/product_image_default.jpg')->get();
-
         $productImages->map(function ($i) {
             $thumbPath = $this->generateThumb($i['product_image']);
             if ($thumbPath !== null) {

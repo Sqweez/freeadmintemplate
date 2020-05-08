@@ -252,6 +252,8 @@
             },
             async editProduct() {
                 const product = {...this.product};
+                console.log(product);
+                return;
                 await this.$store.dispatch(ACTIONS.EDIT_PRODUCT, product);
                 showToast('Товар успешно отредактирован')
             },
@@ -277,7 +279,7 @@
                 this.product.product_images.push(result.data);
             },
             async deleteImage(key) {
-                if (this.product.product_images[key] !== 'products/product_image_default.jpg')
+                if (this.product.product_images[key] != 'products/product_image_default.jpg')
                 {
                     await deleteFile(this.product.product_images[key]);
                 }

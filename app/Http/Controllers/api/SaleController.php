@@ -21,7 +21,6 @@ class SaleController extends Controller
     private $DECREASE = -1;
     private $INCREASE = 1;
 
-    // @TODO: Вспомнить о каспи реде
     public function store(Request $request) {
         $_cart = $request->get('cart');
         $_sale = $request->except('cart');

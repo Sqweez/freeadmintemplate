@@ -75,7 +75,12 @@ class ProductController extends Controller {
     }
 
     private function getProductWithFilter($filters) {
-        return Product::Main()->ofCategory($filters['categories'])->ofSubcategory($filters['subcategories'])->ofBrand($filters['brands'])->ofPrice($filters['prices']);
+        return Product::Main()
+            ->ofCategory($filters['categories'])
+            ->ofSubcategory($filters['subcategories'])
+            ->ofBrand($filters['brands'])
+            ->ofPrice($filters['prices'])
+            ->inStock(1);
     }
 
     private function getFilteredProducts($query) {

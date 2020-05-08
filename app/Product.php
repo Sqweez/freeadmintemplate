@@ -32,7 +32,6 @@ class Product extends Model
 
     public function attributes() {
         return $this->hasMany('App\AttributeProduct', 'product_id');
-        //return $this->belongsToMany('App\Attribute', 'attribute_products', 'product_id', 'attribute_id');
     }
 
     public function manufacturer() {
@@ -54,6 +53,14 @@ class Product extends Model
     public function scopeMain(Builder $query)
     {
         return $query->whereHas('children');
+    }
+
+    public function scopeInStock($query, $param = 2) {
+        $query->whereHas('children', function ($query) use ($param) {
+            $query->whereHas('quantity', function ($query) use ($param) {
+                $query->where('store_id', $param)->where('quantity', '>', 0);
+            });
+        });
     }
 
     public function scopeOfCategory($query, $param) {
