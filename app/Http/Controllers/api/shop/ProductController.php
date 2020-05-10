@@ -11,43 +11,46 @@ use App\Product;
 use App\ManufacturerProducts;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use \Illuminate\Contracts\Encryption\Encrypter;
 
 class ProductController extends Controller {
     public function getProducts(Request $request) {
-        $query = $request->all();
-        $products = $this->getFilteredProducts($query);
+        $query = $request->except('store_id');
+        $store_id = $request->get('store_id');
+        $products = $this->getFilteredProducts($query, $store_id);
         return $products;
     }
 
     public function filters(Request $request) {
         $query = $request->all();
-        return $this->getFilters($query);
+        $store_id = $request->cookie('store_id') ?? 1;
+        return $this->getFilters($query, $store_id);
     }
 
     private function getBySearch($search) {
         //return ProductsResource::collection(Product::paginate(15));
     }
 
-    private function getFilters($query) {
-        $filters = $this->getFilterParametrs($query);
+    private function getFilters($query, $store_id) {
+        $filters = $this->getFilterParametrs($query, $store_id);
         return [
-            'brands' => array_filter($this->convertToArray($this->getBrands($filters)), function ($i) { return $i; }),
-            'prices' => $this->getPrices($filters),
+            'brands' => array_filter($this->convertToArray($this->getBrands($filters, $store_id)), function ($i) { return $i; }),
+            'prices' => $this->getPrices($filters, $store_id),
         ];
 
     }
 
-    private function getBrands($filters) {
+    private function getBrands($filters, $store_id) {
         $_filters = $filters;
         $_filters['brands'] = [];
-        $products_ids = $this->getProductWithFilter($_filters)->get()->pluck('id');
+        $products_ids = $this->getProductWithFilter($_filters, $store_id)->get()->pluck('id');
         return ManufacturerProducts::has('manufacturer')->whereIn('product_id', $products_ids)->get()->pluck('manufacturer')->unique('id');
     }
 
-    private function getPrices($filters) {
+    private function getPrices($filters, $store_id) {
         $_filters = $filters;
         $_filters['prices'] = [];
-        $productsPrices = $this->getProductWithFilter($_filters)->get()->pluck('product_price');
+        $productsPrices = $this->getProductWithFilter($_filters, $store_id)->get()->pluck('product_price');
         return [
             $productsPrices->min(),
             $productsPrices->max()
@@ -65,7 +68,7 @@ class ProductController extends Controller {
     }
 
 
-    private function getFilterParametrs($query) {
+    private function getFilterParametrs($query, $store_id) {
         return [
             'categories' => array_map('intval', array_filter(explode(',', ($query['category'] ?? '')), 'strlen')),
             'subcategories' => array_map('intval', array_filter(explode(',', ($query['subcategory'] ?? '')), 'strlen')),
@@ -74,18 +77,18 @@ class ProductController extends Controller {
         ];
     }
 
-    private function getProductWithFilter($filters) {
+    private function getProductWithFilter($filters, $store_id) {
         return Product::Main()
             ->ofCategory($filters['categories'])
             ->ofSubcategory($filters['subcategories'])
             ->ofBrand($filters['brands'])
             ->ofPrice($filters['prices'])
-            ->inStock(1);
+            ->inStock($store_id);
     }
 
-    private function getFilteredProducts($query) {
-        $filters = $this->getFilterParametrs($query);
-        return ProductsResource::collection($this->getProductWithFilter($filters)->paginate(24));
+    private function getFilteredProducts($query, $store_id) {
+        $filters = $this->getFilterParametrs($query, $store_id);
+        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id)->paginate(24));
     }
 
 

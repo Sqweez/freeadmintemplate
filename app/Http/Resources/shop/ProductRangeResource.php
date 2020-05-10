@@ -14,10 +14,12 @@ class ProductRangeResource extends JsonResource
      */
     public function toArray($request)
     {
+        $store_id = $request->get('store_id');
+
         return [
             'id' => $this->id,
             'product_taste' => $this->getTaste($this->attributes),
-            'quantity' => $this->quantity->sum('quantity'),
+            'quantity' => $this->quantity->where('store_id', $store_id)->sum('quantity'),
         ];
     }
 

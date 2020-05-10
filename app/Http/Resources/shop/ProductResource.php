@@ -28,7 +28,8 @@ class ProductResource extends JsonResource
             'product_images' => $this->getProductImages($this->product_images, 'image'),
             'product_thumbs' => $this->getProductImages($this->product_thumbs, 'thumb'),
             'children' => count($this->children) > 0 ? ProductRangeResource::collection($this->children) : ProductRangeResource::collection($this->parent->children),
-            'product_weight' => $this->getProductWeight($this->attributes),
+            'product_weight' => $this->getProductWeight($this->attributes) ?? '',
+            'product_taste' => $this->getProductTaste($this->attributes) ?? '-',
             'group_id' => $this->group_id,
         ];
     }
@@ -48,5 +49,11 @@ class ProductResource extends JsonResource
         return $attributes->filter(function ($i) {
             return $i['attribute_id'] == 2;
         })->first()['attribute_value'] ?? '';
+    }
+
+    private function getProductTaste($attributes) {
+        return $attributes->filter(function ($i) {
+                return $i['attribute_id'] == 1;
+            })->first()['attribute_value'] ?? '';
     }
 }

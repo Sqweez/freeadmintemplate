@@ -252,8 +252,8 @@
             },
             async editProduct() {
                 const product = {...this.product};
-                console.log(product);
-                return;
+              /*  console.log(product);
+                return;*/
                 await this.$store.dispatch(ACTIONS.EDIT_PRODUCT, product);
                 showToast('Товар успешно отредактирован')
             },

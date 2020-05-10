@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('shop')->group(function () {
+    Route::get('stores', 'api\StoreController@indexStores');
     Route::get('categories', 'api\CategoryController@indexShop');
     Route::get('products', 'api\shop\ProductController@getProducts');
     Route::get('products-group', 'api\shop\ProductController@groupProducts');

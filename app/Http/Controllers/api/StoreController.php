@@ -31,6 +31,10 @@ class StoreController extends Controller
         return new StoreResource(Store::create($request->all()));
     }
 
+    public function indexStores() {
+        return StoreResource::collection(Store::where('type_id', 1)->get());
+    }
+
 
     /**
      * Update the specified resource in storage.
