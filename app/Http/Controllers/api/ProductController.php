@@ -77,7 +77,9 @@ class ProductController extends Controller {
 
     private function createAttributeProduct($attributes, $id) {
         foreach ($attributes as $attribute) {
-            AttributeProduct::create(['product_id' => $id, 'attribute_id' => $attribute['attribute_id'], 'attribute_value' => $attribute['attribute_value']]);
+            if (strlen($attribute['attribute_value']) > 0) {
+                AttributeProduct::create(['product_id' => $id, 'attribute_id' => $attribute['attribute_id'], 'attribute_value' => $attribute['attribute_value']]);
+            }
         }
     }
 

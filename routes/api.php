@@ -13,12 +13,24 @@ Route::prefix('shop')->group(function () {
     Route::resource('manufacturers', 'api\ManufacturerController');
     Route::get('filters', 'api\shop\ProductController@filters');
     // Cart Controller
+    Route::post('cart/order', 'api\CartController@order');
     Route::post('cart/add', 'api\CartController@addCart');
     Route::post('cart/increase', 'api\CartController@increaseCount');
     Route::post('cart/decrease', 'api\CartController@decreaseCount');
     Route::post('cart/delete', 'api\CartController@deleteCart');
     Route::get('cart', 'api\CartController@getCart');
 });
+
+// TEST
+
+Route::get('cart/test/{order}', 'api\CartController@sendTelegramMessage');
+
+// END TEST
+
+Route::get('order/{order}/accept', 'api\OrderController@accept');
+Route::get('order/{order}/decline', 'api\OrderController@decline');
+
+Route::get('mess', 'api\CartController@message');
 
 Route::get('setSlugs', 'api\CategoryController@slugs');
 
