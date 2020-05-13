@@ -278,13 +278,13 @@
                 return this._salesReport
                         .reduce((a, c) => {
                             return a + c.final_price
-                        }, 0);
+                        }, 0).toFixed();
             },
             totalMargin() {
                 return this._salesReport
                     .reduce((a, c) => {
                         return a + c.margin
-                    }, 0);
+                    }, 0).toFixed();
             },
             _salesReport() {
                 return this.salesReport

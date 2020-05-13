@@ -16,7 +16,7 @@ class TelegramService {
 
     public function sendMessage($chat_id, $message) {
         $client = new Client();
-        return $client->get('https://api.telegram.org/bot' . $this->token .'/sendMessage?chat_id=' . $chat_id . '&text=' . $message);
+        return $client->get('https://api.telegram.org/bot' . $this->token .'/sendMessage?parse_mode=HTML&chat_id=' . $chat_id . '&text=' . $message);
     }
 
 }

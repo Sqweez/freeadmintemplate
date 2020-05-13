@@ -34,7 +34,7 @@ class ReportResource extends JsonResource
         return [
             'id' => $this->id,
             'discount' => $this->discount,
-            'user' => 'Андрей',
+            'user' => $this->user_id != -1 ? 'Андрей' : 'Интернет-магазин',
             'user_id' => $this->user_id,
             'client' => $this->client->client_name ?? 'Гость',
             'store' => $this->store->name,
