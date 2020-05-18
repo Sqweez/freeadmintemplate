@@ -27,8 +27,8 @@ Route::get('cart/test/{order}', 'api\CartController@sendTelegramMessage');
 
 // END TEST
 
-Route::get('order/{order}/accept', 'api\OrderController@accept');
-Route::get('order/{order}/decline', 'api\OrderController@decline');
+Route::get('order/{order}/accept', 'api\CartController@accept');
+Route::get('order/{order}/decline', 'api\CartController@decline');
 
 Route::get('mess', 'api\CartController@message');
 
@@ -64,6 +64,8 @@ Route::post('sales', 'api\SaleController@store');
 
 //ReportController
 Route::get('reports', 'api\SaleController@reports');
+Route::get('reports/total', 'api\SaleController@getTotal');
 
+// TransferController
 Route::get('transfer/products', 'Services\TransferController@transferProducts');
 Route::get('transfer/clients', 'Services\TransferController@transferClients');

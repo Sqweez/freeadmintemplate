@@ -203,12 +203,17 @@
                         />
                     </v-col>
                 </v-row>
+                <v-btn icon primary @click="refreshProducts">
+                    <v-icon>mdi-refresh</v-icon>
+                </v-btn>
                 <v-data-table
                     class="background-iron-grey fz-18"
                     :search="search"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     :headers="headers"
+                    :loading="loading"
+                    loading-text="Идет загрузка товаров..."
                     :items="products"
                     :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
@@ -262,6 +267,7 @@
     import showToast from "../../utils/toast";
     import {TOAST_TYPE} from "../../config/consts";
     import ACTIONS from "../../store/actions";
+    import { mapActions } from 'vuex';
 
     export default {
         components: {
@@ -269,8 +275,10 @@
             ClientCart,
             WayBillModal
         },
-        mounted() {
-            this.$store.dispatch(ACTIONS.GET_PRODUCT);
+        async created() {
+            this.loading = this.products.length === 0 || false;
+            await this.getProducts();
+            this.loading = false;
         },
         watch: {
             storeFilter() {
@@ -279,6 +287,7 @@
         },
         data: () => ({
             storeFilter: null,
+            loading: true,
             cart: [],
             isRed: false,
             isFree: false,
@@ -320,6 +329,15 @@
             ]
         }),
         methods: {
+            ...mapActions([
+                ACTIONS.GET_PRODUCT
+            ]),
+            async refreshProducts() {
+                this.loading = true;
+                await this.getProducts();
+                this.loading = false;
+                showToast('Список товаров обновлен!')
+            },
             addToCart(item) {
                 if (!this.checkAvailability(item)) {
                     showToast('Недостаточно товара', TOAST_TYPE.WARNING);

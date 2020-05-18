@@ -44,8 +44,8 @@
                         no-data-text="Нет данных"
                         :headers="headers"
                         :page.sync="pagination.page"
-                        @update:pagination="updatePagination"
                         :items="products"
+                        @page-count="pageCount = $event"
                         :items-per-page="10"
                         :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
@@ -102,10 +102,10 @@
                         </template>
                     </v-data-table>
                     <div class="text-xs-center pt-2">
-                        <v-pagination 
+                        <v-pagination
                             v-model="pagination.page"
                             :total-visible="10"
-                            :length="pages"></v-pagination>
+                            :length="pageCount"></v-pagination>
                     </div>
                 </v-col>
             </v-row>
@@ -157,6 +157,7 @@
             productModal: false,
             productRangeModal: false,
             productQuantityModal: false,
+            pageCount: 1,
             deleteModal: false,
             modalText: 'Вы действительно хотите удалить выбранный товар?',
             productId: -1,
@@ -204,14 +205,6 @@
             products() {
                 return this.$store.getters.products;
             },
-             pages: function () {
-                this.pagination.totalItems = this.products.length;
-                if (this.pagination.rowsPerPage == null ||
-                    this.pagination.totalItems == null
-                ) return 0;
-
-                return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
-            },
             stores() {
                 const stores = this.$store.getters.stores;
                 if (stores.length > 0) {
@@ -227,8 +220,6 @@
             }
         },
         methods: {
-            updatePagination($event) {
-            },
             async deleteProduct() {
                 console.log(this.productId)
                 await this.$store.dispatch(ACTIONS.DELETE_PRODUCT,

@@ -9,10 +9,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ReportResource;
+use App\Http\Resources\SaleByCityResource;
 use App\Product;
 use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
@@ -96,7 +98,63 @@ class SaleController extends Controller
     }
 
     public function reports() {
-        return ReportResource::collection(Sale::all());
+        return ReportResource::collection(Sale::orderBy('created_at', 'desc')->get());
+    }
+
+    public function getTotal(Request $request) {
+        $dateFilter = $request->get('date_filter') ?? 'today';
+        $dates = $this->getDatesFilters($dateFilter);
+        $sales = Sale::whereDate('created_at', '>=', $dates[0])
+                    ->whereDate('created_at', '<=', $dates[1])
+                    ->get();
+        return SaleByCityResource::collection($sales);
+        //return SaleByCityResource::collection(Sale::byDate($date)->get());
+    }
+
+    private function getDatesFilters($dateFilter) {
+        $dates = [];
+        $currentDate = Carbon::today();
+        switch ($dateFilter) {
+            case 'today': {
+                $dates = [
+                    $currentDate->toDateString(),
+                ];
+                break;
+            }
+            case 'week': {
+                $dates = [
+                    $currentDate->subDays(7)->toDateString(),
+                ];
+                break;
+            }
+            case 'month': {
+                $dates = [
+                    $currentDate->subDays(30)->toDateString(),
+                ];
+                break;
+            }
+            case '3months': {
+                $dates = [
+                    $currentDate->subDays(90)->toDateString()
+                ];
+                break;
+            }
+            case 'alltime': {
+                $dates = [
+                    Carbon::createFromTimestamp(0)->toDateString()
+                ];
+                break;
+            }
+            default: {
+                $dates = [
+                    Carbon::now()->toDateString()
+                ];
+            }
+        }
+
+        array_push($dates, Carbon::now()->toDateString());
+        return $dates;
+
     }
 
     public function cancelSale(Request $request, Sale $sale) {

@@ -19,4 +19,8 @@ class Sale extends Model
     public function products() {
         return $this->hasMany('App\SaleProduct', 'sale_id');
     }
+
+    public function scopeByDate($q, $date) {
+        $q->where('created_at', $date);
+    }
 }

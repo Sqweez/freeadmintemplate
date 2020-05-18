@@ -10,6 +10,7 @@ import attributeModule from "./modules/attributes";
 import clientModule from "./modules/clients";
 import ACTIONS from './actions';
 import transferModule from "./modules/transfers";
+import reportsModule from "./modules/reports";
 Vue.use(Vuex);
 
 const store = new Store({
@@ -33,7 +34,8 @@ const store = new Store({
         manufacturerModule,
         attributeModule,
         clientModule,
-        transferModule
+        transferModule,
+        reportsModule
     }
 });
 

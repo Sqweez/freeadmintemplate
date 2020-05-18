@@ -84,6 +84,7 @@ class ProductController extends Controller {
     }
 
     private function createManufacturerProduct($manufacturer, $id) {
+        if ($manufacturer)
         ManufacturerProducts::create(['product_id' => $id, 'manufacturer_id' => $manufacturer]);
     }
 

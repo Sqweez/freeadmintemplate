@@ -13,3 +13,7 @@ export async function getReports() {
 export async function cancelSale(payload, id) {
     await axios.post(`/api/sales/${id}/cancel`, payload);
 }
+
+export async function getStoreReports(date_filter) {
+    return await axios.get(`/api/reports/total?date_filter=${date_filter}`)
+}

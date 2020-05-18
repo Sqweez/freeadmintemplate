@@ -38,7 +38,7 @@ class ReportResource extends JsonResource
             'user_id' => $this->user_id,
             'client' => $this->client->client_name ?? 'Гость',
             'store' => $this->store->name,
-            'store_id' => $this->store_id,
+            'store_id' => intval($this->store_id),
             'products' => $this->groupProducts($products),
             'purchase_price' => $purchase_price,
             'fact_price' => $product_price,
