@@ -13,7 +13,10 @@
             </div>
         </v-card-text>
         <v-card-text v-else>
-            <v-btn color="error" @click="productModal = true">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+            <div>
+                <v-btn color="error" @click="productModal = true">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+            </div>
+            <v-btn color="success" @click="groupProduct">Сгруппировать товар <v-icon>mdi-sync</v-icon></v-btn>
             <v-row>
                 <v-col>
                     <v-row>
@@ -136,6 +139,7 @@
     import ProductQuantityModal from "../../components/Modal/ProductQuantityModal";
     import showToast from "../../utils/toast";
     import ACTIONS from "../../store/actions";
+    import axios from 'axios';
 
     export default {
         components: {
@@ -240,13 +244,17 @@
                         return +a + +c;
                     }, 0)
             },
+            async groupProduct() {
+                await axios.get('/api/shop/products-group');
+                showToast('Товары успешно сгруппированы!')
+            }
         }
     }
 </script>
 
 <style scoped>
     .v-btn {
-        width: 180px!important;
+        width: 250px!important;
         text-align: left!important;
         margin-bottom: 10px;
     }

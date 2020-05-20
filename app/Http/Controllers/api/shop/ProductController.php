@@ -115,8 +115,6 @@ class ProductController extends Controller {
        $products = Product::all();
        $products = $products->groupBy(['product_name', 'product_price']);
 
-       return $products;
-
        foreach($products as $key => $product) {
            foreach ($product as $key2 => $item) {
                if (count ($item) > 1) {

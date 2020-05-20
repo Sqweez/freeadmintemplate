@@ -53,7 +53,14 @@ const navigationModule = {
             {
                 title: 'Интернет-магазин',
                 url: '#',
-                icon: 'home'
+                icon: 'home',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Товары магазин',
+                        url: '/shop/products'
+                    }
+                ]
             }
         ],
     },

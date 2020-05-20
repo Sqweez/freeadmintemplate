@@ -20,6 +20,7 @@
                         label="Наименование"
                         v-model="product.product_name"
                     />
+
                     <vue-editor v-model="product.product_description"  v-if="state"></vue-editor>
                     <div class="d-flex" v-if="product.product_images.length">
                         <div
@@ -76,6 +77,10 @@
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </div>
+                    <v-checkbox
+                        label="Хит продаж"
+                        v-model="product.is_hit"
+                    />
                     <v-divider></v-divider>
                     <h5>Атрибуты:</h5>
                     <div class="d-flex">

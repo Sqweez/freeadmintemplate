@@ -24,7 +24,7 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index() {
-        return ProductResource::collection(Product::all());
+        return ProductResource::collection(Product::orderBy('group_id')->get());
     }
 
     /**
@@ -127,7 +127,7 @@ class ProductController extends Controller {
      *
      * @param \Illuminate\Http\Request $request
      * @param Product $product
-     * @return ProductResource
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function update(Request $request, Product $product) {
         $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs']);
@@ -135,7 +135,26 @@ class ProductController extends Controller {
         $product->update($_product);
         $this->deleteDuplicates($product_id);
         $this->createAdditionalFields($request, $product_id);
-        return new ProductResource($product);
+        $this->updateGroups($request);
+        return ProductResource::collection(Product::where('group_id', $product->group_id)->get());
+    }
+
+    private function updateGroups(Request $request) {
+        $product_id = $request->get('id');
+        $group_id = Product::find($product_id)['group_id'];
+        $_product = $request->except(['id', 'categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'product_barcode']);
+        Product::where('group_id', $group_id)->where('id', '!=', $product_id)->update($_product);
+        $products = Product::where('group_id', $group_id)->where('id', '!=', $product_id)->get();
+        collect($products)->map(function ($product) use ($request){
+            ProductThumb::where('product_id', $product['id'])->delete();
+            ProductImage::where('product_id', $product['id'])->delete();
+            $this->storeImages($request->get('product_images'), $product['id']);
+            $_product = Product::find($product['group_id']);
+            $thumbs = $_product->product_thumbs->pluck('product_image');
+            foreach ($thumbs as $thumb) {
+                ProductThumb::create(['product_id' => $product['id'], 'product_image' => $thumb]);
+            }
+        });
     }
 
     /**

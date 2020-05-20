@@ -18,6 +18,7 @@ Route::prefix('shop')->group(function () {
     Route::post('cart/increase', 'api\CartController@increaseCount');
     Route::post('cart/decrease', 'api\CartController@decreaseCount');
     Route::post('cart/delete', 'api\CartController@deleteCart');
+    Route::post('cart/total', 'api\CartController@getTotal');
     Route::get('cart', 'api\CartController@getCart');
 });
 

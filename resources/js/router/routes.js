@@ -7,6 +7,8 @@ import Cart from "../views/Cart/Cart";
 import Clients from "../views/Clients/Clients";
 import Reports from "../views/Reports/Reports";
 import Transfers from "../views/Transfers/Transfers";
+import Hits from '../views/Hits/Hits';
+
 const routes = [
     {
         path: '/',
@@ -43,6 +45,10 @@ const routes = [
     {
         path: '/transfer',
         component: Transfers
+    },
+    {
+        path: '/shop/products',
+        component: Hits
     }
 ];
 

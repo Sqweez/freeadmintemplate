@@ -208,6 +208,24 @@ class CartController extends Controller {
         return ['message' => 'ok'];
 
     }
+
+
+    public function getTotal(Request $request) {
+        $user_token = $request->get('user_token');
+        $order = Order::where('user_token', $user_token)->first();
+        if (!$order) {
+            return null;
+        }
+
+        $products = $order->items;
+
+
+        return intval(collect($products)->reduce(function ($i, $a) {
+            return $i + $a['product_price'];
+        }, 0));
+
+    }
+
     /*
      * private methods
      * */

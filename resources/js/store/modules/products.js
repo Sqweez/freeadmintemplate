@@ -33,8 +33,9 @@ const productsModule = {
         },
         [MUTATIONS.EDIT_PRODUCT](state, payload) {
             state.products = state.products.map(p => {
-                if (p.id === payload.id) {
-                    p = payload;
+                const item = payload.find(_p => _p.id === p.id);
+                if (item) {
+                    p = item;
                 }
                 return p;
             });
