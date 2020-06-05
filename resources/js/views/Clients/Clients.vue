@@ -6,52 +6,37 @@
                 <v-btn color="error" @click="clientModal = true">Добавить клиента <v-icon>mdi-plus</v-icon></v-btn>
                 <v-row>
                     <v-col>
-                        <v-text-field
-                            class="mt-2"
-                            v-model="search"
-                            solo
-                            clearable
-                            label="Поиск клиента"
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                        <v-data-table
-                            :search="search"
-                            no-results-text="Нет результатов"
-                            no-data-text="Нет данных"
-                            :headers="headers"
-                            :page.sync="pagination.page"
-                            :items="clients"
-                            @page-count="pageCount = $event"
-                            :items-per-page="10"
-                            :footer-props="{
-                            'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
-                            'items-per-page-text': 'Записей на странице',
-                        }">
-                            <template v-slot:item.client_balance="{item}">
-                                {{ item.client_balance }} ₸
+                        <v-simple-table>
+                            <template v-slot:default>
+                                <thead>
+                                <tr>
+                                    <th>ФИО</th>
+                                    <th>Телефон</th>
+                                    <th>Баланс</th>
+                                    <th>Номер карты</th>
+                                    <th>Процент скидки</th>
+                                    <th>Действие</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(user, idx) of clients" :key="idx">
+                                    <td>{{ user.client_name }}</td>
+                                    <td>{{ user.client_phone }}</td>
+                                    <td>{{ user.client_balance }} ₸</td>
+                                    <td>{{ user.client_card }} </td>
+                                    <td>{{ user.client_discount }}%</td>
+                                    <td>
+                                        <v-btn icon @click="userId = user.id; clientModal = true;">
+                                            <v-icon>mdi-pencil</v-icon>
+                                        </v-btn>
+                                        <v-btn icon @click="confirmationModal = true; userId = user.id;">
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </td>
+                                </tr>
+                                </tbody>
                             </template>
-                            <template v-slot:item.client_discount="{item}">
-                                {{ item.client_discount }}%
-                            </template>
-                            <template v-slot:item.actions="{ item }">
-                                <v-btn icon @click="userId = item.id; clientModal = true;">
-                                    <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
-                                <v-btn icon @click="confirmationModal = true; userId = item.id;">
-                                    <v-icon>mdi-delete</v-icon>
-                                </v-btn>
-                            </template>
-                            <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
-                                {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
-                            </template>
-                        </v-data-table>
-                        <div class="text-xs-center pt-2">
-                            <v-pagination
-                                v-model="pagination.page"
-                                :total-visible="10"
-                                :length="pageCount"></v-pagination>
-                        </div>
+                        </v-simple-table>
                     </v-col>
                 </v-row>
             </v-container>
@@ -86,41 +71,6 @@
             confirmationModal: false,
             clientModal: false,
             userId: null,
-            search: '',
-            pagination: {
-                ascending: true,
-                rowsPerPage: 10,
-                page: 1
-            },
-            pageCount: 1,
-            headers: [
-                {
-                    value: 'client_name',
-                    text: 'ФИО',
-                    sortable: false
-                },
-                {
-                    value: 'client_phone',
-                    text: 'Телефон',
-                    sortable: false,
-                },
-                {
-                    value: 'client_balance',
-                    text: 'Баланс'
-                },
-                {
-                    value: 'client_card',
-                    text: 'Номер карты'
-                },
-                {
-                    value: 'client_discount',
-                    text: 'Процент скидки'
-                },
-                {
-                    value: 'actions',
-                    text: 'Действие'
-                }
-            ]
         }),
         computed: {
             clients() {

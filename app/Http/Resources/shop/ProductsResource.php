@@ -22,7 +22,6 @@ class ProductsResource extends JsonResource
 
         return [
                 'product_id' => $this->id,
-                'is_hit' => !!$this->is_hit,
                 'product_name' => $this->product_name,
                 'category' => $this->categories[0]->category_name ?? '',
                 'category_id' => $this->categories[0]->id ?? 0,
@@ -34,5 +33,11 @@ class ProductsResource extends JsonResource
                 'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
                 'attributes' => AttributeResource::collection($this->attributes),
         ];
+    }
+
+    private function inStock($quantity) {
+        return array_reduce($quantity->toArray($quantity), function ($a, $c) {
+            return $a + $c['quantity'];
+        } , 0) > 0;
     }
 }

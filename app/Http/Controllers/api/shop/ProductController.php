@@ -74,7 +74,6 @@ class ProductController extends Controller {
             'subcategories' => array_map('intval', array_filter(explode(',', ($query['subcategory'] ?? '')), 'strlen')),
             'brands' => array_map('intval', array_filter(explode(',', ($query['brands'] ?? '')), 'strlen')),
             'prices' => array_map('intval', array_filter(explode(',', ($query['prices'] ?? '')), 'strlen')),
-            'is_hit' => $query['is_hit'] ? ($query['is_hit'] === 'true' ? 'true' : 'false') : 'false'
         ];
     }
 
@@ -84,8 +83,7 @@ class ProductController extends Controller {
             ->ofSubcategory($filters['subcategories'])
             ->ofBrand($filters['brands'])
             ->ofPrice($filters['prices'])
-            ->inStock($store_id)
-            ->isHit($filters['is_hit']);
+            ->inStock($store_id);
     }
 
     private function getFilteredProducts($query, $store_id) {
@@ -114,20 +112,20 @@ class ProductController extends Controller {
 
     public function groupProducts()
     {
-        $products = Product::all();
-        $products = $products->groupBy(['product_name', 'product_price']);
+       $products = Product::all();
+       $products = $products->groupBy(['product_name', 'product_price']);
 
-        foreach($products as $key => $product) {
-            foreach ($product as $key2 => $item) {
-                if (count ($item) > 1) {
-                    $group_id = $item[0]['id'];
-                    foreach ($item as $_i) {
-                        $pr = Product::find($_i['id']);
-                        $pr->update(['group_id' => $group_id]);
-                    }
-                }
-            }
-        }
+       foreach($products as $key => $product) {
+           foreach ($product as $key2 => $item) {
+               if (count ($item) > 1) {
+                   $group_id = $item[0]['id'];
+                   foreach ($item as $_i) {
+                       $pr = Product::find($_i['id']);
+                       $pr->update(['group_id' => $group_id]);
+                   }
+               }
+           }
+       }
 
     }
 }

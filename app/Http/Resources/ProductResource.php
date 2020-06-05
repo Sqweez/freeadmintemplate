@@ -13,7 +13,7 @@ class ProductResource extends JsonResource {
      */
     public function toArray($request) {
         return [
-            'id' => intval($this->id),
+            'id' => $this->id,
             'product_name' => $this->product_name,
             'product_description' => $this->product_description,
             'categories' => $this->categories,

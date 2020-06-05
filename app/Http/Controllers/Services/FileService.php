@@ -4,7 +4,6 @@
 namespace App\Http\Controllers\Services;
 
 
-use App\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,6 +25,4 @@ class FileService {
         Storage::disk('public')->delete($file);
         return;
     }
-
-
 }
