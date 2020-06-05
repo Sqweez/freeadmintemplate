@@ -95,7 +95,7 @@ class CartController extends Controller {
             dd($e->getMessage());
         }
 
-        return $order->id;
+        return intval($order->id);
     }
 
     public function sendTelegramMessage(Order $order) {
@@ -212,18 +212,17 @@ class CartController extends Controller {
 
     public function getTotal(Request $request) {
         $user_token = $request->get('user_token');
-        $order = Order::where('user_token', $user_token)->first();
+        $order = Cart::where('user_token', $user_token)->first();
         if (!$order) {
             return null;
         }
 
-        $products = $order->items;
-
+        $products = $order->products;
 
         return intval(collect($products)->reduce(function ($i, $a) {
-            return $i + $a['product_price'];
+            $product_price = Product::find($a['product_id'])['product_price'];
+            return $i + ($a['count'] * $product_price);
         }, 0));
-
     }
 
     /*

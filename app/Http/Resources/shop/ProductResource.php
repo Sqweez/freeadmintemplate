@@ -20,7 +20,7 @@ class ProductResource extends JsonResource
     {
 
         return [
-            'product_id' => $this->id,
+            'product_id' => intval($this->id),
             'product_price' => $this->product_price,
             'subcategory' => $this->subcategories[0]->subcategory_name ?? '',
             'product_name' => $this->product_name,
@@ -31,6 +31,7 @@ class ProductResource extends JsonResource
             'product_weight' => $this->getProductWeight($this->attributes) ?? '',
             'product_taste' => $this->getProductTaste($this->attributes) ?? '-',
             'group_id' => $this->group_id,
+            'is_hit' => !!$this->is_hit,
         ];
     }
 

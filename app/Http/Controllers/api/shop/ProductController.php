@@ -6,12 +6,11 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\shop\ProductsResource;
-use App\Subcategory;
-use App\Product;
 use App\ManufacturerProducts;
-use Illuminate\Support\Facades\Http;
+use App\Product;
+use App\Subcategory;
 use Illuminate\Http\Request;
-use \Illuminate\Contracts\Encryption\Encrypter;
+use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller {
     public function getProducts(Request $request) {
@@ -33,10 +32,9 @@ class ProductController extends Controller {
 
     private function getFilters($query, $store_id) {
         $filters = $this->getFilterParametrs($query, $store_id);
-        return [
-            'brands' => array_filter($this->convertToArray($this->getBrands($filters, $store_id)), function ($i) { return $i; }),
-            'prices' => $this->getPrices($filters, $store_id),
-        ];
+        return ['brands' => array_filter($this->convertToArray($this->getBrands($filters, $store_id)), function ($i) {
+            return $i;
+        }), 'prices' => $this->getPrices($filters, $store_id),];
 
     }
 
@@ -51,10 +49,7 @@ class ProductController extends Controller {
         $_filters = $filters;
         $_filters['prices'] = [];
         $productsPrices = $this->getProductWithFilter($_filters, $store_id)->get()->pluck('product_price');
-        return [
-            $productsPrices->min(),
-            $productsPrices->max()
-        ];
+        return [$productsPrices->min(), $productsPrices->max()];
     }
 
     private function convertToArray($filters) {
@@ -69,21 +64,11 @@ class ProductController extends Controller {
 
 
     private function getFilterParametrs($query, $store_id) {
-        return [
-            'categories' => array_map('intval', array_filter(explode(',', ($query['category'] ?? '')), 'strlen')),
-            'subcategories' => array_map('intval', array_filter(explode(',', ($query['subcategory'] ?? '')), 'strlen')),
-            'brands' => array_map('intval', array_filter(explode(',', ($query['brands'] ?? '')), 'strlen')),
-            'prices' => array_map('intval', array_filter(explode(',', ($query['prices'] ?? '')), 'strlen')),
-        ];
+        return ['categories' => array_map('intval', array_filter(explode(',', ($query['category'] ?? '')), 'strlen')), 'subcategories' => array_map('intval', array_filter(explode(',', ($query['subcategory'] ?? '')), 'strlen')), 'brands' => array_map('intval', array_filter(explode(',', ($query['brands'] ?? '')), 'strlen')), 'prices' => array_map('intval', array_filter(explode(',', ($query['prices'] ?? '')), 'strlen')), 'is_hit' => $query['is_hit'] ? ($query['is_hit'] === 'true' ? 'true' : 'false') : 'false'];
     }
 
     private function getProductWithFilter($filters, $store_id) {
-        return Product::Main()
-            ->ofCategory($filters['categories'])
-            ->ofSubcategory($filters['subcategories'])
-            ->ofBrand($filters['brands'])
-            ->ofPrice($filters['prices'])
-            ->inStock($store_id);
+        return Product::Main()->ofCategory($filters['categories'])->ofSubcategory($filters['subcategories'])->ofBrand($filters['brands'])->ofPrice($filters['prices'])->inStock($store_id)->isHit($filters['is_hit']);
     }
 
     private function getFilteredProducts($query, $store_id) {
@@ -110,22 +95,24 @@ class ProductController extends Controller {
         return new ProductResource($product);
     }
 
-    public function groupProducts()
-    {
-       $products = Product::all();
-       $products = $products->groupBy(['product_name', 'product_price']);
+    public function groupProducts() {
+        $products = Product::all();
+        $products = Product::all();
+        $products = $products->groupBy(['product_name', 'product_price']);
 
-       foreach($products as $key => $product) {
-           foreach ($product as $key2 => $item) {
-               if (count ($item) > 1) {
-                   $group_id = $item[0]['id'];
-                   foreach ($item as $_i) {
-                       $pr = Product::find($_i['id']);
-                       $pr->update(['group_id' => $group_id]);
-                   }
-               }
-           }
-       }
+
+        foreach ($products as $key => $product) {
+            foreach ($product as $key2 => $item) {
+                if (count($item) > 1) {
+                    $group_id = $item[0]['id'];
+                    foreach ($item as $_i) {
+                        $pr = Product::find($_i['id']);
+                        $pr->update(['group_id' => $group_id]);
+                    }
+                }
+            }
+        }
+
 
     }
 }

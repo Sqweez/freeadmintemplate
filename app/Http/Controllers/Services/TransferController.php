@@ -14,7 +14,7 @@ use App\Subcategory;
 use App\SubcategoryProduct;
 use Illuminate\Http\Request;
 
-class TransferController extends Controller
+class giTransferController extends Controller
 {
     public function transferProducts() {
         Product::truncate();
@@ -62,6 +62,25 @@ class TransferController extends Controller
 
 
     public function transferClients() {
-
-    }
+        $clients = json_decode(utf8_encode(file_get_contents('http://iron.ariesdev.kz/admin/transfer.php?action=clients')), true);
+        foreach ($clients as $client) {
+            if (strlen($client['name']) > 0) {
+                $_client = Client::create([
+                    'client_name' => $client['name'],
+                    'client_phone' => $client['telefon'],
+                    'client_card' => $client['card_id'],
+                    'client_discount' => $client['discountPercent'] ?? 0
+                ]);
+                $sum = intval($client['total_sum_client']);
+                if ($sum > 0) {
+                    ClientTransaction::create([
+                        'amount' => $sum,
+                        'user_id' => 1,
+                        'client_id' =>$_client->id,
+                        'sale_id' => -1,
+                    ]);
+                }
+            }
+        }
+        }
 }
