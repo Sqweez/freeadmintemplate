@@ -93,4 +93,11 @@ class Product extends Model
         }
         return $query->where('product_price', '>=', $param[0])->where('product_price', '<=', $param[1]);
     }
+
+    public function scopeIsHit($query, $param = 'false') {
+        if ($param === 'false') {
+            return $query;
+        }
+        return $query->where('is_hit', true);
+    }
 }

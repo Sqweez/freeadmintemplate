@@ -5,14 +5,20 @@ namespace App\Http\Controllers\Services;
 use App\AttributeProduct;
 use App\Category;
 use App\CategoryProduct;
+use App\Client;
+use App\ClientTransaction;
 use App\Http\Controllers\Controller;
 use App\Manufacturer;
 use App\ManufacturerProducts;
 use App\Product;
 use App\ProductBatch;
+use App\ProductImage;
 use App\Subcategory;
 use App\SubcategoryProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class TransferController extends Controller
 {
@@ -60,8 +66,43 @@ class TransferController extends Controller
         }
     }
 
-
     public function transferClients() {
+        $clients = json_decode(utf8_encode(file_get_contents('http://iron.ariesdev.kz/admin/transfer.php?action=clients')), true);
+        foreach ($clients as $client) {
+            if (strlen($client['name']) > 0) {
 
+                $_client = Client::create([
+                    'client_name' => $client['name'],
+                    'client_phone' => $client['telefon'],
+                    'client_card' => $client['card_id'],
+                    'client_discount' => $client['discountPercent'] ?? 0
+                ]);
+                $sum = intval($client['total_sum_client']);
+                if ($sum > 0) {
+                    ClientTransaction::create([
+                        'amount' => $sum,
+                        'user_id' => 1,
+                        'client_id' =>$_client->id,
+                        'sale_id' => -1,
+                    ]);
+                }
+            }
+        }
+    }
+
+    public function convertImages() {
+        $images = ProductImage::all();
+        $webpImages = collect($images)->filter(function ($i) {
+            $ext = preg_replace('/^.*\.([^.]+)$/D', '$1', $i['product_image']);
+            return $ext === 'webp';
+        });
+        $webpImages->map(function ($i) {
+            $image = Image::make(Storage::get('public/' . $i['product_image']))->encode('png');
+            Storage::delete('public/' . $i['product_image']);
+            $imagePath = public_path('storage/products/');
+            $imageName = Str::random(40) . '.png';
+            $image->save($imagePath . $imageName);
+            $i->update(['product_image' => 'products/' . $imageName]);
+        });
     }
 }

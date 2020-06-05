@@ -212,7 +212,9 @@ class ProductController extends Controller {
 
     public function setThumbsAll() {
         $productImages = ProductImage::where('product_image', '!=', 'products/product_image_default.jpg')->get();
+        ProductThumb::truncate();
         $productImages->map(function ($i) {
+            // $productThumb = ProductThumb::where('product_id', $i['product_id'])->get();
             $thumbPath = $this->generateThumb($i['product_image']);
             if ($thumbPath !== null) {
                 ProductThumb::create(['product_id' => $i['product_id'], 'product_image' => $thumbPath]);

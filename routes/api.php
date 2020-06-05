@@ -26,6 +26,8 @@ Route::prefix('shop')->group(function () {
 
 Route::get('cart/test/{order}', 'api\CartController@sendTelegramMessage');
 
+Route::get('convert', 'Services\TransferController@convertImages');
+
 // END TEST
 
 Route::get('order/{order}/accept', 'api\CartController@accept');
@@ -58,6 +60,7 @@ Route::resource('clients', 'api\ClientController');
 Route::post('transfers/{transfer}/accept', 'api\TransferController@acceptTransfer');
 Route::post('transfers/{transfer}/cancel', 'api\TransferController@declineTransfer');
 Route::resource('transfers', 'api\TransferController');
+Route::get('transfer/clients', 'api\TransferController@transferClients');
 
 //SaleController
 Route::post('sales/{sale}/cancel', 'api\SaleController@cancelSale');
