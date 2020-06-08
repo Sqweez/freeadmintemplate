@@ -14,19 +14,19 @@
                 </div>
             </div>-->
 
-            <div class="material-icons mdl-badge mdl-badge--overlap mdl-button--icon notification" id="notification"
+        <!--    <div class="material-icons mdl-badge mdl-badge&#45;&#45;overlap mdl-button&#45;&#45;icon notification" id="notification"
                  data-badge="23">
                 notifications_none
             </div>
-            <!-- Notifications dropdown-->
-            <ul class="mdl-menu mdl-list mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right mdl-shadow--2dp notifications-dropdown"
+            &lt;!&ndash; Notifications dropdown&ndash;&gt;
+            <ul class="mdl-menu mdl-list mdl-js-menu mdl-js-ripple-effect mdl-menu&#45;&#45;bottom-right mdl-shadow&#45;&#45;2dp notifications-dropdown"
                 for="notification">
                 <li class="mdl-list__item">
                     You have 23 new notifications!
                 </li>
-                <li class="mdl-menu__item mdl-list__item list__item--border-top">
+                <li class="mdl-menu__item mdl-list__item list__item&#45;&#45;border-top">
                     <span class="mdl-list__item-primary-content">
-                        <span class="mdl-list__item-avatar background-color--primary">
+                        <span class="mdl-list__item-avatar background-color&#45;&#45;primary">
                             <i class="material-icons">plus_one</i>
                         </span>
                         <span>You have 3 new orders.</span>
@@ -35,9 +35,9 @@
                       <span class="label">just now</span>
                     </span>
                 </li>
-                <li class="mdl-menu__item mdl-list__item list__item--border-top">
+                <li class="mdl-menu__item mdl-list__item list__item&#45;&#45;border-top">
                     <span class="mdl-list__item-primary-content">
-                        <span class="mdl-list__item-avatar background-color--secondary">
+                        <span class="mdl-list__item-avatar background-color&#45;&#45;secondary">
                             <i class="material-icons">error_outline</i>
                         </span>
                       <span>Database error</span>
@@ -46,9 +46,9 @@
                       <span class="label">1 min</span>
                     </span>
                 </li>
-                <li class="mdl-menu__item mdl-list__item list__item--border-top">
+                <li class="mdl-menu__item mdl-list__item list__item&#45;&#45;border-top">
                     <span class="mdl-list__item-primary-content">
-                        <span class="mdl-list__item-avatar background-color--primary">
+                        <span class="mdl-list__item-avatar background-color&#45;&#45;primary">
                             <i class="material-icons">new_releases</i>
                         </span>
                       <span>The Death Star is built!</span>
@@ -57,9 +57,9 @@
                       <span class="label">2 hours</span>
                     </span>
                 </li>
-                <li class="mdl-menu__item mdl-list__item list__item--border-top">
+                <li class="mdl-menu__item mdl-list__item list__item&#45;&#45;border-top">
                     <span class="mdl-list__item-primary-content">
-                        <span class="mdl-list__item-avatar background-color--primary">
+                        <span class="mdl-list__item-avatar background-color&#45;&#45;primary">
                             <i class="material-icons">mail_outline</i>
                         </span>
                       <span>You have 4 new mails.</span>
@@ -68,10 +68,10 @@
                       <span class="label">5 days</span>
                     </span>
                 </li>
-                <li class="mdl-list__item list__item--border-top">
+                <li class="mdl-list__item list__item&#45;&#45;border-top">
                     <button href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">ALL NOTIFICATIONS</button>
                 </li>
-            </ul>
+            </ul>-->
 
           <!--  <div class="material-icons mdl-badge mdl-badge&#45;&#45;overlap mdl-button&#45;&#45;icon message" id="inbox" data-badge="4">
                 mail_outline
@@ -135,21 +135,21 @@
                 </li>
             </ul>-->
 
-            <div class="avatar-dropdown" id="icon">
+           <!-- <div class="avatar-dropdown" id="icon">
                 <span>Андрей</span>
                 <img src="../../images/Icon_header.png">
             </div>
-            <!-- Account dropdawn-->
-            <ul class="mdl-menu mdl-list mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-shadow--2dp account-dropdown"
+            &lt;!&ndash; Account dropdawn&ndash;&gt;
+            <ul class="mdl-menu mdl-list mdl-menu&#45;&#45;bottom-right mdl-js-menu mdl-js-ripple-effect mdl-shadow&#45;&#45;2dp account-dropdown"
                 for="icon">
-                <li class="mdl-list__item mdl-list__item--two-line">
+                <li class="mdl-list__item mdl-list__item&#45;&#45;two-line">
                     <span class="mdl-list__item-primary-content">
                         <span class="material-icons mdl-list__item-avatar"></span>
                         <span>Luke</span>
                         <span class="mdl-list__item-sub-title">Luke@skywalker.com</span>
                     </span>
                 </li>
-                <li class="list__item--border-top"></li>
+                <li class="list__item&#45;&#45;border-top"></li>
                 <li class="mdl-menu__item mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                         <i class="material-icons mdl-list__item-icon">account_circle</i>
@@ -162,7 +162,7 @@
                         My tasks
                     </span>
                     <span class="mdl-list__item-secondary-content">
-                      <span class="label background-color--primary">3 new</span>
+                      <span class="label background-color&#45;&#45;primary">3 new</span>
                     </span>
                 </li>
                 <li class="mdl-menu__item mdl-list__item">
@@ -171,7 +171,7 @@
                         My events
                     </span>
                 </li>
-                <li class="list__item--border-top"></li>
+                <li class="list__item&#45;&#45;border-top"></li>
                 <li class="mdl-menu__item mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                         <i class="material-icons mdl-list__item-icon">settings</i>
@@ -181,12 +181,12 @@
                 <a href="login.html">
                     <li class="mdl-menu__item mdl-list__item">
                         <span class="mdl-list__item-primary-content">
-                            <i class="material-icons mdl-list__item-icon text-color--secondary">exit_to_app</i>
+                            <i class="material-icons mdl-list__item-icon text-color&#45;&#45;secondary">exit_to_app</i>
                             Log out
                         </span>
                     </li>
                 </a>
-            </ul>
+            </ul>-->
 
           <!--  <button id="more"
                     class="mdl-button mdl-js-button mdl-button&#45;&#45;icon">

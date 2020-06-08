@@ -56,6 +56,15 @@
                                             color="white darken-2"
                                         />
                                     </div>
+                                    <div class="d-flex ml-4" v-if="client && client.id !== -1">
+                                        <h5>Списать с баланса:</h5>
+                                        <v-text-field
+                                            @keyup.enter="setBalance"
+                                            class="ml-2"
+                                            type="number"
+                                            color="white darken-2"
+                                        />
+                                    </div>
                                 </div>
                             </v-col>
                         </v-row>
@@ -161,7 +170,7 @@
                             <td class="text-center">{{ subtotal }} ₸</td>
                             <td class="text-center">{{ discount }}%</td>
                             <td class="text-center">{{ discountTotal }} ₸</td>
-                            <td class="text-center color-text--green">{{ total }} ₸</td>
+                            <td class="text-center color-text--green">{{ total - balance }}₸</td>
                         </tr>
                         </tbody>
                     </template>
@@ -299,6 +308,7 @@
             wayBillModal: false,
             client: null,
             overlay: false,
+            balance: 0,
             headers: [
                 {
                     text: 'Наименование',
@@ -337,6 +347,10 @@
                 await this.getProducts();
                 this.loading = false;
                 showToast('Список товаров обновлен!')
+            },
+            setBalance(e) {
+                console.log(e);
+                this.balance = Math.min(+e.target.value, this.client.client_balance);
             },
             addToCart(item) {
                 if (!this.checkAvailability(item)) {
@@ -381,6 +395,7 @@
                     client_id: this.client.id,
                     discount: this.discount,
                     kaspi_red: this.isRed,
+                    balance: this.balance,
                 };
 
                 await this.$store.dispatch(ACTIONS.MAKE_SALE, sale);

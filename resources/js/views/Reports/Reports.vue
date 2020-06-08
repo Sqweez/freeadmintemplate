@@ -242,6 +242,7 @@
                 {text: 'Продажная цена', value: 'final_price'},
                 {text: 'Прибыль', value: 'margin'},
                 {text: 'Скидка', value: 'discount'},
+                {text: 'Списано с баланса', value: 'balance'},
                 {
                     text: 'Отмена', value: 'actions'
                 }

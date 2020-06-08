@@ -42,9 +42,10 @@ class ReportResource extends JsonResource
             'products' => $this->groupProducts($products),
             'purchase_price' => $purchase_price,
             'fact_price' => $product_price,
-            'final_price' => $final_price,
+            'final_price' => $final_price - intval($this->balance),
             'margin' => $this->discount != 100 ? $final_price - $purchase_price : 0,
-            'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s')
+            'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
+            'balance' => $this->balance,
         ];
     }
 
