@@ -26,7 +26,6 @@ class ProductResource extends JsonResource
             'product_name' => $this->product_name,
             'product_description' => $this->product_description,
             'product_images' => $this->getProductImages($this->product_images, 'image'),
-            'product_thumbs' => $this->getProductImages($this->product_thumbs, 'thumb'),
             'children' => count($this->children) > 0 ? ProductRangeResource::collection($this->children) : ProductRangeResource::collection($this->parent->children),
             'product_weight' => $this->getProductWeight($this->attributes) ?? '',
             'product_taste' => $this->getProductTaste($this->attributes) ?? '-',

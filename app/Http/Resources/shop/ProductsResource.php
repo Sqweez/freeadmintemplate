@@ -3,9 +3,9 @@
 namespace App\Http\Resources\shop;
 
 use App\Http\Resources\AttributeResource;
+use App\Http\Resources\shop\ProductRangeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\shop\ProductRangeResource;
 
 class ProductsResource extends JsonResource
 {
@@ -20,18 +20,20 @@ class ProductsResource extends JsonResource
 
         $store_id = $request->cookie('store_id') ?? 1;
 
+
         return [
-                'product_id' => $this->id,
-                'product_name' => $this->product_name,
-                'category' => $this->categories[0]->category_name ?? '',
-                'category_id' => $this->categories[0]->id ?? 0,
-                'subcategory' => $this->subcategories[0]->subcategory_name ?? '',
-                'subcategory_id' => $this->subcategories[0]->id ?? 0,
-                'manufacturer_id' => $this->manufacturer[0]->id ?? 0,
-                'product_price' => $this->product_price,
-                'product_image' => url('/') . Storage::url($this->product_thumbs[0]->product_image ?? 'product_thumbs/product_image_default.webp'),
-                'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
-                'attributes' => AttributeResource::collection($this->attributes),
+            'product_id' => $this->id,
+            'is_hit' => !!$this->is_hit,
+            'product_name' => $this->product_name,
+            'category' => $this->categories[0]->category_name ?? '',
+            'category_id' => $this->categories[0]->id ?? 0,
+            'subcategory' => $this->subcategories[0]->subcategory_name ?? '',
+            'subcategory_id' => $this->subcategories[0]->id ?? 0,
+            'manufacturer_id' => $this->manufacturer[0]->id ?? 0,
+            'product_price' => $this->product_price,
+            'product_image' => url('/') . Storage::url($this->product_images[0]->product_image ?? 'products/product_image_default.jpg'),
+            'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
+            'attributes' => AttributeResource::collection($this->attributes),
         ];
     }
 

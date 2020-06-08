@@ -165,7 +165,7 @@
                     ],
                 };
                 if (this.id !== -1) {
-                    this.product = {...this.$store.getters.product(this.id)};
+                    this.product = JSON.parse(JSON.stringify(this.$store.getters.product(this.id)));
                     this.product.categories = this.product.categories.map(c => c.id);
                     this.product.subcategories = this.product.subcategories.map(c => c.id);
                     this.product.manufacturer = this.product.manufacturer_id;
