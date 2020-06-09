@@ -20,6 +20,10 @@ Route::prefix('shop')->group(function () {
     Route::post('cart/delete', 'api\CartController@deleteCart');
     Route::post('cart/total', 'api\CartController@getTotal');
     Route::get('cart', 'api\CartController@getCart');
+    // ClientController
+    Route::post('clients/login', 'api\ClientController@login');
+    Route::post('clients/register', 'api\ClientController@register');
+    Route::post('clients/auth', 'api\ClientController@getAuth');
 });
 
 // TEST
@@ -52,6 +56,11 @@ Route::resource('attributes', 'api\AttributeController');
 Route::resource('manufacturers', 'api\ManufacturerController');
 Route::get('stores/types', 'api\StoreController@types');
 Route::resource('stores', 'api\StoreController');
+
+// ClientsController
+
+
+
 Route::resource('clients', 'api\ClientController');
 
 // TransferController
@@ -67,6 +76,9 @@ Route::post('sales', 'api\SaleController@store');
 Route::get('reports', 'api\SaleController@reports');
 Route::get('reports/total', 'api\SaleController@getTotal');
 
+
+Route::get('cart/group', 'api\CartController@groupCart');
+
 // TransferController
-Route::get('transfer/products', 'Services\TransferController@transferProducts');
-Route::get('transfer/clients', 'Services\TransferController@transferClients');
+/*Route::get('transfer/products', 'Services\TransferController@transferProducts');
+Route::get('transfer/clients', 'Services\TransferController@transferClients');*/

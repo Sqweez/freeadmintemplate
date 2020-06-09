@@ -174,7 +174,7 @@ class SaleController extends Controller
         $remainingProducts = SaleProduct::where('sale_id', $sale['id'])->count();
 
         if ($remainingProducts === 0) {
-            if ($sale['client_id'] !== -1) {
+            if (intval($sale['client_id']) !== -1) {
                 ClientSale::where('sale_id', $sale['id'])->first()->delete();
                 ClientTransaction::where('sale_id', $sale['id'])->first()->delete();
             }

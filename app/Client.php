@@ -15,4 +15,12 @@ class Client extends Model
     public function sales() {
         return $this->hasMany('App\ClientSale', 'client_id');
     }
+
+    public function scopeOfPhone($q, $phone) {
+        $q->where('client_phone', $phone);
+    }
+
+    public function scopeOfToken($q, $token) {
+        $q->where('user_token', $token);
+    }
 }

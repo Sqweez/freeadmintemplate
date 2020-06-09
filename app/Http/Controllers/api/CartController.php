@@ -14,6 +14,7 @@ use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
 use Illuminate\Http\Request;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 
 class CartController extends Controller {
     public function addCart(Request $request) {
@@ -74,9 +75,8 @@ class CartController extends Controller {
     }
 
     public function getCart(Request $request) {
-
         $user_token = $request->get('user_token');
-        $cart = Cart::where('user_token', $user_token)->first() ?? null;
+        $cart = Cart::ofUser($user_token)->first() ?? null;
         return new CartResource($cart);
     }
 
@@ -277,4 +277,36 @@ class CartController extends Controller {
     private function getBatch($product, $store_id) {
         return ProductBatch::where('product_id', $product)->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
     }
+
+    public static function mergeCarts($request_token, $user_token) {
+        $guestCart = Cart::ofUser($request_token)->get()->first();
+        if (!$guestCart) {
+            return;
+        }
+        $cart = Cart::ofUser($user_token)->first();
+        if ($guestCart && !$cart) {
+            $guestCart->update(['user_token' => $user_token]);
+            return;
+        }
+        if ($guestCart && $cart) {
+            CartProduct::Cart($guestCart->id)->update(['cart_id' => $cart->id]);
+            $guestCart->delete();
+            $groupedProducts = collect($cart->products)->groupBy('product_id');
+            $groupedProducts->each(function ($i) {
+                $count = $i->sum('count');
+                $i[0]->count = $count;
+                $i[0]->save();
+                for ($x = 1; $x < count($i); $x++) {
+                    $i[$x]->delete();
+                }
+            });
+
+        }
+    }
+
+    public static function groupCart() {
+
+    }
+
+
 }

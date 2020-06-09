@@ -34,7 +34,14 @@ class ProductsResource extends JsonResource
             'product_image' => url('/') . Storage::url($this->product_images[0]->product_image ?? 'products/product_image_default.jpg'),
             'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
             'attributes' => AttributeResource::collection($this->attributes),
+            'product_weight' => $this->getProductWeight($this->attributes) ?? '',
         ];
+    }
+
+    private function getProductWeight($attributes) {
+        return $attributes->filter(function ($i) {
+                return $i['attribute_id'] == 2;
+            })->first()['attribute_value'] ?? '';
     }
 
     private function inStock($quantity) {
