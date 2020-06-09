@@ -24,6 +24,8 @@
                        label="Номер"
                        solo
                        v-model="client.client_phone"
+                       ref="client_phone"
+                       id="client_phone"
                    />
                    <v-text-field
                        label="Номер карты"
@@ -42,7 +44,12 @@
            <v-card-actions>
                <v-btn text @click="$emit('cancel')">Отмена</v-btn>
                <v-spacer></v-spacer>
-               <v-btn text color="success" @click="onSubmit">
+               <v-progress-circular
+                   v-if="loading"
+                   indeterminate
+                   color="primary"
+               ></v-progress-circular>
+               <v-btn text color="success" @click="onSubmit" v-else>
                    {{ id === null ? 'Создать' : 'Редактировать' }} клиента
                    <v-icon>mdi-check</v-icon>
                </v-btn>
@@ -54,19 +61,31 @@
 <script>
     import ACTIONS from "../../store/actions";
     import showToast from "../../utils/toast";
+    import InputMask from 'inputmask';
 
     export default {
         data: () => ({
             client: {},
+            loading: false,
         }),
+        mounted() {
+            const phoneInput = document.getElementById('client_phone');
+            if (phoneInput) {
+                const inputMask = new InputMask("+7(999)999-99-99");
+                inputMask.mask(phoneInput);
+            }
+        },
         methods: {
             async onSubmit() {
+                this.loading = true;
+                this.client.client_phone = this.modifyPhone(this.client.client_phone);
                 if(this.id === null) {
                     await this.createClient();
                     this.$emit('cancel');
                 } else {
                     await this.editClient();
                 }
+                this.loading = false;
             },
             async createClient() {
                 await this.$store.dispatch(ACTIONS.CREATE_CLIENT, this.client);
@@ -77,6 +96,9 @@
                 await this.$store.dispatch(ACTIONS.EDIT_CLIENT, this.client);
                 showToast('Клиент успешно отредактирован');
                 this.$emit('cancel')
+            },
+            modifyPhone(phone) {
+                return phone.replace(/[-()]/gi, '');
             }
         },
         computed: {},
@@ -96,6 +118,16 @@
                 if (this.id !== null) {
                     this.client = {...this.$store.getters.client(this.id)}
                 }
+                if (this.state === true) {
+                    setTimeout(() => {
+                        const phoneInput = document.getElementById('client_phone');
+                        if (phoneInput) {
+                            const inputMask = new InputMask("+7(999)999-99-99");
+                            inputMask.mask(phoneInput);
+                        }
+                    }, 500);
+                }
+
             }
         },
     }

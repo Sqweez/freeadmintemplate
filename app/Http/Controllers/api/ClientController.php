@@ -51,8 +51,11 @@ class ClientController extends Controller {
      * @return ClientResource
      */
     public function update(Request $request, Client $client) {
-        $_client = $request->all();
-        $client->update($_client);
+        $_client = $request->only(['client_name', 'client_card', 'client_phone', 'client_discount']);
+        $_client = collect($_client)->filter(function ($i) {
+            return strlen($i) > 0;
+        });
+        $client->update($_client->toArray());
         return new ClientResource($client);
     }
 

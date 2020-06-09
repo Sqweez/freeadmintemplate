@@ -1,10 +1,10 @@
 <template>
     <div>
         <v-row>
-            <v-col sm="12" lg="6" md="6">
+            <v-col sm="3" lg="3" md="3">
                 <Weather />
             </v-col>
-            <v-col sm="12" lg="6" md="6">
+            <v-col sm="9" lg="9" md="9">
                 <SalesRating />
             </v-col>
         </v-row>

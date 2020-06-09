@@ -1,33 +1,48 @@
 <template>
-    <v-card elevation="5">
-        <v-responsive :max-height="400">
+    <v-card elevation="1">
+        <v-responsive  v-if="!loading" min-height="400">
             <v-card-title class="d-flex justify-space-between">
                 <span class="display-1">Погода</span>
                 <span class="body-2 text-color--gray">
                           <v-icon class="text-color--gray">
                               mdi-map-marker
                           </v-icon>
-                          Павлодар, Казахстан
+                          {{ weather.name }}
                       </span>
             </v-card-title>
             <v-card-text style="padding: 0;">
-                <v-img src="../../images/weather_bck.png" contain class="d-flex">
-                    <div class="text-right mr-5 mt-10">
-                        <span class="display-4 font-weight-medium text-shadow">-11&deg</span><br><br>
-                        <span class="body-1 text-shadow">
+                <div class="text-right mr-5 mt-10">
+                    <span class="display-4 font-weight-medium text-shadow">{{ weather.main.temp }}&deg</span><br><br>
+                    <span class="body-1 text-shadow">
                                         <v-icon class="pr-2">
                                             mdi-apple-icloud
-                                        </v-icon>Ветер и снег</span>
-                    </div>
-                </v-img>
+                                        </v-icon>{{ weather.weather[0].description }}</span>
+                </div>
             </v-card-text>
+        </v-responsive>
+        <v-responsive :min-height="400" v-else class="text-center d-flex justify-center align-center">
+            <v-progress-circular
+                :size="50"
+                color="primary"
+                indeterminate
+            ></v-progress-circular>
         </v-responsive>
     </v-card>
 </template>
 
 <script>
-    export default {
+    import axios from 'axios';
 
+    export default {
+        data: () => ({
+            weather: {},
+            loading: true,
+        }),
+        async created() {
+            const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=pavlodar&appid=31395ab117614ed1542befb54b91d748&lang=ru&units=metric`);
+            this.weather = response.data;
+            this.loading = false;
+        }
     }
 </script>
 

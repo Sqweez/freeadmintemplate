@@ -125,9 +125,17 @@
             </v-card-text>
             <v-divider />
             <v-card-actions>
+                <v-flex>
+
+                </v-flex>
                 <v-btn text @click="$emit('cancel')">Отмена</v-btn>
                 <v-spacer />
-                <v-btn color="success" text @click="onSubmit">{{ id === -1 ? 'Создать' : 'Редактировать' }} <v-icon>mdi-check</v-icon></v-btn>
+                <v-progress-circular
+                    v-if="loading"
+                    indeterminate
+                    color="primary"
+                ></v-progress-circular>
+                <v-btn color="success" text @click="onSubmit" v-else>{{ id === -1 ? 'Создать' : 'Редактировать' }} <v-icon>mdi-check</v-icon></v-btn>
             </v-card-actions>
         </v-card>
         <ManufacturerModal
@@ -237,6 +245,7 @@
             attributesSelect: [],
             groupProduct: false,
             manufacturerModal: false,
+            loading: false,
         }),
         methods: {
             addAttributesSelect() {
@@ -269,6 +278,7 @@
                 showToast('Ассортимент добавлен ')
             },
             onSubmit() {
+                this.loading = true;
                 if (this.id === -1) {
                     this.createProduct();
                 } else if (!this.rangeMode){
@@ -277,6 +287,7 @@
                     this.addRange();
                 }
                 this.$emit('cancel');
+                this.loading = false;
             },
             async uploadPhoto(e) {
                 const file = e.target.files[0];
