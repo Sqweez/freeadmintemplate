@@ -1,6 +1,6 @@
 <template>
     <v-card elevation="1">
-        <v-responsive  v-if="!loading" min-height="400">
+        <v-responsive v-if="!loading" min-height="400">
             <v-card-title class="d-flex justify-space-between">
                 <span class="display-1">Погода</span>
                 <span class="body-2 text-color--gray">
@@ -38,10 +38,12 @@
             weather: {},
             loading: true,
         }),
-        async created() {
-            const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=pavlodar&appid=31395ab117614ed1542befb54b91d748&lang=ru&units=metric`);
-            this.weather = response.data;
-            this.loading = false;
+        created() {
+            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=pavlodar&appid=31395ab117614ed1542befb54b91d748&lang=ru&units=metric`)
+                .then(response => {
+                    this.weather = response.data;
+                    this.loading = false;
+                }).catch(err => {})
         }
     }
 </script>

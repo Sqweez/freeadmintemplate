@@ -224,6 +224,7 @@
         async mounted() {
             this.loading = this.products.length === 0;
             await this.$store.dispatch(ACTIONS.GET_PRODUCT);
+            await this.$store.dispatch(ACTIONS.GET_STORES);
             this.loading = false;
         },
         methods: {
@@ -256,7 +257,7 @@
                         return {id: c.id, count: c.count};
                     }),
                     parent_store_id: this.storeFilter,
-                    user_id: 1,
+                    user_id: this.user.id,
                     child_store_id: this.child_store,
                 };
 
@@ -323,6 +324,9 @@
                 const stores = this.stores.filter(s => s.id !== this.storeFilter);
                 this.child_store = stores[0].id;
                 return stores;
+            },
+            user() {
+                return this.$store.getters.USER;
             }
         }
     }

@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-export async function getStores() {
-    const response = await axios.get('/api/stores');
+export async function getStores(store_id) {
+    const getParams = store_id ? `?store_id=${store_id}` : ``;
+    const response = await axios.get(`/api/stores${getParams}`);
     return response.data.data;
 }
 

@@ -13,18 +13,28 @@
                 <v-form class="p-2">
                     <v-text-field label="Имя" v-model.trim="user.name" autofocus/>
                     <v-text-field label="Логин" v-model.trim="user.login"/>
-                    <v-text-field label="Пароль" type="password" v-model="user.password" />
+                    <v-text-field
+                        :label="id === null ? 'Пароль' : 'Новый пароль'"
+                        type="password"
+                        v-model="user.password"
+                        v-if="changePass || id === null"
+                    />
+                    <v-checkbox label="Сменить пароль?" v-model="changePass" v-if="id !== null"/>
                     <v-select
                         class="mt-3"
                         label="Роль"
+                        item-value="id"
+                        item-text="role_name"
                         :items="roles"
-                        v-model="user.role"
+                        v-model="user.role_id"
                     />
                     <v-select
                         class="mt-3"
                         label="Город"
-                        :items="cities"
-                        v-model="user.city"
+                        :items="stores"
+                        item-text="city"
+                        item-value="id"
+                        v-model="user.store_id"
                     />
                 </v-form>
             </v-card-text>
@@ -54,6 +64,7 @@
 
 <script>
     import ACTIONS from "../../store/actions";
+    import showToast from "../../utils/toast";
 
     export default {
         watch: {
@@ -67,8 +78,7 @@
         data: () => ({
             loading: false,
             user: {},
-            roles: ['Суперадмин', "Продавец", "Наблюдатель", "Склад"],
-            cities: ["Павлодар", "Усть-Каменогорск", "Экибастуз"]
+            changePass: false,
         }),
         props: {
             state: {
@@ -80,31 +90,44 @@
                 default: null,
             }
         },
+        computed: {
+            roles() {
+                return this.$store.getters.user_roles;
+            },
+            stores() {
+                return this.$store.getters.stores;
+            }
+        },
         methods: {
             async createUser() {
                 const user = {
                     name: this.user.name,
                     login: this.user.login,
                     password: this.user.password,
-                    role: this.user.role,
-                    city: this.user.city
+                    role_id: this.user.role_id,
+                    store_id: this.user.store_id
                 };
 
                 await this.$store.dispatch(ACTIONS.CREATE_USER, user);
 
-                alert('пользователь создан')
+                showToast('пользователь создан')
             },
-            editUser() {
+            async editUser() {
                 const user = {
                     id: this.id,
                     name: this.user.name,
                     login: this.user.login,
-                    password: this.user.password,
-                    role: this.user.role,
-                    city: this.user.city
+                    role_id: this.user.role_id,
+                    store_id: this.user.store_id
                 };
 
-                alert('пользователь отредактирован')
+                if (this.changePass) {
+                    user.password = this.user.password;
+                }
+
+                await this.$store.dispatch(ACTIONS.EDIT_USER, user);
+
+                showToast('пользователь отредактирован')
 
             },
             async submit() {

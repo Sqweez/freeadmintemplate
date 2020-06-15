@@ -1,56 +1,16 @@
 import ACTIONS from "../actions";
 import MUTATIONS from '../mutations';
+import {createUser, deleteUser, editUser, getUserRoles, getUsers} from "../../api/users";
 
 const userModule = {
     state: {
-        users: [
-            {
-                id: 0,
-                name: 'Андрей 1Соловьев',
-                login: 'admin',
-                role: 'Суперадмин',
-                city: 'Все города',
-            },
-            {
-                id: 1,
-                name: 'Андрей 2Соловьев',
-                login: 'admin',
-                role: 'Суперадмин',
-                city: 'Все города',
-            },
-            {
-                id: 2,
-                name: 'Андрей 3Соловьев',
-                login: 'admin',
-                role: 'Суперадмин',
-                city: 'Все города',
-            },
-            {
-                id: 3,
-                name: 'Андрей 4Соловьев',
-                login: 'admin',
-                role: 'Суперадмин',
-                city: 'Все города',
-            },
-            {
-                id: 4,
-                name: 'Андрей 5Соловьев',
-                login: 'admin',
-                role: 'Суперадмин',
-                city: 'Все города',
-            },
-            {
-                id: 5,
-                name: 'Андрей 6Соловьев',
-                login: 'admin',
-                role: 'Суперадмин',
-                city: 'Все города',
-            }
-            ]
+        users: [],
+        user_roles: []
     },
     getters: {
         users: state => state.users,
-        user: state => id => state.users.find(u => u.id === id)
+        user: state => id => state.users.find(u => u.id === id),
+        user_roles: state => state.user_roles,
     },
     mutations: {
         [MUTATIONS.CREATE_USER](state, payload) {
@@ -66,17 +26,34 @@ const userModule = {
         },
         [MUTATIONS.DELETE_USER](state, payload) {
             state.users = state.users.filter(u => u.id !== payload);
+        },
+        [MUTATIONS.SET_USERS] (state, payload) {
+            state.users = payload;
+        },
+        SET_USER_ROLES (state, payload) {
+            state.user_roles = payload;
         }
     },
     actions: {
         async [ACTIONS.CREATE_USER]({commit}, payload) {
-            await commit(MUTATIONS.CREATE_USER, payload);
+            const response = await createUser(payload);
+            await commit(MUTATIONS.CREATE_USER, response.data.data);
         },
         async [ACTIONS.DELETE_USER]({commit}, payload) {
+            await deleteUser(payload);
             await commit(MUTATIONS.DELETE_USER, payload);
         },
         async [ACTIONS.EDIT_USER]({commit}, payload) {
-            await commit(MUTATIONS.EDIT_USER, payload)
+            const response = await editUser(payload);
+            await commit(MUTATIONS.EDIT_USER, response.data.data);
+        },
+        async [ACTIONS.GET_USERS] ({commit}) {
+            const response = await getUsers();
+            commit(MUTATIONS.SET_USERS, response.data.data)
+        },
+        async [ACTIONS.GET_USER_ROLES] ({commit}) {
+            const response = await getUserRoles();
+            commit(MUTATIONS.SET_USER_ROLES, response.data);
         }
     },
 };

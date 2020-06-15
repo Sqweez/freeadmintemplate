@@ -1,5 +1,6 @@
 <template>
     <component
+        v-if="link.isAdmin !== true || (link.isAdmin === true && is_admin)"
         :key="link.url"
         :is="link.hasDropdown ? 'div' : 'router-link'"
         style="cursor: pointer;"
@@ -21,6 +22,7 @@
         </a>
         <div class="mdl-navigation" v-if="link.hasDropdown">
             <router-link
+                v-if="_link.isAdmin !== true || (_link.isAdmin === true && is_admin)"
                 v-for="(_link) of link.children"
                 :key="_link.url"
                 :to="_link.url"
@@ -47,6 +49,11 @@
                 if (e.target.parentElement.classList.contains('sub-navigation')) {
                     e.target.parentElement.classList.toggle('sub-navigation--show');
                 }
+            }
+        },
+        computed: {
+            is_admin() {
+                return this.$store.getters.IS_ADMIN;
             }
         }
     }

@@ -24,7 +24,7 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index() {
-        return ProductResource::collection(Product::orderBy('group_id')->get());
+        return ProductResource::collection(Product::orderBy('group_id')->paginate(10));
     }
 
     /**

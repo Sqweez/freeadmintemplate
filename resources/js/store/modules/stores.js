@@ -47,9 +47,9 @@ const storeModule = {
             const store = await editStore(payload);
             await commit(MUTATIONS.EDIT_STORE, store);
         },
-        async [ACTIONS.GET_STORES] ({commit, dispatch}) {
+        async [ACTIONS.GET_STORES] ({commit, dispatch}, store_id) {
             await dispatch(ACTIONS.GET_STORE_TYPES);
-            const stores = await getStores();
+            const stores = await getStores(store_id);
             commit(MUTATIONS.SET_STORES, stores);
         },
         async [ACTIONS.GET_STORE_TYPES] ({commit}) {

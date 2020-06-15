@@ -20,6 +20,10 @@ class Sale extends Model
         return $this->hasMany('App\SaleProduct', 'sale_id');
     }
 
+    public function user() {
+        return $this->belongsTo('App\User', 'user_id')->withTrashed();
+    }
+
     public function scopeByDate($q, $date) {
         $q->where('created_at', $date);
     }

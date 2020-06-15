@@ -26,6 +26,9 @@
         computed: {
             navigations() {
                 return this.$store.getters.navigations;
+            },
+            is_admin() {
+                return this.$store.getters.IS_ADMIN;
             }
         },
         methods: {

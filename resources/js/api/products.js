@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-export async function getProducts() {
-    const response = await axios.get(`/api/products`);
-    return response;
+export async function getProducts(store_id) {
+    const getParams = store_id ? `?store_id=${store_id}` : ``;
+    return await axios.get(`/api/products${getParams}`);
 }
 
 export async function createProduct(payload) {

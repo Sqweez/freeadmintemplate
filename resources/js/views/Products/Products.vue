@@ -150,9 +150,12 @@
         },
         async mounted() {
             this.loading = this.products.length === 0;
-            await this.$store.dispatch(ACTIONS.GET_PRODUCT);
-            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+            const store_id = this.is_admin ? null : this.user.store_id;
+            await this.$store.dispatch(ACTIONS.GET_PRODUCT, store_id);
             this.loading = false;
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
+            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
         },
         data: () => ({
             search: '',
@@ -221,6 +224,12 @@
             },
             totalProducts() {
                 return this.$store.getters.totalProducts;
+            },
+            user() {
+                return this.$store.getters.USER;
+            },
+            is_admin() {
+                return this.$store.getters.IS_ADMIN;
             }
         },
         methods: {
@@ -234,6 +243,9 @@
                 showToast('Товар успешно удален');
             },
             getQuantity(quantity = []) {
+                if (typeof quantity === 'number') {
+                    return quantity;
+                }
                 if (!quantity.length) {
                     return 0;
                 }

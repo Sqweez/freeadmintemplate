@@ -11,6 +11,7 @@ import clientModule from "./modules/clients";
 import ACTIONS from './actions';
 import transferModule from "./modules/transfers";
 import reportsModule from "./modules/reports";
+import authModule from "./modules/auth";
 Vue.use(Vuex);
 
 const store = new Store({
@@ -18,11 +19,11 @@ const store = new Store({
     mutations: {},
     actions: {
         async [ACTIONS.INIT] ({dispatch}) {
-            dispatch(ACTIONS.GET_CLIENTS);
+           /* dispatch(ACTIONS.GET_CLIENTS);
             dispatch(ACTIONS.GET_MANUFACTURERS);
             dispatch(ACTIONS.GET_ATTRIBUTES);
             dispatch(ACTIONS.GET_CATEGORIES);
-            dispatch(ACTIONS.GET_STORES);
+            dispatch(ACTIONS.GET_STORES);*/
         }
     },
     modules: {
@@ -35,7 +36,8 @@ const store = new Store({
         attributeModule,
         clientModule,
         transferModule,
-        reportsModule
+        reportsModule,
+        authModule
     }
 });
 

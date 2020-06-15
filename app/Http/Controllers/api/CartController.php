@@ -174,6 +174,7 @@ class CartController extends Controller {
             unset($product['order_id']);
             unset($product['created_at']);
             unset($product['updated_at']);
+            unset($product['id']);
             SaleProduct::create($product->toArray($product));
         }
 
@@ -181,7 +182,7 @@ class CartController extends Controller {
 
         $order->update();
 
-        return $order;
+        return 'Заказ выполнен!';
     }
 
     public function decline(Order $order) {
@@ -205,7 +206,7 @@ class CartController extends Controller {
             $productBatch->update();
         }
 
-        return ['message' => 'ok'];
+        return 'Заказ отменен!';
 
     }
 

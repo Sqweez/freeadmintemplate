@@ -16,6 +16,8 @@
                             hide-details
                         ></v-text-field>
                         <v-data-table
+                            :loading="clients.length === 0"
+                            loading-text="Идет загрузка клиентов"
                             :search="search"
                             no-results-text="Нет результатов"
                             no-data-text="Нет данных"
@@ -81,6 +83,9 @@
             ClientModal,
             ConfirmationModal,
             UserModal
+        },
+        async created() {
+            await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         data: () => ({
             confirmationModal: false,

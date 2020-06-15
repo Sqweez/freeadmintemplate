@@ -202,7 +202,7 @@
                             hide-details
                         ></v-text-field>
                     </v-col>
-                    <v-col cols="12" xl="4">
+                    <v-col cols="12" xl="4" v-if="is_admin">
                         <v-select
                             :items="stores"
                             item-text="name"
@@ -276,7 +276,7 @@
     import showToast from "../../utils/toast";
     import {TOAST_TYPE} from "../../config/consts";
     import ACTIONS from "../../store/actions";
-    import { mapActions } from 'vuex';
+    import {mapActions} from 'vuex';
 
     export default {
         components: {
@@ -286,12 +286,18 @@
         },
         async created() {
             this.loading = this.products.length === 0 || false;
-            await this.getProducts();
+            const store_id = this.is_admin ? null : this.user.store_id;
+            await this.$store.dispatch(ACTIONS.GET_PRODUCT, store_id);
+            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
             this.loading = false;
+            await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         watch: {
             storeFilter() {
                 this.cart = [];
+            },
+            stores() {
+                this.storeFilter = this.stores[0].id;
             }
         },
         data: () => ({
@@ -340,16 +346,18 @@
         }),
         methods: {
             ...mapActions([
-                ACTIONS.GET_PRODUCT
+                ACTIONS.GET_PRODUCT,
+                ACTIONS.GET_CLIENTS,
+                ACTIONS.GET_STORES,
             ]),
             async refreshProducts() {
                 this.loading = true;
-                await this.getProducts();
+                const store_id = this.is_admin ? null : this.user.store_id;
+                await this.$store.dispatch(ACTIONS.GET_PRODUCT, store_id);
                 this.loading = false;
                 showToast('Список товаров обновлен!')
             },
             setBalance(e) {
-                console.log(e);
                 this.balance = Math.min(+e.target.value, this.client.client_balance);
             },
             addToCart(item) {
@@ -391,7 +399,7 @@
                         return {id: c.id, product_price: c.product_price, count: c.count};
                     }),
                     store_id: this.storeFilter,
-                    user_id: 1,
+                    user_id: this.user.id,
                     client_id: this.client.id,
                     discount: this.discount,
                     kaspi_red: this.isRed,
@@ -416,11 +424,18 @@
                 showToast('чек печатается....')
             },
             getQuantity(quantity = []) {
+                if (typeof quantity === 'number') {
+                    return quantity;
+                }
                 if (!quantity.length) {
                     return 0;
                 }
+                console.log(quantity);
                 return quantity
-                    .filter(q => +q.store_id === +this.storeFilter)
+                    .filter(q => {
+                        console.log(q);
+                        return +q.store_id === +this.storeFilter
+                    })
                     .map(q => q.quantity)
                     .reduce((a, c) => {
                         return +a + +c;
@@ -438,6 +453,12 @@
             }
         },
         computed: {
+            user() {
+                return this.$store.getters.USER;
+            },
+            is_admin() {
+                return this.$store.getters.IS_ADMIN;
+            },
             products() {
                 return this.$store.getters.products;
             },
@@ -475,11 +496,7 @@
                 return Math.min(Math.max(this.discountPercent, this.client.client_discount, 0), 100);
             },
             stores() {
-                const stores = this.$store.getters.stores;
-                if (stores.length > 0) {
-                    this.storeFilter = stores[0].id;
-                }
-                return stores;
+                return this.$store.getters.stores;
             },
         }
     }

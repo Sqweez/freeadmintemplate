@@ -67,6 +67,10 @@
             StoreModal,
             ConfirmationModal
         },
+        created() {
+            this.$store.dispatch(ACTIONS.GET_STORES);
+            this.$store.dispatch(ACTIONS.GET_STORE_TYPES);
+        },
         computed: {
             ...mapGetters(['stores'])
         },

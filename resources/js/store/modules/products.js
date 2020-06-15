@@ -77,8 +77,8 @@ const productsModule = {
         }
     },
     actions: {
-        async [ACTIONS.GET_PRODUCT] ({commit}) {
-            const response = await getProducts();
+        async [ACTIONS.GET_PRODUCT] ({commit}, store_id) {
+            const response = await getProducts(store_id);
             const products = response.data.data;
             commit(MUTATIONS.SET_PRODUCTS, products);
         },

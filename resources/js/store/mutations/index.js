@@ -29,6 +29,8 @@ export default {
     SET_STORES: 'setStores',
     SET_STORE_TYPES: 'setStoreTypes',
     SET_CLIENTS: 'setClients',
-    ON_SALE: 'onSale'
+    ON_SALE: 'onSale',
+    SET_USERS: 'setUsers',
+    SET_USER_ROLES: 'SET_USER_ROLES'
 }
 

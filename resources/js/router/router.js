@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from "vue-router";
 import routes from "./routes";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -11,6 +12,25 @@ const Router = new VueRouter({
     scrollBehavior(to, from, savePos) {
         return {x: 0, y: 0};
     }
+});
+
+Router.beforeEach(async (to, from, next) => {
+    if (!store.getters.LOGIN_CHECKED) {
+        await store.dispatch('AUTH');
+    }
+    if (!to.meta.guest) {
+        if (store.getters.LOGGED_IN) {
+            next();
+        } else {
+            next('/login');
+        }
+    }
+
+    if (to.meta.guest && store.getters.LOGGED_IN) {
+        next('/');
+    }
+
+    next();
 });
 
 export default Router;

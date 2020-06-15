@@ -8,6 +8,7 @@ import Clients from "../views/Clients/Clients";
 import Reports from "../views/Reports/Reports";
 import Transfers from "../views/Transfers/Transfers";
 import Hits from '../views/Hits/Hits';
+import Login from "../views/Login/Login";
 
 const routes = [
     {
@@ -16,11 +17,18 @@ const routes = [
     },
     {
         path: '/users',
-        component: Users
+        component: Users,
+        meta: {
+            isAdmin: true
+        }
     },
     {
         path: '/stores',
-        component: Stores
+        component: Stores,
+        meta: {
+            isAdmin: true
+        }
+
     },
     {
         path: '/products',
@@ -28,7 +36,10 @@ const routes = [
     },
     {
         path: '/categories',
-        component: Control
+        component: Control,
+        meta: {
+            isAdmin: true
+        }
     },
     {
         path: '/cart',
@@ -40,7 +51,10 @@ const routes = [
     },
     {
         path: '/reports',
-        component: Reports
+        component: Reports,
+        meta: {
+            isAdmin: true
+        }
     },
     {
         path: '/transfer',
@@ -49,6 +63,13 @@ const routes = [
     {
         path: '/shop/products',
         component: Hits
+    },
+    {
+        path: '/login',
+        component: Login,
+        meta: {
+            guest: true
+        }
     }
 ];
 

@@ -15,9 +15,10 @@ class StoreController extends Controller
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return StoreResource::collection(Store::all());
+        $stores = $request->has('store_id') ? Store::where('id', $request->get('store_id'))->get() : Store::all();
+        return StoreResource::collection($stores);
     }
 
     /**

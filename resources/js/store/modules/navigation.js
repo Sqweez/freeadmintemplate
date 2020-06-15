@@ -10,6 +10,7 @@ const navigationModule = {
                 title: 'Продавцы',
                 url: '/users',
                 icon: 'person',
+                isAdmin: true
             },
             {
                 title: 'Клиенты',
@@ -24,7 +25,8 @@ const navigationModule = {
                 children: [
                     {
                         title: 'Все склады',
-                        url: '/stores'
+                        url: '/stores',
+                        isAdmin: true
                     },
                     {
                         title: 'Все товары',
@@ -32,7 +34,8 @@ const navigationModule = {
                     },
                     {
                         title: 'Категории',
-                        url: '/categories'
+                        url: '/categories',
+                        isAdmin: true
                     },
                     {
                         title: 'Корзина',
@@ -40,7 +43,8 @@ const navigationModule = {
                     },
                     {
                         title: 'Перемещения',
-                        url: '/transfer'
+                        url: '/transfer',
+                        isAdmin: true
                     },
 
                 ],
@@ -48,7 +52,8 @@ const navigationModule = {
             {
                 title: 'Отчеты по продажам',
                 url: '/reports',
-                icon: 'report'
+                icon: 'report',
+                isAdmin: true
             },
             {
                 title: 'Интернет-магазин',

@@ -31,5 +31,7 @@ export default {
     GET_STORE_TYPES: 'getStoreTypes',
     GET_CLIENTS: 'getClients',
     MAKE_SALE: 'makeSale',
-    MAKE_TRANSFER: 'makeTransfer'
+    MAKE_TRANSFER: 'makeTransfer',
+    GET_USERS: 'getUsers',
+    GET_USER_ROLES: 'GET_USER_ROLES'
 }
