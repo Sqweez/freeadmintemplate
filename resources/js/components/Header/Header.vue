@@ -135,11 +135,14 @@
                 </li>
             </ul>-->
 
-            <div class="avatar-dropdown" id="icon" v-if="LOGGED_IN" @click="showDropdown = !showDropdown" style="position: relative">
+            <div class="avatar-dropdown" id="icon" v-if="LOGGED_IN" @click="showDropdown = !showDropdown">
                 <span>{{ USER.name}}</span>
                 <img src="../../../assets/images/iron-logo.png">
 
             </div>
+
+
+            <button @click="logout">Выйти</button>
             <!-- Account dropdawn-->
 
             <ul class="mdl-menu mdl-list mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-shadow--2dp account-dropdown"

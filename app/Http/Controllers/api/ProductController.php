@@ -6,6 +6,7 @@ use App\AttributeProduct;
 use App\CategoryProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductRevisionResource;
 use App\ManufacturerProducts;
 use App\Product;
 use App\ProductBatch;
@@ -14,6 +15,7 @@ use App\ProductThumb;
 use App\SubcategoryProduct;
 use App\SaleProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -218,8 +220,13 @@ class ProductController extends Controller {
                 ProductThumb::create(['product_id' => $i['product_id'], 'product_image' => $thumbPath]);
             }
         });
+    }
 
-
-
+    public function jsonProducts() {
+        $products = collect(ProductRevisionResource::collection(Product::all()));
+        $jsonData = json_encode($products, JSON_UNESCAPED_UNICODE);
+        $fileName = 'public/json/products_15_06.json';
+        Storage::put($fileName, $jsonData);
+        return $products;
     }
 }

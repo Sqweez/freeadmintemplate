@@ -14,6 +14,7 @@ Route::get('/unauthorised', function () {
 
 Route::get('order/{order}/accept', 'api\CartController@accept');
 Route::get('order/{order}/decline', 'api\CartController@decline');
+Route::get('json/products', 'api\ProductController@jsonProducts');
 
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('shop')->group(function () {
