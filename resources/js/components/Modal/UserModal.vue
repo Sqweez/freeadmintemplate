@@ -92,6 +92,7 @@
         },
         computed: {
             roles() {
+                console.log(this.$store.getters.user_roles);
                 return this.$store.getters.user_roles;
             },
             stores() {

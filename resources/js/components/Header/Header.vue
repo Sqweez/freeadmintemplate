@@ -135,12 +135,13 @@
                 </li>
             </ul>-->
 
-            <div class="avatar-dropdown" id="icon">
-                <span>{{ USER.name || '' }}</span>
+            <div class="avatar-dropdown" id="icon" v-if="LOGGED_IN">
+                <span>{{ USER.name}}</span>
                 <img src="../../../assets/images/iron-logo.png">
             </div>
             <!-- Account dropdawn-->
             <ul class="mdl-menu mdl-list mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-shadow--2dp account-dropdown"
+                v-if="LOGGED_IN"
                 for="icon">
                <!-- <li class="mdl-list__item mdl-list__item&#45;&#45;two-line">
                     <span class="mdl-list__item-primary-content">
@@ -214,7 +215,8 @@
     export default {
         computed: {
             ...mapGetters([
-                'USER'
+                'USER',
+                'LOGGED_IN'
             ])
         },
         methods: {

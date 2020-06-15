@@ -24,7 +24,7 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index() {
-        return ProductResource::collection(Product::orderBy('group_id')->paginate(10));
+        return ProductResource::collection(Product::orderBy('group_id')->get());
     }
 
     /**
@@ -85,7 +85,7 @@ class ProductController extends Controller {
 
     private function createManufacturerProduct($manufacturer, $id) {
         if ($manufacturer)
-        ManufacturerProducts::create(['product_id' => $id, 'manufacturer_id' => $manufacturer]);
+            ManufacturerProducts::create(['product_id' => $id, 'manufacturer_id' => $manufacturer]);
     }
 
     public function createBatch(Request $request) {
