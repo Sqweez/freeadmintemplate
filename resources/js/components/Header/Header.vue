@@ -224,13 +224,15 @@
         watch: {
             showDropdown() {
                 const menuContainer = document.querySelector('.mdl-menu__container');
-                if (this.showDropdown) {
-                    if (!menuContainer.classList.contains('is-visible')) {
-                        menuContainer.classList.add('is-visible');
-                    }
-                } else {
-                    if (menuContainer.classList.contains('is-visible')) {
-                        menuContainer.classList.remove('is-visible');
+                if (menuContainer) {
+                    if (this.showDropdown) {
+                        if (!menuContainer.classList.contains('is-visible')) {
+                            menuContainer.classList.add('is-visible');
+                        }
+                    } else {
+                        if (menuContainer.classList.contains('is-visible')) {
+                            menuContainer.classList.remove('is-visible');
+                        }
                     }
                 }
             }

@@ -14,7 +14,6 @@ use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
 use Illuminate\Http\Request;
-use SebastianBergmann\CodeCoverage\Report\PHP;
 
 class CartController extends Controller {
     public function addCart(Request $request) {
@@ -112,12 +111,17 @@ class CartController extends Controller {
         $message .= 'Адрес: ' . $order['address'] . "\n";
 
         $products = Product::with('attributes')->whereIn('id', $order->items->pluck('product_id'))->get();
+        $cartProducts = collect($order->items);
 
         foreach ($products as $key => $product) {
             $attributes = $product->attributes->reduce(function ($a, $c) {
                 return $c['attribute_value'] . ', ' . $a;
             }, '');
-            $message .= ($key + 1) . '.' . $product->product_name . ',' . $attributes . '' . $product['product_price'] . 'тг' . "\n";
+
+            $count = $cartProducts->filter(function ($i) use ($product) {
+                return $i['product_id'] == $product['id'];
+            })->count();
+            $message .= ($key + 1) . '.' . $product->product_name . ',' . $attributes . ' ' . $product['product_price'] . 'тг' . ' | ' . $count . 'шт.' . "\n";
         }
 
         if ($order['comment']) {
@@ -165,7 +169,7 @@ class CartController extends Controller {
         $sale = Sale::create([
             'client_id' => -1,
             'store_id' => $store_id,
-            'user_id' => -1,
+            'user_id' => 2,
             'discount' => 0,
             'kaspi_red' => 0
         ]);

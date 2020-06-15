@@ -48,7 +48,11 @@ const productsModule = {
         [MUTATIONS.ADD_PRODUCT_QUANTITY](state, payload) {
             state.products = state.products.map(p => {
                 if (payload.id === p.id) {
-                    p.quantity.push(payload);
+                    if (typeof p.quantity !== 'number') {
+                        p.quantity.push(payload);
+                    } else {
+                        p.quantity += payload.quantity;
+                    }
                 }
                 return p;
             })
