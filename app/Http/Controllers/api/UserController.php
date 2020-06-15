@@ -97,7 +97,7 @@ class UserController extends Controller
         }
         return response()->json([
             'status' => 'success',
-            'user' => $user
+            'user' => new UserResource($user),
         ], 200);
     }
 
@@ -107,7 +107,7 @@ class UserController extends Controller
             $user = User::Login($attributes['login'])->first();
             return response()->json([
                 'status' => 'success',
-                'user' => $user
+                'user' => new UserResource($user),
             ], 200);
         } else {
             return response()->json(['error' => 'Неверные логин и пароль!']);

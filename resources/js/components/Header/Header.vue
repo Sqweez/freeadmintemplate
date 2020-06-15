@@ -135,22 +135,24 @@
                 </li>
             </ul>-->
 
-            <div class="avatar-dropdown" id="icon" v-if="LOGGED_IN">
+            <div class="avatar-dropdown" id="icon" v-if="LOGGED_IN" @click="showDropdown = !showDropdown" style="position: relative">
                 <span>{{ USER.name}}</span>
                 <img src="../../../assets/images/iron-logo.png">
+
             </div>
             <!-- Account dropdawn-->
+
             <ul class="mdl-menu mdl-list mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-shadow--2dp account-dropdown"
                 v-if="LOGGED_IN"
                 for="icon">
-               <!-- <li class="mdl-list__item mdl-list__item&#45;&#45;two-line">
+               <!-- <li class="mdl-list__item mdl-list__item--two-line">
                     <span class="mdl-list__item-primary-content">
                         <span class="material-icons mdl-list__item-avatar"></span>
                         <span>Luke</span>
                         <span class="mdl-list__item-sub-title">Luke@skywalker.com</span>
                     </span>
                 </li>
-                <li class="list__item&#45;&#45;border-top"></li>
+                <li class="list__item--border-top"></li>
                 <li class="mdl-menu__item mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                         <i class="material-icons mdl-list__item-icon">account_circle</i>
@@ -163,7 +165,7 @@
                         My tasks
                     </span>
                     <span class="mdl-list__item-secondary-content">
-                      <span class="label background-color&#45;&#45;primary">3 new</span>
+                      <span class="label background-color--primary">3 new</span>
                     </span>
                 </li>
                 <li class="mdl-menu__item mdl-list__item">
@@ -172,7 +174,7 @@
                         My events
                     </span>
                 </li>
-                <li class="list__item&#45;&#45;border-top"></li>
+                <li class="list__item--border-top"></li>
                 <li class="mdl-menu__item mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                         <i class="material-icons mdl-list__item-icon">settings</i>
@@ -219,6 +221,23 @@
                 'LOGGED_IN'
             ])
         },
+        watch: {
+            showDropdown() {
+                const menuContainer = document.querySelector('.mdl-menu__container');
+                if (this.showDropdown) {
+                    if (!menuContainer.classList.contains('is-visible')) {
+                        menuContainer.classList.add('is-visible');
+                    }
+                } else {
+                    if (menuContainer.classList.contains('is-visible')) {
+                        menuContainer.classList.remove('is-visible');
+                    }
+                }
+            }
+        },
+        data: () => ({
+            showDropdown: true,
+        }),
         methods: {
             async logout() {
                 await this.$store.dispatch('LOGOUT');
@@ -228,6 +247,25 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    .avatar-dropdown {
+        .account__dropdown {
+            position: absolute;
+            left: 0;
+            bottom: -26px;
+            display: flex;
+            flex-direction: column;
+            background-color: #202020;
+            list-style: none;
+            min-width: 100%;
 
+            li {
+
+                a {
+                    text-decoration: none;
+                    color: #ffffff!important;;
+                }
+            }
+        }
+    }
 </style>

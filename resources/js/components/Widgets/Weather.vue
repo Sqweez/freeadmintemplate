@@ -31,19 +31,33 @@
 </template>
 
 <script>
-    import axios from 'axios';
 
     export default {
         data: () => ({
             weather: {},
             loading: true,
         }),
-        created() {
-            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=pavlodar&appid=31395ab117614ed1542befb54b91d748&lang=ru&units=metric`)
+        async created() {
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${this.user.store_slug}&appid=31395ab117614ed1542befb54b91d748&lang=ru&units=metric`;
+            try {
+                const response = await fetch(url, {
+                    method: 'GET'
+                });
+                this.weather = await response.json();
+            } catch (e) {
+                console.log(e);
+            }
+            this.loading = false;
+            /*axios.get(`https://api.openweathermap.org/data/2.5/weather?q=pavlodar&appid=31395ab117614ed1542befb54b91d748&lang=ru&units=metric`)
                 .then(response => {
                     this.weather = response.data;
                     this.loading = false;
-                }).catch(err => {})
+                }).catch(err => {})*/
+        },
+        computed: {
+            user() {
+                return this.$store.getters.USER;
+            }
         }
     }
 </script>
