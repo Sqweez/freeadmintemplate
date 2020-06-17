@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\AttributeProduct;
 use App\CategoryProduct;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Services\ExcelService;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductRevisionResource;
 use App\ManufacturerProducts;
@@ -228,5 +229,10 @@ class ProductController extends Controller {
         $fileName = 'public/json/products_15_06.json';
         Storage::put($fileName, $jsonData);
         return $products;
+    }
+
+    public function excelProducts() {
+        $excelService = new ExcelService();
+        return $excelService->createExcel();
     }
 }

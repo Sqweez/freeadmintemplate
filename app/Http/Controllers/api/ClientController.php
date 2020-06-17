@@ -51,12 +51,25 @@ class ClientController extends Controller {
      * @return ClientResource
      */
     public function update(Request $request, Client $client) {
-        $_client = $request->only(['client_name', 'client_card', 'client_phone', 'client_discount']);
-        $_client = collect($_client)->filter(function ($i) {
-            return strlen($i) > 0;
-        });
-        $client->update($_client->toArray());
-        return new ClientResource($client);
+        if (!$request->has('site')) {
+            $_client = $request->only(['client_name', 'client_card', 'client_phone', 'client_discount']);
+            $_client = collect($_client)->filter(function ($i) {
+                return strlen($i) > 0;
+            });
+            $client->update($_client->toArray());
+            return new ClientResource($client);
+        }
+        else {
+            $_client = $request->except('site');
+            if (isset($_client['password'])) {
+                $_client['password'] = Hash::make($_client['password']);
+            }
+            $_client = collect($_client)->filter(function ($i) {
+                return strlen($i) > 0;
+            });
+            $client->update($_client->toArray());
+            return collect($client)->only(['client_name', 'client_phone', 'address', 'city', 'email', 'id', 'client_discount']);
+        }
     }
 
     /**
@@ -106,7 +119,7 @@ class ClientController extends Controller {
         if (!$client) {
             return null;
         } else {
-            return collect($client)->only(['client_name', 'client_phone', 'address', 'city']);
+            return collect($client)->only(['client_name', 'client_phone', 'address', 'city', 'email', 'id', 'client_discount']);
         }
     }
 

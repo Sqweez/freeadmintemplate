@@ -14,6 +14,7 @@ use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
 use Illuminate\Http\Request;
+use App\Client;
 
 class CartController extends Controller {
     public function addCart(Request $request) {
@@ -84,7 +85,16 @@ class CartController extends Controller {
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
         $customer_info = $request->get('customer_info');
-        $order = $this->createOrder($user_token, $store_id, $customer_info);
+        
+        $client_id = -1;
+        $discount = 0;
+
+        if (isset($customer_info['client_id'])) {
+            $client_id = $customer_info['client_id'];
+            $discount = Client::find($client_id)['client_discount'];
+        };
+
+        $order = $this->createOrder($user_token, $store_id, $customer_info, $client_id, $discount);
         $products = CartProduct::where('cart_id', $cart)->get();
         $this->createOrderProducts($order, $store_id, $products);
         CartProduct::where('cart_id', $cart)->delete();
@@ -110,6 +120,8 @@ class CartController extends Controller {
         $message .= 'Номер телефона: ' . $order['phone'] . "\n";
         $message .= 'Адрес: ' . $order['address'] . "\n";
 
+        $discount = $order['discount'];
+
         $products = Product::with('attributes')->whereIn('id', $order->items->pluck('product_id'))->get();
         $cartProducts = collect($order->items);
 
@@ -122,6 +134,10 @@ class CartController extends Controller {
                 return $i['product_id'] == $product['id'];
             })->count();
             $message .= ($key + 1) . '.' . $product->product_name . ',' . $attributes . ' ' . $product['product_price'] . 'тг' . ' | ' . $count . 'шт.' . "\n";
+        }
+
+        if (intval($discount) > 0) {
+            $message .= 'Скидка: ' . $discount . '%' . "\n";
         }
 
         if ($order['comment']) {
@@ -142,9 +158,9 @@ class CartController extends Controller {
         $message .= 'Способ оплаты: ' . $payment . "\n";
         $message .= 'Способ получения: ' . $delivery . "\n";
 
-        $message .= 'Общая сумма: ' . $order->items->reduce(function ($a, $c) {
-                return $a + $c['product_price'];
-            }, 0) . 'тг' . "\n";
+        $message .= 'Общая сумма: ' . ceil($order->items->reduce(function ($a, $c) use ($discount){
+                return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
+            }, 0)) . 'тг' . "\n";
 
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/decline'>Отменить заказ❌</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>";
@@ -167,10 +183,10 @@ class CartController extends Controller {
         $products = $order->items;
         // @TODO после авторизации сделать клиент ид
         $sale = Sale::create([
-            'client_id' => -1,
+            'client_id' => $order['client_id'],
             'store_id' => $store_id,
             'user_id' => 2,
-            'discount' => 0,
+            'discount' => $order['discount'],
             'kaspi_red' => 0
         ]);
         foreach ($products as $product) {
@@ -234,8 +250,22 @@ class CartController extends Controller {
      * private methods
      * */
 
-    private function createOrder($user_token, $store_id, $customer_info) {
-        $order = ['user_token' => $user_token, 'store_id' => $store_id, 'payment' => $customer_info['paymentMethod'], 'delivery' => $customer_info['deliveryMethod'], 'fullname' => $customer_info['fullname'], 'address' => $customer_info['address'], 'phone' => $customer_info['phone'], 'city' => $customer_info['city'], 'email' => $customer_info['email'], 'comment' => $customer_info['comment'], 'status' => 0];
+    private function createOrder($user_token, $store_id, $customer_info, $client_id, $discount) {
+        $order = [
+            'user_token' => $user_token,
+            'store_id' => $store_id,
+            'payment' => $customer_info['paymentMethod'],
+            'delivery' => $customer_info['deliveryMethod'],
+            'fullname' => $customer_info['fullname'],
+            'address' => $customer_info['address'],
+            'phone' => $customer_info['phone'],
+            'city' => $customer_info['city'],
+            'email' => $customer_info['email'],
+            'comment' => $customer_info['comment'],
+            'status' => 0,
+            'client_id' => $client_id,
+            'discount' => $discount,
+        ];
         return Order::create($order);
     }
 

@@ -16,7 +16,8 @@
         "intervention/image": "^2.5",
         "laravel/framework": "^6.2",
         "laravel/sanctum": "^2.4",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "phpoffice/phpspreadsheet": "^1.13"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

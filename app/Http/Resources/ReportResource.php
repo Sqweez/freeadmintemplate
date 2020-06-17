@@ -50,7 +50,7 @@ class ReportResource extends JsonResource
     }
 
     private function getFinalPrice($discount, $price) {
-        return intval($price - $price * $discount / 100);
+        return ceil($price * ((100 - intval($discount)) / 100));
     }
 
     private function groupProducts($products) {

@@ -108,7 +108,6 @@ class SaleController extends Controller
                     ->whereDate('created_at', '<=', $dates[1])
                     ->get();
         return SaleByCityResource::collection($sales);
-        //return SaleByCityResource::collection(Sale::byDate($date)->get());
     }
 
     private function getDatesFilters($dateFilter) {
