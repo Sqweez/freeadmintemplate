@@ -7,6 +7,8 @@ use App\CartProduct;
 use App\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClientResource;
+use App\Http\Resources\shop\OrderResource;
+use App\Http\Resources\shop\SaleResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Hash;
@@ -142,4 +144,17 @@ class ClientController extends Controller {
         return collect($client)->only('user_token');
     }
 
+
+    public function getOrders(Request $request) {
+        $user_token = $request->get('user_token');
+        $client = Client::ofToken($user_token)->first();
+        if (!$client) {
+            return response()->json(['error' => 'Клиент не найден']);
+        }
+
+        $orders = OrderResource::collection($client->orders->where('status', '!=', 1));
+        $sales = OrderResource::collection($client->purchases);
+        
+        return collect($orders)->merge(collect($sales));
+    }
 }

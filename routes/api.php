@@ -40,6 +40,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('clients/login', 'api\ClientController@login');
         Route::post('clients/register', 'api\ClientController@register');
         Route::post('clients/auth', 'api\ClientController@getAuth');
+        Route::post('clients/orders', 'api\ClientController@getOrders');
     });
 
     // TEST

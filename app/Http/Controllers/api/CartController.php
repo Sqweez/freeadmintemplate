@@ -15,6 +15,9 @@ use App\Sale;
 use App\SaleProduct;
 use Illuminate\Http\Request;
 use App\Client;
+use App\ClientSale;
+use App\ClientTransaction;
+
 
 class CartController extends Controller {
     public function addCart(Request $request) {
@@ -198,6 +201,9 @@ class CartController extends Controller {
             SaleProduct::create($product->toArray($product));
         }
 
+
+        $this->createClientSale($sale);
+
         $order->status = 1;
 
         $order->update();
@@ -341,6 +347,36 @@ class CartController extends Controller {
 
     public static function groupCart() {
 
+    }
+
+    private function createClientSale(Sale $sale) {
+
+        $client_id = $sale['client_id'];
+
+        if ($client_id === -1) {
+            return null;
+        }
+
+        $discount = intval($sale['discount']);
+        $products = $sale->products;
+        $amount = collect($products)->reduce(function ($c, $i) use ($discount) {
+            return $c + ($i['product_price'] * ((100 - $discount) / 100));
+        });
+
+
+        ClientSale::create([
+            'client_id' => $client_id,
+            'amount' => $amount,
+            'sale_id' => $sale['id']
+        ]);
+
+
+        ClientTransaction::create([
+            'client_id' => $client_id,
+            'sale_id' => $sale['id'],
+            'amount' => $amount * 0.01,
+            'user_id' => 2
+        ]);
     }
 
 

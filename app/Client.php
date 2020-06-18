@@ -16,6 +16,14 @@ class Client extends Model
         return $this->hasMany('App\ClientSale', 'client_id');
     }
 
+    public function orders() {
+        return $this->hasMany('App\Order', 'client_id');
+    }
+
+    public function purchases() {
+        return $this->hasMany('App\Sale', 'client_id');
+    }
+
     public function scopeOfPhone($q, $phone) {
         $q->where('client_phone', $phone);
     }
