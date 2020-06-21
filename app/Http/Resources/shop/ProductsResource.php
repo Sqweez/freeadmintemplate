@@ -35,6 +35,7 @@ class ProductsResource extends JsonResource
             'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
             'attributes' => AttributeResource::collection($this->attributes),
             'product_weight' => $this->getProductWeight($this->attributes) ?? '',
+            'product_taste' => $this->getProductWeight($this->attributes) ?? '',
         ];
     }
 
@@ -48,5 +49,11 @@ class ProductsResource extends JsonResource
         return array_reduce($quantity->toArray($quantity), function ($a, $c) {
             return $a + $c['quantity'];
         } , 0) > 0;
+    }
+
+    private function getProductTaste($attributes) {
+        return $attributes->filter(function ($i) {
+                return $i['attribute_id'] == 1;
+            })->first()['attribute_value'] ?? '';
     }
 }

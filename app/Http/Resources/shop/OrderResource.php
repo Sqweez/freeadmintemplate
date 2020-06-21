@@ -4,7 +4,7 @@ namespace App\Http\Resources\shop;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\shop\ProductsResource;
+use App\Http\Resources\shop\OrderProductResource;
 use App\Product;
 
 class OrderResource extends JsonResource
@@ -19,10 +19,19 @@ class OrderResource extends JsonResource
     {
 
         $products = $this->items ?? $this->products;
+        $productCollection = collect(OrderProductResource::collection(Product::find($products->pluck('product_id'))));
+        $productCollection = $productCollection->map(function ($i) use ($products) {
+            $i['count'] = $products->filter(function ($c) use ($i){
+                return $c['product_id'] == $i['product_id'];
+            })->count();
+            return $i;
+        });
 
         return [
             'status' => $this->status ?? 1,
-            'products' => ProductsResource::collection(Product::find($products->pluck('product_id'))),
+            'id' => $this->id,
+            'products' => $productCollection,
+            'created_at' => $this->created_at,
         ];
     }
 }

@@ -154,6 +154,7 @@
             await this.$store.dispatch(ACTIONS.GET_PRODUCT, store_id);
             this.loading = false;
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+            await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
         },
