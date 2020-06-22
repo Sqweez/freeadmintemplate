@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Services;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ExcelService {
 
@@ -46,6 +48,36 @@ class ExcelService {
         $writer->save('products.xlsx');
 
         return $data;
+    }
+
+    public function parseExcel($filename) {
+        $excelFile = $this->loadFile($filename);
+        $sheet = $excelFile->getActiveSheet();
+        $rows = $sheet->getRowIterator();
+        $products = [];
+        foreach ($rows as $key => $item) {
+            if ($key > 1) {
+                $count = intval($sheet->getCell('G' . $key)->getValue());
+                if ($count > 0) {
+                    array_push($products, [
+                        'id' => $sheet->getCell('A' . $key)->getValue(),
+                        'name' => $sheet->getCell('B' . $key)->getValue(),
+                        'count' => $sheet->getCell('G' . $key)->getValue(),
+                    ]);
+                }
+
+            }
+        }
+        $jsonData = json_encode($products, JSON_UNESCAPED_UNICODE);
+        $fileName = 'public/json/' . $filename . '.json';
+        Storage::put($fileName, $jsonData);
+        return $products;
+    }
+
+    private function loadFile($filename) {
+        $path = 'app/public/excel/' . $filename . '.xlsx';
+        $file = storage_path($path);
+        return IOFactory::load($file);
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\User;
+use http\Client\Response;
 
 class AuthorizationMiddleware
 {
@@ -16,6 +17,7 @@ class AuthorizationMiddleware
      */
     public function handle($request, Closure $next)
     {
+
         if (!$request->hasHeader('authorization')) {
             return response()->json(['error' => 'You must get API KEY from your provider']);
         }

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+
 class ProductController extends Controller {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,9 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index() {
-        return ProductResource::collection(Product::orderBy('group_id')->get());
+        return ProductResource::collection(
+            Product::orderBy('group_id')->get()
+        );
     }
 
     /**
@@ -231,8 +234,27 @@ class ProductController extends Controller {
         return $products;
     }
 
-    public function excelProducts() {
+    public function excelProducts(Request $request) {
+        /*$excelService = new ExcelService();
+        return $excelService->createExcel();*/
         $excelService = new ExcelService();
-        return $excelService->createExcel();
+        return $excelService->parseExcel($request->get('filename'));
+    }
+
+    public function jsonParseProduct(Request $request) {
+        $fileName = $request->get('file');
+        $store_id = $request->get('store_id') ?? 2;
+        $jsonContent = Storage::get('public/json/' . $fileName . '.json');
+        $batches = json_decode($jsonContent, true);
+        foreach ($batches as $batch) {
+            $purchase_price = ProductBatch::where('product_id', $batch['id'])->first()['purchase_price'] ?? 0;
+            ProductBatch::create([
+                'product_id' => $batch['id'],
+                'quantity' => $batch['count'],
+                'purchase_price' => $purchase_price,
+                'store_id' => $store_id
+            ]);
+        }
+        return $jsonContent;
     }
 }
