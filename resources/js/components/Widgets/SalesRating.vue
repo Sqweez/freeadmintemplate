@@ -19,9 +19,6 @@
                                 <div class="d-flex justify-space-between">
                                     <span>{{ store.name }}</span>
                                     <span>
-                                       <!-- <v-icon size="30" class="pr-3 text&#45;&#45;darken-1" :color="index % 2 ? 'error' : 'primary'">
-                                            mdi-menu-{{ index % 2 ? 'down' : 'up'}}
-                                        </v-icon>-->
                                         {{ getTotal(store.id) }} тнг
                                     </span>
                                 </div>
@@ -75,7 +72,6 @@
             stores() {
                 return this.$store.getters.stores.filter(s => {
                     return s;
-                    //return +s.type_id === 1;
                 }) || [];
             }
         },

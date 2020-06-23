@@ -36,7 +36,8 @@ class SaleController extends Controller
             'products' => ProductResource::collection(Product::find(array_map(function ($i) {
                 return $i['id'];
             }, $_cart))),
-            'client' => $client_id === -1 ? [] : new ClientResource(Client::find($request->get('client_id')))
+            'client' => $client_id === -1 ? [] : new ClientResource(Client::find($request->get('client_id'))),
+            'sale_id' => $sale_id
         ];
     }
 
@@ -99,6 +100,10 @@ class SaleController extends Controller
 
     public function reports() {
         return ReportResource::collection(Sale::orderBy('created_at', 'desc')->get());
+    }
+
+    public function report(Sale $sale) {
+        return new ReportResource($sale);
     }
 
     public function getTotal(Request $request) {

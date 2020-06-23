@@ -37,6 +37,7 @@ class ReportResource extends JsonResource
             'user' => $this->user->name,
             'user_id' => $this->user_id,
             'client' => $this->client->client_name,
+            'client_id' => $this->client_id,
             'store' => $this->store->name,
             'store_id' => intval($this->store_id),
             'products' => $this->groupProducts($products),
@@ -66,7 +67,8 @@ class ReportResource extends JsonResource
                 'product_name' => $product[0]['product_name'] . " | " . $this->getAttributeString($product[0]['attributes']),
                 'attributes' => $product[0]['attributes'],
                 'manufacturer' => $product[0]['manufacturer'],
-                'product_id' => $product[0]['product_id']
+                'product_id' => $product[0]['product_id'],
+                'product_price' => $product[0]['product_price']
             ]);
         }
 

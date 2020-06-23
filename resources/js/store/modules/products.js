@@ -112,9 +112,10 @@ const productsModule = {
             commit(MUTATIONS.ADD_PRODUCT_RANGE, product);
         },
         async [ACTIONS.MAKE_SALE] ({commit}, payload) {
-            const {products, client} = await makeSale(payload);
+            const {products, client, sale_id} = await makeSale(payload);
             commit(MUTATIONS.ON_SALE, products);
             commit(MUTATIONS.EDIT_CLIENT, client);
+            return sale_id;
         }
     }
 };

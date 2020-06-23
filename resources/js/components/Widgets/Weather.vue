@@ -20,7 +20,10 @@
                 </div>
             </v-card-text>
         </v-responsive>
-        <v-responsive :min-height="400" v-else class="text-center d-flex justify-center align-center">
+        <v-responsive
+            :min-height="400"
+            v-else
+            class="text-center d-flex justify-center align-center">
             <v-progress-circular
                 :size="50"
                 color="primary"
@@ -48,11 +51,6 @@
                 console.log(e);
             }
             this.loading = false;
-            /*axios.get(`https://api.openweathermap.org/data/2.5/weather?q=pavlodar&appid=31395ab117614ed1542befb54b91d748&lang=ru&units=metric`)
-                .then(response => {
-                    this.weather = response.data;
-                    this.loading = false;
-                }).catch(err => {})*/
         },
         computed: {
             user() {

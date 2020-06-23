@@ -254,7 +254,7 @@
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
         <ClientCart
-            v-on:cancel="clientCartModal = false;"
+            v-on:cancel="clientCartModal = false"
             v-on:onClientChosen="onClientChosen"
             :state="clientCartModal"/>
         <ConfirmationModal
@@ -265,6 +265,11 @@
         <WayBillModal
             :state="wayBillModal"
             v-on:cancel="wayBillModal = false"
+        />
+        <CheckModal
+            :state="showCheckModal"
+            :sale_id="sale_id"
+            @cancel="showCheckModal = false"
         />
     </div>
 </template>
@@ -277,9 +282,11 @@
     import {TOAST_TYPE} from "../../config/consts";
     import ACTIONS from "../../store/actions";
     import {mapActions} from 'vuex';
+    import CheckModal from "../../components/Modal/CheckModal";
 
     export default {
         components: {
+            CheckModal,
             ConfirmationModal,
             ClientCart,
             WayBillModal
@@ -314,7 +321,9 @@
             wayBillModal: false,
             client: null,
             overlay: false,
+            sale_id: null,
             balance: 0,
+            showCheckModal: false,
             headers: [
                 {
                     text: 'Наименование',
@@ -406,7 +415,7 @@
                     balance: this.balance,
                 };
 
-                await this.$store.dispatch(ACTIONS.MAKE_SALE, sale);
+                this.sale_id = await this.$store.dispatch(ACTIONS.MAKE_SALE, sale);
 
                 this.overlay = false;
 
@@ -421,7 +430,7 @@
             },
             printCheck() {
                 this.confirmationModal = false;
-                showToast('чек печатается....')
+                window.open(`/check/${this.sale_id}`, '_blank');
             },
             getQuantity(quantity = []) {
                 if (typeof quantity === 'number') {
@@ -430,10 +439,8 @@
                 if (!quantity.length) {
                     return 0;
                 }
-                console.log(quantity);
                 return quantity
                     .filter(q => {
-                        console.log(q);
                         return +q.store_id === +this.storeFilter
                     })
                     .map(q => q.quantity)

@@ -170,6 +170,11 @@
                         <v-icon>mdi-cancel</v-icon>
                     </v-btn>
                 </template>
+                <template v-slot:item.print="{item}">
+                    <v-btn color="primary" :href="'/check/' + item.id" target="_blank">
+                        печать чека
+                    </v-btn>
+                </template>
                 <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                     {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
                 </template>
@@ -245,6 +250,9 @@
                 {text: 'Списано с баланса', value: 'balance'},
                 {
                     text: 'Отмена', value: 'actions'
+                },
+                {
+                    text: 'Печать', value: 'print'
                 }
             ],
             salesReport: [],
@@ -266,6 +274,9 @@
             async onConfirm() {
                 this.closeModal();
                 this.init();
+            },
+            printCheck(id) {
+                window.open(`/check/${id}`, '_blank');
             }
         },
         computed: {
