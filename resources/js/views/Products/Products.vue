@@ -196,6 +196,11 @@
                     text: 'Стоимость'
                 },
                 {
+                    value: 'product_barcode',
+                    text: 'Штрих-код',
+                    align: ' d-none'
+                },
+                {
                     value: 'attributes',
                     text: 'Атрибуты'
                 },

@@ -29,7 +29,7 @@ class ProductController extends Controller {
      */
     public function index() {
         return ProductResource::collection(
-            Product::orderBy('group_id')->paginate(10)
+            Product::orderBy('group_id')->get()
         );
     }
 

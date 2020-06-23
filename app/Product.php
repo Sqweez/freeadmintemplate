@@ -2,8 +2,8 @@
 
 namespace App;
 
+use App\ManufacturerProducts;
 use Illuminate\Database\Eloquent\Model;
-use \App\ManufacturerProducts;
 use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model
@@ -11,6 +11,18 @@ class Product extends Model
     protected $guarded = [];
 
     public $timestamps = false;
+
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function ($query) {
+            $query->product_barcode = $query->product_barcode ?? "";
+        });
+
+        static::updating(function ($query) {
+            $query->product_barcode = $query->product_barcode ?? "";
+        });
+    }
 
     public function parent()
     {
