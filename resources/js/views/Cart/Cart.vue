@@ -260,16 +260,13 @@
         <ConfirmationModal
             :state="confirmationModal"
             message="Напечатать чек?"
+            :cancel-message="'нет'"
             :on-confirm="printCheck"
+            @cancel="confirmationModal = false"
         />
         <WayBillModal
             :state="wayBillModal"
             v-on:cancel="wayBillModal = false"
-        />
-        <CheckModal
-            :state="showCheckModal"
-            :sale_id="sale_id"
-            @cancel="showCheckModal = false"
         />
     </div>
 </template>
@@ -350,6 +347,11 @@
                 {
                     text: 'Добавить',
                     value: 'actions'
+                },
+                {
+                    text: 'Штрих-код',
+                    value: 'product_barcode',
+                    align: ' d-none'
                 }
             ]
         }),

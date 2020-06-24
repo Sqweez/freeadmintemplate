@@ -5,13 +5,13 @@ export async function makeSale(payload) {
     return response.data;
 }
 
-export async function getReports() {
-    const response = await axios.get('/api/reports');
+export async function getReports({filter = 5, start = null , finish = null}) {
+    const response = await axios.get(`/api/reports?filter=${filter}&start=${start}&finish=${finish}`);
     return response.data.data;
 }
 
 export async function cancelSale(payload, id) {
-    await axios.post(`/api/sales/${id}/cancel`, payload);
+    return await axios.post(`/api/sales/${id}/cancel`, payload);
 }
 
 export async function getStoreReports(date_filter) {

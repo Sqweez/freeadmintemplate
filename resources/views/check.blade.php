@@ -32,7 +32,7 @@
         </h1>
         <div class="check-divider"
              style="margin: 10px 0;
-                    width: 100%;
+                    width: 58mm;
                     transform: skew(-15deg);
                     display: flex;
                     align-items: center;">
@@ -50,14 +50,14 @@
     <div class="check-body">
         <ol class="products-list" style="padding-left: 10px;">
             @foreach ($report['products'] as $product)
-            <li
-                 style="color: #000;
+                <li
+                    style="color: #000;
                         font-size: 12px;
                         font-style: italic;
                         text-transform: uppercase;">
-                <span class="product-name">{{ $product['product_name']  }}</span>
-                <span class="product-footer"
-                      style="display: flex;
+                    <span class="product-name">{{ $product['product_name']  }}</span>
+                    <span class="product-footer"
+                          style="display: flex;
                              justify-content: space-between;
                              margin-left: 20px;">
                                     <span class="product-count" style="
@@ -65,31 +65,32 @@
                                     overflow: hidden;">
                                         {{ $product['count']  }} х  {{ $product['product_price']  }}..........................................................................................................................................................................................................
                                     </span>
-                                     <span class="product-cost">{{ $product['count'] * $product['product_price']  }}</span>
+                                     <span
+                                         class="product-cost">{{ $product['count'] * $product['product_price']  }}</span>
                                 </span>
-            </li>
+                </li>
             @endforeach
         </ol>
         @if ($report['discount'] != 0 || $report['client_id'] != -1)
-        <div class="check-divider"
-             style="margin: 10px 0;
-                    width: 100%;
+            <div class="check-divider"
+                 style="margin: 10px 0;
+                    width: 58mm;
                     transform: skew(-15deg);
                     display: flex;
                     align-items: center;">
-            <div class="divider-one"
-                 style="flex: 1;
+                <div class="divider-one"
+                     style="flex: 1;
                         height: 2px;
                         background-color: #000;
                         margin-right: 7px;"></div>
-            <div class="divider-two"
-                 style="flex: 2;
+                <div class="divider-two"
+                     style="flex: 2;
                         height: 1px;
                         background-color: #000;"></div>
-        </div>
+            </div>
             @if ($report['client_id'] != -1)
                 <div
-                     style="font-size: 12px;
+                    style="font-size: 12px;
                             text-transform: uppercase;
                             font-style: italic;"
                     class="client-info">
@@ -106,30 +107,31 @@
                                      margin-left: 5px;">
                             {{ $report['client'] }}
                     </span>
-                </div>
-            @endif
+                    </div>
+                    @endif
                     @if($report['discount'] != 0)
-            <div class="client-discount"
-                 style="display: flex;
+                        <div class="client-discount"
+                             style="display: flex;
                         justify-content: space-between;">
                 <span class="client-label"
                       style="white-space: nowrap;
                              overflow: hidden;">
                     Скидка......................................................................................................................
                 </span>
-                <span class="name"
-                        style="white-space: normal;
+                            <span class="name"
+                                  style="white-space: normal;
                              margin-left: 5px;">
                     {{ $report['discount'] }}%
                 </span>
-            </div>
-                @endif
-        </div>
-        @endif
+                        </div>
+                    @endif
+                </div>
+            @endif
     </div>
     <div class="check-divider"
          style="margin: 10px 0;
-                width: 100%;
+
+                width: 58mm;
                 transform: skew(-15deg);
                 display: flex;
                 align-items: center;">
@@ -143,7 +145,7 @@
                             height: 1px;
                             background-color: #000;"></div>
     </div>
-    <div class="check-footer">
+    <div class="check-footer" style="width: 58mm;">
         <div class="total"
              style="display: flex;
                     justify-content: space-between;
@@ -152,10 +154,13 @@
                 <span class="label-red" style="font-size: 12px;">итого</span>
                 к оплате..........................................................................................................................................................................................................................
             </span>
-            <span class="span-total" style="font-size: 12px; white-space: nowrap; margin-left: 5px;">{{ $report['final_price'] }}</span>
+            <span class="span-total"
+                  style="font-size: 12px; white-space: nowrap; margin-left: 5px;">{{ $report['final_price'] }}</span>
         </div>
-        <h5 style="text-align: center; text-transform: uppercase; font-style: italic; font-size: 12px; margin-top: 15px;">www.iron-addicts.kz</h5>
-        <h4 style="text-align: center; text-transform: uppercase; font-size: 15px; margin-top: 10px; margin-bottom: 40px; font-weight: bold;">Спасибо за покупку!</h4>
+        <h5 style="text-align: center; text-transform: uppercase; font-style: italic; font-size: 12px; margin-top: 15px;">
+            www.iron-addicts.kz</h5>
+        <h4 style="text-align: center; text-transform: uppercase; font-size: 15px; margin-top: 10px; margin-bottom: 40px; font-weight: bold;">
+            Спасибо за покупку!</h4>
     </div>
     <div class="empty-space"></div>
 </div>

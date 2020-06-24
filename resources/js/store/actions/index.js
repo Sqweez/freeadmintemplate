@@ -33,5 +33,7 @@ export default {
     MAKE_SALE: 'makeSale',
     MAKE_TRANSFER: 'makeTransfer',
     GET_USERS: 'getUsers',
-    GET_USER_ROLES: 'GET_USER_ROLES'
+    GET_USER_ROLES: 'GET_USER_ROLES',
+    GET_REPORTS: 'getStoresReport',
+    CANCEL_SALE: 'cancelSale'
 }

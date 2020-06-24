@@ -32,7 +32,7 @@ class ReportResource extends JsonResource
         $products = $products->toArray($products);
 
         return [
-            'id' => $this->id,
+            'id' => intval($this->id),
             'discount' => $this->discount,
             'user' => $this->user->name,
             'user_id' => $this->user_id,

@@ -31,6 +31,9 @@ class ProductController extends Controller {
         return ProductResource::collection(
             Product::orderBy('group_id')->get()
         );
+        /*return ProductResource::collection(
+            Product::orderBy('group_id')->get()
+        );*/
     }
 
     /**

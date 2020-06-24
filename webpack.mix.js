@@ -13,7 +13,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js');
+mix.js('resources/js/app.js', 'public/js').version();
 mix.sass('resources/sass/app.scss', 'public/css')
     .webpackConfig({
         plugins: [
@@ -25,5 +25,5 @@ mix.sass('resources/sass/app.scss', 'public/css')
                 '@': path.resolve(__dirname, 'resources/js')
             }
         }
-    })
+    }).version();
 

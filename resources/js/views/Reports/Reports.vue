@@ -19,6 +19,7 @@
                         item-value="value"
                         v-model="currentDate"
                         label="Время:"
+                        @change="loadReport"
                     />
                 </v-col>
                 <v-col v-if="currentDate === 4">
@@ -62,7 +63,7 @@
                                 text
                                 outlined
                                 color="primary"
-                                @click="$refs.startMenu.save(start)"
+                                @click="changeCustomDate(startMenu, start)"
                             >
                                 OK
                             </v-btn>
@@ -107,7 +108,7 @@
                                 text
                                 outline
                                 color="primary"
-                                @click="$refs.finishMenu.save(finish)"
+                                @click="changeCustomDate(finishMenu, finish) "
                             >
                                 OK
                             </v-btn>
@@ -137,6 +138,8 @@
                 no-results-text="Нет результатов"
                 no-data-text="Нет данных"
                 :headers="headers"
+                :loading="loading"
+                loading-text="Отчеты обновляются"
                 :items="_salesReport"
                 :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
@@ -146,7 +149,8 @@
                 <template v-slot:item.products="{item}">
                     <ul>
                         <li v-for="(product, index) of item.products" :key="index" class="d-flex justify-space-between">
-                            <span>• {{ product.product_name }}</span> <b style="white-space: nowrap">{{ product.count }} шт.</b>
+                            <span>• {{ product.product_name }}</span> <b style="white-space: nowrap">{{ product.count }}
+                            шт.</b>
                         </li>
                     </ul>
                 </template>
@@ -166,7 +170,8 @@
                     {{ item.discount }}%
                 </template>
                 <template v-slot:item.actions="{item}">
-                    <v-btn icon color="error" @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
+                    <v-btn icon color="error"
+                           @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
                         <v-icon>mdi-cancel</v-icon>
                     </v-btn>
                 </template>
@@ -192,21 +197,23 @@
 
 <script>
     import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import showToast from "../../utils/toast";
-    import {getReports} from "../../api/sale";
     import moment from 'moment';
     import ReportCancelModal from "../../components/Modal/ReportCancelModal";
+    import ACTIONS from '../../store/actions/index';
+
     const DATE_FILTERS = {
         ALL_TIME: 1,
         CURRENT_MONTH: 2,
         TODAY: 3,
         CUSTOM_FILTER: 4,
+        LAST_3_DAYS: 5,
     };
 
     export default {
         components: {ReportCancelModal, ConfirmationModal},
         data: () => ({
             overlay: false,
+            loading: false,
             cancelModal: false,
             purchaseId: null,
             currentProducts: [],
@@ -215,26 +222,30 @@
             finishMenu: null,
             today: moment(),
             finish: null,
-            currentDate: DATE_FILTERS.ALL_TIME,
+            currentDate: DATE_FILTERS.LAST_3_DAYS,
             currentCity: -1,
             currentSeller: -1,
             dateFilters: [
                 {
-                    name: 'За все время',
-                    value: DATE_FILTERS.ALL_TIME,
-                },
-                {
-                    name: 'За текущий месяц',
-                    value: DATE_FILTERS.CURRENT_MONTH,
+                    name: 'Последние 3 дня',
+                    value: DATE_FILTERS.LAST_3_DAYS,
                 },
                 {
                     name: 'Сегодня',
                     value: DATE_FILTERS.TODAY,
                 },
                 {
+                    name: 'За текущий месяц',
+                    value: DATE_FILTERS.CURRENT_MONTH,
+                },
+                {
+                    name: 'За все время',
+                    value: DATE_FILTERS.ALL_TIME,
+                },
+                {
                     name: 'Произвольно',
                     value: DATE_FILTERS.CUSTOM_FILTER
-                }
+                },
             ],
             headers: [
                 {text: 'Наименование', value: 'products', align: ' min-w-250'},
@@ -255,28 +266,64 @@
                     text: 'Печать', value: 'print'
                 }
             ],
-            salesReport: [],
         }),
         async mounted() {
-           this.init();
+            await this.init();
         },
         methods: {
-            filterByDate() {
-            },
             closeModal() {
-                this.currentProducts = []; this.purchaseId = null; this.cancelModal = false;
+                this.currentProducts = [];
+                this.purchaseId = null;
+                this.cancelModal = false;
             },
             async init() {
-                this.overlay = true;
-                this.salesReport = await getReports();
-                this.overlay = false;
+                if (this.salesReport.length === 0) {
+                    this.overlay = true;
+                    this.loading = false;
+                } else {
+                    this.overlay = false;
+                    this.loading = true;
+                }
+                await this.$store.dispatch(ACTIONS.GET_REPORTS, {
+                    filter: this.currentDate,
+                });
+                await this.$store.dispatch(ACTIONS.GET_STORES);
+                await this.$store.dispatch(ACTIONS.GET_USERS);
+                this.overlay = this.loading = false;
             },
             async onConfirm() {
                 this.closeModal();
-                this.init();
             },
             printCheck(id) {
                 window.open(`/check/${id}`, '_blank');
+            },
+            async loadReport() {
+
+                console.log('uea');
+
+                if (this.currentDate === DATE_FILTERS.CUSTOM_FILTER) {
+                    if (!(this.start || this.finish)) {
+                        console.log(1);
+                        return;
+                    }
+                }
+                this.overlay = true;
+                await this.$store.dispatch(ACTIONS.GET_REPORTS, {
+                    filter: this.currentDate,
+                    start: this.start,
+                    finish: this.finish
+                });
+                this.overlay = false;
+
+            },
+            async changeCustomDate() {
+                this.$refs.startMenu.save(this.start);
+                this.$refs.finishMenu.save(this.finish);
+
+                if (this.start && this.finish) {
+                    await this.loadReport();
+                }
+
             }
         },
         computed: {
@@ -288,15 +335,18 @@
             },
             totalSales() {
                 return this._salesReport
-                        .reduce((a, c) => {
-                            return a + c.final_price
-                        }, 0).toFixed();
+                    .reduce((a, c) => {
+                        return a + c.final_price
+                    }, 0).toFixed();
             },
             totalMargin() {
                 return this._salesReport
                     .reduce((a, c) => {
                         return a + c.margin
                     }, 0).toFixed();
+            },
+            salesReport() {
+                return this.$store.getters.REPORTS || [];
             },
             _salesReport() {
                 return this.salesReport
@@ -314,20 +364,22 @@
                             return s.store_id === this.currentCity;
                         }
                     })
-                    .filter(s => {
-                        const momentDate = moment(s.date, 'DD.MM.YYYY HH:mm');
-                        switch (this.currentDate) {
-                            case DATE_FILTERS.ALL_TIME:
-                                return s;
-                            case DATE_FILTERS.CURRENT_MONTH:
-                                const monthStart = moment().startOf('month');
-                                return momentDate.isSameOrBefore(this.today, 'day') && momentDate.isSameOrAfter(monthStart, 'day');
-                            case DATE_FILTERS.TODAY:
-                                return momentDate.isSameOrBefore(this.today, 'day') && momentDate.isSameOrAfter(this.today, 'day');
-                            case DATE_FILTERS.CUSTOM_FILTER:
-                                return momentDate.isSameOrBefore(moment(this.finish), 'day') && momentDate.isSameOrAfter(moment(this.start), 'day');
-                        }
-                    })
+                /*.filter(s => {
+                    const momentDate = moment(s.date, 'DD.MM.YYYY HH:mm');
+                    switch (this.currentDate) {
+                        case DATE_FILTERS.ALL_TIME:
+                            return s;
+                        case DATE_FILTERS.LAST_3_DAYS:
+
+                        case DATE_FILTERS.CURRENT_MONTH:
+                            const monthStart = moment().startOf('month');
+                            return momentDate.isSameOrBefore(this.today, 'day') && momentDate.isSameOrAfter(monthStart, 'day');
+                        case DATE_FILTERS.TODAY:
+                            return momentDate.isSameOrBefore(this.today, 'day') && momentDate.isSameOrAfter(this.today, 'day');
+                        case DATE_FILTERS.CUSTOM_FILTER:
+                            return momentDate.isSameOrBefore(moment(this.finish), 'day') && momentDate.isSameOrAfter(moment(this.start), 'day');
+                    }
+                })*/
             }
         }
     }

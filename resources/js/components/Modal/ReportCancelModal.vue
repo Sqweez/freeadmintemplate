@@ -90,6 +90,7 @@
     import {acceptTransfer, getTransferInfo} from "../../api/transfers";
     import showToast from "../../utils/toast";
     import {cancelSale} from "../../api/sale";
+    import ACTIONS from "../../store/actions";
 
     export default {
         props: {
@@ -151,7 +152,10 @@
                         product_id: t.product_id
                     }
                 });
-                await cancelSale(canceled, this.id);
+                await this.$store.dispatch(ACTIONS.CANCEL_SALE, {
+                    canceled: canceled,
+                    id: this.id,
+                });
                 showToast('Продажа отменена');
                 this.$emit('confirm');
                 this.loading = false;
