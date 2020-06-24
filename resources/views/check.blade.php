@@ -8,7 +8,7 @@
     <title>Чек</title>
 </head>
 <body>
-<div class="check-wrapper" id="print" style="font-family: sans-serif; color: #000; width: 58mm; padding: 5mm">
+<div class="check-wrapper" id="print" style="font-family: sans-serif; color: #000; width: 58mm; padding-right: 10mm">
     <div class="check-header"
          style="display: flex;
                 align-items: center;
