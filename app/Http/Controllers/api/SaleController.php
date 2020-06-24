@@ -108,7 +108,7 @@ class SaleController extends Controller
             'LAST_3_DAYS' => 5,
         ];
 
-        $filter = intval($request->get('filter')) ?? 5;
+        $filter = intval($request->get('filter')) ?? 3;
         $start = $request->get('start') ?? null;
         $finish = $request->get('finish') ?? null;
 

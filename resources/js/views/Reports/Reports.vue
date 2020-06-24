@@ -222,17 +222,17 @@
             finishMenu: null,
             today: moment(),
             finish: null,
-            currentDate: DATE_FILTERS.LAST_3_DAYS,
+            currentDate: DATE_FILTERS.TODAY,
             currentCity: -1,
             currentSeller: -1,
             dateFilters: [
                 {
-                    name: 'Последние 3 дня',
-                    value: DATE_FILTERS.LAST_3_DAYS,
-                },
-                {
                     name: 'Сегодня',
                     value: DATE_FILTERS.TODAY,
+                },
+                {
+                    name: 'Последние 3 дня',
+                    value: DATE_FILTERS.LAST_3_DAYS,
                 },
                 {
                     name: 'За текущий месяц',

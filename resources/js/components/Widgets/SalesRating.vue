@@ -62,7 +62,7 @@
         }),
         mounted() {
             this.$store.dispatch('getStores');
-            this.getStoresReport();
+            this.$store.dispatch('getStoresReport')
             this.current = this.items[0];
         },
         computed: {
@@ -80,13 +80,13 @@
                 'getStoresReport'
             ]),
             getTotal(store_id) {
-                const sales = this.STORES_REPORTS.filter(s => s.store_id === store_id);
+                const sales = this.STORES_REPORTS.filter(s => s.store_id === store_id) || [];
                 return sales.reduce((a, c) => {
                     return c.total_cost + a;
                 }, 0);
             },
             async changeFilter() {
-                await this.getStoresReport(this.current)
+                await this.$store.dispatch('getStoresReport', this.current)
             }
         }
 
