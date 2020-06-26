@@ -6,7 +6,8 @@ import {
     createProduct,
     deleteProduct,
     editProduct,
-    getProducts
+    getProducts,
+    getMainProducts
 } from "../../api/products";
 import {makeSale} from "../../api/sale";
 
@@ -15,7 +16,8 @@ const productsModule = {
         products: [],
         total: 0,
         prev: null,
-        next: null
+        next: null,
+        main_products: [],
     },
     getters: {
         products: state => state.products,
@@ -23,10 +25,14 @@ const productsModule = {
         totalProducts: state => state.total,
         prevLink: state => state.prev,
         nextLink: state => state.next,
+        main_products: state => state.main_products,
     },
     mutations: {
         [MUTATIONS.CREATE_PRODUCT](state, payload) {
             state.products.push(payload);
+        },
+        [MUTATIONS.SET_MAIN_PRODUCTS] (state, payload) {
+          state.main_products = payload;
         },
         [MUTATIONS.SET_PRODUCTS] (state, payload) {
             state.products = payload;
@@ -116,6 +122,10 @@ const productsModule = {
             commit(MUTATIONS.ON_SALE, products);
             commit(MUTATIONS.EDIT_CLIENT, client);
             return sale_id;
+        },
+        async [ACTIONS.GET_MAIN_PRODUCTS] ({commit}) {
+            const {data} = await getMainProducts();
+            commit(MUTATIONS.SET_MAIN_PRODUCTS, data);
         }
     }
 };

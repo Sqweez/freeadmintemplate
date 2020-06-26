@@ -35,5 +35,11 @@ export default {
     GET_USERS: 'getUsers',
     GET_USER_ROLES: 'GET_USER_ROLES',
     GET_REPORTS: 'getReports',
-    CANCEL_SALE: 'cancelSale'
+    CANCEL_SALE: 'cancelSale',
+    GET_GOALS: 'getGoals',
+    EDIT_GOAL: 'editGoal',
+    DELETE_GOAL: 'deleteGoal',
+    CREATE_GOAL: 'createGoal',
+    GET_MAIN_PRODUCTS: 'getMainProducts'
+
 }

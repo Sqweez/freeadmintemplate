@@ -29,3 +29,7 @@ export async function addProductBatch(payload) {
     return response.data.data;
 }
 
+export async function getMainProducts() {
+    const response = await axios.get(`/api/products/main`);
+    return response.data;
+}

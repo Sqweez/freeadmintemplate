@@ -31,6 +31,7 @@ export default {
     SET_CLIENTS: 'setClients',
     ON_SALE: 'onSale',
     SET_USERS: 'setUsers',
-    SET_USER_ROLES: 'SET_USER_ROLES'
+    SET_USER_ROLES: 'SET_USER_ROLES',
+    SET_MAIN_PRODUCTS: 'setMainProducts'
 }
 

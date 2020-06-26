@@ -69,6 +69,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::resource('category', 'api\CategoryController');
     Route::post('products/batch', 'api\ProductController@createBatch');
     Route::post('products/range', 'api\ProductController@createRange');
+    Route::get('products/main', 'api\ProductController@getMainProducts');
     Route::resource('products', 'api\ProductController');
     Route::resource('attributes', 'api\AttributeController');
     Route::resource('manufacturers', 'api\ManufacturerController');
@@ -101,6 +102,9 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // TransferController
     Route::post('transfers/{transfer}/accept', 'api\TransferController@acceptTransfer');
     Route::post('transfers/{transfer}/cancel', 'api\TransferController@declineTransfer');
+
+    Route::resource('goals', 'api\GoalController');
+
 });
 
 

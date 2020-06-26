@@ -12,6 +12,7 @@ import ACTIONS from './actions';
 import transferModule from "./modules/transfers";
 import reportsModule from "./modules/reports";
 import authModule from "./modules/auth";
+import goalModule from "./modules/goals";
 Vue.use(Vuex);
 
 const store = new Store({
@@ -37,7 +38,8 @@ const store = new Store({
         clientModule,
         transferModule,
         reportsModule,
-        authModule
+        authModule,
+        goalModule
     }
 });
 

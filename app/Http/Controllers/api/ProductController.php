@@ -6,6 +6,7 @@ use App\AttributeProduct;
 use App\CategoryProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ExcelService;
+use App\Http\Resources\MainProductsResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductRevisionResource;
 use App\ManufacturerProducts;
@@ -22,26 +23,13 @@ use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
+
     public function index() {
         return ProductResource::collection(
             Product::orderBy('group_id')->get()
         );
-        /*return ProductResource::collection(
-            Product::orderBy('group_id')->get()
-        );*/
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return ProductResource
-     */
     public function store(Request $request) {
         $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs']);
         $_product = Product::create($product);
@@ -131,13 +119,6 @@ class ProductController extends Controller {
         $this->createManufacturerProduct($manufacturer, $product_id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param Product $product
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
     public function update(Request $request, Product $product) {
         $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs']);
         $product_id = $request->get('id');
@@ -166,13 +147,6 @@ class ProductController extends Controller {
         });
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Product $product
-     * @return void
-     * @throws \Exception
-     */
     public function destroy(Product $product) {
         AttributeProduct::where('product_id', $product['id'])->delete();
         CategoryProduct::where('product_id', $product['id'])->delete();
@@ -238,8 +212,6 @@ class ProductController extends Controller {
     }
 
     public function excelProducts(Request $request) {
-        /*$excelService = new ExcelService();
-        return $excelService->createExcel();*/
         $excelService = new ExcelService();
         return $excelService->parseExcel($request->get('filename'));
     }
@@ -259,5 +231,9 @@ class ProductController extends Controller {
             ]);
         }
         return $jsonContent;
+    }
+
+    public function getMainProducts(Request $request) {
+        return MainProductsResource::collection(Product::Main()->with(['manufacturer', 'categories', 'subcategories'])->get());
     }
 }

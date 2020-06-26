@@ -62,8 +62,8 @@ const navigationModule = {
                 hasDropdown: true,
                 children: [
                     {
-                        title: 'Товары магазин',
-                        url: '/shop/products'
+                        title: 'Цели',
+                        url: '/shop/goals'
                     }
                 ]
             }

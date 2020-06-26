@@ -9,6 +9,7 @@ import Reports from "../views/Reports/Reports";
 import Transfers from "../views/Transfers/Transfers";
 import Hits from '../views/Hits/Hits';
 import Login from "../views/Login/Login";
+import Goals from "../views/Goals/Goals";
 
 const routes = [
     {
@@ -63,6 +64,10 @@ const routes = [
     {
         path: '/shop/products',
         component: Hits
+    },
+    {
+        path: '/shop/goals',
+        component: Goals
     },
     {
         path: '/login',
