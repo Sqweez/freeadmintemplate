@@ -26,7 +26,9 @@ class ProductController extends Controller {
 
     public function index() {
         return ProductResource::collection(
-            Product::orderBy('group_id')->get()
+            Product::orderBy('group_id')
+                ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'quantity'])
+                ->get()
         );
     }
 

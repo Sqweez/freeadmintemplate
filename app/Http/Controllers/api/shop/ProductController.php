@@ -12,13 +12,14 @@ use App\ManufacturerProducts;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use \Illuminate\Contracts\Encryption\Encrypter;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller {
+
     public function getProducts(Request $request) {
         $query = $request->except('store_id');
-        $store_id = $request->get('store_id');
-        $products = $this->getFilteredProducts($query, $store_id);
-        return $products;
+        $store_id = $request->get('store_id') ?? 1;
+        return $this->getFilteredProducts($query, $store_id);
     }
 
     public function filters(Request $request) {
@@ -27,8 +28,13 @@ class ProductController extends Controller {
         return $this->getFilters($query, $store_id);
     }
 
-    private function getBySearch($search) {
-        //return ProductsResource::collection(Product::paginate(15));
+    public function getBySearch(Request $request) {
+        $search = $this->prepareSearchString($request->get('search') ?? "");
+        return Product::ofSearch($search)->paginate(15);
+    }
+
+    private function prepareSearchString($search) {
+        return "%" . str_replace(' ', '%', $search) . "%";
     }
 
     private function getFilters($query, $store_id) {
@@ -74,18 +80,21 @@ class ProductController extends Controller {
             'subcategories' => array_map('intval', array_filter(explode(',', ($query['subcategory'] ?? '')), 'strlen')),
             'brands' => array_map('intval', array_filter(explode(',', ($query['brands'] ?? '')), 'strlen')),
             'prices' => array_map('intval', array_filter(explode(',', ($query['prices'] ?? '')), 'strlen')),
-            'is_hit' => isset($query['is_hit']) ? ($query['is_hit'] === 'true' ? 'true' : 'false') : 'false'
+            'is_hit' => isset($query['is_hit']) ? ($query['is_hit'] === 'true' ? 'true' : 'false') : 'false',
+            'search' => isset($query['search']) ? $this->prepareSearchString($query['search']) : ''
         ];
     }
 
     private function getProductWithFilter($filters, $store_id) {
         return Product::Main()
+            ->ofSearch($filters['search'])
             ->ofCategory($filters['categories'])
             ->ofSubcategory($filters['subcategories'])
             ->ofBrand($filters['brands'])
             ->ofPrice($filters['prices'])
             ->inStock($store_id)
-            ->isHit($filters['is_hit']);
+            ->isHit($filters['is_hit'])
+            ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity']);
     }
 
     private function getFilteredProducts($query, $store_id) {

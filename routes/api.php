@@ -19,11 +19,13 @@ Route::get('excel/products', 'api\ProductController@excelProducts');*/
 Route::get('excel/products', 'api\ProductController@excelProducts');
 Route::get('json/products/parse', 'api\ProductController@jsonParseProduct');
 
+
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('shop')->group(function () {
         Route::get('stores', 'api\StoreController@indexStores');
         Route::get('categories', 'api\CategoryController@indexShop');
         Route::get('products', 'api\shop\ProductController@getProducts');
+        Route::get('products/search', 'api\shop\ProductController@getBySearch');
         Route::get('products-group', 'api\shop\ProductController@groupProducts');
         Route::get('products/{product}', 'api\shop\ProductController@getProduct');
         Route::get('heading', 'api\shop\ProductController@getHeading');

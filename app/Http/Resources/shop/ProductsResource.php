@@ -22,7 +22,7 @@ class ProductsResource extends JsonResource
 
 
         return [
-            'product_id' => $this->id,
+            'product_id' => intval($this->id),
             'is_hit' => !!$this->is_hit,
             'product_name' => $this->product_name,
             'category' => $this->categories[0]->category_name ?? '',
@@ -47,8 +47,8 @@ class ProductsResource extends JsonResource
 
     private function inStock($quantity) {
         return array_reduce($quantity->toArray($quantity), function ($a, $c) {
-            return $a + $c['quantity'];
-        } , 0) > 0;
+                return $a + $c['quantity'];
+            } , 0) > 0;
     }
 
     private function getProductTaste($attributes) {

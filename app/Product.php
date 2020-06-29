@@ -75,8 +75,15 @@ class Product extends Model
         });
     }
 
+    public function scopeOfSearch($query, $search) {
+        if (!$search) {
+            return $query;
+        }
+        $query->where('product_name', 'like', $search);
+    }
+
     public function scopeOfCategory($query, $param) {
-        if (!count($param)) {
+        if (count($param) === 0) {
             return $query;
         }
         $ids = CategoryProduct::whereIn('category_id', $param)->pluck('product_id');

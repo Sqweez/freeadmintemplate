@@ -61,12 +61,12 @@ class GoalController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
-    public function show($id)
+    public function show($slug)
     {
-        //
+        return new GoalResource(Goal::where('slug', $slug)->first());
     }
 
     /**
