@@ -64,6 +64,10 @@ const navigationModule = {
                     {
                         title: 'Цели',
                         url: '/shop/goals'
+                    },
+                    {
+                        title: 'Атлеты',
+                        url: '/shop/sportsmen'
                     }
                 ]
             }

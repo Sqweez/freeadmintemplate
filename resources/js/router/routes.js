@@ -10,7 +10,7 @@ import Transfers from "../views/Transfers/Transfers";
 import Hits from '../views/Hits/Hits';
 import Login from "../views/Login/Login";
 import Goals from "../views/Goals/Goals";
-
+import Sportsmen from "../views/Sportsmen/Sportsmen";
 const routes = [
     {
         path: '/',
@@ -68,6 +68,10 @@ const routes = [
     {
         path: '/shop/goals',
         component: Goals
+    },
+    {
+        path: '/shop/sportsmen',
+        component: Sportsmen
     },
     {
         path: '/login',

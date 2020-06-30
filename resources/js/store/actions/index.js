@@ -40,6 +40,10 @@ export default {
     EDIT_GOAL: 'editGoal',
     DELETE_GOAL: 'deleteGoal',
     CREATE_GOAL: 'createGoal',
-    GET_MAIN_PRODUCTS: 'getMainProducts'
+    GET_MAIN_PRODUCTS: 'getMainProducts',
+    GET_SPORTSMEN: 'setSportsmen',
+    DELETE_SPORTSMEN: 'deleteSportsmen',
+    EDIT_SPORTSMEN: 'editSportsmen',
+    CREATE_SPORTSMEN: 'createSportsmen',
 
 }

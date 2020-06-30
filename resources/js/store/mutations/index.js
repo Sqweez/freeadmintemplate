@@ -32,6 +32,10 @@ export default {
     ON_SALE: 'onSale',
     SET_USERS: 'setUsers',
     SET_USER_ROLES: 'SET_USER_ROLES',
-    SET_MAIN_PRODUCTS: 'setMainProducts'
+    SET_MAIN_PRODUCTS: 'setMainProducts',
+    SET_SPORTSMEN: 'setSportsmen',
+    DELETE_SPORTSMEN: 'deleteSportsmen',
+    EDIT_SPORTSMEN: 'editSportsmen',
+    CREATE_SPORTSMAN: 'createSportsmen',
 }
 

@@ -47,15 +47,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('clients/orders', 'api\ClientController@getOrders');
     });
 
-    // TEST
+    Route::resource('sportsmen', 'api\SportsmenController');
 
-    Route::get('cart/test/{order}', 'api\CartController@sendTelegramMessage');
-
-    // END TEST
-
-
-
-    Route::get('mess', 'api\CartController@message');
 
     Route::get('setSlugs', 'api\CategoryController@slugs');
 
