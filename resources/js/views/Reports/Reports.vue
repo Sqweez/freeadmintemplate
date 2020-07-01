@@ -148,7 +148,7 @@
             >
                 <template v-slot:item.products="{item}">
                     <ul>
-                        <li v-for="(product, index) of item.products" :key="index" class="d-flex justify-space-between">
+                        <li v-for="(product, index) of item.products" :key="index" class="d-flex justify-space-between align-center">
                             <span>• {{ product.product_name }}</span> <b style="white-space: nowrap">{{ product.count }}
                             шт.</b>
                         </li>
@@ -385,7 +385,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     h5 {
         font-size: 18px;
     }
@@ -393,4 +393,16 @@
     .min-w-250 {
         width: 300px;
     }
+
+    .v-data-table>.v-data-table__wrapper>table>tbody>tr>td, .v-data-table>.v-data-table__wrapper>table>tfoot>tr>td, .v-data-table>.v-data-table__wrapper>table>thead>tr>td {
+        height: auto!important;
+    }
+
+    @media (max-width: 550px) {
+        .v-data-table__mobile-row__cell {
+            text-align: left!important;
+        }
+    }
+
+
 </style>

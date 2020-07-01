@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Cart;
 use App\CartProduct;
 use App\Client;
+use App\ClientTransaction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\shop\OrderResource;
@@ -154,7 +155,18 @@ class ClientController extends Controller {
 
         $orders = OrderResource::collection($client->orders->where('status', '!=', 1));
         $sales = OrderResource::collection($client->purchases);
-        
+
         return collect($orders)->merge(collect($sales));
+    }
+
+    public function addBalance(Request $request, Client $client) {
+        ClientTransaction::create([
+            'client_id' => $client->id,
+            'user_id' => 1,
+            'amount' => $request->get('sum'),
+            'sale_id' => -1
+        ]);
+
+        return new ClientResource($client);
     }
 }

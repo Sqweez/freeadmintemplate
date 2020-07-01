@@ -18,3 +18,10 @@ export async function editClient(payload) {
 export async function deleteClient(id) {
     await axios.delete(`/api/clients/${id}`)
 }
+
+export async function addBalance({client_id, sum}) {
+    const {data} = await axios.post(`/api/clients/balance/${client_id}`, {
+        sum: sum,
+    })
+    return data;
+}

@@ -1,6 +1,6 @@
 import ACTIONS from '../actions'
 import MUTATIONS from '../mutations';
-import {createClient, deleteClient, editClient, getClients} from "../../api/clients";
+import {addBalance, createClient, deleteClient, editClient, getClients} from "../../api/clients";
 
 const clientModule = {
     state: {
@@ -45,6 +45,10 @@ const clientModule = {
         async [ACTIONS.GET_CLIENTS] ({commit}) {
             const payload = await getClients();
             await commit(MUTATIONS.SET_CLIENTS, payload);
+        },
+        async [ACTIONS.ADD_BALANCE] ({commit}, payload) {
+            const client = await addBalance(payload);
+            await commit(MUTATIONS.EDIT_CLIENT, client.data);
         }
     }
 };

@@ -73,6 +73,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     // ClientsController
     Route::resource('clients', 'api\ClientController');
+    Route::post('clients/balance/{client}', 'api\ClientController@addBalance');
 
     // UserController
     Route::get('users/roles', 'api\UserController@indexRoles');

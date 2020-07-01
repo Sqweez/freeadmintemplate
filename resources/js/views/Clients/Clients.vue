@@ -43,7 +43,7 @@
                                 <v-btn icon @click="confirmationModal = true; userId = item.id;">
                                     <v-icon>mdi-delete</v-icon>
                                 </v-btn>
-                                <v-btn icon @click="confirmationModal = true; userId = item.id;">
+                                <v-btn icon @click="balanceModal = true; userId = item.id;">
                                     <v-icon>mdi-cash</v-icon>
                                 </v-btn>
                             </template>
@@ -72,6 +72,11 @@
             :on-confirm="deleteUser"
             v-on:cancel="userId = null; confirmationModal = false"
             message="Вы действительно хотите удалить выбранного клиента?" />
+        <BalanceModal
+            :state="balanceModal"
+            @cancel="userId = null; balanceModal = false"
+            @submit="addBalance"
+        />
     </v-card>
 </template>
 
@@ -81,8 +86,10 @@
     import ACTIONS from "../../store/actions";
     import ClientModal from "../../components/Modal/ClientModal";
     import showToast from "../../utils/toast";
+    import BalanceModal from "../../components/Modal/BalanceModal";
     export default {
         components: {
+            BalanceModal,
             ClientModal,
             ConfirmationModal,
             UserModal
@@ -94,6 +101,7 @@
             confirmationModal: false,
             clientModal: false,
             userId: null,
+            balanceModal: false,
             search: '',
             pagination: {
                 ascending: true,
@@ -142,6 +150,15 @@
                 this.userId = null;
                 this.confirmationModal = false;
             },
+            async addBalance(e) {
+                await this.$store.dispatch(ACTIONS.ADD_BALANCE, {
+                    client_id: this.userId,
+                    sum: e,
+                });
+                this.balanceModal = false;
+                this.userId = null;
+                showToast('Баланс успешно пополнен!');
+            }
         }
     }
 </script>
