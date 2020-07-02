@@ -13,7 +13,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 class ExcelService {
 
     public function createExcel() {
-        $fileName = 'products_15_06.json';
+        $fileName = 'products.json';
         $jsonFile = Storage::get('public/json/' . $fileName);
         $data = json_decode($jsonFile, true);
         $spreadSheet = new Spreadsheet();
@@ -31,9 +31,10 @@ class ExcelService {
             $sheet->setCellValue('A' . ($key + 2), $datum['id']);
             $sheet->setCellValue('B' . ($key + 2), $datum['product_name']);
             $sheet->setCellValue('C' . ($key + 2), $datum['categories']);
-            //$sheet->setCellValue('D' . ($key + 2), 'Атрибуты');
+            $sheet->setCellValue('D' . ($key + 2), 'Атрибуты');
             $sheet->setCellValue('E' . ($key + 2), $datum['manufacturer']);
             $sheet->setCellValue('F' . ($key + 2),  $datum['product_price']);
+            $sheet->setCellValue('G' . ($key + 2),  $datum['quantity']);
 
             $attributes = '';
 

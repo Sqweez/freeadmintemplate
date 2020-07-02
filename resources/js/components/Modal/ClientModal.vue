@@ -39,6 +39,10 @@
                        type="number"
                        v-model="client.client_discount"
                    />
+                   <v-checkbox
+                       v-model="client.is_partner"
+                       :label="`Партнер`"
+                   ></v-checkbox>
                </v-form>
            </v-card-text>
            <v-card-actions>
@@ -116,7 +120,7 @@
             state() {
                 this.client = {};
                 if (this.id !== null) {
-                    this.client = {...this.$store.getters.client(this.id)}
+                    this.client = JSON.parse(JSON.stringify(this.$store.getters.client(this.id)))
                 }
                 if (this.state === true) {
                     setTimeout(() => {

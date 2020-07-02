@@ -36,6 +36,11 @@
                             <template v-slot:item.client_discount="{item}">
                                 {{ item.client_discount }}%
                             </template>
+                            <template v-slot:item.is_partner="{item}">
+                                <v-icon :color="item.is_partner ? 'success' : 'error'">
+                                    {{ item.is_partner ? 'mdi-check' : 'mdi-close' }}
+                                </v-icon>
+                            </template>
                             <template v-slot:item.actions="{ item }">
                                 <v-btn icon @click="userId = item.id; clientModal = true;">
                                     <v-icon>mdi-pencil</v-icon>
@@ -131,6 +136,10 @@
                 {
                     value: 'client_discount',
                     text: 'Процент скидки'
+                },
+                {
+                    value: 'is_partner',
+                    text: 'Партнер'
                 },
                 {
                     value: 'actions',

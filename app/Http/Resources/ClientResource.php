@@ -27,6 +27,7 @@ class ClientResource extends JsonResource
             'client_discount' => min(max($this->client_discount, $sale_discount), 100),
             'client_balance' => $this->transactions->sum('amount'),
             'total_sum' => $total,
+            'is_partner' => !!$this->is_partner
         ];
     }
 
