@@ -96,6 +96,15 @@ class SaleController extends Controller
             'amount' => $amount * 0.01,
             'user_id' => $request['user_id']
         ]);
+
+        if (isset($request['partner_id']) && $request['partner_id']) {
+            ClientTransaction::create([
+                'client_id' => $request['partner_id'],
+                'sale_id' => $id,
+                'amount' => $amount * 0.05,
+                'user_id' => $request['user_id']
+            ]);
+        }
     }
 
     public function reports(Request $request) {

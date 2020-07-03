@@ -34,7 +34,7 @@
                                     />
                                 </div>
                             </v-col>
-                            <v-col cols="12" xl="4" md="6" style="padding: 0" v-if="!isFree">
+                            <v-col cols="12" xl="8" md="6" style="padding: 0" v-if="!isFree">
                                 <div class="d-flex mt-2">
                                     <div class="d-flex">
                                         <h5>Скидка:</h5>
@@ -64,6 +64,15 @@
                                             type="number"
                                             color="white darken-2"
                                         />
+                                    </div>
+                                    <div class="d-flex ml-4" v-if="client && client.id !== -1">
+                                        <h5>Партнер:</h5>
+                                        <v-autocomplete
+                                            :items="partners"
+                                            item-value="id"
+                                            item-text="client_name"
+                                            v-model="partner_id"
+                                        ></v-autocomplete>
                                     </div>
                                 </div>
                             </v-col>
@@ -310,6 +319,7 @@
             cart: [],
             isRed: false,
             isFree: false,
+            partner_id: null,
             discountPercent: '',
             promocode: null,
             search: '',
@@ -415,6 +425,7 @@
                     discount: this.discount,
                     kaspi_red: this.isRed,
                     balance: this.balance,
+                    partner_id: this.partner_id
                 };
 
                 this.sale_id = await this.$store.dispatch(ACTIONS.MAKE_SALE, sale);
@@ -464,6 +475,9 @@
         computed: {
             user() {
                 return this.$store.getters.USER;
+            },
+            partners() {
+                return this.$store.getters.PARTNERS;
             },
             is_admin() {
                 return this.$store.getters.IS_ADMIN;

@@ -8,7 +8,8 @@ const clientModule = {
     },
     getters: {
         clients: state => state.clients,
-        client: state => id => state.clients.find(c => c.id === id)
+        client: state => id => state.clients.find(c => c.id === id),
+        PARTNERS: state => state.clients.filter(c => c.is_partner),
     },
     mutations: {
         [MUTATIONS.CREATE_CLIENT] (state, payload) {
