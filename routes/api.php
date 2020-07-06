@@ -48,6 +48,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     });
 
     Route::resource('sportsmen', 'api\SportsmenController');
+    Route::resource('plans', 'api\PlanController');
 
 
     Route::get('setSlugs', 'api\CategoryController@slugs');
@@ -90,6 +91,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     //ReportController
     Route::get('reports', 'api\SaleController@reports');
+    Route::get('reports/plan', 'api\SaleController@getPlanReports');
     Route::get('reports/total', 'api\SaleController@getTotal');
 
 

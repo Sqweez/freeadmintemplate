@@ -46,6 +46,11 @@ const navigationModule = {
                         url: '/transfer',
                         isAdmin: true
                     },
+                    {
+                        title: 'План продаж',
+                        url: '/plan',
+                        isAdmin: true
+                    },
 
                 ],
             },

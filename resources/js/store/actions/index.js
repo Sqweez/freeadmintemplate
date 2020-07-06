@@ -45,5 +45,7 @@ export default {
     DELETE_SPORTSMEN: 'deleteSportsmen',
     EDIT_SPORTSMEN: 'editSportsmen',
     CREATE_SPORTSMEN: 'createSportsmen',
-    ADD_BALANCE: 'addBalance'
+    ADD_BALANCE: 'addBalance',
+    GET_PLANS: 'getPlans',
+    SAVE_PLANS: 'savePlans'
 }

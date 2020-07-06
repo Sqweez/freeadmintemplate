@@ -17,3 +17,8 @@ export async function cancelSale(payload, id) {
 export async function getStoreReports(date_filter) {
     return await axios.get(`/api/reports/total?date_filter=${date_filter}`)
 }
+
+export async function getPlanReports() {
+    return await axios.get(`/api/reports/plan`)
+}
+

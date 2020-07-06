@@ -88,7 +88,7 @@ class CartController extends Controller {
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
         $customer_info = $request->get('customer_info');
-        
+
         $client_id = -1;
         $discount = 0;
 
@@ -121,6 +121,7 @@ class CartController extends Controller {
         $message .= 'Заказ №' . $order['id'] . "\n";
         $message .= 'ФИО: ' . $order['fullname'] . "\n";
         $message .= 'Номер телефона: ' . $order['phone'] . "\n";
+        $message .= 'Город: ' . $order['city'] . "\n";
         $message .= 'Адрес: ' . $order['address'] . "\n";
 
         $discount = $order['discount'];

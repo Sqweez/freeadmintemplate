@@ -11,6 +11,8 @@ import Hits from '../views/Hits/Hits';
 import Login from "../views/Login/Login";
 import Goals from "../views/Goals/Goals";
 import Sportsmen from "../views/Sportsmen/Sportsmen";
+import Plan from "../views/Plan/Plan";
+
 const routes = [
     {
         path: '/',
@@ -53,6 +55,13 @@ const routes = [
     {
         path: '/reports',
         component: Reports,
+        meta: {
+            isAdmin: true
+        }
+    },
+    {
+        path: '/plan',
+        component: Plan,
         meta: {
             isAdmin: true
         }

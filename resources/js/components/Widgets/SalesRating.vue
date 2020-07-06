@@ -81,9 +81,9 @@
             ]),
             getTotal(store_id) {
                 const sales = this.STORES_REPORTS.filter(s => s.store_id === store_id) || [];
-                return sales.reduce((a, c) => {
+                return new Intl.NumberFormat('ru-RU').format(sales.reduce((a, c) => {
                     return c.total_cost + a;
-                }, 0);
+                }, 0));
             },
             async changeFilter() {
                 await this.$store.dispatch('getStoresReport', this.current)
@@ -93,6 +93,5 @@
     }
 </script>
 
-<style scoped>
-
+<style>
 </style>

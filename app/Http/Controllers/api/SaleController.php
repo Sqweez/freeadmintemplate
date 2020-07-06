@@ -191,6 +191,19 @@ class SaleController extends Controller
         return SaleByCityResource::collection($sales);
     }
 
+    public function getPlanReports() {
+        $today = Carbon::now();
+        $startOfWeek = $today->startOf('week')->toDateString();
+        $startOfMonth = $today->startOf('month')->toDateString();
+
+        return [
+            'week' => SaleByCityResource::collection(Sale::whereDate('created_at', '>=', $startOfWeek)
+                ->get()),
+            'month' => SaleByCityResource::collection(Sale::whereDate('created_at', '>=', $startOfMonth)
+                ->get()),
+        ];
+    }
+
     private function getDatesFilters($dateFilter) {
         $dates = [];
         $currentDate = Carbon::today();

@@ -299,11 +299,8 @@
             },
             async loadReport() {
 
-                console.log('uea');
-
                 if (this.currentDate === DATE_FILTERS.CUSTOM_FILTER) {
                     if (!(this.start || this.finish)) {
-                        console.log(1);
                         return;
                     }
                 }
@@ -334,16 +331,16 @@
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.stores];
             },
             totalSales() {
-                return this._salesReport
+                return new Intl.NumberFormat('ru-RU').format(this._salesReport
                     .reduce((a, c) => {
                         return a + c.final_price
-                    }, 0).toFixed();
+                    }, 0).toFixed());
             },
             totalMargin() {
-                return this._salesReport
+                return new Intl.NumberFormat('ru-RU').format(this._salesReport
                     .reduce((a, c) => {
                         return a + c.margin
-                    }, 0).toFixed();
+                    }, 0).toFixed());
             },
             salesReport() {
                 return this.$store.getters.REPORTS || [];

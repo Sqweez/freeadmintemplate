@@ -7,6 +7,9 @@
             <v-col sm="9" lg="9" md="9">
                 <SalesRating />
             </v-col>
+            <v-col sm="12" lg="12" md="12">
+                <PlanWidget />
+            </v-col>
         </v-row>
 
 
@@ -17,11 +20,13 @@
 <script>
     import Weather from "../../components/Widgets/Weather";
     import SalesRating from "../../components/Widgets/SalesRating";
+    import PlanWidget from "../../components/Widgets/PlanWidget";
     export default {
         data: () => ({
             items: ['Сегодня', 'Текущая неделя', 'Текущий месяц', 'Последние 3 месяца'],
         }),
         components: {
+            PlanWidget,
             Weather, SalesRating
         }
     }
