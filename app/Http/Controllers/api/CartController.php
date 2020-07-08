@@ -144,6 +144,10 @@ class CartController extends Controller {
             $message .= 'Скидка: ' . $discount . '%' . "\n";
         }
 
+        if (intval($order['balance']) > 0) {
+            $message .= 'Списано с баланса: ' . $order['balance'] . ' тнг' . "\n";
+        }
+
         if ($order['comment']) {
             $message .= 'Комментарий:' . $order['comment'] . "\n";
         }
@@ -164,7 +168,7 @@ class CartController extends Controller {
 
         $message .= 'Общая сумма: ' . ceil($order->items->reduce(function ($a, $c) use ($discount){
                 return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
-            }, 0)) . 'тг' . "\n";
+            }, 0) - intval($order['balance'])) . 'тг' . "\n";
 
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/decline'>Отменить заказ❌</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>";
@@ -185,14 +189,17 @@ class CartController extends Controller {
 
         $store_id = $order['store_id'];
         $products = $order->items;
-        // @TODO после авторизации сделать клиент ид
+
         $sale = Sale::create([
             'client_id' => $order['client_id'],
             'store_id' => $store_id,
             'user_id' => 2,
             'discount' => $order['discount'],
-            'kaspi_red' => 0
+            'kaspi_red' => 0,
+            'balance' => $order['balance']
         ]);
+
+
         foreach ($products as $product) {
             $product['sale_id'] = $sale['id'];
             unset($product['order_id']);
@@ -208,6 +215,10 @@ class CartController extends Controller {
         $order->status = 1;
 
         $order->update();
+
+        if (intval($order['balance']) > 0) {
+
+        }
 
         return 'Заказ выполнен!';
     }
@@ -378,6 +389,17 @@ class CartController extends Controller {
             'amount' => $amount * 0.01,
             'user_id' => 2
         ]);
+
+        if ($sale['balance'] > 0) {
+            ClientTransaction::create([
+                'client_id' => $client_id,
+                'sale_id' => $sale['id'],
+                'amount' => $sale['balance'] * -1,
+                'user_id' => 2
+            ]);
+        }
+
+
     }
 
 

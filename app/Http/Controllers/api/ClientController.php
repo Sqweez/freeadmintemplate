@@ -95,11 +95,11 @@ class ClientController extends Controller {
 
         $client = Client::ofPhone($phone)->first();
 
-         if ($client && (strlen($client->password) || strlen($client->user_token))) {
-             return [
-                 'error' => 'Клиент с данным номер уже зарегистрирован!'
-             ];
-         }
+        if ($client && (strlen($client->password) || strlen($client->user_token))) {
+            return [
+                'error' => 'Клиент с данным номер уже зарегистрирован!'
+            ];
+        }
 
         if (!$client) {
             $client = Client::create(['client_name' => "", 'client_phone' => $phone, 'client_card' => '', 'client_discount' => 0, 'password' => Hash::make($password), 'address' => '', 'user_token' => Str::random(60), 'email' => '']);
@@ -122,7 +122,8 @@ class ClientController extends Controller {
         if (!$client) {
             return null;
         } else {
-            return collect($client)->only(['client_name', 'client_phone', 'address', 'city', 'email', 'id', 'client_discount']);
+            $client['client_balance'] = $client->transactions->sum('amount');
+            return collect($client)->only(['client_name', 'client_phone', 'address', 'city', 'email', 'id', 'client_discount', 'client_balance', 'is_partner']);
         }
     }
 

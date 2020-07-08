@@ -19,7 +19,7 @@ class SportsmenController extends Controller
         if ($request->has('shop')) {
             $sportsmen = Sportsmen::all();
             return collect($sportsmen)->map(function ($i) {
-                $i->image = url('/') . Storage::url($this->image);
+                $i->image = url('/') . Storage::url($i->image);
                 return $i;
             });
         }

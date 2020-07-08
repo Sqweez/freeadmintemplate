@@ -84,7 +84,9 @@ class SaleController extends Controller
         $_amount = array_reduce($cart, function ($c, $i) {
             return $c + ($i['product_price'] * $i['count']);
         });
+
         $amount = $_amount - ($_amount * $discount/100);
+
         ClientSale::create([
             'client_id' => $client_id,
             'amount' => $amount,
@@ -96,6 +98,15 @@ class SaleController extends Controller
             'amount' => $amount * 0.01,
             'user_id' => $request['user_id']
         ]);
+
+        if ($request['balance'] > 0) {
+            ClientTransaction::create([
+                'client_id' => $client_id,
+                'sale_id' => $id,
+                'amount' => $request['balance'] * -1,
+                'user_id' => $request['user_id']
+            ]);
+        }
 
         if (isset($request['partner_id']) && $request['partner_id']) {
             ClientTransaction::create([
