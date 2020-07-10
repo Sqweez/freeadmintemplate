@@ -17,8 +17,8 @@
                         {{ getCategoryById(key) }}
                     </td>
                     <td>
-                        <ol v-for="item of category">
-                            <li>
+                        <ol>
+                            <li v-for="item of category">
                                 {{ item.product.product_name }}
                                 {{ item.product.manufacturer }}
                                 {{ item.product.attributes.map(a => a.attribute_value).join(' ') }} |
@@ -58,8 +58,16 @@
     .stat-table th, .stat-table td {
         font-size: 16px!important;
 
+        padding: 10px 5px!important;
+
         li {
             font-size: 16px!important;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        li:first-child {
+            border-top: 1px solid #eee;
         }
     }
 
