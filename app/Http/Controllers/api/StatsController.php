@@ -15,7 +15,11 @@ class StatsController extends Controller
     public function getMVPProducts(Request $request) {
         $today = Carbon::now();
         $monthStart = Carbon::now()->subDays(30);
-        $sales = Sale::whereDate('created_at', '<', $today)->whereDate('created_at', '>', $monthStart)->with('products')->get();
+        $sales = Sale::whereDate('created_at', '<', $today)
+                    ->whereDate('created_at', '>', $monthStart)
+                    ->where('discount', '<', 100)
+                    ->with('products')
+                    ->get();
         $sales = $sales->pluck('products')->flatten()->groupBy('product_id');
         $sales = $sales->map(function ($i) {
             return collect($i)->count();

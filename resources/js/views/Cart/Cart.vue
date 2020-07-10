@@ -440,6 +440,7 @@
                 this.discountPercent = '';
                 this.isRed = false;
                 this.isFree = false;
+                this.balance = 0;
             },
             printCheck() {
                 this.confirmationModal = false;
