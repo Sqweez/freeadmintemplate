@@ -47,5 +47,6 @@ export default {
     CREATE_SPORTSMEN: 'createSportsmen',
     ADD_BALANCE: 'addBalance',
     GET_PLANS: 'getPlans',
-    SAVE_PLANS: 'savePlans'
+    SAVE_PLANS: 'savePlans',
+    GET_MVP_PRODUCTS: 'getMVPProducts'
 }

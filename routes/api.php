@@ -103,6 +103,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     Route::resource('goals', 'api\GoalController');
 
+    Route::get('stats/mvp-products', 'api\StatsController@getMVPProducts');
+
 });
 
 

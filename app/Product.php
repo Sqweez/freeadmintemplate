@@ -24,6 +24,18 @@ class Product extends Model
         });
     }
 
+    /*
+     * TEST
+     * */
+
+   /* public function _categories() {
+        return $this->morphToMany('App\Category', 'product', 'category_product');
+    }*/
+
+    /*
+     * END TEST
+     * */
+
     public function parent()
     {
         return $this->belongsTo('App\Product', 'group_id');

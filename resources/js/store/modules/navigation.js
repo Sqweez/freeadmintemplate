@@ -75,6 +75,19 @@ const navigationModule = {
                         url: '/shop/sportsmen'
                     }
                 ]
+            },
+            {
+                title: 'Статистика',
+                url: '#',
+                icon: 'dashboard',
+                hasDropdown: true,
+                isAdmin: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/stats/mvp_products'
+                    }
+                ]
             }
         ],
     },

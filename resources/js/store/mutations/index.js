@@ -37,6 +37,7 @@ export default {
     DELETE_SPORTSMEN: 'deleteSportsmen',
     EDIT_SPORTSMEN: 'editSportsmen',
     CREATE_SPORTSMAN: 'createSportsmen',
-    SET_PLANS: 'setPlans'
+    SET_PLANS: 'setPlans',
+    SET_MVP_PRODUCTS: 'setMVPProducts'
 }
 

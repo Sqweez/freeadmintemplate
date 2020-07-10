@@ -167,8 +167,8 @@ class CartController extends Controller {
         $message .= 'Способ получения: ' . $delivery . "\n";
 
         $message .= 'Общая сумма: ' . ceil($order->items->reduce(function ($a, $c) use ($discount){
-                return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
-            }, 0) - intval($order['balance'])) . 'тг' . "\n";
+                    return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
+                }, 0) - intval($order['balance'])) . 'тг' . "\n";
 
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/decline'>Отменить заказ❌</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>";
@@ -196,7 +196,7 @@ class CartController extends Controller {
             'user_id' => 2,
             'discount' => $order['discount'],
             'kaspi_red' => 0,
-            'balance' => $order['balance']
+            'balance' => $order['balance'] ?? 0
         ]);
 
 
@@ -283,6 +283,7 @@ class CartController extends Controller {
             'status' => 0,
             'client_id' => $client_id,
             'discount' => $discount,
+            'balance' => $customer_info['balance']
         ];
         return Order::create($order);
     }

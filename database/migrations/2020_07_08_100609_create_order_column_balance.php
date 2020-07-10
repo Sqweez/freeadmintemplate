@@ -14,7 +14,7 @@ class CreateOrderColumnBalance extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            //
+            $table->integer('balance')->nullable()->default(0);
         });
     }
 
@@ -26,7 +26,7 @@ class CreateOrderColumnBalance extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            //
+            $table->dropColumn('balance');
         });
     }
 }

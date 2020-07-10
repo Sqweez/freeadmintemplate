@@ -15,6 +15,7 @@ import authModule from "./modules/auth";
 import goalModule from "./modules/goals";
 import sportsmenModule from "./modules/sportsmen";
 import plansModule from "./modules/plans";
+import statsModule from "./modules/stats";
 Vue.use(Vuex);
 
 const store = new Store({
@@ -43,7 +44,8 @@ const store = new Store({
         authModule,
         goalModule,
         sportsmenModule,
-        plansModule
+        plansModule,
+        statsModule,
     }
 });
 

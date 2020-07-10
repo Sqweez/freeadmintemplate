@@ -20,6 +20,7 @@ class SportsmenController extends Controller
             $sportsmen = Sportsmen::all();
             return collect($sportsmen)->map(function ($i) {
                 $i->image = url('/') . Storage::url($i->image);
+                $i->nickname = explode('/', $i->instagram)[3];
                 return $i;
             });
         }
