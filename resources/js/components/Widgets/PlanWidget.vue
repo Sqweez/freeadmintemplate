@@ -28,7 +28,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(store) of plans">
+                    <tr v-for="(store) of plans" v-if="IS_ADMIN || USER.store_id == store.store_id">
                         <td>{{ store.name }}</td>
                         <td>
                             {{ store.week_plan }}₸
@@ -58,6 +58,7 @@
 
 <script>
     import ACTIONS from "../../store/actions";
+    import {mapGetters} from 'vuex';
 
     export default {
         data: () => ({
@@ -88,6 +89,10 @@
             planReports() {
                 return this.$store.getters.PLAN_REPORTS;
             },
+            ...mapGetters([
+                'IS_ADMIN',
+                'USER'
+            ]),
         },
         async created() {
             await this.$store.dispatch(ACTIONS.GET_PLANS);

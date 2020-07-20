@@ -13,7 +13,7 @@
             </v-card-title>
             <v-card-text class="pl-0 pr-0">
                 <v-list-item-group>
-                    <v-list-item v-for="(store, index) of stores" :key="index" class="darken-3" :class="index % 2 ? 'grey' : 'black'">
+                    <v-list-item v-for="(store, index) of stores" :key="index" class="darken-3" :class="index % 2 ? 'grey' : 'black'" v-if="IS_ADMIN || store.id == USER.store_id">
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
@@ -67,7 +67,9 @@
         },
         computed: {
             ...mapGetters([
-                'STORES_REPORTS'
+                'STORES_REPORTS',
+                'IS_ADMIN',
+                'USER'
             ]),
             stores() {
                 return this.$store.getters.stores.filter(s => {
