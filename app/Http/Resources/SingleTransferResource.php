@@ -16,7 +16,7 @@ class SingleTransferResource extends JsonResource
     {
 
         $products = BatchResource::collection($this->batches);
-        $products = $products->toArray($products);
+        $products = $products->toArray($request);
 
         return [
             'id' => $this->id,

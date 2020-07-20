@@ -16,7 +16,7 @@ class BatchResource extends JsonResource
     public function toArray($request)
     {
         $product = new ProductResource(Product::find($this->productBatch->product_id));
-        $product = $product->toArray($product);
+        $product = $product->toArray($request);
 
         return [
             'batch_id' => $this->batch_id,

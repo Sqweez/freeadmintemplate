@@ -273,14 +273,17 @@
                 showToast('чек печатается....')
             },
             getQuantity(quantity = []) {
+                if (typeof quantity === 'number') {
+                    return quantity;
+                }
                 if (!quantity.length) {
                     return 0;
                 }
                 return quantity
-                    .filter(q => q.store_id === this.storeFilter)
+                    .filter(q => +q.store_id === +this.storeFilter)
                     .map(q => q.quantity)
                     .reduce((a, c) => {
-                        return a + c;
+                        return +a + +c;
                     }, 0)
             },
             getCartCount(id) {

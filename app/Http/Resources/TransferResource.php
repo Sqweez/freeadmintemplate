@@ -21,7 +21,7 @@ class TransferResource extends JsonResource
             'id' => $this->id,
             'parent_store' => $this->parent_store->name,
             'child_store' => $this->child_store->name,
-            'user' => 'Андрей',
+            'user' => 'Администратор',
             'product_count' => $batches->count(),
             'position_count' => $batches->groupBy('product_id')->count(),
             'total_cost' => $this->getTotalCost($batches->toArray($batches))
