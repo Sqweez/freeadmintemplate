@@ -6,7 +6,7 @@
                     <v-btn color="error" class="top-button mr-3" @click="wayBillModal = true;">
                         Сформировать счет на оплату
                     </v-btn>
-                    <v-btn color="error" class="top-button" @click="wayBillModal = true;">
+                    <v-btn color="error" class="top-button" @click="confirmationModal = true;">
                         Сформировать накладную
                     </v-btn>
                 </div>
@@ -36,6 +36,9 @@
                                 </ul>
                             </td>
                             <td>
+                                <v-btn icon color="error" @click="decreaseCartCount(index)">
+                                    <v-icon>mdi-minus</v-icon>
+                                </v-btn>
                                 {{ item.count }} шт.
                                 <v-btn icon color="success" @click="addToCart(item)">
                                     <v-icon>mdi-plus</v-icon>
@@ -160,8 +163,8 @@
         </v-overlay>
         <ConfirmationModal
             :state="confirmationModal"
-            message="Напечатать чек?"
-            :on-confirm="printCheck"
+            message="Сформировать накладную?"
+            :on-confirm="getWayBill"
         />
         <WayBillModal
             :state="wayBillModal"
@@ -176,6 +179,7 @@
     import showToast from "../../utils/toast";
     import {TOAST_TYPE} from "../../config/consts";
     import ACTIONS from "../../store/actions";
+    import axios from 'axios';
 
     export default {
         components: {
@@ -246,6 +250,9 @@
             increaseCartCount(index) {
                 this.$set(this.cart[index], 'count', this.cart[index].count + 1);
             },
+            decreaseCartCount(index) {
+                this.$set(this.cart[index], 'count', Math.max(1, this.cart[index].count - 1))
+            },
             onClientChosen(client) {
                 this.clientCartModal = false;
                 this.client = client;
@@ -265,12 +272,22 @@
 
                 this.overlay = false;
 
+                this.confirmationModal = true;
+
                 showToast('Перемещение создано успешно!');
                 this.cart = [];
             },
-            printCheck() {
+            async getWayBill() {
                 this.confirmationModal = false;
-                showToast('чек печатается....')
+                const { data } = await axios.post('/api/excel/transfer/waybill', {
+                    child_store: this.child_store,
+                    parent_store: this.storeFilter,
+                    cart: this.cart,
+                });
+
+                const link = document.createElement('a');
+                link.href = data.path;
+                link.click();
             },
             getQuantity(quantity = []) {
                 if (typeof quantity === 'number') {

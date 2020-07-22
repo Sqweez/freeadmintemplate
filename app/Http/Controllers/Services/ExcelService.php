@@ -75,8 +75,8 @@ class ExcelService {
         return $products;
     }
 
-    private function loadFile($filename) {
-        $path = 'app/public/excel/' . $filename . '.xlsx';
+    public function loadFile($filename, $ext = 'xlsx') {
+        $path = 'app/public/excel/' . $filename . '.' . $ext;
         $file = storage_path($path);
         return IOFactory::load($file);
     }
