@@ -14,9 +14,9 @@
         </v-card-text>
         <v-card-text v-else>
             <div>
-                <v-btn color="error" @click="productModal = true">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+                <v-btn color="error" @click="productModal = true" v-if="is_admin">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
             </div>
-            <v-btn color="success" @click="groupProduct">Сгруппировать товар <v-icon>mdi-sync</v-icon></v-btn>
+            <v-btn color="success" @click="groupProduct" v-if="is_admin">Сгруппировать товар <v-icon>mdi-sync</v-icon></v-btn>
             <v-row>
                 <v-col>
                     <v-row>
@@ -31,7 +31,7 @@
                                 hide-details
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12" xl="4">
+                        <v-col cols="12" xl="4" v-if="is_admin">
                             <v-select
                                 :items="stores"
                                 item-text="name"
@@ -176,43 +176,6 @@
                 rowsPerPage: 10,
                 page: 1
             },
-            headers: [
-                {
-                    value: 'actions',
-                    text: 'Действие',
-                    sortable: false
-                },
-                {
-                    value: 'product_name',
-                    text: 'Наименование',
-                    sortable: false,
-                },
-                {
-                    value: 'quantity',
-                    text: 'Остаток'
-                },
-                {
-                    value: 'product_price',
-                    text: 'Стоимость'
-                },
-                {
-                    value: 'product_barcode',
-                    text: 'Штрих-код',
-                    align: ' d-none'
-                },
-                {
-                    value: 'attributes',
-                    text: 'Атрибуты'
-                },
-                {
-                    value: 'manufacturer',
-                    text: 'Производитель'
-                },
-                {
-                    value: 'categories',
-                    text: 'Категория'
-                }
-            ]
         }),
         computed: {
             products() {
@@ -236,6 +199,50 @@
             },
             is_admin() {
                 return this.$store.getters.IS_ADMIN;
+            },
+            headers() {
+                const headers = [
+                    {
+                        value: 'product_name',
+                        text: 'Наименование',
+                        sortable: false,
+                    },
+                    {
+                        value: 'quantity',
+                        text: 'Остаток'
+                    },
+                    {
+                        value: 'product_price',
+                        text: 'Стоимость'
+                    },
+                    {
+                        value: 'product_barcode',
+                        text: 'Штрих-код',
+                        align: ' d-none'
+                    },
+                    {
+                        value: 'attributes',
+                        text: 'Атрибуты'
+                    },
+                    {
+                        value: 'manufacturer',
+                        text: 'Производитель'
+                    },
+                    {
+                        value: 'categories',
+                        text: 'Категория'
+                    }
+                ];
+
+                if (this.is_admin) {
+                    headers.unshift( {
+                        value: 'actions',
+                        text: 'Действие',
+                        sortable: false
+                    })
+                }
+
+                return headers;
             }
         },
         methods: {
