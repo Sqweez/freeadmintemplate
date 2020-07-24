@@ -13,6 +13,7 @@ import Goals from "../views/Goals/Goals";
 import Sportsmen from "../views/Sportsmen/Sportsmen";
 import Plan from "../views/Plan/Plan";
 import MVPProducts from "../views/MVPProducts/MVPProducts";
+import Rating from "../views/Rating/Rating";
 
 const routes = [
     {
@@ -93,6 +94,13 @@ const routes = [
     {
         path: '/stats/mvp_products',
         component: MVPProducts,
+        meta: {
+            isAdmin: true
+        }
+    },
+    {
+        path: '/shop/rating',
+        component: Rating,
         meta: {
             isAdmin: true
         }

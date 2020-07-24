@@ -73,6 +73,10 @@ const navigationModule = {
                     {
                         title: 'Атлеты',
                         url: '/shop/sportsmen'
+                    },
+                    {
+                        title: 'Рейтинг продавцов',
+                        url: '/shop/rating'
                     }
                 ]
             },

@@ -45,6 +45,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('clients/register', 'api\ClientController@register');
         Route::post('clients/auth', 'api\ClientController@getAuth');
         Route::post('clients/orders', 'api\ClientController@getOrders');
+        Route::get('rating/sellers', 'api\RatingController@getRating');
     });
 
     Route::resource('sportsmen', 'api\SportsmenController');
@@ -107,6 +108,17 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     Route::post('excel/transfer/waybill', 'api\WaybillController@transferWaybill');
 
+    // RatingController
+
+    Route::get('rating/sellers', 'api\RatingController@getSellers');
+    Route::post('rating/sellers', 'api\RatingController@createSeller');
+    Route::patch('rating/sellers/{seller}', 'api\RatingController@editSeller');
+    Route::delete('rating/sellers/{seller}', 'api\RatingController@deleteSeller');
+
+    Route::get('rating/criteria', 'api\RatingController@getCriteria');
+    Route::post('rating/criteria', 'api\RatingController@createCriteria');
+    Route::patch('rating/criteria/{crit}', 'api\RatingController@editCriteria');
+    Route::delete('rating/criteria/{crit}', 'api\RatingController@deleteCriteria');
 });
 
 

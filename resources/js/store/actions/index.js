@@ -48,5 +48,13 @@ export default {
     ADD_BALANCE: 'addBalance',
     GET_PLANS: 'getPlans',
     SAVE_PLANS: 'savePlans',
-    GET_MVP_PRODUCTS: 'getMVPProducts'
+    GET_MVP_PRODUCTS: 'getMVPProducts',
+    GET_SELLERS: 'getSellers',
+    CREATE_SELLER: 'createSeller',
+    EDIT_SELLER: 'editSeller',
+    DELETE_SELLER: 'deleteSeller',
+    GET_CRITERIA: 'getCriteria',
+    CREATE_CRITERIA: 'createCriteria',
+    EDIT_CRITERIA: 'editCriteria',
+    DELETE_CRITERIA: 'deleteCriteria',
 }

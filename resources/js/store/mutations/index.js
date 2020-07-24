@@ -38,6 +38,14 @@ export default {
     EDIT_SPORTSMEN: 'editSportsmen',
     CREATE_SPORTSMAN: 'createSportsmen',
     SET_PLANS: 'setPlans',
-    SET_MVP_PRODUCTS: 'setMVPProducts'
+    SET_MVP_PRODUCTS: 'setMVPProducts',
+    SET_SELLERS: 'setSellers',
+    CREATE_SELLER: 'createSeller',
+    EDIT_SELLER: 'editSeller',
+    DELETE_SELLER: 'deleteSeller',
+    SET_CRITERIA: 'setCriteria',
+    CREATE_CRITERIA: 'createCriteria',
+    EDIT_CRITERIA: 'editCriteria',
+    DELETE_CRITERIA: 'deleteCriteria',
 }
 
