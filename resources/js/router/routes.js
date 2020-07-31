@@ -14,6 +14,7 @@ import Sportsmen from "../views/Sportsmen/Sportsmen";
 import Plan from "../views/Plan/Plan";
 import MVPProducts from "../views/MVPProducts/MVPProducts";
 import Rating from "../views/Rating/Rating";
+import Revision from "../views/Revision/Revision";
 
 const routes = [
     {
@@ -104,6 +105,10 @@ const routes = [
         meta: {
             isAdmin: true
         }
+    },
+    {
+        path: '/revision',
+        component: Revision
     }
 ];
 

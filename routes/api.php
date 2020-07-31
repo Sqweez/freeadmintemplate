@@ -46,7 +46,15 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('clients/auth', 'api\ClientController@getAuth');
         Route::post('clients/orders', 'api\ClientController@getOrders');
         Route::get('rating/sellers', 'api\RatingController@getRating');
+        Route::post('rating/vote', 'api\RatingController@vote');
+        Route::get('revision', 'api\RevisionController@index');
     });
+
+    // RevisionController
+
+    Route::get('revision/file/get', 'api\RevisionController@getRevisionProducts');
+
+    // End RevisionController
 
     Route::resource('sportsmen', 'api\SportsmenController');
     Route::resource('plans', 'api\PlanController');

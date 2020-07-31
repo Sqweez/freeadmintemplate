@@ -18,7 +18,7 @@ class ProductRevisionResource extends JsonResource
         $quantity =
             $request->has('store_id') ?
                 $this->quantity->where('store_id', $request->get('store_id'))->sum('quantity') :
-                $this->quantity;
+                $this->quantity->where('store_id', 1)->sum('quantity');
 
         return [
             'id' => intval($this->id),

@@ -51,7 +51,10 @@ const navigationModule = {
                         url: '/plan',
                         isAdmin: true
                     },
-
+                    {
+                        title: 'Ревизии',
+                        url: '/revision',
+                    },
                 ],
             },
             {

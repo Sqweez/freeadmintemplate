@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\RatingResource;
 use App\RatingCriteria;
 use App\Seller;
+use App\SellerRating;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
@@ -48,7 +49,17 @@ class RatingController extends Controller
 
 
     public function vote(Request $request) {
+        $user_token = $request->get('user_token');
+        $seller_id = $request->get('seller_id');
+        $criteria_id = $request->get('criteria_id');
 
+        $previousRating = SellerRating::where('user_token', $user_token)->where('seller_id', $seller_id)->where('criteria_id', $criteria_id)->first();
+
+        if ($previousRating) {
+            $previousRating->delete();
+        }
+
+        SellerRating::create($request->all());
     }
 
     public function getRating(Request $request) {

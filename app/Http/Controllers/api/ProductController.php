@@ -16,6 +16,7 @@ use App\ProductImage;
 use App\ProductThumb;
 use App\SubcategoryProduct;
 use App\SaleProduct;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -208,8 +209,11 @@ class ProductController extends Controller {
     public function jsonProducts() {
         $products = collect(ProductRevisionResource::collection(Product::all()));
         $jsonData = json_encode($products, JSON_UNESCAPED_UNICODE);
-        $fileName = 'public/json/products_15_06.json';
+        $fileName = Carbon::now()->toDateString() . '_' . Str::random(10) . '_'  .'_products.json';
+        $fileName = 'public/json/' . $fileName;
         Storage::put($fileName, $jsonData);
+        $excelService = new ExcelService();
+        $excelService->createExcel($fileName);
         return $products;
     }
 
