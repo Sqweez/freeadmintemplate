@@ -110,6 +110,26 @@ class ExcelService {
         return url('/') . Storage::url($file);
     }
 
+    public function parseRevisionExcel($filename) {
+        $file = explode('/', $filename);
+        $file = $file[1] . '/' . $file[2];
+        $excelFile = $this->loadFile($file, '');
+        $sheet = $excelFile->getActiveSheet();
+        $rows = $sheet->getRowIterator();
+        $products = [];
+        foreach ($rows as $key => $row) {
+            if ($key > 1) {
+                $products[] = [
+                    'id' => $sheet->getCell('A' . $key)->getValue(),
+                    'stock_quantity' => $sheet->getCell('G' . $key)->getValue(),
+                    'fact_quantity' => $sheet->getCell('H' . $key)->getValue() ?? 0,
+                ];
+            }
+        }
+
+        return $products;
+    }
+
     public function parseExcel($filename) {
         $excelFile = $this->loadFile($filename);
         $sheet = $excelFile->getActiveSheet();

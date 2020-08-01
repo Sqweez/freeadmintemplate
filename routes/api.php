@@ -53,6 +53,9 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // RevisionController
 
     Route::get('revision/file/get', 'api\RevisionController@getRevisionProducts');
+    Route::get('revision', 'api\RevisionController@getRevisions');
+    Route::get('revision/{revision}', 'api\RevisionController@getRevisionInfo');
+    Route::post('revision', 'api\RevisionController@createRevision');
 
     // End RevisionController
 

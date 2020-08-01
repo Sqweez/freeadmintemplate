@@ -212,6 +212,10 @@
                     value: 'attributes'
                 },
                 {
+                    value: 'manufacturer',
+                    text: 'Производитель'
+                },
+                {
                     text: 'Остаток',
                     value: 'quantity'
                 },
