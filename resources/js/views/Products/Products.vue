@@ -80,6 +80,10 @@
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
+                                <v-btn color="primary" @click="priceTag = item; priceTagModal = true;">
+                                    Печать ценника
+                                    <v-icon>mdi-plus</v-icon>
+                                </v-btn>
                             </div>
                             <div>
                                 <v-btn color="primary" @click="productId = item.id; rangeMode = true; productModal = true;">
@@ -129,6 +133,11 @@
             :on-confirm="deleteProduct"
             v-on:cancel="productId = -1; deleteModal = false;"
         />
+        <PriceTagModal
+            :state="priceTagModal"
+            :priceTag="priceTag"
+            @cancel="priceTagModal = false"
+        />
     </v-card>
 </template>
 
@@ -140,9 +149,11 @@
     import showToast from "../../utils/toast";
     import ACTIONS from "../../store/actions";
     import axios from 'axios';
+    import PriceTagModal from "../../components/Modal/PriceTagModal";
 
     export default {
         components: {
+            PriceTagModal,
             ProductModal,
             ConfirmationModal,
             ProductQuantityModal,
@@ -160,6 +171,7 @@
         },
         data: () => ({
             search: '',
+            priceTagModal: false,
             loading: true,
             options: {},
             productModal: false,
@@ -171,6 +183,7 @@
             productId: -1,
             storeFilter: null,
             rangeMode: false,
+            priceTag: {},
             pagination: {
                 ascending: true,
                 rowsPerPage: 10,
