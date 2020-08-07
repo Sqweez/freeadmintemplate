@@ -132,6 +132,13 @@
                         item-value="id"
                         item-text="name">
                     </v-select>
+                    <v-select
+                        :items="payment_types"
+                        label="Способ оплаты:"
+                        v-model="currentType"
+                        item-value="id"
+                        item-text="name">
+                    </v-select>
                 </v-col>
             </v-row>
             <v-data-table
@@ -225,6 +232,7 @@
             currentDate: DATE_FILTERS.TODAY,
             currentCity: -1,
             currentSeller: -1,
+            currentType: -1,
             dateFilters: [
                 {
                     name: 'Сегодня',
@@ -253,6 +261,7 @@
                 {text: 'Клиент', value: 'client'},
                 {text: 'Продавец', value: 'user'},
                 {text: 'Магазин', value: 'store'},
+                {text: 'Способ оплаты', value: 'payment_type_text'},
                 {text: 'Закупочная цена', value: 'purchase_price'},
                 {text: 'Фактическая цена', value: 'fact_price'},
                 {text: 'Продажная цена', value: 'final_price'},
@@ -327,6 +336,9 @@
             sellers() {
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.users];
             },
+            payment_types() {
+                return [{id: -1, name: 'Все'}, ...this.$store.getters.payment_types];
+            },
             shops() {
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.stores];
             },
@@ -359,6 +371,13 @@
                             return s;
                         } else {
                             return s.store_id === this.currentCity;
+                        }
+                    })
+                    .filter(s => {
+                        if (this.currentType == -1) {
+                            return s;
+                        } else {
+                            return s.payment_type == this.currentType;
                         }
                     })
                 /*.filter(s => {

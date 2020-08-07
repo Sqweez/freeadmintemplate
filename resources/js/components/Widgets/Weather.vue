@@ -12,7 +12,7 @@
             </v-card-title>
             <v-card-text style="padding: 0;">
                 <div class="text-right mr-5 mt-10">
-                    <span class="display-4 font-weight-medium text-shadow">{{ weather.main.temp }}&deg</span><br><br>
+                    <span class="display-4 font-weight-medium text-shadow">{{ Math.floor(weather.main.temp) }}&deg</span><br><br>
                     <span class="body-1 text-shadow">
                                         <v-icon class="pr-2">
                                             mdi-apple-icloud

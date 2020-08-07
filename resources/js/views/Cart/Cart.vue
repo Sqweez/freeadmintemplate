@@ -74,6 +74,16 @@
                                             v-model="partner_id"
                                         ></v-autocomplete>
                                     </div>
+                                    <div class="d-flex ml-4">
+                                        <h5>Способ оплаты:</h5>
+                                        <v-select
+                                            label="Способ оплаты"
+                                            v-model="payment_type"
+                                            :items="payment_types"
+                                            item-text="name"
+                                            class="ml-2"
+                                            item-value="id"></v-select>
+                                    </div>
                                 </div>
                             </v-col>
                         </v-row>
@@ -319,6 +329,7 @@
             cart: [],
             isRed: false,
             isFree: false,
+            payment_type: 0,
             partner_id: null,
             discountPercent: '',
             promocode: null,
@@ -425,7 +436,8 @@
                     discount: this.discount,
                     kaspi_red: this.isRed,
                     balance: this.balance,
-                    partner_id: this.partner_id
+                    partner_id: this.partner_id,
+                    payment_type: this.payment_type
                 };
 
                 this.sale_id = await this.$store.dispatch(ACTIONS.MAKE_SALE, sale);
@@ -441,6 +453,7 @@
                 this.isRed = false;
                 this.isFree = false;
                 this.balance = 0;
+                this.payment_type = 0;
             },
             printCheck() {
                 this.confirmationModal = false;
@@ -522,6 +535,9 @@
             stores() {
                 return this.$store.getters.stores;
             },
+            payment_types() {
+                return this.$store.getters.payment_types;
+            }
         }
     }
 </script>

@@ -18,6 +18,11 @@ const productsModule = {
         prev: null,
         next: null,
         main_products: [],
+        paymentTypes: [
+            {id: 0, name: 'Наличные'},
+            {id: 1, name: 'Безналичная оплата'},
+            {id: 2, name: 'Kaspi RED/PayDa!'},
+        ]
     },
     getters: {
         products: state => state.products,
@@ -26,6 +31,7 @@ const productsModule = {
         prevLink: state => state.prev,
         nextLink: state => state.next,
         main_products: state => state.main_products,
+        payment_types: state => state.paymentTypes,
     },
     mutations: {
         [MUTATIONS.CREATE_PRODUCT](state, payload) {

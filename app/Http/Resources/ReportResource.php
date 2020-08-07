@@ -31,6 +31,12 @@ class ReportResource extends JsonResource
 
         $products = $products->toArray($products);
 
+        $payment_types = [
+            'Наличные',
+            'Безналичная оплата',
+            'Kaspi RED/PayDa!',
+        ];
+
         return [
             'id' => intval($this->id),
             'discount' => $this->discount,
@@ -41,6 +47,8 @@ class ReportResource extends JsonResource
             'store' => $this->store->name,
             'store_id' => intval($this->store_id),
             'products' => $this->groupProducts($products),
+            'payment_type' => intval($this->payment_type),
+            'payment_type_text' => $payment_types[$this->payment_type],
             'purchase_price' => $purchase_price,
             'fact_price' => $product_price,
             'final_price' => $final_price - intval($this->balance),
