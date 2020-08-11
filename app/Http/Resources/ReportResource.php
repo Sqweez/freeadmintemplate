@@ -35,6 +35,7 @@ class ReportResource extends JsonResource
             'Наличные',
             'Безналичная оплата',
             'Kaspi RED/PayDa!',
+            'Перевод на карту'
         ];
 
         return [

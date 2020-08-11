@@ -22,6 +22,7 @@ const productsModule = {
             {id: 0, name: 'Наличные'},
             {id: 1, name: 'Безналичная оплата'},
             {id: 2, name: 'Kaspi RED/PayDa!'},
+            {id: 3, name: 'Перевод на карту'},
         ]
     },
     getters: {

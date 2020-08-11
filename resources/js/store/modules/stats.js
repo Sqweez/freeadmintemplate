@@ -7,7 +7,8 @@ const statsModule = {
         mvp_products: [],
     },
     getters: {
-        MVP_CATEGORY_PRODUCTS: state => state.mvp_products.by_category,
+        MVP_CATEGORY_PRODUCTS: state => state.mvp_products.best_products,
+        WORST_CATEGORY_PRODUCTS: state => state.mvp_products.worst_products
     },
     mutations: {
         [MUTATIONS.SET_MVP_PRODUCTS](state, payload) {
@@ -15,8 +16,8 @@ const statsModule = {
         }
     },
     actions: {
-        async [ACTIONS.GET_MVP_PRODUCTS] ({commit}, payload) {
-            const { data } = await axios.get('/api/stats/mvp-products');
+        async [ACTIONS.GET_MVP_PRODUCTS] ({commit}, {store = 1, time = 'last_30_days'}) {
+            const { data } = await axios.get(`/api/stats/mvp-products?store=${store}&time=${time}`);
             commit(MUTATIONS.SET_MVP_PRODUCTS, data);
         }
     }
