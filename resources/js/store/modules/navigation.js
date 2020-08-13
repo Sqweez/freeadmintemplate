@@ -55,6 +55,10 @@ const navigationModule = {
                         title: 'Ревизии',
                         url: '/revision',
                     },
+                    {
+                        title: 'Поступления',
+                        url: '/arrivals',
+                    },
                 ],
             },
             {

@@ -15,6 +15,7 @@ import Plan from "../views/Plan/Plan";
 import MVPProducts from "../views/MVPProducts/MVPProducts";
 import Rating from "../views/Rating/Rating";
 import Revision from "../views/Revision/Revision";
+import Arrivals from "../views/Arrivals/Arrivals";
 
 const routes = [
     {
@@ -109,6 +110,13 @@ const routes = [
     {
         path: '/revision',
         component: Revision
+    },
+    {
+        path: '/arrivals',
+        component: Arrivals,
+        meta: {
+            isAdmin: true
+        }
     }
 ];
 

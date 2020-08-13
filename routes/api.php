@@ -130,6 +130,13 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::post('rating/criteria', 'api\RatingController@createCriteria');
     Route::patch('rating/criteria/{crit}', 'api\RatingController@editCriteria');
     Route::delete('rating/criteria/{crit}', 'api\RatingController@deleteCriteria');
+
+    // ArrivalController
+
+    Route::get('arrivals', 'api\ArrivalController@index');
+    Route::post('arrivals', 'api\ArrivalController@createArrival');
+    Route::post('arrivals/complete', 'api\ArrivalController@createBatch');
+    Route::delete('arrivals/{arrival}', 'api\ArrivalController@deleteArrival');
 });
 
 

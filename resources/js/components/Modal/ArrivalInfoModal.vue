@@ -1,0 +1,187 @@
+<template>
+    <v-dialog
+        persistent
+        max-width="1000"
+        v-model="state"
+    >
+        <v-card>
+            <v-card-title class="headline d-flex justify-space-between">
+                <span
+                    class="white--text">{{ confirmMode ? 'Подтвердите поступление' : 'Информация о поступлении' }}</span>
+                <v-btn icon text class="float-right">
+                    <v-icon color="white" @click="$emit('cancel')">
+                        mdi-close
+                    </v-icon>
+                </v-btn>
+            </v-card-title>
+            <v-card-text class="modal-text">
+                <v-simple-table v-if="!loading">
+                    <template v-slot:default>
+                        <thead>
+                        <tr>
+                            <th v-if="confirmMode">Действие</th>
+                            <th>Наименование</th>
+                            <th>Атрибуты</th>
+                            <th>Количество</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item, idx) of products" :key="idx">
+                            <td v-if="confirmMode">
+                                <v-checkbox
+                                    v-model="item.accepted"
+                                />
+                            </td>
+                            <td>{{ item.product_name }}</td>
+                            <td>
+                                <ul>
+                                    <li v-for="(attr, index) of item.attributes" :key="index">
+                                        {{ attr.attribute }}: {{ attr.attribute_value }}
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+
+                                <v-btn icon color="error" @click="decreaseCount(idx)" v-if="confirmMode">
+                                    <v-icon>
+                                        mdi-minus
+                                    </v-icon>
+                                </v-btn>
+                                {{ item.count }}
+                                <v-btn icon color="success" @click="increaseCount(idx)" v-if="confirmMode">
+                                    <v-icon>
+                                        mdi-plus
+                                    </v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
+                <div
+                    class="text-center d-flex align-center justify-center"
+                    style="min-height: 300px"
+                    v-if="loading">
+                    <v-progress-circular
+                        indeterminate
+                        size="65"
+                        color="primary"
+                    ></v-progress-circular>
+                </div>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-btn text @click="$emit('cancel')">
+                    Закрыть
+                </v-btn>
+                <v-spacer/>
+                <v-btn color="success" text v-if="confirmMode && hasAccepted" @click="accept">
+                    Подтвердить
+                    <v-icon>mdi-check</v-icon>
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</template>
+
+<script>
+    import {acceptTransfer, getTransferInfo} from "../../api/transfers";
+    import showToast from "../../utils/toast";
+    import {createBatch} from "../../api/arrivals";
+
+    export default {
+        props: {
+            state: {
+                default: false
+            },
+            confirmMode: {
+                type: Boolean,
+                default: true
+            },
+            arrival: {
+                type: Object,
+                default: {}
+            }
+        },
+        watch: {
+            state() {
+                if (this.state) {
+                    this.products = this.arrival.products;
+                } else {
+                    this._arrival = {};
+                }
+            }
+        },
+        data: () => ({
+            selected: [],
+            products: [],
+            loading: false,
+            headers: [
+                {
+                    text: 'Наименование',
+                    value: 'product_name',
+                    sortable: false,
+                },
+                {
+                    text: 'Атрибуты',
+                    value: 'attributes',
+                    sortable: false,
+                },
+                {
+                    text: 'Количество',
+                    value: 'count',
+                    sortable: false
+                }
+            ],
+        }),
+        methods: {
+            async accept() {
+                this.loading = true;
+                const products = this.products
+                    .filter(p => p.accepted)
+                    .map(p => {
+                        return {
+                            product_id: p.id,
+                            count: p.count,
+                            purchase_price: p.purchase_price
+                        }
+                    })
+
+                const data = await createBatch({
+                    arrival_id: this.arrival.id,
+                    products: products
+                })
+
+                this.loading = false;
+                showToast('Поступление успешно создано!');
+                this.$emit('submit')
+            },
+            decreaseCount(idx) {
+                const newValue = {
+                    ...this.products[idx],
+                    count: Math.max(0, this.products[idx].count - 1)
+                };
+                newValue.accepted = newValue.count > 0;
+                this.products.splice(idx, 1, newValue)
+            },
+            increaseCount(idx) {
+                const newValue = {
+                    ...this.products[idx],
+                    count: this.products[idx].count + 1
+                };
+                newValue.accepted = newValue.count > 0;
+                this.products.splice(idx, 1, newValue)
+            },
+        },
+        computed: {
+            hasAccepted() {
+                return true;
+                //return !!this.transfer.filter(t => t.accepted).length
+            }
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>
