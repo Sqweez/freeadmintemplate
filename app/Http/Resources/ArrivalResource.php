@@ -35,8 +35,8 @@ class ArrivalResource extends JsonResource
             'user' => $this->user->name,
             'is_completed' => !!$this->is_completed,
             'products' => $products,
-            'position_count' => collect($_products)->sum('count'),
-            'product_count' => $_products->count(),
+            'product_count' => collect($_products)->sum('count'),
+            'position_count' => $_products->count(),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y'),
         ];
     }

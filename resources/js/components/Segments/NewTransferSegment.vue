@@ -226,6 +226,11 @@
                 {
                     text: 'Добавить',
                     value: 'actions'
+                },
+                {
+                    text: 'Штрих-код',
+                    value: 'product_barcode',
+                    align: ' d-none'
                 }
             ]
         }),

@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div>
+            <v-btn color="error" @click="productModal = true">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+        </div>
+        <h2 v-if="user.login === 'atanus'" class="text-center">АТАН, РАБОТАЙ, БЛЯТЬ!</h2>
         <v-card class="background-iron-darkgrey mb-5 mt-5"  v-if="!emptyCart">
             <v-card-title class="justify-end">
             </v-card-title>
@@ -147,10 +151,16 @@
         <v-overlay :value="overlay">
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
+        <ProductModal
+            :id="-1"
+            v-on:cancel="productModal = false;"
+            :range-mode="false"
+            :state="productModal"/>
     </div>
 </template>
 
 <script>
+    import ProductModal from "../../components/Modal/ProductModal";
     import ConfirmationModal from "../Modal/ConfirmationModal";
     import WayBillModal from "../Modal/WayBillModal";
     import ACTIONS from "../../store/actions";
@@ -162,7 +172,8 @@
     export default {
         components: {
             ConfirmationModal,
-            WayBillModal
+            WayBillModal,
+            ProductModal
         },
         data: () => ({
             storeFilter: null,
@@ -173,6 +184,7 @@
             child_store: 1,
             overlay: false,
             loading: false,
+            productModal: false,
             headers: [
                 {
                     text: 'Наименование',
@@ -195,6 +207,11 @@
                 {
                     text: 'Добавить',
                     value: 'actions'
+                },
+                {
+                    text: 'Штрих-код',
+                    value: 'product_barcode',
+                    align: ' d-none'
                 }
             ]
         }),
@@ -202,6 +219,9 @@
             this.loading = this.products.length === 0;
             await this.$store.dispatch(ACTIONS.GET_PRODUCT);
             await this.$store.dispatch(ACTIONS.GET_STORES);
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+            await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             this.loading = false;
         },
         methods: {
