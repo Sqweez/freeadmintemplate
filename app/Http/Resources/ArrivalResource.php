@@ -18,14 +18,18 @@ class ArrivalResource extends JsonResource
     {
 
         $products = ProductRevisionResource::collection(Product::find($this->products->pluck('product_id')));
-        $_products = $this->products;
+        $_products = collect($this->products);
 
         $products = collect($products)->map(function ($i, $key) use ($_products) {
-            $i['count'] = $_products[$key]['count'];
-            $i['purchase_price'] = $_products[$key]['purchase_price'];
+            $product = $_products->first(function ($item) use ($i) {
+                return $item->product_id == $i['id'];
+            });
+            $i['count'] = intval($product['count']);
+            $i['purchase_price'] = $product['purchase_price'];
+            $i['sort_id'] = intval($product['id']);
             unset($i['quantity']);
             return $i;
-        });
+        })->sortBy('sort_id')->values();
 
         return [
             'id' => $this->id,
