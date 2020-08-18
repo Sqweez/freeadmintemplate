@@ -2,8 +2,11 @@
     <div>
         <div>
             <v-btn color="error" @click="productModal = true">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+            <v-btn color="error" class="top-button" @click="wayBillModal = true;">
+                Сформировать накладную
+            </v-btn>
         </div>
-        <h2 v-if="user.login === 'atanus'" class="text-center">АТАН, РАБОТАЙ, БЛЯТЬ!</h2>
+        <h2 v-if="user.login === 'atan'" class="text-center">АТАН, РАБОТАЙ, БЛЯТЬ!</h2>
         <v-card class="background-iron-darkgrey mb-5 mt-5"  v-if="!emptyCart">
             <v-card-title class="justify-end">
             </v-card-title>
@@ -156,6 +159,11 @@
             v-on:cancel="productModal = false;"
             :range-mode="false"
             :state="productModal"/>
+        <ConfirmationModal
+            message="Распечатать накладную?"
+            :state="wayBillModal"
+            :on-confirm="getWayBill"
+        />
     </div>
 </template>
 
@@ -238,6 +246,18 @@
             },
             decreaseCartCount(index) {
                 this.$set(this.cart[index], 'count', Math.max(1, this.cart[index].count - 1))
+            },
+            async getWayBill() {
+                this.wayBillModal = false;
+                const { data } = await axios.post('/api/excel/transfer/waybill', {
+                    child_store: this.storeFilter,
+                    parent_store: this.storeFilter,
+                    cart: this.cart,
+                });
+
+                const link = document.createElement('a');
+                link.href = data.path;
+                link.click();
             },
             async onSubmit() {
                 const products = this.cart.map(c => {

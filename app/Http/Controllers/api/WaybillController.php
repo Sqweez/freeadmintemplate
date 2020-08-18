@@ -78,14 +78,37 @@ class WaybillController extends Controller
 
         $excelWriter = new Xlsx($excelTemplate);
 
-        $fileName = "Перемещение_" . Carbon::today()->toDateString() . "_" . $parent_city . '-' . $child_city . "_" . Str::random(10) . '.xlsx';
-        $fullPath = 'storage/excel/waybills/transfers/' . $fileName;
+        $fileType = $this->getFileType($request);
+
+        $fileName =  $fileType. "_" . Carbon::today()->toDateString() . "_" . $parent_city . '-' . $child_city . "_" . Str::random(10) . '.xlsx';
+        $fullPath = 'storage/excel/waybills/' . $fileName;
 
         $excelWriter->save($fullPath);
 
         return response()->json([
             'path' => $fullPath
         ]);
+    }
+
+    private function getFileType(Request $request) {
+        $fileType = "";
+        $type = $request->get('type') ?? '';
+        switch ($type) {
+            case "transfer":
+                $fileType = 'Перемещение';
+                break;
+            case "sale":
+                $fileType = 'Продажа';
+                break;
+            case "arrival":
+                $fileType = "Поступление";
+                break;
+            default:
+                $fileType = "Накладная";
+                break;
+        }
+
+        return $fileType;
     }
 
     private function getTotalCost($cart) {

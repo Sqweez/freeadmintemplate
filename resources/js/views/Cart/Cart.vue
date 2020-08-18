@@ -4,10 +4,10 @@
             <v-card-title class="justify-space-between">
                 <span>Корзина</span>
                 <div>
-                    <v-btn color="error" class="top-button mr-3" @click="wayBillModal = true;">
+                   <!-- <v-btn color="error" class="top-button mr-3" @click="wayBillModal = true;">
                         Сформировать счет на оплату
-                    </v-btn>
-                    <v-btn color="error" class="top-button" @click="wayBillModal = true;">
+                    </v-btn>-->
+                    <v-btn color="error" class="top-button" @click="waybillModal = true;">
                         Сформировать накладную
                     </v-btn>
                 </div>
@@ -283,9 +283,14 @@
             :on-confirm="printCheck"
             @cancel="confirmationModal = false"
         />
-        <WayBillModal
+        <!--<WayBillModal
             :state="wayBillModal"
             v-on:cancel="wayBillModal = false"
+        />-->
+        <ConfirmationModal
+            :state="waybillModal"
+            message="Сформировать накладную?"
+            :on-confirm="getWayBill"
         />
     </div>
 </template>
@@ -299,6 +304,7 @@
     import ACTIONS from "../../store/actions";
     import {mapActions} from 'vuex';
     import CheckModal from "../../components/Modal/CheckModal";
+    import axios from "axios";
 
     export default {
         components: {
@@ -325,6 +331,7 @@
         },
         data: () => ({
             storeFilter: null,
+            waybillModal: false,
             loading: true,
             cart: [],
             isRed: false,
@@ -484,6 +491,18 @@
             },
             deleteFromCart(index) {
                 this.cart.splice(index, 1);
+            },
+            async getWayBill() {
+                this.waybillModal = false;
+                const { data } = await axios.post('/api/excel/transfer/waybill?type=sale', {
+                    child_store: this.storeFilter,
+                    parent_store: this.storeFilter,
+                    cart: this.cart,
+                });
+
+                const link = document.createElement('a');
+                link.href = data.path;
+                link.click();
             }
         },
         computed: {
