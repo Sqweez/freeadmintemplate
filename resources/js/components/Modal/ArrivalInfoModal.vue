@@ -106,7 +106,10 @@
         watch: {
             state() {
                 if (this.state) {
-                    this.products = this.arrival.products;
+                    this.products = this.arrival.products.map(p => {
+                        p.accepted = true;
+                        return p;
+                    });
                 } else {
                     this._arrival = {};
                 }
@@ -147,7 +150,7 @@
                         }
                     })
 
-                const data = await createBatch({
+                await createBatch({
                     arrival_id: this.arrival.id,
                     products: products
                 })

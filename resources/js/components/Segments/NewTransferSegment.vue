@@ -3,12 +3,12 @@
         <v-card class="background-iron-darkgrey mb-5 mt-5"  v-if="!emptyCart">
             <v-card-title class="justify-end">
                 <div>
-                    <v-btn color="error" class="top-button mr-3" @click="wayBillModal = true;">
+                  <!--  <v-btn color="error" class="top-button mr-3" @click="wayBillModal = true;">
                         Сформировать счет на оплату
                     </v-btn>
                     <v-btn color="error" class="top-button" @click="confirmationModal = true;">
                         Сформировать накладную
-                    </v-btn>
+                    </v-btn>-->
                 </div>
             </v-card-title>
             <v-card-text style="padding: 0;">
@@ -165,6 +165,7 @@
             :state="confirmationModal"
             message="Сформировать накладную?"
             :on-confirm="getWayBill"
+            @cancel="cart = []; confirmationModal = false;"
         />
         <WayBillModal
             :state="wayBillModal"
@@ -284,7 +285,7 @@
                 this.confirmationModal = true;
 
                 showToast('Перемещение создано успешно!');
-                this.cart = [];
+                //this.cart = [];
             },
             async getWayBill() {
                 this.confirmationModal = false;
@@ -297,6 +298,7 @@
                 const link = document.createElement('a');
                 link.href = data.path;
                 link.click();
+                this.cart = [];
             },
             getQuantity(quantity = []) {
                 if (typeof quantity === 'number') {
