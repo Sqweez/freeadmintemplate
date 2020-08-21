@@ -26,6 +26,9 @@
                         <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true;">
                             <v-icon>mdi-information-outline</v-icon>
                         </v-btn>
+                        <v-btn icon color="success" @click="printWaybill(item.id)">
+                            <v-icon>mdi-file-excel</v-icon>
+                        </v-btn>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -45,6 +48,7 @@
 <script>
     import {getArrivals} from "../../api/arrivals";
     import ArrivalInfoModal from "../Modal/ArrivalInfoModal";
+    import axios from "axios";
 
     export default {
         components: {ArrivalInfoModal},
@@ -83,6 +87,14 @@
             ],
         }),
         methods: {
+            async printWaybill(id) {
+                this.loading = true;
+                const { data } = await axios.get(`/api/excel/transfer/waybill?arrival=${id}`)
+                const link = document.createElement('a');
+                link.href = data.path;
+                link.click();
+                this.loading = false;
+            }
         },
         computed: {},
         async mounted() {

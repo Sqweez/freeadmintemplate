@@ -33,6 +33,9 @@
                         <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;">
                             <v-icon>mdi-cancel</v-icon>
                         </v-btn>
+                        <v-btn icon color="success" @click="printWaybill(item.id)">
+                            <v-icon>mdi-file-excel</v-icon>
+                        </v-btn>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -59,6 +62,7 @@
     import {deleteArrival, getArrivals} from "../../api/arrivals";
     import ArrivalInfoModal from "../Modal/ArrivalInfoModal";
     import ConfirmationModal from "../Modal/ConfirmationModal";
+    import axios from "axios";
 
     export default {
         components: {ConfirmationModal, ArrivalInfoModal},
@@ -108,6 +112,14 @@
                 this.arrivals = this.arrivals.filter(a => a.id !== this.current_arrival.id);
                 this.confirmationModal = false;
                 this.current_arrival = {}
+            },
+            async printWaybill(id) {
+                this.loading = true;
+                const { data } = await axios.get(`/api/excel/transfer/waybill?arrival=${id}`)
+                const link = document.createElement('a');
+                link.href = data.path;
+                link.click();
+                this.loading = false;
             }
         },
         computed: {},

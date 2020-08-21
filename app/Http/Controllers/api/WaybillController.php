@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Arrival;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ExcelService;
+use App\Http\Resources\ArrivalResource;
 use App\Http\Resources\SingleTransferResource;
 use App\Store;
 use App\Transfer;
@@ -21,6 +23,7 @@ class WaybillController extends Controller
 {
     public function transferWaybill(Request $request) {
         $transfer_id = $request->get('transfer') ?? -1;
+        $arrival_id = $request->get('arrival') ?? -1;
 
         if ($transfer_id !== -1) {
             $transfer = new SingleTransferResource(Transfer::find($transfer_id));
@@ -28,7 +31,16 @@ class WaybillController extends Controller
             $cart = $transfer['products'];
             $parent_store = $transfer['parent_store'];
             $child_store = $transfer['child_store'];
-        } else {
+        }
+
+        else if ($arrival_id !== -1) {
+            $parent_store = 1;
+            $child_store = 1;
+            $arrival = new ArrivalResource(Arrival::find($arrival_id));
+            $arrival = $arrival->toArray($request);
+            $cart = $arrival['products'];
+        }
+        else {
             $cart = $request->get('cart');
             $parent_store = $request->get('parent_store');
             $child_store = $request->get('child_store');
@@ -127,7 +139,8 @@ class WaybillController extends Controller
     }
 
     private function getTotalCost($cart) {
-        return array_reduce($cart, function ($a, $c) {
+        $_cart = is_object($cart) ? $cart->toArray($cart) : $cart;
+        return array_reduce($_cart, function ($a, $c) {
             return $c['product_price'] * $c['count'] + $a;
         }, 0);
     }
@@ -273,7 +286,8 @@ class WaybillController extends Controller
     }
 
     private function getTotalCount($cart) {
-        return array_reduce($cart, function ($a, $c) {
+        $_cart = is_object($cart) ? $cart->toArray($cart) : $cart;
+        return array_reduce($_cart, function ($a, $c) {
             return $c['count'] + $a;
         }, 0);
     }

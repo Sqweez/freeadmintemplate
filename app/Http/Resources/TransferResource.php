@@ -30,7 +30,7 @@ class TransferResource extends JsonResource
     private function getTotalCost($products) {
         $_products = $this->groupProducts($products);
         return array_reduce($_products, function ($a, $c) {
-            $price = Product::find($c['id'])->product_price;
+            $price = Product::find($c['id'])->product_price ?? 0;
             return $a + ($price * $c['count']);
         }, 0);
     }
