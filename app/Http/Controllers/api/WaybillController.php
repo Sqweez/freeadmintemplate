@@ -4,7 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ExcelService;
+use App\Http\Resources\SingleTransferResource;
 use App\Store;
+use App\Transfer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,9 +20,22 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 class WaybillController extends Controller
 {
     public function transferWaybill(Request $request) {
-        $cart = $request->get('cart');
-        $parent_store = $request->get('parent_store');
-        $child_store = $request->get('child_store');
+        $transfer_id = $request->get('transfer') ?? -1;
+
+        if ($transfer_id !== -1) {
+            $transfer = new SingleTransferResource(Transfer::find($transfer_id));
+            $transfer = $transfer->toArray($request);
+            $cart = $transfer['products'];
+            $parent_store = $transfer['parent_store'];
+            $child_store = $transfer['child_store'];
+        } else {
+            $cart = $request->get('cart');
+            $parent_store = $request->get('parent_store');
+            $child_store = $request->get('child_store');
+        }
+
+        // return $cart;
+
         $excelService = new ExcelService();
         $excelTemplate = $excelService->loadFile('waybill_transfer_template', 'xls');
         $excelSheet = $excelTemplate->getActiveSheet();
@@ -120,7 +135,7 @@ class WaybillController extends Controller
     private function getProductName($item) {
         $attributeValues = join(' | ' , array_map(function ($i) {
             return $i['attribute_value'];
-        }, $item['attributes']));
+        }, is_object($item['attributes']) ? $item['attributes']->toArray($item) : $item['attributes']));
         return $item['manufacturer'] . ' ' . $item['product_name'] . ' ' . $attributeValues;
     }
 

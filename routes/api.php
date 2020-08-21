@@ -118,6 +118,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::get('stats/mvp-products', 'api\StatsController@getMVPProducts');
 
     Route::post('excel/transfer/waybill', 'api\WaybillController@transferWaybill');
+    Route::get('excel/transfer/waybill', 'api\WaybillController@transferWaybill');
 
     // RatingController
 

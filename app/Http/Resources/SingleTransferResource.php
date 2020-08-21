@@ -20,6 +20,8 @@ class SingleTransferResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'parent_store' => $this->parent_store_id,
+            'child_store' => $this->child_store_id,
             'products' => $this->groupProducts($products)
         ];
     }
@@ -36,6 +38,8 @@ class SingleTransferResource extends JsonResource
                 'attributes' => $product[0]['attributes'],
                 'product_id' => $product[0]['product_id'],
                 'batch_id' => $product[0]['batch_id'],
+                'manufacturer' => $product[0]['manufacturer'],
+                'product_price' => $product[0]['product_price']
             ]);
         }
 

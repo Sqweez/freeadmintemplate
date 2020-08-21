@@ -23,6 +23,8 @@ class BatchResource extends JsonResource
             'product_id' => $this->productBatch->product_id,
             'product_name' => $product['product_name'],
             'attributes' => $product['attributes'],
+            'manufacturer' => $product['manufacturer'],
+            'product_price' => $product['product_price']
         ];
     }
 }
