@@ -27,7 +27,7 @@
                     </td>
                     <td>
                         <div v-if="!editMode || manufacturer.id !== manuf.id">
-                            <v-btn icon @click="manufacturer = {...manuf}; editMode = true;">
+                            <v-btn icon @click="manufacturer = {...manuf}; createMode = true;">
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                             <v-btn icon @click="manufacturerId = manuf.id; deleteModal = true">
@@ -54,8 +54,9 @@
             :on-confirm="deleteManufacturer"
         />
         <ManufacturerModal
-            v-on:cancel="createMode = false"
+            v-on:cancel="createMode = false; manufacturer = {}"
             :state="createMode"
+            :editing_manufacturer="manufacturer"
         />
     </div>
 </template>

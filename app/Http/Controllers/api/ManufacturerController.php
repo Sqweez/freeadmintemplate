@@ -3,19 +3,22 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ManufacturerResource;
 use App\Manufacturer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ManufacturerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Manufacturer[]|\Illuminate\Database\Eloquent\Collection
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Manufacturer::all();
+        return ManufacturerResource::collection(Manufacturer::all());
     }
 
     /**

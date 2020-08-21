@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function getManufacturers() {
     const response = await axios.get('/api/manufacturers');
-    return response.data;
+    return response.data.data;
 }
 
 export async function createManufacturer(payload) {
