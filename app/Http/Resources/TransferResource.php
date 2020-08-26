@@ -24,7 +24,8 @@ class TransferResource extends JsonResource
             'user' => 'Администратор',
             'product_count' => $batches->count(),
             'position_count' => $batches->groupBy('product_id')->count(),
-            'total_cost' => $this->getTotalCost($batches->toArray($batches))
+            'total_cost' => $this->getTotalCost($batches->toArray($batches)),
+            'photos' => json_decode($this->photos, true)
         ];
     }
     private function getTotalCost($products) {

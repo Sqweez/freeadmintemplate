@@ -1,16 +1,29 @@
 <template>
     <div>
-        <v-card class="background-iron-darkgrey mb-5 mt-5"  v-if="!emptyCart">
+        <v-card class="background-iron-darkgrey mb-5 mt-5" v-if="!emptyCart">
             <v-card-title class="justify-end">
                 <div>
-                  <!--  <v-btn color="error" class="top-button mr-3" @click="wayBillModal = true;">
-                        Сформировать счет на оплату
+                    <v-btn color="error" class="top-button mr-3" @click="$refs.fileInput.click()">
+                        Загрузить фото
+                        <v-icon>mdi-plus</v-icon>
                     </v-btn>
-                    <v-btn color="error" class="top-button" @click="confirmationModal = true;">
-                        Сформировать накладную
-                    </v-btn>-->
+                    <input type="file" class="d-none" ref="fileInput" @change="uploadPhoto">
                 </div>
             </v-card-title>
+            <div class="d-flex" v-if="photos.length">
+                <div
+                    class="image-container"
+                    v-for="(image, idx) of photos"
+                    :key="idx">
+                    <button class="delete-image" @click.prevent="deleteImage(idx)">&times;</button>
+                    <img
+                        :src="'../storage/' + image"
+                        width="150"
+                        height="150"
+                        alt="Изображение">
+                </div>
+
+            </div>
             <v-card-text style="padding: 0;">
                 <v-simple-table v-slot:default class="mt-5">
                     <template>
@@ -181,6 +194,7 @@
     import {TOAST_TYPE} from "../../config/consts";
     import ACTIONS from "../../store/actions";
     import axios from 'axios';
+    import uploadFile, {deleteFile} from "../../api/upload";
 
     export default {
         components: {
@@ -201,6 +215,7 @@
             child_store: 1,
             overlay: false,
             loading: false,
+            photos: [],
             headers: [
                 {
                     text: 'Наименование',
@@ -267,6 +282,15 @@
                 this.clientCartModal = false;
                 this.client = client;
             },
+            async uploadPhoto(e) {
+                const file = e.target.files[0];
+                const result = await uploadFile(file, 'file', 'transfers');
+                this.photos.push(result.data);
+            },
+            async deleteImage(key) {
+                await deleteFile(this.photos[key]);
+                this.photos.splice(key, 1);
+            },
             async onTransfer() {
                 this.overlay = true;
                 const sale = {
@@ -276,6 +300,7 @@
                     parent_store_id: this.storeFilter,
                     user_id: this.user.id,
                     child_store_id: this.child_store,
+                    photos: JSON.stringify(this.photos),
                 };
 
                 await this.$store.dispatch(ACTIONS.MAKE_TRANSFER, sale);
@@ -289,7 +314,7 @@
             },
             async getWayBill() {
                 this.confirmationModal = false;
-                const { data } = await axios.post('/api/excel/transfer/waybill', {
+                const {data} = await axios.post('/api/excel/transfer/waybill', {
                     child_store: this.child_store,
                     parent_store: this.storeFilter,
                     cart: this.cart,
@@ -363,7 +388,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     * {
     }
 
@@ -390,10 +415,36 @@
     }
 
     .fz-18 th, td {
-        font-size: 18px!important;
+        font-size: 18px !important;
     }
 
     .v-data-table {
-        font-size: 18px!important;
+        font-size: 18px !important;
+    }
+
+    .image-container {
+        img {
+            object-fit: contain;
+            object-position: center;
+        }
+
+        position: relative;
+
+        .delete-image {
+            padding: 8px 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            position: absolute;
+            right: 14px;
+            top: 14px;
+            font-size: 2rem;
+            border: none;
+            transition: .3s;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.6);
+            }
+        }
     }
 </style>

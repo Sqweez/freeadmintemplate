@@ -41,6 +41,9 @@
                 <v-btn icon color="success" @click="printWaybill(item.id)">
                     <v-icon>mdi-file-excel</v-icon>
                 </v-btn>
+                <v-btn icon color="primary" @click="showPhotoModal(item.photos)">
+                    <v-icon>mdi-camera</v-icon>
+                </v-btn>
             </template>
             <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                 {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -59,25 +62,35 @@
             v-on:cancel="transferId = null; infoModal = false"
             v-on:confirmed="onConfirm"
         />
+        <TransferPhotoModal
+            :state="photoModal"
+            :photos="currentPhotos"
+            @cancel="photoModal = false; currentPhotos = []"
+        />
     </div>
 </template>
 
 <script>
     import ConfirmationModal from "../Modal/ConfirmationModal";
+    import TransferPhotoModal from "../Modal/TransferPhotoModal";
     import TransferModal from "../Modal/TransferModal";
     import {declineTransfer} from "../../api/transfers";
     import axios from "axios";
+    import showToast from "../../utils/toast";
+    import {TOAST_TYPE} from "../../config/consts";
     export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'current'});
             this.loading = false;
         },
-        components: {ConfirmationModal, TransferModal},
+        components: {ConfirmationModal, TransferModal, TransferPhotoModal},
         data: () => ({
             loading: true,
             cancelModal: false,
             infoModal: false,
             transferId: null,
+            photoModal: false,
+            currentPhotos: [],
             headers: [
                 {
                     text: 'Количество позиций',
@@ -138,6 +151,14 @@
                 link.href = data.path;
                 link.click();
                 this.loading = false;
+            },
+            showPhotoModal(photos) {
+                if (!photos || !photos.length) {
+                    showToast('Нет фотографий', TOAST_TYPE.ERROR);
+                    return false;
+                }
+                this.currentPhotos = photos;
+                this.photoModal = true;
             }
         },
         computed: {
