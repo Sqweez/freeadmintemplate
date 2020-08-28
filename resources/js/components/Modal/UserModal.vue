@@ -32,7 +32,7 @@
                         class="mt-3"
                         label="Город"
                         :items="stores"
-                        item-text="city"
+                        item-text="name"
                         item-value="id"
                         v-model="user.store_id"
                     />

@@ -57,8 +57,8 @@ class WaybillController extends Controller
         $TOTAL_COST = $this->getTotalCost($cart);
         $TOTAL_COUNT = $this->getTotalCount($cart);
 
-        $parent_city = Store::find($parent_store)->city;
-        $child_city = Store::find($child_store)->city;
+        $parent_city = Store::find($parent_store)->name;
+        $child_city = Store::find($child_store)->name;
 
         $parent_store_name = 'IRON ADDICTS, ' . $parent_city;
         $child_store_name = 'IRON ADDICTS, '. $child_city;

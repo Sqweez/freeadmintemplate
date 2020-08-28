@@ -80,8 +80,8 @@
             },
         },
         computed: {
-            stores() {
-                return this.$store.getters.stores;
+            shops() {
+                return this.$store.getters.shops;
             },
             _plans() {
                 return this.$store.getters.PLANS;
@@ -98,7 +98,7 @@
             await this.$store.dispatch(ACTIONS.GET_PLANS);
             await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch('getPlanReports');
-            this.plans = this.stores.map(s => {
+            this.plans = this.shops.map(s => {
                 const plan = this._plans.find(p => p.store_id == s.id);
                 if (!plan) {
                     return {

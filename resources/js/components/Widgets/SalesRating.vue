@@ -72,7 +72,7 @@
                 'USER'
             ]),
             stores() {
-                return this.$store.getters.stores.filter(s => {
+                return this.$store.getters.shops.filter(s => {
                     return s;
                 }) || [];
             }

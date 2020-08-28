@@ -13,6 +13,7 @@ use App\Product;
 use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
+use App\Store;
 use Illuminate\Http\Request;
 use App\Client;
 use App\ClientSale;
@@ -113,15 +114,17 @@ class CartController extends Controller {
     public function sendTelegramMessage(Order $order) {
         $message = $this->getMessage($order);
         $telegram = new TelegramService();
-        $telegram->sendMessage('-1001285942724', $message);
+        $store = Store::where('id', $order['city'])->first();
+        $telegram->sendMessage($store->telegram_chat_id, $message);
     }
 
     public function getMessage(Order $order) {
+        $store = Store::where('id', $order['city'])->first();
         $message = 'Новый заказ 💪💪💪' . "\n";
         $message .= 'Заказ №' . $order['id'] . "\n";
         $message .= 'ФИО: ' . $order['fullname'] . "\n";
         $message .= 'Номер телефона: ' . $order['phone'] . "\n";
-        $message .= 'Город: ' . $order['city'] . "\n";
+        $message .= 'Город: ' . $store->city . "\n";
         $message .= 'Адрес: ' . $order['address'] . "\n";
 
         $discount = $order['discount'];

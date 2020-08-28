@@ -340,7 +340,7 @@
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.payment_types];
             },
             shops() {
-                return [{id: -1, name: 'Все'}, ...this.$store.getters.stores];
+                return [{id: -1, name: 'Все'}, ...this.$store.getters.shops];
             },
             totalSales() {
                 return new Intl.NumberFormat('ru-RU').format(this._salesReport

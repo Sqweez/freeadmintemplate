@@ -11,6 +11,7 @@ const storeModule = {
         stores: state => state.stores,
         store: state => id => state.stores.find(s => s.id === id),
         store_types: state => state.store_types,
+        shops: state => state.stores.filter(s => s.type_id == 1)
     },
     mutations: {
         async [MUTATIONS.DELETE_STORE] (state, payload) {
