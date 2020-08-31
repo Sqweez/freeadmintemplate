@@ -38,7 +38,7 @@ const goalModule = {
             })
         },
         CREATE_GOAL(state, payload) {
-            state.goals.push(payload.map(p => {
+            state.goals.push(payload.data.map(p => {
                 p.parts = p.parts.map(_p => {
                     _p.products = _p.product_ids;
                     return _p;
@@ -59,11 +59,11 @@ const goalModule = {
         },
         async [ACTIONS.EDIT_GOAL]({commit}, payload) {
             const {data} = await editGoal(payload);
-            commit('EDIT_GOAL', [data]);
+            commit('SET_GOALS', data);
         },
         async [ACTIONS.CREATE_GOAL]({commit}, payload) {
             const {data} = await createGoal(payload);
-            commit('CREATE_GOAL', [data]);
+            commit('SET_GOALS', data);
         }
     }
 }

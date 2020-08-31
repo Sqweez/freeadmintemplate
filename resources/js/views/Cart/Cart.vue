@@ -14,6 +14,7 @@
             </v-card-title>
             <v-card-text style="padding: 0;">
                 <div class="background-iron-grey">
+                    <h3 class="text-center my-2">Для списания с баланса после ввода суммы нажимайте "ENTER"!!!</h3>
                     <div class="d-flex align-center">
                         <v-row class="ml-2">
                             <v-col class="d-flex" cols="12" xl="3" md="6" style="padding: 0">

@@ -33,6 +33,16 @@ const productsModule = {
         nextLink: state => state.next,
         main_products: state => state.main_products,
         payment_types: state => state.paymentTypes,
+        products_without_photo: state => state.products.filter(p => {
+            if (p.product_images.length === 1 && p.product_images[0] === 'products/product_image_default.jpg') {
+                return p;
+            }
+        }),
+        products_with_photo: state => state.products.filter(p => {
+            if (p.product_images.length >= 1 && p.product_images[0] !== 'products/product_image_default.jpg') {
+                return p;
+            }
+        }),
     },
     mutations: {
         [MUTATIONS.CREATE_PRODUCT](state, payload) {

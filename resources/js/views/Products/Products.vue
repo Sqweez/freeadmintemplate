@@ -20,7 +20,7 @@
             <v-row>
                 <v-col>
                     <v-row>
-                        <v-col cols="12" xl="8">
+                        <v-col cols="12" xl="6">
                             <v-text-field
                                 class="mt-2"
                                 v-model="search"
@@ -38,6 +38,15 @@
                                 v-model="storeFilter"
                                 item-value="id"
                                 label="Склад"
+                            />
+                        </v-col>
+                        <v-col cols="12" xl="2" v-if="is_admin">
+                            <v-select
+                                :items="photoFilters"
+                                item-text="name"
+                                v-model="photoFilter"
+                                item-value="id"
+                                label="Фильтр"
                             />
                         </v-col>
                     </v-row>
@@ -189,10 +198,39 @@
                 rowsPerPage: 10,
                 page: 1
             },
+            photoFilter: 0,
+            photoFilters: [
+                {
+                    name: 'Все товары',
+                    id: 0,
+                },
+                {
+                    name: 'Товары без фото',
+                    id: 1,
+                },
+                {
+                    name: 'Товары с фото',
+                    id: 2,
+                },
+            ]
         }),
         computed: {
             products() {
-                return this.$store.getters.products;
+                let products = [];
+                switch (this.photoFilter) {
+                    case 0:
+                        products = this.$store.getters.products;
+                        break;
+                    case 1:
+                        products = this.$store.getters.products_without_photo;
+                        break;
+                    case 2:
+                        products = this.$store.getters.products_with_photo;
+                        break;
+                    default:
+                        break;
+                }
+                return products;
             },
             stores() {
                 const stores = this.$store.getters.stores;

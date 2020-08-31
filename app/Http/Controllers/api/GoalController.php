@@ -8,13 +8,14 @@ use App\GoalPartProducts;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GoalResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GoalController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -37,8 +38,8 @@ class GoalController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return GoalResource
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
     public function store(Request $request)
     {
@@ -54,7 +55,7 @@ class GoalController extends Controller
 
         $this->createParts($parts, $goal);
 
-        return new GoalResource($goal);
+        return GoalResource::collection(Goal::with('parts')->get());
 
     }
 
@@ -72,9 +73,9 @@ class GoalController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return GoalResource
+     * @param Request $request
+     * @param Goal $goal
+     * @return AnonymousResourceCollection
      */
     public function update(Request $request, Goal $goal)
     {
@@ -90,7 +91,7 @@ class GoalController extends Controller
 
         $this->createParts($parts, $goal);
 
-        return new GoalResource($goal);
+        return GoalResource::collection(Goal::with('parts')->get());
     }
 
     private function createParts($parts, Goal $goal) {
@@ -121,5 +122,6 @@ class GoalController extends Controller
     public function destroy(Goal $goal)
     {
         $goal->delete();
+        return null;
     }
 }

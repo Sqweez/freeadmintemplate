@@ -84,12 +84,12 @@ class CategoryController extends Controller {
         $categories = Category::all();
         $subcategories = Subcategory::all();
         foreach ($categories as $category) {
-            $category_slug = Str::slug($category['category_name'], '-');
+            $category_slug = Str::slug($category['category_name'] . ' ' . $category['id'], '-');
             $category->update(['category_slug' => $category_slug]);
         }
 
         foreach ($subcategories as $category) {
-            $category_slug = Str::slug($category['subcategory_name'], '-');
+            $category_slug = Str::slug($category['subcategory_name'] . ' ' . $category['id'], '-');
             $category->update(['subcategory_slug' => $category_slug]);
         }
         return $categories;
