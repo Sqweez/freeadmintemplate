@@ -92,14 +92,14 @@ class ProductController extends Controller {
             ->ofSubcategory($filters['subcategories'])
             ->ofBrand($filters['brands'])
             ->ofPrice($filters['prices'])
-            ->inStock($store_id)
+            /*->inStock($store_id)*/
             ->isHit($filters['is_hit'])
             ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity']);
     }
 
     private function getFilteredProducts($query, $store_id) {
         $filters = $this->getFilterParametrs($query, $store_id);
-        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id)->paginate(24));
+        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id)->paginate(48));
     }
 
 

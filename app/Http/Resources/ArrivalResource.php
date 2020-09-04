@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use function foo\func;
 
 class ArrivalResource extends JsonResource
 {
@@ -41,6 +42,9 @@ class ArrivalResource extends JsonResource
             'products' => $products,
             'product_count' => collect($_products)->sum('count'),
             'position_count' => $_products->count(),
+            'total_cost' => collect($_products)->reduce(function($a, $c) {
+                return ($c['purchase_price'] * $c['count']) + $a;
+            }, 0) . "₸",
             'date' => Carbon::parse($this->created_at)->format('d.m.Y'),
         ];
     }

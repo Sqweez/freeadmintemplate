@@ -19,7 +19,7 @@ class ProductsResource extends JsonResource
     {
 
         $store_id = $request->cookie('store_id') ?? 1;
-
+        $attributes = $this->attributes;
 
         return [
             'product_id' => intval($this->id),
@@ -33,9 +33,9 @@ class ProductsResource extends JsonResource
             'product_price' => $this->product_price,
             'product_image' => url('/') . Storage::url($this->product_images[0]->product_image ?? 'products/product_image_default.jpg'),
             'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
-            'attributes' => AttributeResource::collection($this->attributes),
-            'product_weight' => $this->getProductWeight($this->attributes) ?? '',
-            'product_taste' => $this->getProductWeight($this->attributes) ?? '',
+            'attributes' => AttributeResource::collection($attributes),
+            'product_weight' => $this->getProductWeight($attributes) ?? '',
+            'product_taste' => $this->getProductWeight($attributes) ?? '',
         ];
     }
 

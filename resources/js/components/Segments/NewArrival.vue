@@ -35,11 +35,15 @@
                                     </li>
                                 </ul>
                             </td>
-                            <td>
+                            <td class="d-flex align-center">
                                 <v-btn icon color="error" @click="decreaseCartCount(index)">
                                     <v-icon>mdi-minus</v-icon>
                                 </v-btn>
-                                {{ item.count }} шт.
+                                <v-text-field
+                                    v-model.number="item.count"
+                                    type="number"
+                                    style="width: 20px;"
+                                ></v-text-field> шт.
                                 <v-btn icon color="success" @click="addToCart(item)">
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>

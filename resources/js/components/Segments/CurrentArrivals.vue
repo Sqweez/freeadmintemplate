@@ -83,6 +83,10 @@
                     value: 'product_count',
                 },
                 {
+                    text: 'Общая сумма',
+                    value: 'total_cost'
+                },
+                {
                     text: 'Пользователь',
                     value: 'user',
                 },

@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Product;
+use App\SaleProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
