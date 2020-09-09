@@ -135,7 +135,12 @@ class SaleController extends Controller {
             $dates[] = Carbon::now()->toDateString();
         }
 
-        return ReportResource::collection(Sale::with(['client', 'user', 'store', 'products', 'products.products', 'products.products.manufacturer', 'products.products.attributes'])->whereDate('created_at', '>=', $dates[0])->whereDate('created_at', '<=', $dates[1])->orderBy('created_at', 'desc')->get());
+        return ReportResource::collection(
+            Sale::with(
+                ['client', 'user', 'store', 'products', 'products.products', 'products.products.manufacturer', 'products.products.attributes']
+            )
+                ->whereDate('created_at', '>=', $dates[0])
+                ->whereDate('created_at', '<=', $dates[1])->orderBy('created_at', 'desc')->get());
 
     }
 
@@ -146,7 +151,7 @@ class SaleController extends Controller {
     public function getTotal(Request $request) {
         $dateFilter = $request->get('date_filter') ?? 'today';
         $dates = $this->getDatesFilters($dateFilter);
-        $sales = Sale::whereDate('created_at', '>=', $dates[0])->whereDate('created_at', '<=', $dates[1])->get();
+        $sales = Sale::whereDate('created_at', '>=', $dates[0])->whereDate('created_at', '<=', $dates[1])->with(['products', 'products.products'])->get();
         return SaleByCityResource::collection($sales);
     }
 

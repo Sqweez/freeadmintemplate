@@ -49,6 +49,27 @@
                             {{ store.month_percent }}%
                         </td>
                     </tr>
+                    <tr class="total">
+                        <td><b>Итого:</b></td>
+                        <td>
+                            {{ totalWeekPlan }}₸
+                        </td>
+                        <td>
+                            {{ totalWeekPlanSum }}₸
+                        </td>
+                        <td>
+                            {{ totalWeekPlanPercent }} %
+                        </td>
+                        <td>
+                            {{ totalMonthPlan }}₸
+                        </td>
+                        <td>
+                            {{ totalMonthPlanSum }}₸
+                        </td>
+                        <td>
+                            {{ totalMonthPlanPercent }} %
+                        </td>
+                    </tr>
                     </tbody>
                 </v-simple-table>
             </v-card-text>
@@ -89,6 +110,32 @@
             planReports() {
                 return this.$store.getters.PLAN_REPORTS;
             },
+            totalWeekPlan() {
+                return this.plans.reduce(function (a, c) {
+                    return c._week_plan + a;
+                }, 0);
+            },
+            totalWeekPlanSum() {
+                return this.plans.reduce(function (a, c) {
+                    return c._week_fact + a;
+                }, 0);
+            },
+            totalWeekPlanPercent() {
+                return Math.floor(100 * this.totalWeekPlanSum / this.totalWeekPlan);
+            },
+            totalMonthPlan() {
+                return this.plans.reduce(function (a, c) {
+                    return c._month_plan + a;
+                }, 0);
+            },
+            totalMonthPlanSum() {
+                return this.plans.reduce(function (a, c) {
+                    return c._month_fact + a;
+                }, 0);
+            },
+            totalMonthPlanPercent() {
+                return Math.floor(100 * this.totalMonthPlanSum / this.totalMonthPlan);
+            },
             ...mapGetters([
                 'IS_ADMIN',
                 'USER'
@@ -104,10 +151,14 @@
                     return {
                         store_id: s.id,
                         week_plan: 0,
+                        _week_plan: 0,
                         month_plan: 0,
+                        _month_plan: 0,
                         name: s.name,
                         week_fact: new Intl.NumberFormat('ru-RU').format(this.getTotalWeek(s.id)),
+                        _week_fact: this.getTotalWeek(s.id),
                         month_fact: new Intl.NumberFormat('ru-RU').format(this.getTotalMonth(s.id)),
+                        _month_fact: this.getTotalMonth(s.id),
                         week_percent: 100,
                         month_percent: 100,
                     }
@@ -115,9 +166,13 @@
                 plan.name = s.name;
                 plan.month_percent = Math.floor(100 * this.getTotalMonth(s.id) / plan.month_plan);
                 plan.week_percent = Math.floor(100 * this.getTotalWeek(s.id) / plan.week_plan);
+                plan._week_plan = plan.week_plan;
                 plan.week_plan = new Intl.NumberFormat('ru-RU').format(plan.week_plan);
+                plan._month_plan = plan.month_plan;
                 plan.month_plan = new Intl.NumberFormat('ru-RU').format(plan.month_plan);
+                plan._week_fact = this.getTotalWeek(s.id);
                 plan.week_fact = new Intl.NumberFormat('ru-RU').format(this.getTotalWeek(s.id));
+                plan._month_fact =this.getTotalMonth(s.id);
                 plan.month_fact = new Intl.NumberFormat('ru-RU').format(this.getTotalMonth(s.id));
                 return plan;
             });
@@ -127,6 +182,8 @@
     }
 </script>
 
-<style>
-
+<style scoped>
+    .total td{
+        font-size: 16px!important;
+    }
 </style>

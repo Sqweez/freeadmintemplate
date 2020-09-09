@@ -25,6 +25,18 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN">
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                <div class="d-flex justify-space-between">
+                                    <span>Итого</span>
+                                    <span>
+                                        {{ totalSum }} тнг
+                                    </span>
+                                </div>
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
                 </v-list-item-group>
             </v-card-text>
         </v-responsive>
@@ -71,6 +83,11 @@
                 'IS_ADMIN',
                 'USER'
             ]),
+            totalSum() {
+                return new Intl.NumberFormat('ru-RU').format(this.STORES_REPORTS.reduce((a, c) => {
+                    return c.total_cost + a;
+                }, 0));
+            },
             stores() {
                 return this.$store.getters.shops.filter(s => {
                     return s;
