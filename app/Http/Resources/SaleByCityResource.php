@@ -19,14 +19,16 @@ class SaleByCityResource extends JsonResource
 
         $discount = intval($this->discount);
 
+        $balance = intval($this->balance);
+
         return [
             'id' => $this->id,
             'store_id' => intval($this->store_id),
-            'total_cost' => $this->getFinalPrice($discount, $cost)
+            'total_cost' => $this->getFinalPrice($discount, $cost, $balance)
         ];
     }
 
-    private function getFinalPrice($discount, $price) {
-        return intval($price - $price * $discount / 100);
+    private function getFinalPrice($discount, $price, $balance) {
+        return intval(($price - $price * $discount / 100) - $balance);
     }
 }

@@ -52,19 +52,19 @@
                     <tr class="total">
                         <td><b>Итого:</b></td>
                         <td>
-                            {{ totalWeekPlan }}₸
+                            {{ new Intl.NumberFormat('ru-RU').format(totalWeekPlan) }}₸
                         </td>
                         <td>
-                            {{ totalWeekPlanSum }}₸
+                            {{ new Intl.NumberFormat('ru-RU').format(totalWeekPlanSum) }}₸
                         </td>
                         <td>
                             {{ totalWeekPlanPercent }} %
                         </td>
                         <td>
-                            {{ totalMonthPlan }}₸
+                            {{new Intl.NumberFormat('ru-RU').format(totalMonthPlan) }}₸
                         </td>
                         <td>
-                            {{ totalMonthPlanSum }}₸
+                            {{ new Intl.NumberFormat('ru-RU').format(totalMonthPlanSum) }}₸
                         </td>
                         <td>
                             {{ totalMonthPlanPercent }} %
@@ -111,27 +111,27 @@
                 return this.$store.getters.PLAN_REPORTS;
             },
             totalWeekPlan() {
-                return new Intl.NumberFormat('ru-RU').format(this.plans.reduce(function (a, c) {
+                return this.plans.reduce(function (a, c) {
                     return c._week_plan + a;
-                }, 0));
+                }, 0);
             },
             totalWeekPlanSum() {
-                return new Intl.NumberFormat('ru-RU').format(this.plans.reduce(function (a, c) {
+                return this.plans.reduce(function (a, c) {
                     return c._week_fact + a;
-                }, 0));
+                }, 0);
             },
             totalWeekPlanPercent() {
                 return Math.floor(100 * this.totalWeekPlanSum / this.totalWeekPlan);
             },
             totalMonthPlan() {
-                return new Intl.NumberFormat('ru-RU').format(this.plans.reduce(function (a, c) {
+                return this.plans.reduce(function (a, c) {
                     return c._month_plan + a;
-                }, 0));
+                }, 0);
             },
             totalMonthPlanSum() {
-                return new Intl.NumberFormat('ru-RU').format(this.plans.reduce(function (a, c) {
+                return this.plans.reduce(function (a, c) {
                     return c._month_fact + a;
-                }, 0));
+                }, 0);
             },
             totalMonthPlanPercent() {
                 return Math.floor(100 * this.totalMonthPlanSum / this.totalMonthPlan);
@@ -184,6 +184,6 @@
 
 <style scoped>
     .total td{
-        font-size: 16px!important;
+        border-top: 1px solid #ccc;
     }
 </style>
