@@ -111,27 +111,27 @@
                 return this.$store.getters.PLAN_REPORTS;
             },
             totalWeekPlan() {
-                return this.plans.reduce(function (a, c) {
+                return new Intl.NumberFormat('ru-RU').format(this.plans.reduce(function (a, c) {
                     return c._week_plan + a;
-                }, 0);
+                }, 0));
             },
             totalWeekPlanSum() {
-                return this.plans.reduce(function (a, c) {
+                return new Intl.NumberFormat('ru-RU').format(this.plans.reduce(function (a, c) {
                     return c._week_fact + a;
-                }, 0);
+                }, 0));
             },
             totalWeekPlanPercent() {
                 return Math.floor(100 * this.totalWeekPlanSum / this.totalWeekPlan);
             },
             totalMonthPlan() {
-                return this.plans.reduce(function (a, c) {
+                return new Intl.NumberFormat('ru-RU').format(this.plans.reduce(function (a, c) {
                     return c._month_plan + a;
-                }, 0);
+                }, 0));
             },
             totalMonthPlanSum() {
-                return this.plans.reduce(function (a, c) {
+                return new Intl.NumberFormat('ru-RU').format(this.plans.reduce(function (a, c) {
                     return c._month_fact + a;
-                }, 0);
+                }, 0));
             },
             totalMonthPlanPercent() {
                 return Math.floor(100 * this.totalMonthPlanSum / this.totalMonthPlan);
