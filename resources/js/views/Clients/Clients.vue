@@ -101,6 +101,7 @@
         },
         async created() {
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
+            await this.$store.dispatch(ACTIONS.GET_STORES);
         },
         data: () => ({
             confirmationModal: false,
@@ -142,6 +143,10 @@
                     text: 'Партнер'
                 },
                 {
+                    value: 'city',
+                    text: 'Город'
+                },
+                {
                     value: 'actions',
                     text: 'Действие'
                 }
@@ -150,6 +155,9 @@
         computed: {
             clients() {
                 return this.$store.getters.clients;
+            },
+            shops() {
+                return this.$store.getters.shops;
             }
         },
         methods: {

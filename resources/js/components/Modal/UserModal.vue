@@ -96,6 +96,9 @@
             },
             stores() {
                 return this.$store.getters.stores;
+            },
+            shops() {
+                return this.$store.getters.shops;
             }
         },
         methods: {

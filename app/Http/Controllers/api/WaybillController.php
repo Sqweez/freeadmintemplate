@@ -11,16 +11,20 @@ use App\Store;
 use App\Transfer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Exception;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Reader;
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Worksheet\Row;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class WaybillController extends Controller
 {
+
+    const ROW_PADDING = 5;
+    const DEFAULT_CELL_WIDTH = 9.14;
+    const DEFAULT_ROW_HEIGHT = 15;
+
     public function transferWaybill(Request $request) {
         $transfer_id = $request->get('transfer') ?? -1;
         $arrival_id = $request->get('arrival') ?? -1;
@@ -45,8 +49,6 @@ class WaybillController extends Controller
             $parent_store = $request->get('parent_store');
             $child_store = $request->get('child_store');
         }
-
-        // return $cart;
 
         $excelService = new ExcelService();
         $excelTemplate = $excelService->loadFile('waybill_transfer_template', 'xls');
@@ -96,12 +98,24 @@ class WaybillController extends Controller
             $excelSheet->setCellValue('AF' . ($currentIndex), mb_convert_case($item['product_price'], MB_CASE_TITLE, 'UTF-8'));
             $excelSheet->setCellValue('AL' . ($currentIndex), mb_convert_case(intval($item['product_price']) * intval($item['count']), MB_CASE_TITLE, 'UTF-8'));
             $excelSheet->setCellValue('AR' . ($currentIndex), mb_convert_case(intval($item['product_price']) * intval($item['count']), MB_CASE_TITLE, 'UTF-8'));
+
+            $excelTemplate->getActiveSheet()->getRowDimension($currentIndex)->setRowHeight(-1);
+            $excelTemplate->getActiveSheet()->getStyle('C' . $currentIndex)->getAlignment()->setWrapText(true);
+
+            $row = new Row($excelSheet, $currentIndex);
+            $this->autofitRowHeight($row);
+
         }
 
 
         $excelSheet->setCellValue('AR' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), $TOTAL_COST);
         $excelSheet->setCellValue('AE' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COST));
         $excelSheet->setCellValue('N' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COUNT));
+
+        foreach($excelTemplate->getActiveSheet()->getRowDimensions() as $rowID) {
+            $rowID->setRowHeight(-1);
+        }
+
 
         $excelWriter = new Xlsx($excelTemplate);
 
@@ -290,6 +304,68 @@ class WaybillController extends Controller
         return array_reduce($_cart, function ($a, $c) {
             return $c['count'] + $a;
         }, 0);
+    }
+
+    public function autofitRowHeight(Row $row, $rowPadding = self::ROW_PADDING)
+    {
+        $ws = $row->getWorksheet();
+        $cellIterator = $row->getCellIterator();
+        $cellIterator->setIterateOnlyExistingCells(true);
+
+        $maxCellLines = 1;
+        /* @var $cell Cell */
+        foreach ($cellIterator as $cell) {
+            $cellLength = strlen($cell->getValue());
+            $cellWidth = $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->getWidth();
+            // If no column width is set, set the default
+            if($cellWidth === -1) {
+                $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->setWidth(self::DEFAULT_CELL_WIDTH);
+                $cellWidth = $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->getWidth();
+            }
+            // If the cell is in a merge range we need to determine the full width of the range
+            if($cell->isInMergeRange()) {
+                // We only need to do this for the master (first) cell in the range, the rest need to have a line height of 1
+                if($cell->isMergeRangeValueCell()) {
+                    $mergeRange = $cell->getMergeRange();
+                    if($mergeRange) {
+                        $mergeWidth = 0;
+                        $mergeRefs = Coordinate::extractAllCellReferencesInRange($mergeRange);
+                        foreach($mergeRefs as $cellRef) {
+                            $mergeCell = $ws->getCell($cellRef);
+                            $width = $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->getWidth();
+                            if($width === -1) {
+                                $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->setWidth(self::DEFAULT_CELL_WIDTH);
+                                $width = $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->getWidth();
+                            }
+                            $mergeWidth += $width;
+                        }
+                        $cellWidth = $mergeWidth;
+                    } else {
+                        $cellWidth = 1;
+                    }
+                } else {
+                    $cellWidth = 1;
+                }
+            }
+
+            // Calculate the number of cell lines with a 10% additional margin
+            $cellLines = ceil(($cellLength * 1.1) / $cellWidth);
+            $maxCellLines = $cellLines > $maxCellLines ? $cellLines : $maxCellLines;
+        }
+
+        $rowDimension= $ws->getRowDimension($row->getRowIndex());
+        $rowHeight = $rowDimension->getRowHeight();
+        // If no row height is set, set the default
+        if($rowHeight === -1) {
+            $rowDimension->setRowHeight(self::DEFAULT_ROW_HEIGHT);
+            $rowHeight = $rowDimension->getRowHeight();
+        }
+
+        $rowLines = $maxCellLines <= 0 ? 1 : $maxCellLines;
+
+        $rowDimension->setRowHeight( (self::DEFAULT_ROW_HEIGHT * $rowLines) + $rowPadding);
+
+        return $ws;
     }
 
 }

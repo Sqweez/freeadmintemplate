@@ -118,6 +118,14 @@
                 <v-col>
                     <label>Прочие фильтры:</label>
                     <v-select
+                        :items="store_types"
+                        item-text="type"
+                        item-value="id"
+                        v-model="currentStoreType"
+                        label="Тип магазина:"
+                    >
+                    </v-select>
+                    <v-select
                         :items="shops"
                         item-text="name"
                         item-value="id"
@@ -224,6 +232,7 @@
             cancelModal: false,
             purchaseId: null,
             currentProducts: [],
+            currentStoreType: -1,
             startMenu: null,
             start: null,
             finishMenu: null,
@@ -342,6 +351,9 @@
             shops() {
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.shops];
             },
+            store_types() {
+                return [{id: -1, type: 'Все'}, ...this.$store.getters.store_types];
+            },
             totalSales() {
                 return new Intl.NumberFormat('ru-RU').format(this._salesReport
                     .reduce((a, c) => {
@@ -380,22 +392,12 @@
                             return s.payment_type == this.currentType;
                         }
                     })
-                /*.filter(s => {
-                    const momentDate = moment(s.date, 'DD.MM.YYYY HH:mm');
-                    switch (this.currentDate) {
-                        case DATE_FILTERS.ALL_TIME:
+                    .filter(s => {
+                        if (this.currentStoreType === -1) {
                             return s;
-                        case DATE_FILTERS.LAST_3_DAYS:
-
-                        case DATE_FILTERS.CURRENT_MONTH:
-                            const monthStart = moment().startOf('month');
-                            return momentDate.isSameOrBefore(this.today, 'day') && momentDate.isSameOrAfter(monthStart, 'day');
-                        case DATE_FILTERS.TODAY:
-                            return momentDate.isSameOrBefore(this.today, 'day') && momentDate.isSameOrAfter(this.today, 'day');
-                        case DATE_FILTERS.CUSTOM_FILTER:
-                            return momentDate.isSameOrBefore(moment(this.finish), 'day') && momentDate.isSameOrAfter(moment(this.start), 'day');
-                    }
-                })*/
+                        }
+                        return s.store_type == this.currentStoreType;
+                    });
             }
         }
     }

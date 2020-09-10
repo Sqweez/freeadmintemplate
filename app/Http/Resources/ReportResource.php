@@ -49,6 +49,7 @@ class ReportResource extends JsonResource
             'client_id' => $this->client_id,
             'store' => $this->store->name,
             'store_id' => intval($this->store_id),
+            'store_type' => intval($this->store->type_id),
             'products' => $this->groupProducts($products),
             'payment_type' => intval($this->payment_type),
             'payment_type_text' => $payment_types[$this->payment_type],

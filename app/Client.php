@@ -20,6 +20,12 @@ class Client extends Model
         return $this->hasMany('App\Order', 'client_id');
     }
 
+    public function city() {
+        return $this->belongsTo('App\Store', 'client_city')->withDefault([
+            'city' => 'Город не указан'
+        ]);
+    }
+
     public function purchases() {
         return $this->hasMany('App\Sale', 'client_id');
     }

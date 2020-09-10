@@ -33,11 +33,13 @@
                        v-model="client.client_card"
                    />
 
-                   <v-text-field
-                       label="Скидка"
-                       solo
-                       type="number"
-                       v-model="client.client_discount"
+                   <v-select
+                       class="mt-3"
+                       label="Город"
+                       :items="shops"
+                       item-text="city"
+                       item-value="id"
+                       v-model="client.client_city"
                    />
                    <v-checkbox
                        v-model="client.is_partner"
@@ -105,7 +107,11 @@
                 return phone.replace(/[-()]/gi, '');
             }
         },
-        computed: {},
+        computed: {
+            shops() {
+                return [{id: -1, city: 'Город не указан'}, ...this.$store.getters.shops];
+            }
+        },
         props: {
             state: {
                 type: Boolean,
