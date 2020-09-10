@@ -208,7 +208,7 @@
         watch: {
             storeFilter() {
                 this.cart = [];
-            }
+            },
         },
         data: () => ({
             storeFilter: null,
@@ -296,7 +296,18 @@
                 this.photos.splice(key, 1);
             },
             async onTransfer() {
+
+                const check = this.cart.filter(c => {
+                    return c.count > this.getQuantity(c.quantity) || c.count <= 0;
+                }).length
+
+                if (check) {
+                    showToast('Некорректное количество товара в перемещении, вы выбрали товара больше чем есть или меньше нуля!', TOAST_TYPE.ERROR);
+                    return ;
+                }
+
                 this.overlay = true;
+
                 const sale = {
                     cart: this.cart.map(c => {
                         return {id: c.id, count: c.count};
