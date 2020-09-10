@@ -53,7 +53,7 @@
                                     <v-icon>mdi-minus</v-icon>
                                 </v-btn>
                                 <v-text-field
-                                    v-model="item.count"
+                                    v-model.number="item.count"
                                     style="width: 20px;"
                                     type="number"
                                 ></v-text-field>
