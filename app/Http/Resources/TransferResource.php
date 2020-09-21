@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Product;
+use App\ProductBatch;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TransferResource extends JsonResource
@@ -25,6 +26,7 @@ class TransferResource extends JsonResource
             'product_count' => $batches->count(),
             'position_count' => $batches->groupBy('product_id')->count(),
             'total_cost' => $this->getTotalCost($batches->toArray($batches)),
+            'total_purchase_cost' => $this->getTotalPurchaseCost($batches),
             'photos' => json_decode($this->photos, true)
         ];
     }
@@ -33,6 +35,13 @@ class TransferResource extends JsonResource
         return array_reduce($_products, function ($a, $c) {
             $price = Product::find($c['id'])->product_price ?? 0;
             return $a + ($price * $c['count']);
+        }, 0);
+    }
+
+    private function getTotalPurchaseCost($products = []) {
+        return collect($products)->reduce(function ($a, $c) {
+            $batch = ProductBatch::where('id', $c['batch_id'])->get()->first();
+            return intval($batch['purchase_price']) + intval($a);
         }, 0);
     }
 

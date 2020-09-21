@@ -30,6 +30,12 @@
                             <v-icon>mdi-file-excel</v-icon>
                         </v-btn>
                     </template>
+                    <template v-slot:item.total_cost="{item}">
+                        {{ new Intl.NumberFormat('ru-RU').format(item.total_cost) }}₸
+                    </template>
+                    <template v-slot:item.total_sale_cost="{item}">
+                        {{ new Intl.NumberFormat('ru-RU').format(item.total_sale_cost) }}₸
+                    </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
                     </template>
@@ -70,6 +76,10 @@
                 {
                     text: 'Общая сумма',
                     value: 'total_cost'
+                },
+                {
+                    text: 'Общая продажная сумма',
+                    value: 'total_sale_cost'
                 },
                 {
                     text: 'Пользователь',

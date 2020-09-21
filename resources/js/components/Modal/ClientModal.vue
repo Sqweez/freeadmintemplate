@@ -32,6 +32,12 @@
                        solo
                        v-model="client.client_card"
                    />
+                   <v-text-field
+                       label="Процент скидки"
+                       solo
+                       type="number"
+                       v-model="client.client_discount"
+                   />
 
                    <v-select
                        class="mt-3"
@@ -85,6 +91,7 @@
             async onSubmit() {
                 this.loading = true;
                 this.client.client_phone = this.modifyPhone(this.client.client_phone);
+                this.client.client_discount = Math.min(Math.max(this.client.client_discount, 0), 100);
                 if(this.id === null) {
                     await this.createClient();
                     this.$emit('cancel');

@@ -26,7 +26,10 @@
                         }"
         >
             <template v-slot:item.total_cost="{item}">
-                {{ item.total_cost }}₸
+                {{ new Intl.NumberFormat('ru-RU').format(item.total_cost) }}₸
+            </template>
+            <template v-slot:item.total_purchase_cost="{item}">
+                {{ new Intl.NumberFormat('ru-RU').format(item.total_purchase_cost) }}₸
             </template>
             <template v-slot:item.product_count="{item}">
                 {{ item.product_count }} шт.
@@ -97,6 +100,11 @@
                 {
                     text: 'Количество товаров',
                     value: 'product_count',
+                    sortable: false,
+                },
+                {
+                    text: 'Общая закуп. стоимость',
+                    value: 'total_purchase_cost',
                     sortable: false,
                 },
                 {

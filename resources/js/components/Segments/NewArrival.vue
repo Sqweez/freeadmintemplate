@@ -148,6 +148,10 @@
                         <v-btn icon @click="addToCart(item)" color="success">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
+                        <v-btn @click="rangeMode = true; productId = item.id; productModal = true;" color="success">
+                            Ассортимент
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -159,9 +163,9 @@
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
         <ProductModal
-            :id="-1"
-            v-on:cancel="productModal = false;"
-            :range-mode="false"
+            :id="productId"
+            v-on:cancel="productId = -1; rangeMode = false; productModal = false;"
+            :range-mode="rangeMode"
             :state="productModal"/>
         <ConfirmationModal
             message="Распечатать накладную?"
@@ -225,7 +229,9 @@
                     value: 'product_barcode',
                     align: ' d-none'
                 }
-            ]
+            ],
+            productId: -1,
+            rangeMode: false,
         }),
         async mounted() {
             this.loading = this.products.length === 0;

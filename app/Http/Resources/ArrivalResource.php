@@ -21,7 +21,7 @@ class ArrivalResource extends JsonResource
         $products = ProductRevisionResource::collection(Product::find($this->products->pluck('product_id')));
         $_products = collect($this->products);
 
-        $products = collect($products)->map(function ($i, $key) use ($_products) {
+        $products = collect($products)->map(function ($i) use ($_products) {
             $product = $_products->first(function ($item) use ($i) {
                 return $item->product_id == $i['id'];
             });
@@ -44,7 +44,10 @@ class ArrivalResource extends JsonResource
             'position_count' => $_products->count(),
             'total_cost' => collect($_products)->reduce(function($a, $c) {
                 return ($c['purchase_price'] * $c['count']) + $a;
-            }, 0) . "₸",
+            }, 0),
+            'total_sale_cost' => collect($products)->reduce(function($a, $c) {
+                    return ($c['product_price'] * $c['count']) + $a;
+                }, 0),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y'),
         ];
     }
