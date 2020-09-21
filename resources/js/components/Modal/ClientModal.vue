@@ -91,7 +91,7 @@
             async onSubmit() {
                 this.loading = true;
                 this.client.client_phone = this.modifyPhone(this.client.client_phone);
-                this.client.client_discount = Math.min(Math.max(this.client.client_discount, 0), 100);
+                this.client.client_discount = Math.min(Math.max(this.client.client_discount, 0), 100) || 0;
                 if(this.id === null) {
                     await this.createClient();
                     this.$emit('cancel');
