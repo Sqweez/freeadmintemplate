@@ -8,6 +8,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\shop\ShopCategoryResource;
 use App\Subcategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller {
@@ -15,9 +16,15 @@ class CategoryController extends Controller {
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @throws \Exception
      */
     public function index() {
-        return CategoryResource::collection(Category::all());
+        if (Cache::has('categories')) {
+            return Cache::get('categories');
+        } else
+        return cache()->remember('categories', 24 * 60 * 60 * 30 * 365, function () {
+            return CategoryResource::collection(Category::all());
+        });
     }
 
 
@@ -45,7 +52,10 @@ class CategoryController extends Controller {
     }
 
     public function indexShop() {
-        return ShopCategoryResource::collection(Category::all());
+        return cache()->remember('shop-categories', 24 * 60 * 60 * 30 * 365, function () {
+            return ShopCategoryResource::collection(Category::all());
+        });
+        //return ShopCategoryResource::collection(Category::all());
     }
 
 

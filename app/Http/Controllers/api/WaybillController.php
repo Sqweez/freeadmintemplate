@@ -101,21 +101,12 @@ class WaybillController extends Controller
 
             $excelTemplate->getActiveSheet()->getRowDimension($currentIndex)->setRowHeight(-1);
             $excelTemplate->getActiveSheet()->getStyle('C' . $currentIndex)->getAlignment()->setWrapText(true);
-
-            $row = new Row($excelSheet, $currentIndex);
-            $this->autofitRowHeight($row);
-
         }
 
 
         $excelSheet->setCellValue('AR' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), $TOTAL_COST);
         $excelSheet->setCellValue('AE' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COST));
         $excelSheet->setCellValue('N' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COUNT));
-
-        foreach($excelTemplate->getActiveSheet()->getRowDimensions() as $rowID) {
-            $rowID->setRowHeight(-1);
-        }
-
 
         $excelWriter = new Xlsx($excelTemplate);
 
