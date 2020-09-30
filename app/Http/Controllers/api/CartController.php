@@ -102,11 +102,14 @@ class CartController extends Controller {
         $products = CartProduct::where('cart_id', $cart)->get();
         $this->createOrderProducts($order, $store_id, $products);
         CartProduct::where('cart_id', $cart)->delete();
-        try {
-            $this->sendTelegramMessage($order);
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-        }
+
+        if ($customer_info['is_paid']) {
+            try {
+                $this->sendTelegramMessage($order);
+            } catch (\Exception $e) {
+                dd($e->getMessage());
+            }
+        } 
 
         return intval($order->id);
     }
@@ -164,6 +167,10 @@ class CartController extends Controller {
 
         if ($order['payment'] == 1) {
             $payment = 'Оплата картой';
+        }
+
+        if ($order['payment'] == 2) {
+            $payment = 'Онлайн оплата: ОПЛАЧЕНО!';
         }
 
         $message .= 'Способ оплаты: ' . $payment . "\n";

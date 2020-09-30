@@ -10,6 +10,7 @@ use App\Http\Resources\MainProductsResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductRevisionResource;
 use App\ManufacturerProducts;
+use App\Price;
 use App\Product;
 use App\ProductBatch;
 use App\ProductImage;
@@ -28,13 +29,13 @@ class ProductController extends Controller {
     public function index() {
         return ProductResource::collection(
             Product::orderBy('group_id')
-                ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'quantity'])
+                ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'quantity', 'price'])
                 ->get()
         );
     }
 
     public function store(Request $request) {
-        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs']);
+        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'prices']);
         $_product = Product::create($product);
         $product_id = $_product['id'];
         $_product->update(['group_id' => $product_id]);
@@ -120,10 +121,22 @@ class ProductController extends Controller {
         $this->createAttributeProduct($attributes, $product_id);
         $manufacturer = $request->get('manufacturer');
         $this->createManufacturerProduct($manufacturer, $product_id);
+        $prices = $request->get('prices');
+        $this->createPricesProducts($prices, $product_id);
+    }
+
+    private function createPricesProducts($prices, $product_id) {
+        foreach ($prices as $price) {
+            Price::create([
+                'product_id' => $product_id,
+                'store_id' => $price['store_id'],
+                'price' => $price['price']
+            ]);
+        }
     }
 
     public function update(Request $request, Product $product) {
-        $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs']);
+        $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'prices']);
         $product_id = $request->get('id');
         $product->update($_product);
         $this->deleteDuplicates($product_id);
@@ -135,7 +148,7 @@ class ProductController extends Controller {
     private function updateGroups(Request $request) {
         $product_id = $request->get('id');
         $group_id = Product::find($product_id)['group_id'];
-        $_product = $request->except(['id', 'categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'product_barcode']);
+        $_product = $request->except(['id', 'categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'product_barcode', 'prices']);
         Product::where('group_id', $group_id)->where('id', '!=', $product_id)->update($_product);
         $products = Product::where('group_id', $group_id)->where('id', '!=', $product_id)->get();
         collect($products)->map(function ($product) use ($request){
@@ -168,6 +181,7 @@ class ProductController extends Controller {
         ManufacturerProducts::where('product_id', $id)->delete();
         SubcategoryProduct::where('product_id', $id)->delete();
         ProductThumb::where('product_id', $id)->delete();
+        Price::where('product_id', $id)->delete();
     }
 
     private function makeThumbs($images) {

@@ -161,6 +161,9 @@
                             </li>
                         </ul>
                     </template>
+                    <template v-slot:item.product_price="{ item }">
+                        {{ getPrice(item) | priceFilters}}
+                    </template>
                     <template v-slot:item.actions="{item}">
                         <v-btn icon @click="addToCart(item)" color="success">
                             <v-icon>mdi-plus</v-icon>
@@ -199,6 +202,7 @@
     import ACTIONS from "../../store/actions";
     import axios from 'axios';
     import uploadFile, {deleteFile} from "../../api/upload";
+    import product from "../../mixins/product";
 
     export default {
         components: {
@@ -260,7 +264,12 @@
             await this.$store.dispatch(ACTIONS.GET_STORES);
             this.loading = false;
         },
+        mixins: [product],
         methods: {
+         /*   getPrice(product) {
+                const item = product.prices.find(p => p.store_id == this.storeFilter);
+                return item ? item.price : product.product_price;
+            },*/
             addToCart(item) {
                 if (!this.checkAvailability(item)) {
                     showToast('Недостаточно товара', TOAST_TYPE.WARNING);

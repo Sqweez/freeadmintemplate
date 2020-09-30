@@ -120,7 +120,7 @@ class ClientController extends Controller {
         $user_token = $request->get('user_token');
         $client = Client::ofToken($user_token)->first();
         if (!$client) {
-            return null;
+            return response(418);
         } else {
             $client['client_balance'] = $client->transactions->sum('amount');
             return collect($client)->only(['client_name', 'client_phone', 'address', 'city', 'email', 'id', 'client_discount', 'client_balance', 'is_partner']);

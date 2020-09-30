@@ -18,8 +18,9 @@ class ProductsResource extends JsonResource
     public function toArray($request)
     {
 
-        $store_id = $request->cookie('store_id') ?? 1;
+        $store_id = $request->get('store_id') ?? 1;
         $attributes = $this->attributes;
+        $price = $this->price->where('store_id', $store_id)->first()['price'] ?? $this->product_price;
 
         return [
             'product_id' => intval($this->id),
@@ -30,7 +31,7 @@ class ProductsResource extends JsonResource
             'subcategory' => $this->subcategories[0]->subcategory_name ?? '',
             'subcategory_id' => $this->subcategories[0]->id ?? 0,
             'manufacturer_id' => $this->manufacturer[0]->id ?? 0,
-            'product_price' => $this->product_price,
+            'product_price' => $price,
             'product_image' => url('/') . Storage::url($this->product_images[0]->product_image ?? 'products/product_image_default.jpg'),
             'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
             'attributes' => AttributeResource::collection($attributes),

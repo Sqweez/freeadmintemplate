@@ -10,6 +10,7 @@ import 'froala-editor/js/third_party/spell_checker.min';
 import 'froala-editor/js/third_party/image_tui.min';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import axios from 'axios';
+import './filters/filters';
 
 axios.defaults.withCredentials = true;
 

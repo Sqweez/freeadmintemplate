@@ -144,6 +144,9 @@
                             </li>
                         </ul>
                     </template>
+                    <template v-slot:item.product_price="{ item }">
+                        {{ item.product_price | priceFilters }}
+                    </template>
                     <template v-slot:item.actions="{item}">
                         <v-btn icon @click="addToCart(item)" color="success">
                             <v-icon>mdi-plus</v-icon>

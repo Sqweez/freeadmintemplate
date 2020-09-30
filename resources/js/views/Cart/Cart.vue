@@ -60,10 +60,10 @@
                                     <div class="d-flex ml-4" v-if="client && client.id !== -1">
                                         <h5>Списать с баланса:</h5>
                                         <v-text-field
-                                            @keyup.enter="setBalance"
                                             class="ml-2"
                                             type="number"
                                             color="white darken-2"
+                                            v-model="balance"
                                         />
                                     </div>
                                     <div class="d-flex ml-4" v-if="client && client.id !== -1">
@@ -261,6 +261,9 @@
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </template>
+                    <template v-slot:item.product_price="{item}">
+                        {{ getPrice(item) }}
+                    </template>
                     <template v-slot:item.quantity="{item}">
                         {{ getQuantity(item.quantity) - getCartCount(item.id) }}
                     </template>
@@ -306,6 +309,7 @@
     import {mapActions} from 'vuex';
     import CheckModal from "../../components/Modal/CheckModal";
     import axios from "axios";
+    import product from "../../mixins/product";
 
     export default {
         components: {
@@ -328,8 +332,12 @@
             },
             stores() {
                 this.storeFilter = this.stores[0].id;
+            },
+            balance() {
+                this.balance = Math.min(this.client.client_balance, Math.max(0, this.balance));
             }
         },
+        mixins: [product],
         data: () => ({
             storeFilter: null,
             waybillModal: false,
@@ -407,7 +415,7 @@
                 }
                 const index = this.cart.map(c => c.id).indexOf(item.id);
                 if (index === -1) {
-                    this.cart.push({...item, count: 1});
+                    this.cart.push({...item, count: 1, product_price: this.getPrice(item)});
                 } else {
                     this.increaseCartCount(index);
                 }
@@ -558,7 +566,7 @@
             payment_types() {
                 return this.$store.getters.payment_types;
             }
-        }
+        },
     }
 </script>
 

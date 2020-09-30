@@ -52,19 +52,19 @@
                     <tr class="total">
                         <td><b>Итого:</b></td>
                         <td>
-                            {{ new Intl.NumberFormat('ru-RU').format(totalWeekPlan) }}₸
+                            {{ totalWeekPlan | priceFilters }}
                         </td>
                         <td>
-                            {{ new Intl.NumberFormat('ru-RU').format(totalWeekPlanSum) }}₸
+                            {{ totalWeekPlanSum | priceFilters }}
                         </td>
                         <td>
                             {{ totalWeekPlanPercent }} %
                         </td>
                         <td>
-                            {{new Intl.NumberFormat('ru-RU').format(totalMonthPlan) }}₸
+                            {{ totalMonthPlan | priceFilters }}
                         </td>
                         <td>
-                            {{ new Intl.NumberFormat('ru-RU').format(totalMonthPlanSum) }}₸
+                            {{ totalMonthPlanSum | priceFilters }}
                         </td>
                         <td>
                             {{ totalMonthPlanPercent }} %

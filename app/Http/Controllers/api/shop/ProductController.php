@@ -94,7 +94,7 @@ class ProductController extends Controller {
             ->ofPrice($filters['prices'])
             /*->inStock($store_id)*/
             ->isHit($filters['is_hit'])
-            ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity']);
+            ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity', 'price']);
     }
 
     private function getFilteredProducts($query, $store_id) {

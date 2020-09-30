@@ -82,6 +82,46 @@
                         v-model="product.is_hit"
                     />
                     <v-divider></v-divider>
+                    <h5>Цены по городам:</h5>
+                    <div class="d-flex">
+                        <v-select
+                            style="max-width: 300px;"
+                            :items="stores"
+                            item-text="name"
+                            item-value="id"
+                            label="Магазин"
+                            v-model="product.prices[0].store_id"
+                        ></v-select>
+                        <v-spacer />
+                        <v-text-field
+                            label="Стоимость"
+                            v-model.number="product.prices[0].price"
+                        ></v-text-field>
+                        <v-btn icon @click="addPricesSelect">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </div>
+                    <div class="d-flex" v-for="(attrs, idx) of pricesSelect" :key="idx * 1500" v-if="pricesSelect.length !== 0">
+                        <component
+                            v-if="pricesSelect.length !== 0"
+                            style="max-width: 300px;"
+                            :is="attrs"
+                            :items="stores"
+                            item-text="name"
+                            item-value="id"
+                            label="Магазин"
+                            v-model="product.prices[idx + 1].store_id"
+                        />
+                        <v-spacer/>
+                        <v-text-field
+                            label="Стоимость"
+                            v-model.number="product.prices[idx + 1].price"
+                        ></v-text-field>
+                        <v-btn icon @click="removeAttributeSelect(idx)">
+                            <v-icon>mdi-minus</v-icon>
+                        </v-btn>
+                    </div>
+                    <v-divider></v-divider>
                     <h5>Атрибуты:</h5>
                     <div class="d-flex">
                         <v-select
@@ -152,6 +192,7 @@
     import ManufacturerModal from "./ManufacturerModal";
     import uploadFile, {deleteFile} from "../../api/upload";
     import { VueEditor } from "vue2-editor";
+    import {TOAST_TYPE} from "../../config/consts";
 
 
     export default {
@@ -159,6 +200,7 @@
         watch: {
             state() {
                 this.attributesSelect = [];
+                this.pricesSelect = [];
                 this.groupProduct = false;
                 this.product = {
                     categories: [],
@@ -171,6 +213,12 @@
                             attribute_value: ''
                         }
                     ],
+                    prices: [
+                        {
+                            store_id: null,
+                            price: 0,
+                        }
+                    ]
                 };
                 if (this.id !== -1) {
                     this.product = JSON.parse(JSON.stringify(this.$store.getters.product(this.id)));
@@ -190,6 +238,20 @@
                             {
                                 attribute_id: null,
                                 attribute_value: ''
+                            }
+                        )
+                    }
+
+                    if (this.product.prices.length > 1) {
+                        this.pricesSelect = new Array(this.product.prices.length - 1);
+                        this.pricesSelect.fill(VSelect);
+                    }
+
+                    if (this.product.prices.length === 0) {
+                        this.product.prices.push(
+                            {
+                                store_id: null,
+                                price: 0
                             }
                         )
                     }
@@ -218,6 +280,9 @@
             categories() {
                 return this.$store.getters.categories;
             },
+            stores() {
+                return this.$store.getters.stores;
+            },
             subcategories() {
                 const subcategories = [];
                 this.categories.forEach(c => {
@@ -243,17 +308,34 @@
                 product_description: '',
             },
             attributesSelect: [],
+            pricesSelect: [],
             groupProduct: false,
             manufacturerModal: false,
             loading: false,
         }),
         methods: {
+            hasDuplicates(arr) {
+                return arr.filter(x => {
+                    return arr.filter(a => x.store_id === a.store_id).length > 1;
+                }).length > 0;
+            },
             addAttributesSelect() {
                 this.product.attributes.push({
                     attribute_id: null,
                     attribute_value: ''
                 });
                 this.attributesSelect.push(VSelect);
+            },
+            addPricesSelect() {
+                this.product.prices.push({
+                    store_id: null,
+                    price: 0
+                });
+                this.pricesSelect.push(VSelect);
+            },
+            removePriceSelect(idx) {
+                this.pricesSelect.splice(idx, 1);
+                this.product.prices.splice(idx + 1, 1);
             },
             removeAttributeSelect(idx) {
                 this.attributesSelect.splice(idx, 1);
@@ -266,8 +348,6 @@
             },
             async editProduct() {
                 const product = {...this.product};
-              /*  console.log(product);
-                return;*/
                 await this.$store.dispatch(ACTIONS.EDIT_PRODUCT, product);
                 showToast('Товар успешно отредактирован')
             },
@@ -279,14 +359,19 @@
             },
             onSubmit() {
                 this.loading = true;
-                if (this.id === -1) {
-                    this.createProduct();
-                } else if (!this.rangeMode){
-                    this.editProduct();
+                const condition = this.hasDuplicates(this.product.prices);
+                if (!condition) {
+                    if (this.id === -1) {
+                        this.createProduct();
+                    } else if (!this.rangeMode){
+                        this.editProduct();
+                    } else {
+                        this.addRange();
+                    }
+                    this.$emit('cancel');
                 } else {
-                    this.addRange();
+                    showToast('Внесены несколько одинаковых магазинов!', TOAST_TYPE.ERROR);
                 }
-                this.$emit('cancel');
                 this.loading = false;
             },
             async uploadPhoto(e) {

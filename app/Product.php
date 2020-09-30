@@ -5,6 +5,7 @@ namespace App;
 use App\ManufacturerProducts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Request;
 
 class Product extends Model
 {
@@ -72,6 +73,14 @@ class Product extends Model
 
     public function product_thumbs() {
         return $this->hasMany('App\ProductThumb', 'product_id');
+    }
+
+    public function price() {
+        return $this->hasMany('App\Price', 'product_id');
+    }
+
+    public function getCurrentPriceAttribute() {
+        return 1000;
     }
 
     public function scopeMain(Builder $query)

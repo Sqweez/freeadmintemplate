@@ -74,7 +74,7 @@
                           {{ getQuantity(item.quantity) }}
                         </template>
                         <template v-slot:item.product_price="{item}">
-                            {{ item.product_price }} ₸
+                            {{ getPrice(item) | priceFilters }}
                         </template>
                         <template v-slot:item.categories="{ item }">
                             <ul>
@@ -159,6 +159,7 @@
     import ACTIONS from "../../store/actions";
     import axios from 'axios';
     import PriceTagModal from "../../components/Modal/PriceTagModal";
+    import product from "../../mixins/product";
 
     export default {
         components: {
@@ -324,7 +325,8 @@
                 await axios.get('/api/shop/products-group');
                 showToast('Товары успешно сгруппированы!')
             }
-        }
+        },
+        mixins: [product]
     }
 </script>
 

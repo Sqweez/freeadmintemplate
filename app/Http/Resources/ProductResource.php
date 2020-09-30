@@ -18,6 +18,8 @@ class ProductResource extends JsonResource {
                 $this->quantity->where('store_id', $request->get('store_id'))->sum('quantity') :
                 $this->quantity;
 
+        $price = $request->has('store_id') ? $this->price->where('store_id', $request->get('store_id')) : $this->price;
+
         return [
             'id' => intval($this->id),
             'product_name' => $this->product_name,
@@ -28,6 +30,7 @@ class ProductResource extends JsonResource {
             'manufacturer' => $this->manufacturer->first()->manufacturer_name ?? '',
             'manufacturer_id' => $this->manufacturer->first()->id ?? '',
             'product_price' => $this->product_price,
+            'prices' => $this->price,
             'quantity' => $quantity,
             'product_barcode' => $this->product_barcode,
             'group_id' => $this->group_id,
