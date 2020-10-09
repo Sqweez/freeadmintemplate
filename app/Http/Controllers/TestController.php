@@ -6,83 +6,39 @@ use App\CategoryProduct;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ReportResource;
 use App\Product;
+use App\ProductBatch;
+use App\ProductQuantity;
 use App\Sale;
 use Carbon\Carbon;
 use Barryvdh\Debugbar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TestController extends Controller
 {
     public function index(Request $request) {
+        $batches = ProductBatch::where('quantity', '>', 0)->get();
+        $batches = collect($batches)->groupBy('product_id');
+        $batches = collect($batches)->map(function ($i) {
+            return $i->groupBy('store_id')->map(function ($r) {
+                return $r->sum('quantity');
+            });
+        });
 
-        $FILTERS = [
-            'ALL_TIME' => 1,
-            'CURRENT_MONTH' => 2,
-            'TODAY' => 3,
-            'CUSTOM_FILTER' => 4,
-            'LAST_3_DAYS' => 5,
-        ];
+        $array = [];
 
-        $filter = intval($request->get('filter')) ?? 3;
-        $start = $request->get('start') ?? null;
-        $finish = $request->get('finish') ?? null;
-
-        $dates = [];
-
-        $currentDate = Carbon::today();
-        switch ($filter) {
-            case $FILTERS['TODAY']: {
-                $dates = [
-                    $currentDate->toDateString(),
-                ];
-                break;
-            }
-            case $FILTERS['CURRENT_MONTH']: {
-                $dates = [
-                    $currentDate->subDays(30)->toDateString(),
-                ];
-                break;
-            }
-            case $FILTERS['ALL_TIME']: {
-                $dates = [
-                    Carbon::createFromTimestamp(0)->toDateString()
-                ];
-                break;
-            }
-
-            case $FILTERS['LAST_3_DAYS']: {
-                $dates = [
-                    $currentDate->subDays(3)->toDateString()
-                ];
-                break;
-            }
-
-            case $FILTERS['CUSTOM_FILTER']: {
-                $dates = [
-                    Carbon::parse($start),
-                    Carbon::parse($finish)
-                ];
-                break;
-            }
-
-            default: {
-                $dates = [
-                    Carbon::now()->toDateString()
-                ];
-            }
-        }
-
-        if (count($dates) === 1) {
-            $dates[] = Carbon::now()->toDateString();
-        }
-
-        return
-        view('test', [
-            'reports' => ReportResource::collection(
-                Sale::with(['client', 'user', 'store', 'products'])->whereDate('created_at', '>=', $dates[0])
-                    ->whereDate('created_at', '<=', $dates[1])
-                    ->orderBy('created_at', 'desc')
-                    ->get())->toArray($request)
-        ]);
+        return $batches->map(function ($item, $key) {
+            $product_id = $key;
+            $item->map(function ($_item, $_key) use ($product_id) {
+                $store_id = $_key;
+                DB::table('product_quantities')->insert(
+                    [
+                        'product_id' => $product_id,
+                        'store_id' => $store_id,
+                        'quantity' => $_item
+                    ]
+                );
+            });
+        });
     }
 }

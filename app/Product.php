@@ -67,6 +67,10 @@ class Product extends Model
         return $this->hasMany('App\ProductBatch', 'product_id');
     }
 
+    public function product_quantity() {
+        return $this->hasMany(ProductQuantity::class, 'product_id');
+    }
+
     public function product_images() {
         return $this->hasMany('App\ProductImage', 'product_id');
     }

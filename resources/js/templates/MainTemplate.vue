@@ -17,7 +17,7 @@
     import "./../scripts/nv.d3.min"
     import "./../scripts/layout/layout.min"
     import "./../scripts/scroll/scroll.min"
-   
+
     import Drawer from "../components/Navigation/Drawer";
     import Header from "../components/Header/Header";
     import ACTIONS from "../store/actions";
@@ -27,6 +27,8 @@
         },
         async mounted() {
             await this.$store.dispatch(ACTIONS.INIT)
+        },
+        computed: {
         }
     }
 </script>

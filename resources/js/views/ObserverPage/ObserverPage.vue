@@ -12,26 +12,22 @@
             </v-col>
         </v-row>
     </div>
-
 </template>
 
 <script>
-    import Weather from "../../components/Widgets/Weather";
     import SalesRating from "../../components/Widgets/SalesRating";
     import PlanWidget from "../../components/Widgets/PlanWidget";
+    import Weather from "../../components/Widgets/Weather";
     export default {
-        data: () => ({
-            items: ['Сегодня', 'Текущая неделя', 'Текущий месяц', 'Последние 3 месяца'],
-        }),
+        data: () => ({}),
+        methods: {},
+        computed: {},
         components: {
-            PlanWidget,
-            Weather, SalesRating
+            SalesRating, PlanWidget, Weather
         }
     }
 </script>
 
 <style scoped>
-    .text-shadow {
-        text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
-    }
+
 </style>

@@ -14,6 +14,8 @@ const authModule = {
         LOGGED_IN: state => !!(state.user && state.token),
         LOGIN_CHECKED: state => state.checked,
         IS_ADMIN: state => state.user && +state.user.role_id === 1,
+        IS_OBSERVER: state => state.user && +state.user.role_id === 3,
+        IS_SELLER: state => state.user && +state.user.role_id === 2,
     },
     mutations: {
         SET_TOKEN(state, token) {

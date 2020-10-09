@@ -54,6 +54,9 @@
         computed: {
             is_admin() {
                 return this.$store.getters.IS_ADMIN;
+            },
+            is_observer() {
+                return this.$store.getters.IS_OBSERVER;
             }
         }
     }

@@ -28,7 +28,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(store) of plans" v-if="IS_ADMIN || USER.store_id == store.store_id">
+                    <tr v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.store_id">
                         <td>{{ store.name }}</td>
                         <td>
                             {{ store.week_plan }}₸
@@ -138,7 +138,8 @@
             },
             ...mapGetters([
                 'IS_ADMIN',
-                'USER'
+                'USER',
+                'IS_OBSERVER'
             ]),
         },
         async created() {

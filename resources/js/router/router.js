@@ -18,6 +18,27 @@ Router.beforeEach(async (to, from, next) => {
     if (!store.getters.LOGIN_CHECKED) {
         await store.dispatch('AUTH');
     }
+
+    const IS_OBSERVER = store.getters.IS_OBSERVER;
+
+    if (IS_OBSERVER) {
+        if (to.meta.isObserver) {
+            next();
+        } else {
+            next('/observer');
+        }
+        return;
+    }
+
+    if (to.meta.isAdmin) {
+        if (store.getters.IS_ADMIN) {
+            next();
+        } else {
+            next('/');
+        }
+        return;
+    }
+
     if (!to.meta.guest) {
         if (store.getters.LOGGED_IN) {
             next();

@@ -25,10 +25,22 @@
         },
         computed: {
             navigations() {
+                if (this.is_observer) {
+                    return this.$store.getters.OBSERVER_NAVIGATIONS;
+                }
+                if (this.is_seller) {
+                    return this.$store.getters.SELLER_NAVIGATIONS;
+                }
                 return this.$store.getters.navigations;
             },
             is_admin() {
                 return this.$store.getters.IS_ADMIN;
+            },
+            is_observer() {
+                return this.$store.getters.IS_OBSERVER;
+            },
+            is_seller() {
+                return this.$store.getters.IS_SELLER;
             }
         },
         methods: {

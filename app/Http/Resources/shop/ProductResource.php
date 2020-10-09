@@ -18,10 +18,11 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-
+        $store_id = $request->get('store_id') ?? 1;
+        $price = $this->price->where('store_id', $store_id)->first()['price'] ?? $this->product_price;
         return [
             'product_id' => intval($this->id),
-            'product_price' => $this->product_price,
+            'product_price' => $price,
             'subcategory' => $this->subcategories[0]->subcategory_name ?? '',
             'product_name' => $this->product_name,
             'product_description' => $this->product_description,

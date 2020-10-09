@@ -16,11 +16,12 @@ import MVPProducts from "../views/MVPProducts/MVPProducts";
 import Rating from "../views/Rating/Rating";
 import Revision from "../views/Revision/Revision";
 import Arrivals from "../views/Arrivals/Arrivals";
+import ObserverPage from "../views/ObserverPage/ObserverPage";
 
 const routes = [
     {
         path: '/',
-        component: Dashboard
+        component: Dashboard,
     },
     {
         path: '/users',
@@ -116,6 +117,13 @@ const routes = [
         component: Arrivals,
         meta: {
             isAdmin: true
+        }
+    },
+    {
+        path: '/observer',
+        component: ObserverPage,
+        meta: {
+            isObserver: true
         }
     }
 ];

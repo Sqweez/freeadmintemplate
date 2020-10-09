@@ -80,7 +80,13 @@ class CartController extends Controller {
 
     public function getCart(Request $request) {
         $user_token = $request->get('user_token');
+        $store_id = $request->get('store_id');
         $cart = Cart::ofUser($user_token)->first() ?? null;
+        if ($cart && $store_id != $cart['store_id']) {
+            CartProduct::where('cart_id', $cart['id'])->delete();
+            $cart->delete();
+            $cart = null;
+        }
         return new CartResource($cart);
     }
 
@@ -109,7 +115,7 @@ class CartController extends Controller {
             } catch (\Exception $e) {
                 dd($e->getMessage());
             }
-        } 
+        }
 
         return intval($order->id);
     }

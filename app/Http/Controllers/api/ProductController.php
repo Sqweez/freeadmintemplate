@@ -95,7 +95,7 @@ class ProductController extends Controller {
 
     public function createRange(Request $request) {
         $product_id = $request->get('id');
-        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'id', 'groupProduct', 'product_images', 'product_thumbs']);
+        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'id', 'groupProduct', 'product_images', 'product_thumbs', 'prices']);
         $groupProduct = $request->get('groupProduct');
         if ($groupProduct === true) {
             $product['group_id'] = $product_id;
@@ -126,7 +126,10 @@ class ProductController extends Controller {
     }
 
     private function createPricesProducts($prices, $product_id) {
-        foreach ($prices as $price) {
+        $_prices = array_filter($prices, function ($i) {
+            return $i['store_id'] & $i['price'];
+        });
+        foreach ($_prices as $price) {
             Price::create([
                 'product_id' => $product_id,
                 'store_id' => $price['store_id'],

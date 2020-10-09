@@ -4,13 +4,19 @@ const navigationModule = {
             {
                 title: 'Главная страница',
                 url: '/',
-                icon: 'dashboard'
+                icon: 'dashboard',
             },
             {
                 title: 'Продавцы',
                 url: '/users',
                 icon: 'person',
                 isAdmin: true
+            },
+            {
+                title: 'Страница наблюдателя',
+                url: '/observer',
+                icon: 'dashboard',
+                isObserver: true,
             },
             {
                 title: 'Клиенты',
@@ -44,7 +50,7 @@ const navigationModule = {
                     {
                         title: 'Перемещения',
                         url: '/transfer',
-                        isAdmin: true
+                        //isAdmin: true
                     },
                     {
                         title: 'План продаж',
@@ -58,6 +64,7 @@ const navigationModule = {
                     {
                         title: 'Поступления',
                         url: '/arrivals',
+                        isAdmin: true,
                     },
                 ],
             },
@@ -72,6 +79,7 @@ const navigationModule = {
                 url: '#',
                 icon: 'home',
                 hasDropdown: true,
+                isAdmin: true,
                 children: [
                     {
                         title: 'Цели',
@@ -96,7 +104,7 @@ const navigationModule = {
                 children: [
                     {
                         title: 'Товары',
-                        url: '/stats/mvp_products'
+                        url: '/stats/mvp_products',
                     }
                 ]
             }
@@ -104,6 +112,18 @@ const navigationModule = {
     },
     getters: {
         navigations: state => state.menu,
+        ADMIN_NAVIGATIONS: state => state.menu,
+        OBSERVER_NAVIGATIONS: state => state.menu.filter(s => s.isObserver),
+        SELLER_NAVIGATIONS: state => state.menu
+            .filter(s => !s.isObserver && !s.isAdmin)
+            .map(s => {
+                let children = [];
+                if (s.children) {
+                    children = s.children.filter(c => !c.isAdmin && !c.isObserver);
+                    return {...s, children};
+                }
+                return s;
+            })
     }
 };
 
