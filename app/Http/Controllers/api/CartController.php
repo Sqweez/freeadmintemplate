@@ -331,8 +331,7 @@ class CartController extends Controller {
     }
 
     private function getCount($product, $store_id) {
-        $quantity = ProductBatch::where('product_id', $product)->where('store_id', $store_id)->sum('quantity');
-        return $quantity;
+        return ProductBatch::where('product_id', $product)->where('store_id', $store_id)->sum('quantity');
     }
 
     private function createCartProduct($product, $cart_id, $count) {

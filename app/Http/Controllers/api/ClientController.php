@@ -61,8 +61,7 @@ class ClientController extends Controller {
             });
             $client->update($_client->toArray());
             return new ClientResource($client);
-        }
-        else {
+        } else {
             $_client = $request->except('site');
             if (isset($_client['password'])) {
                 $_client['password'] = Hash::make($_client['password']);
@@ -92,35 +91,68 @@ class ClientController extends Controller {
         $user_token = $request->get('user_token');
         $phone = $request->get('phone');
         $password = $request->get('password');
+        $name = $request->get('name');
+        $city = $request->get('city');
 
         $client = Client::ofPhone($phone)->first();
 
         if ($client && (strlen($client->password) || strlen($client->user_token))) {
-            return [
-                'error' => 'Клиент с данным номер уже зарегистрирован!'
-            ];
+            return ['error' => 'Клиент с данным номер уже зарегистрирован!'];
         }
 
         if (!$client) {
-            $client = Client::create(['client_name' => "", 'client_phone' => $phone, 'client_card' => '', 'client_discount' => 0, 'password' => Hash::make($password), 'address' => '', 'user_token' => Str::random(60), 'email' => '']);
+            $client = Client::create([
+                'client_name' => $name,
+                'client_phone' => $phone,
+                'client_card' => '',
+                'client_discount' => 0,
+                'password' => Hash::make($password),
+                'address' => '',
+                'user_token' => Str::random(60),
+                'client_city' => $city,
+                'email' => ''
+                ]
+            );
         } else {
-            $client->update(['password' => Hash::make($password), 'user_token' => Str::random(60),]);
+            $client->update([
+                'password' => Hash::make($password),
+                'user_token' => Str::random(60),
+                'client_name' => $name,
+                'client_city' => $city
+                ]);
         }
 
         $cart = Cart::ofUser($user_token)->first();
 
         if ($cart) {
             $cart->update(['user_token' => $client->user_token]);
+        } else {
+            $cart = Cart::create([
+                'user_token' => $client->user_token,
+                'type' => 'web',
+                'store_id' => $city
+            ]);
         }
 
+        $this->addFreeBarForRegistration($cart);
+
         return collect($client)->only(['user_token']);
+    }
+
+    private function addFreeBarForRegistration(Cart $cart) {
+        $bar_id = 1;
+        CartProduct::create([
+            'cart_id' => $cart->id,
+            'product_id' => $bar_id,
+            'count' => 1
+        ]);
     }
 
     public function getAuth(Request $request) {
         $user_token = $request->get('user_token');
         $client = Client::ofToken($user_token)->first();
         if (!$client) {
-            return response(418);
+            return null;
         } else {
             $client['client_balance'] = $client->transactions->sum('amount');
             return collect($client)->only(['client_name', 'client_phone', 'address', 'city', 'email', 'id', 'client_discount', 'client_balance', 'is_partner']);
@@ -161,12 +193,7 @@ class ClientController extends Controller {
     }
 
     public function addBalance(Request $request, Client $client) {
-        ClientTransaction::create([
-            'client_id' => $client->id,
-            'user_id' => 1,
-            'amount' => $request->get('sum'),
-            'sale_id' => -1
-        ]);
+        ClientTransaction::create(['client_id' => $client->id, 'user_id' => 1, 'amount' => $request->get('sum'), 'sale_id' => -1]);
 
         return new ClientResource($client);
     }

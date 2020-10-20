@@ -7,11 +7,11 @@ use App\ProductQuantity;
 class BatchObserver
 {
     public function created($batch) {
-        $this->increaseQuantity($batch);
+        //$this->increaseQuantity($batch);
     }
 
     public function updated($batch) {
-        $this->decreaseQuantity($batch);
+        //$this->decreaseQuantity($batch);
     }
 
     public function decreaseQuantity($batch) {
