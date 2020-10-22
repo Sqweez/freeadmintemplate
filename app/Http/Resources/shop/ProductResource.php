@@ -32,6 +32,7 @@ class ProductResource extends JsonResource
             'product_taste' => $this->getProductTaste($this->attributes) ?? '-',
             'group_id' => $this->group_id,
             'is_hit' => !!$this->is_hit,
+            'is_site_visible' => !!$this->is_site_visible,
         ];
     }
 

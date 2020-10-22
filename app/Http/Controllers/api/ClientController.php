@@ -140,7 +140,7 @@ class ClientController extends Controller {
     }
 
     private function addFreeBarForRegistration(Cart $cart) {
-        $bar_id = 1;
+        $bar_id = 2775;
         CartProduct::create([
             'cart_id' => $cart->id,
             'product_id' => $bar_id,

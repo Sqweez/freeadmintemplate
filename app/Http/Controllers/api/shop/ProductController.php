@@ -94,7 +94,7 @@ class ProductController extends Controller {
             ->ofPrice($filters['prices'])
             /*->inStock($store_id)*/
             ->isHit($filters['is_hit'])
-            ->where('is_visible', true)
+            ->where('is_site_visible', true)
             ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity', 'price']);
     }
 

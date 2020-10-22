@@ -22,6 +22,7 @@
                             <th v-if="confirmMode">Действие</th>
                             <th>Наименование</th>
                             <th>Атрибуты</th>
+                            <th>Закуп</th>
                             <th>Количество</th>
                         </tr>
                         </thead>
@@ -39,6 +40,9 @@
                                         {{ attr.attribute }}: {{ attr.attribute_value }}
                                     </li>
                                 </ul>
+                            </td>
+                            <td>
+                                {{ item.purchase_price || "??" }} тнг
                             </td>
                             <td>
 
