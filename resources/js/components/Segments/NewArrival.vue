@@ -1,10 +1,21 @@
 <template>
     <div>
-        <div>
+        <div class="d-flex align-center">
             <v-btn color="error" @click="productModal = true">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
-            <v-btn color="error" class="top-button" @click="wayBillModal = true;">
+            <v-btn color="error" class="top-button" @click="wayBillModal = true;" style="margin-left: 10px;">
                 Сформировать накладную
             </v-btn>
+
+            <div style="margin-left: auto; max-width: 200px;">
+                <v-text-field
+                    label="Курс валюты"
+                    v-model="moneyRate"
+                    type="number"
+                />
+                <v-btn color="primary" style="margin-left: auto" @click="calculatePrices">
+                    Расчитать цены
+                </v-btn>
+            </div>
         </div>
         <h2 v-if="user.login === 'atan'" class="text-center">АТАН, РАБОТАЙ, БЛЯТЬ!</h2>
         <v-card class="background-iron-darkgrey mb-5 mt-5"  v-if="!emptyCart">
@@ -196,6 +207,7 @@
         },
         data: () => ({
             storeFilter: null,
+            moneyRate: 1,
             cart: [],
             search: '',
             confirmationModal: false,
@@ -246,6 +258,12 @@
             this.loading = false;
         },
         methods: {
+            calculatePrices() {
+                this.cart = this.cart.map(item => {
+                    item.purchase_price = Math.ceil(item.purchase_price * this.moneyRate);
+                    return item;
+                })
+            },
             addToCart(item) {
                 const index = this.cart.map(c => c.id).indexOf(item.id);
                 if (index === -1) {
@@ -339,6 +357,11 @@
             },
             user() {
                 return this.$store.getters.USER;
+            }
+        },
+        watch: {
+            moneyRate(value) {
+                //this.moneyRate = Math.max(1, value);
             }
         }
     }

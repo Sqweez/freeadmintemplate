@@ -18,3 +18,7 @@ export async function createBatch(payload) {
 export async function deleteArrival(id) {
     await axios.delete(`/api/arrivals/${id}`);
 }
+
+export async function changeArrival(id, payload) {
+    await axios.post(`/api/arrivals/change/${id}`, payload);
+}

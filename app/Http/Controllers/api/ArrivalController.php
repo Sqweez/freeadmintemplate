@@ -31,6 +31,19 @@ class ArrivalController extends Controller
         return new ArrivalResource($arrival);
     }
 
+    public function changeArrival($id, Request $request) {
+        ArrivalProducts::where('arrival_id', $id)->delete();
+        $products = collect($request->all());
+        $products->each(function ($product) use ($id) {
+            ArrivalProducts::create([
+                'arrival_id' => $id,
+                'product_id' => $product['product_id'],
+                'count' => $product['count'],
+                'purchase_price' => $product['purchase_price']
+            ]);
+        });
+    }
+
     public function createBatch(Request $request) {
         $arrival = Arrival::find($request->get('arrival_id'));
         $products = $request->get('products');

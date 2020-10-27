@@ -17,10 +17,10 @@
                         }"
                 >
                    <template v-slot:item.total_cost="{item}">
-                        {{ new Intl.NumberFormat('ru-RU').format(item.total_cost) }}₸
+                        {{ item.total_cost | priceFilters }}
                     </template>
                     <template v-slot:item.total_sale_cost="{item}">
-                        {{ new Intl.NumberFormat('ru-RU').format(item.total_sale_cost) }}₸
+                        {{ item.total_sale_cost | priceFilters }}
                     </template>
                     <template v-slot:item.product_count="{item}">
                         {{ item.product_count }} шт.
@@ -50,6 +50,7 @@
             :arrival="current_arrival"
             @cancel="arrivalModal = false; current_arrival = {}"
             @submit="onSubmit"
+            @edit="onEdit"
         />
         <ConfirmationModal
             :state="confirmationModal"
@@ -112,10 +113,22 @@
             ],
         }),
         methods: {
+            async getArrivals() {
+                this.overlay = true;
+                const { data } = await getArrivals(false);
+                this.arrivals = data;
+                this.overlay = false;
+            },
             async onSubmit() {
                 this.arrivals = this.arrivals.filter(a => a.id !== this.current_arrival.id);
                 this.arrivalModal = false;
                 this.current_arrival = {}
+            },
+            async onEdit() {
+                this.loading = true;
+                this.arrivalModal = false;
+                this.current_arrival = {};
+                await this.getArrivals();
             },
             async deleteArrival() {
                 await deleteArrival(this.current_arrival.id);
@@ -134,9 +147,7 @@
         },
         computed: {},
         async mounted() {
-            const { data } = await getArrivals(false);
-            this.arrivals = data;
-            this.overlay = false;
+            await this.getArrivals();
         }
     }
 </script>

@@ -42,9 +42,12 @@
                                 </ul>
                             </td>
                             <td>
-                                {{ item.purchase_price || "??" }} тнг
+                                <v-text-field
+                                    v-model="item.purchase_price"
+                                    type="number"
+                                />
                             </td>
-                            <td>
+                            <td style="min-width: 200px;">
 
                                 <v-btn icon color="error" @click="decreaseCount(idx)" v-if="confirmMode">
                                     <v-icon>
@@ -78,6 +81,10 @@
                 <v-btn text @click="$emit('cancel')">
                     Закрыть
                 </v-btn>
+                <v-btn color="primary" text v-if="confirmMode && hasAccepted" @click="saveChanges">
+                    Сохранить изменения
+                    <v-icon>mdi-pencil</v-icon>
+                </v-btn>
                 <v-spacer/>
                 <v-btn color="success" text v-if="confirmMode && hasAccepted" @click="accept">
                     Подтвердить
@@ -91,7 +98,7 @@
 <script>
     import {acceptTransfer, getTransferInfo} from "../../api/transfers";
     import showToast from "../../utils/toast";
-    import {createBatch} from "../../api/arrivals";
+    import {createBatch, changeArrival} from "../../api/arrivals";
 
     export default {
         props: {
@@ -179,6 +186,27 @@
                 newValue.accepted = newValue.count > 0;
                 this.products.splice(idx, 1, newValue)
             },
+            async saveChanges() {
+                this.loading = true;
+                const products = this.products
+                    .filter(p => p.accepted)
+                    .map(p => {
+                        return {
+                            product_id: p.id,
+                            count: p.count,
+                            purchase_price: p.purchase_price
+                        }
+                    })
+
+                await changeArrival(
+                    this.arrival.id,
+                    products
+                )
+
+                this.loading = false;
+                showToast('Поступление успешно отредактировано!');
+                this.$emit('edit')
+            }
         },
         computed: {
             hasAccepted() {
