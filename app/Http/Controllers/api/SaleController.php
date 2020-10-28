@@ -244,4 +244,10 @@ class SaleController extends Controller {
 
     }
 
+    public function update(Request $request, $id) {
+        $sale = Sale::findOrFail($id);
+        $sale->update($request->all());
+        return new ReportResource($sale);
+    }
+
 }

@@ -181,6 +181,18 @@
                 <template v-slot:item.margin="{item}">
                     {{ item.margin }} ₸
                 </template>
+                <template v-slot:item.payment_type_text="{item}">
+                    <span v-if="report.id !== item.id">
+                        {{ item.payment_type_text }}
+                    </span>
+                    <v-select
+                        v-if="editMode && report.id === item.id"
+                        v-model="report.payment_type"
+                        :items="_payment_types"
+                        item-text="name"
+                        item-value="id"
+                    ></v-select>
+                </template>
                 <template v-slot:item.discount="{item}">
                     {{ item.discount }}%
                 </template>
@@ -191,9 +203,22 @@
                     </v-btn>
                 </template>
                 <template v-slot:item.print="{item}">
-                    <v-btn color="primary" :href="'/check/' + item.id" target="_blank">
-                        печать чека
-                    </v-btn>
+                    <div class="d-flex" v-if="report.id !== item.id">
+                        <v-btn color="primary" icon @click="report = item; editMode = true;">
+                            <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
+                        <v-btn color="primary" :href="'/check/' + item.id" target="_blank">
+                            печать чека
+                        </v-btn>
+                    </div>
+                    <div class="d-flex" v-if="editMode && report.id === item.id">
+                        <v-btn icon @click="report = {}; editMode = false">
+                            <v-icon>mdi-cancel</v-icon>
+                        </v-btn>
+                        <v-btn icon color="success" @click="changeSale">
+                            <v-icon>mdi-check</v-icon>
+                        </v-btn>
+                    </div>
                 </template>
                 <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                     {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -234,6 +259,8 @@
             currentProducts: [],
             currentStoreType: -1,
             startMenu: null,
+            report: {},
+            editMode: false,
             start: null,
             finishMenu: null,
             today: moment(),
@@ -281,7 +308,7 @@
                     text: 'Отмена', value: 'actions'
                 },
                 {
-                    text: 'Печать', value: 'print'
+                    text: 'Действие', value: 'print'
                 }
             ],
         }),
@@ -289,6 +316,16 @@
             await this.init();
         },
         methods: {
+            async changeSale() {
+                this.overlay = true;
+                await this.$store.dispatch('updateSale', {
+                    id: this.report.id,
+                    payment_type: this.report.payment_type
+                });
+                this.report = {};
+                this.overlay = false;
+                this.editMode = false;
+            },
             closeModal() {
                 this.currentProducts = [];
                 this.purchaseId = null;
@@ -347,6 +384,9 @@
             },
             payment_types() {
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.payment_types];
+            },
+            _payment_types() {
+                return this.$store.getters.payment_types;
             },
             shops() {
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.shops];

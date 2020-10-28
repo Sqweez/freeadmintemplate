@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use function foo\func;
 
 class Sale extends Model
 {
@@ -28,5 +29,15 @@ class Sale extends Model
 
     public function scopeByDate($q, $date) {
         $q->where('created_at', $date);
+    }
+
+    protected static function boot() {
+        parent::boot();
+        static::creating(function ($query) {
+            $query->client_id = $query->client_id ?? -1;
+        });
+        static::updating(function ($query) {
+            $query->client_id = $query->client_id ?? -1;
+        });
     }
 }

@@ -1,4 +1,4 @@
-import {cancelSale, getPlanReports, getReports, getStoreReports} from '../../api/sale'
+import {cancelSale, getPlanReports, getReports, getStoreReports, updateSale} from '../../api/sale'
 import ACTIONS from '../actions/index';
 
 const reportsModule = {
@@ -55,6 +55,10 @@ const reportsModule = {
         async getPlanReports({commit}) {
             const { data } = await getPlanReports();
             commit('setPlanReports', data);
+        },
+        async updateSale({commit}, payload) {
+            const data = await updateSale(payload);
+            commit('changeSale', data);
         }
     }
 };

@@ -103,6 +103,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::post('sales', 'api\SaleController@store');
 
     //ReportController
+    Route::patch('reports/{report}', 'api\SaleController@update');
     Route::get('reports', 'api\SaleController@reports');
     Route::get('reports/plan', 'api\SaleController@getPlanReports');
     Route::get('reports/total', 'api\SaleController@getTotal');
@@ -136,7 +137,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // ArrivalController
     Route::post('arrivals/change/{arrival}', 'api\ArrivalController@changeArrival');
     Route::get('arrivals/cancel/{arrival}', 'api\ArrivalController@cancelArrival');
-    Route::get('arrivals/{arrival}', 'api\ArrivalController@ ');
+    Route::get('arrivals/{arrival}', 'api\ArrivalController@getArrival');
     Route::get('arrivals', 'api\ArrivalController@index');
     Route::post('arrivals', 'api\ArrivalController@createArrival');
     Route::post('arrivals/complete', 'api\ArrivalController@createBatch');

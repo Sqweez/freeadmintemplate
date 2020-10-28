@@ -22,3 +22,8 @@ export async function getPlanReports() {
     return await axios.get(`/api/reports/plan`)
 }
 
+export async function updateSale(payload) {
+    const { data } = await axios.patch(`/api/reports/${payload.id}`, payload);
+    return data.data;
+}
+
