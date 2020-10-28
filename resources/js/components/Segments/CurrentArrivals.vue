@@ -29,7 +29,10 @@
                         {{ item.position_count }} шт.
                     </template>
                     <template v-slot:item.actions="{item}">
-                        <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true;">
+                        <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;">
+                            <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
+                        <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = false;">
                             <v-icon>mdi-information-outline</v-icon>
                         </v-btn>
                         <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;">
@@ -48,6 +51,7 @@
         <ArrivalInfoModal
             :state="arrivalModal"
             :arrival="current_arrival"
+            :edit-mode="editArrivalMode"
             @cancel="arrivalModal = false; current_arrival = {}"
             @submit="onSubmit"
             @edit="onEdit"
@@ -62,7 +66,7 @@
 </template>
 
 <script>
-    import {deleteArrival, getArrivals} from "../../api/arrivals";
+    import {deleteArrival, getArrival, getArrivals} from "../../api/arrivals";
     import ArrivalInfoModal from "../Modal/ArrivalInfoModal";
     import ConfirmationModal from "../Modal/ConfirmationModal";
     import axios from "axios";
@@ -72,6 +76,7 @@
         data: () => ({
             overlay: true,
             loading: false,
+            editArrivalMode: false,
             arrivals: [],
             current_arrival: {},
             arrivalModal: false,
@@ -119,6 +124,17 @@
                 this.arrivals = data;
                 this.overlay = false;
             },
+            async getArrival(id) {
+                this.overlay = true;
+                const { data } = await getArrival(id);
+                this.arrivals = this.arrivals.map(arrival => {
+                    if (arrival.id === data.id) {
+                        arrival = data;
+                    }
+                    return arrival;
+                })
+                this.overlay = false;
+            },
             async onSubmit() {
                 this.arrivals = this.arrivals.filter(a => a.id !== this.current_arrival.id);
                 this.arrivalModal = false;
@@ -126,9 +142,9 @@
             },
             async onEdit() {
                 this.loading = true;
+                await this.getArrival(this.current_arrival.id);
                 this.arrivalModal = false;
                 this.current_arrival = {};
-                await this.getArrivals();
             },
             async deleteArrival() {
                 await deleteArrival(this.current_arrival.id);

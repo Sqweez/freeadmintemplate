@@ -135,6 +135,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     // ArrivalController
     Route::post('arrivals/change/{arrival}', 'api\ArrivalController@changeArrival');
+    Route::get('arrivals/cancel/{arrival}', 'api\ArrivalController@cancelArrival');
+    Route::get('arrivals/{arrival}', 'api\ArrivalController@ ');
     Route::get('arrivals', 'api\ArrivalController@index');
     Route::post('arrivals', 'api\ArrivalController@createArrival');
     Route::post('arrivals/complete', 'api\ArrivalController@createBatch');

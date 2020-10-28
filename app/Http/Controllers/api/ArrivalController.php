@@ -17,6 +17,10 @@ class ArrivalController extends Controller
         return ArrivalResource::collection(Arrival::where('is_completed', $is_completed)->get());
     }
 
+    public function getArrival(Arrival $arrival) {
+        return new ArrivalResource($arrival);
+    }
+
     public function createArrival(Request $request) {
         $arrival = Arrival::create($request->except('products'));
         foreach ($request->get('products') as $item) {
@@ -52,7 +56,8 @@ class ArrivalController extends Controller
                 'product_id' => $product['product_id'],
                 'quantity' => $product['count'],
                 'store_id' => $arrival->store_id,
-                'purchase_price' => $product['purchase_price']
+                'purchase_price' => $product['purchase_price'],
+                'arrival_id' => $arrival->id,
             ]);
         }
 
@@ -69,6 +74,14 @@ class ArrivalController extends Controller
 
         $arrival->is_completed = true;
         $arrival->save();
+    }
+
+    public function cancelArrival(Arrival $arrival) {
+        $id = $arrival->id;
+        if ($id !== -1) {
+            ProductBatch::where('arrival_id', $id)->delete();
+            $this->deleteArrival($arrival);
+        }
     }
 
     public function deleteArrival(Arrival $arrival) {

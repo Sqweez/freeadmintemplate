@@ -29,12 +29,15 @@
                         <v-btn icon color="success" @click="printWaybill(item.id)">
                             <v-icon>mdi-file-excel</v-icon>
                         </v-btn>
+                        <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;">
+                            <v-icon>mdi-cancel</v-icon>
+                        </v-btn>
                     </template>
                     <template v-slot:item.total_cost="{item}">
-                        {{ new Intl.NumberFormat('ru-RU').format(item.total_cost) }}₸
+                        {{ item.total_cost | priceFilters }}
                     </template>
                     <template v-slot:item.total_sale_cost="{item}">
-                        {{ new Intl.NumberFormat('ru-RU').format(item.total_sale_cost) }}₸
+                        {{ item.total_sale_cost | priceFilters }}
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -48,19 +51,28 @@
                 :confirm-mode="false"
                 @cancel="arrivalModal = false; current_arrival = {}"
         />
+        <ConfirmationModal
+            :state="confirmationModal"
+            message="Вы действительно хотите отменить поставку?"
+            :on-confirm="cancelArrival"
+            @cancel="confirmationModal = false; current_arrival = {}"
+        />
     </div>
 </template>
 
 <script>
-    import {getArrivals} from "../../api/arrivals";
+    import {cancelArrival, getArrivals} from "../../api/arrivals";
     import ArrivalInfoModal from "../Modal/ArrivalInfoModal";
     import axios from "axios";
+    import ConfirmationModal from "../Modal/ConfirmationModal";
+    import showToast from "../../utils/toast";
 
     export default {
-        components: {ArrivalInfoModal},
+        components: {ConfirmationModal, ArrivalInfoModal},
         data: () => ({
             overlay: true,
             loading: false,
+            confirmationModal: false,
             arrivals: [],
             current_arrival: {},
             arrivalModal: false,
@@ -108,6 +120,15 @@
                 link.href = data.path;
                 link.click();
                 this.loading = false;
+            },
+            async cancelArrival() {
+                this.confirmationModal = false;
+                this.loading = true;
+                await cancelArrival(this.current_arrival.id);
+                this.arrivals = this.arrivals.filter(s => s.id !== this.current_arrival.id);
+                this.current_arrival = {};
+                this.loading = false;
+                showToast('Поставка отменена!');
             }
         },
         computed: {},

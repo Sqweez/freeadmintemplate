@@ -7,7 +7,10 @@
         <v-card>
             <v-card-title class="headline d-flex justify-space-between">
                 <span
-                    class="white--text">{{ confirmMode ? 'Подтвердите поступление' : 'Информация о поступлении' }}</span>
+                    class="white--text">{{
+                    confirmMode
+                    ? (editMode ? 'Редактирование поступления' : 'Подтвердите поступление')
+                    : 'Информация о поступлении' }}</span>
                 <v-btn icon text class="float-right">
                     <v-icon color="white" @click="$emit('cancel')">
                         mdi-close
@@ -43,19 +46,23 @@
                             </td>
                             <td>
                                 <v-text-field
+                                    v-if="confirmMode && editMode"
                                     v-model="item.purchase_price"
                                     type="number"
                                 />
+                                <span v-else>
+                                    {{ item.purchase_price }} тнг
+                                </span>
                             </td>
                             <td style="min-width: 200px;">
 
-                                <v-btn icon color="error" @click="decreaseCount(idx)" v-if="confirmMode">
+                                <v-btn icon color="error" @click="decreaseCount(idx)" v-if="confirmMode && editMode">
                                     <v-icon>
                                         mdi-minus
                                     </v-icon>
                                 </v-btn>
                                 {{ item.count }}
-                                <v-btn icon color="success" @click="increaseCount(idx)" v-if="confirmMode">
+                                <v-btn icon color="success" @click="increaseCount(idx)" v-if="confirmMode && editMode">
                                     <v-icon>
                                         mdi-plus
                                     </v-icon>
@@ -81,12 +88,12 @@
                 <v-btn text @click="$emit('cancel')">
                     Закрыть
                 </v-btn>
-                <v-btn color="primary" text v-if="confirmMode && hasAccepted" @click="saveChanges">
+                <v-spacer/>
+                <v-btn color="primary" text v-if="confirmMode && hasAccepted && editMode" @click="saveChanges">
                     Сохранить изменения
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
-                <v-spacer/>
-                <v-btn color="success" text v-if="confirmMode && hasAccepted" @click="accept">
+                <v-btn color="success" text v-if="confirmMode && hasAccepted && !editMode" @click="accept">
                     Подтвердить
                     <v-icon>mdi-check</v-icon>
                 </v-btn>
@@ -112,6 +119,10 @@
             arrival: {
                 type: Object,
                 default: {}
+            },
+            editMode: {
+                type: Boolean,
+                default: false
             }
         },
         watch: {
