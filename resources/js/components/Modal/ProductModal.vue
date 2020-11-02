@@ -82,6 +82,26 @@
                         v-model="product.is_hit"
                     />
                     <v-divider></v-divider>
+                    <h5>Теги:</h5>
+                    <div class="d-flex">
+                        <div>
+                            <v-chip
+                                v-for="(tag, key) of product.tags"
+                                class="mr-2 mb-2"
+                                close
+                                link
+                                pill
+                                @click:close="removeTag(key)"
+                            >{{ tag.name }}</v-chip>
+                            <v-text-field
+                                label="Новый тег"
+                                v-model="newTag"
+                                :append-outer-icon="'mdi-plus'"
+                                @click:append-outer="createTag"
+                            />
+                        </div>
+                    </div>
+                    <v-divider></v-divider>
                     <h5>Цены по городам:</h5>
                     <div class="d-flex">
                         <v-select
@@ -165,9 +185,6 @@
             </v-card-text>
             <v-divider />
             <v-card-actions>
-                <v-flex>
-
-                </v-flex>
                 <v-btn text @click="$emit('cancel')">Отмена</v-btn>
                 <v-spacer />
                 <v-progress-circular
@@ -218,7 +235,8 @@
                             store_id: null,
                             price: 0,
                         }
-                    ]
+                    ],
+                    tags: []
                 };
                 if (this.id !== -1) {
                     this.product = JSON.parse(JSON.stringify(this.$store.getters.product(this.id)));
@@ -312,8 +330,19 @@
             groupProduct: false,
             manufacturerModal: false,
             loading: false,
+            newTag: '',
         }),
         methods: {
+            removeTag(idx) {
+                this.product.tags.splice(idx, 1);
+            },
+            createTag() {
+                this.product.tags.push({
+                    name: this.newTag.trim().toLowerCase()
+                });
+
+                this.newTag = '';
+            },
             hasDuplicates(arr) {
                 return arr.filter(x => {
                     return arr.filter(a => x.store_id === a.store_id).length > 1;
@@ -342,6 +371,14 @@
                 this.product.attributes.splice(idx + 1, 1);
             },
             async createProduct() {
+                this.product.tags.push(
+                    {
+                        name: this.product.product_name,
+                    },
+                    {
+                        name: this.manufacturers.find(m => m.id == this.product.manufacturer).manufacturer_name,
+                    }
+                )
                 const product = {...this.product};
                 await this.$store.dispatch(ACTIONS.CREATE_PRODUCT, product);
                 showToast('Товар успешно добавлен')

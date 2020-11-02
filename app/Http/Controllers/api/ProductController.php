@@ -14,9 +14,11 @@ use App\Price;
 use App\Product;
 use App\ProductBatch;
 use App\ProductImage;
+use App\ProductTag;
 use App\ProductThumb;
 use App\SubcategoryProduct;
 use App\SaleProduct;
+use App\Tag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -29,13 +31,59 @@ class ProductController extends Controller {
     public function index() {
         return ProductResource::collection(
             Product::orderBy('group_id')
-                ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'quantity', 'price'])
+                ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'quantity', 'price', 'tag'])
                 ->get()
         );
     }
 
+    public function setTags() {
+        $products = collect(Product::all());
+        $brn = $products->map(function ($product) {
+            $product_name = $product['product_name'];
+            $manufacturer = $product->manufacturer[0] ?? null;
+            $tag = Tag::where('name', 'like', '%' . $product_name . '%')->first();
+            if ($tag) {
+                ProductTag::create(
+                    [
+                        'tag_id' => $tag['id'],
+                        'product_id' => $product['id']
+                    ]
+                );
+            } else {
+                $tag = Tag::create(['name' => $product_name]);
+                ProductTag::create(
+                    [
+                        'tag_id' => $tag['id'],
+                        'product_id' => $product['id']
+                    ]
+                );
+            }
+
+            if ($manufacturer !== null) {
+                $tag = Tag::where('name', 'like', '%' . $manufacturer['manufacturer_name'])->first();
+
+                if ($tag) {
+                    ProductTag::create([
+                        'tag_id' => $tag['id'],
+                        'product_id' => $product['id']
+                    ]);
+                } else {
+                    $tag = Tag::create(['name' => $manufacturer['manufacturer_name']]);
+                    ProductTag::create([
+                        'tag_id' => $tag['id'],
+                        'product_id' => $product['id']
+                    ]);
+                }
+            }
+
+
+        });
+        return $brn;
+
+    }
+
     public function store(Request $request) {
-        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'prices']);
+        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'prices', 'tags']);
         $_product = Product::create($product);
         $product_id = $_product['id'];
         $_product->update(['group_id' => $product_id]);
@@ -95,7 +143,7 @@ class ProductController extends Controller {
 
     public function createRange(Request $request) {
         $product_id = $request->get('id');
-        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'id', 'groupProduct', 'product_images', 'product_thumbs', 'prices']);
+        $product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'id', 'groupProduct', 'product_images', 'product_thumbs', 'prices', 'tags']);
         $groupProduct = $request->get('groupProduct');
         if ($groupProduct === true) {
             $product['group_id'] = $product_id;
@@ -123,6 +171,35 @@ class ProductController extends Controller {
         $this->createManufacturerProduct($manufacturer, $product_id);
         $prices = $request->get('prices');
         $this->createPricesProducts($prices, $product_id);
+        $tags = $request->get('tags');
+        $this->createProductTag($tags, $product_id);
+    }
+
+    private function createProductTag($tags, $product_id) {
+        collect($tags)->each(function ($tag) use ($product_id) {
+            if (!isset($tag['id'])) {
+                $_tag = Tag::where('name', $tag['name'])->first();
+                if ($_tag) {
+                    ProductTag::create([
+                        'product_id' => $product_id,
+                        'tag_id' => $_tag['id']
+                    ]);
+                } else {
+                    $_tag = Tag::create([
+                        'name' => $tag['name']
+                    ]);
+                    ProductTag::create([
+                        'product_id' => $product_id,
+                        'tag_id' => $_tag['id']
+                    ]);
+                }
+            } else {
+                ProductTag::create([
+                    'product_id' => $product_id,
+                    'tag_id' => $tag['id']
+                ]);
+            }
+        });
     }
 
     private function createPricesProducts($prices, $product_id) {
@@ -139,7 +216,7 @@ class ProductController extends Controller {
     }
 
     public function update(Request $request, Product $product) {
-        $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'prices']);
+        $_product = $request->except(['categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'prices', 'tags']);
         $product_id = $request->get('id');
         $product->update($_product);
         $this->deleteDuplicates($product_id);
@@ -151,7 +228,7 @@ class ProductController extends Controller {
     private function updateGroups(Request $request) {
         $product_id = $request->get('id');
         $group_id = Product::find($product_id)['group_id'];
-        $_product = $request->except(['id', 'categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'product_barcode', 'prices']);
+        $_product = $request->except(['id', 'categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'product_barcode', 'prices', 'tags']);
         Product::where('group_id', $group_id)->where('id', '!=', $product_id)->update($_product);
         $products = Product::where('group_id', $group_id)->where('id', '!=', $product_id)->get();
         collect($products)->map(function ($product) use ($request){
@@ -185,6 +262,7 @@ class ProductController extends Controller {
         SubcategoryProduct::where('product_id', $id)->delete();
         ProductThumb::where('product_id', $id)->delete();
         Price::where('product_id', $id)->delete();
+        ProductTag::where('product_id', $id)->delete();
     }
 
     private function makeThumbs($images) {

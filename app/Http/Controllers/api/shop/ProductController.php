@@ -86,15 +86,15 @@ class ProductController extends Controller {
     }
 
     private function getProductWithFilter($filters, $store_id) {
-        return Product::Main()
-            ->ofSearch($filters['search'])
+        return Product::ofTag($filters['search'])
             ->ofCategory($filters['categories'])
             ->ofSubcategory($filters['subcategories'])
             ->ofBrand($filters['brands'])
             ->ofPrice($filters['prices'])
-            /*->inStock($store_id)*/
+            ->inStock($store_id)
             ->isHit($filters['is_hit'])
             ->where('is_site_visible', true)
+            ->groupBy('group_id')
             ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity', 'price']);
     }
 

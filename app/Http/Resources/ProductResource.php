@@ -36,6 +36,7 @@ class ProductResource extends JsonResource {
             'group_id' => $this->group_id,
             'product_images' => $this->product_images->pluck('product_image'),
             'is_hit' => !!$this->is_hit,
+            'tags' => $this->tag,
         ];
     }
 }

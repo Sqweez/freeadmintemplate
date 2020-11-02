@@ -18,7 +18,7 @@ Route::get('order/{order}/decline', 'api\CartController@decline');
 Route::get('excel/products', 'api\ProductController@excelProducts');*/
 Route::get('excel/products', 'api\ProductController@excelProducts');
 Route::get('json/products/parse', 'api\ProductController@jsonParseProduct');
-
+Route::get('set-tags', 'api\ProductController@setTags');
 
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('shop')->group(function () {

@@ -25,6 +25,9 @@ class Product extends Model
         });
     }
 
+    public function tag() {
+        return $this->belongsToMany(Tag::class, 'product_tags');
+    }
     /*
      * TEST
      * */
@@ -44,7 +47,7 @@ class Product extends Model
 
     public function children()
     {
-        return $this->hasMany('App\Product', 'group_id');
+        return $this->hasMany('App\Product', 'group_id', 'group_id');
     }
 
     public function categories() {
@@ -92,10 +95,10 @@ class Product extends Model
         return $query->whereHas('children');
     }
 
-    public function scopeInStock($query, $param = 1) {
-        $query->whereHas('children', function ($query) use ($param) {
-            $query->whereHas('quantity', function ($query) use ($param) {
-                $query->where('store_id', $param)->where('quantity', '>', 0);
+    public function scopeInStock($query, $store_id = 1) {
+        $query->whereHas('children', function ($query) use ($store_id) {
+            $query->whereHas('quantity', function ($query) use ($store_id) {
+                $query->where('store_id', $store_id)->where('quantity', '>', 0);
             });
         });
     }
@@ -105,6 +108,15 @@ class Product extends Model
             return $query;
         }
         $query->where('product_name', 'like', $search);
+    }
+
+    public function scopeOfTag($query, $search) {
+        if (!$search) {
+            return $query;
+        }
+        $tags = Tag::where('name', 'like', $search)->pluck('id');
+        $ids = ProductTag::whereIn('tag_id', $tags)->pluck('product_id');
+        $query->whereIn('id', $ids);
     }
 
     public function scopeOfCategory($query, $param) {

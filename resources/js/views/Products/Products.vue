@@ -83,6 +83,9 @@
                                 </li>
                             </ul>
                         </template>
+                        <template v-slot:item.tags="{item}">
+                            <span>Количество тегов: {{ item.tags.length }}</span>
+                        </template>
                         <template v-slot:item.actions="{ item }">
                             <div>
                                 <v-btn color="primary" @click="productId = item.id; productQuantityModal = true;">
@@ -283,6 +286,10 @@
                     {
                         value: 'categories',
                         text: 'Категория'
+                    },
+                    {
+                        value: 'tags',
+                        text: 'Теги'
                     }
                 ];
 
