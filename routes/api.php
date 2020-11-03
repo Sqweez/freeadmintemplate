@@ -22,6 +22,7 @@ Route::get('set-tags', 'api\ProductController@setTags');
 
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('shop')->group(function () {
+        Route::post('analytics/search', 'api\AnalyticsController@storeSearch');
         Route::get('stores', 'api\StoreController@indexStores');
         Route::get('categories', 'api\CategoryController@indexShop');
         Route::get('products', 'api\shop\ProductController@getProducts');
