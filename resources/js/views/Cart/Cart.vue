@@ -14,7 +14,8 @@
             </v-card-title>
             <v-card-text style="padding: 0;">
                 <div class="background-iron-grey">
-                    <h3 class="text-center my-2">Для списания с баланса после ввода суммы нажимайте "ENTER"!!!</h3>
+                    <h3 class="text-center my-2">Для списания с баланса после ввода суммы нажимайте "ENTER"!</h3>
+                    <h3 class="text-center my-2">Для поиска партнера по промокоду после ввода нажимайте Enter!</h3>
                     <div class="d-flex align-center">
                         <v-row class="ml-2">
                             <v-col class="d-flex" cols="12" xl="3" md="6" style="padding: 0">
@@ -48,13 +49,13 @@
                                             color="white darken-2"
                                         />
                                     </div>
-                                    <div class="d-flex ml-4">
+                                    <div class="d-flex ml-4" v-if="client && client.id !== -1 && !partner_id">
                                         <h5>Промокод:</h5>
                                         <v-text-field
                                             v-model="promocode"
                                             class="ml-2"
-                                            type="number"
                                             color="white darken-2"
+                                            @keypress.enter="searchPromocode"
                                         />
                                     </div>
                                     <div class="d-flex ml-4" v-if="client && client.id !== -1">
@@ -71,6 +72,7 @@
                                         <v-autocomplete
                                             :items="partners"
                                             item-value="id"
+                                            :disabled="promocodeSet"
                                             item-text="client_name"
                                             v-model="partner_id"
                                         ></v-autocomplete>
@@ -110,7 +112,7 @@
                             <td>{{ client.client_balance }} ₸</td>
                             <td>{{ client.client_discount }}%</td>
                             <td>
-                                <v-btn icon @click="client = null">
+                                <v-btn icon @click="client = null; partner_id = null; promocode = ''; discountPercent = ''; promocodeSet = false;">
                                     <v-icon>mdi-cancel</v-icon>
                                 </v-btn>
                             </td>
@@ -335,7 +337,10 @@
             },
             balance() {
                 this.balance = Math.min(this.client.client_balance, Math.max(0, this.balance));
-            }
+            },
+           /* discountPercent(value) {
+                this.discountPercent = Math.max(0, Math.min(100, value));
+            }*/
         },
         mixins: [product],
         data: () => ({
@@ -346,9 +351,10 @@
             isRed: false,
             isFree: false,
             payment_type: 0,
+            promocodeSet: false,
             partner_id: null,
             discountPercent: '',
-            promocode: null,
+            promocode: "",
             search: '',
             clientCartModal: false,
             confirmationModal: false,
@@ -398,6 +404,21 @@
                 ACTIONS.GET_CLIENTS,
                 ACTIONS.GET_STORES,
             ]),
+            async searchPromocode() {
+                this.$loading();
+                try {
+                    const response = await axios.get(`/api/promocode/search/${this.promocode}`);
+                    this.partner_id = response.data.data.partner.id;
+                    this.discountPercent = Math.max(this.discountPercent, response.data.data.discount);
+                    showToast('Партнер установлен');
+                    this.promocodeSet = true;
+                } catch (e) {
+                    showToast('Промокод не найден', TOAST_TYPE.ERROR)
+                } finally {
+                    this.$loading();
+                }
+
+            },
             async refreshProducts() {
                 this.loading = true;
                 const store_id = this.is_admin ? null : this.user.store_id;
@@ -470,6 +491,7 @@
                 this.isFree = false;
                 this.balance = 0;
                 this.payment_type = 0;
+                this.partner_id = false;
             },
             printCheck() {
                 this.confirmationModal = false;

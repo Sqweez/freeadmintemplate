@@ -96,10 +96,8 @@ class Product extends Model
     }
 
     public function scopeInStock($query, $store_id = 1) {
-        $query->whereHas('children', function ($query) use ($store_id) {
-            $query->whereHas('quantity', function ($query) use ($store_id) {
-                $query->where('store_id', $store_id)->where('quantity', '>', 0);
-            });
+        $query->whereHas('quantity', function ($query) use ($store_id) {
+            $query->where('store_id', $store_id)->where('quantity', '>', 0);
         });
     }
 

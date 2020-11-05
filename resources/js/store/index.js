@@ -17,6 +17,8 @@ import sportsmenModule from "./modules/sportsmen";
 import plansModule from "./modules/plans";
 import statsModule from "./modules/stats";
 import ratingModule from "./modules/rating";
+import promocodeModule from "./modules/promocode";
+import frontEndModule from "./modules/frontend";
 Vue.use(Vuex);
 
 const store = new Store({
@@ -47,7 +49,9 @@ const store = new Store({
         sportsmenModule,
         plansModule,
         statsModule,
-        ratingModule
+        ratingModule,
+        promocodeModule,
+        frontEndModule
     }
 });
 

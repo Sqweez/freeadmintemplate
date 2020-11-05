@@ -92,6 +92,10 @@ const navigationModule = {
                     {
                         title: 'Рейтинг продавцов',
                         url: '/shop/rating'
+                    },
+                    {
+                        title: 'Промокоды',
+                        url: '/promocode'
                     }
                 ]
             },
@@ -105,6 +109,10 @@ const navigationModule = {
                     {
                         title: 'Товары',
                         url: '/stats/mvp_products',
+                    },
+                    {
+                        title: 'Партнеры',
+                        url: '/stats/partners'
                     }
                 ]
             }

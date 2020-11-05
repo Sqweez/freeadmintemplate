@@ -4,6 +4,7 @@
         <Drawer/>
         <main class="mdl-layout__content mdl-color--grey-100">
             <v-container>
+                <LoadingSpinner />
                 <router-view></router-view>
             </v-container>
         </main>
@@ -21,8 +22,10 @@
     import Drawer from "../components/Navigation/Drawer";
     import Header from "../components/Header/Header";
     import ACTIONS from "../store/actions";
+    import LoadingSpinner from "../components/Loaders/LoadingSpinner";
     export default {
         components: {
+            LoadingSpinner,
             Drawer, Header
         },
         async mounted() {

@@ -36,6 +36,80 @@ class ProductController extends Controller {
         );
     }
 
+    public function bombbarReport() {
+        $product_ids = [
+            1778, 821, 780, 774, 844, 805, 640, 1773, 1459
+        ];
+
+        $products = Product::whereIn('group_id', $product_ids)->pluck('id');
+        $batches = collect(ProductBatch::whereIn('product_id', $products)
+            ->where('quantity', '>', 0)
+            ->whereIn('store_id', [1, 2, 3, 4, 5, 8, 9])
+            ->with(['product' => function ($q) {
+                $q->select(['id', 'product_name', 'group_id']);
+            }])
+            ->get());
+        $batches = $batches->groupBy('product.group_id')->map(function ($batch) {
+            return collect($batch)->groupBy('store_id');
+        })->map(function ($batch) {
+            //$product_name = $batch[0]['product'];
+            $quantity = collect($batch)->map(function ($_batch) {
+                return collect($_batch)->reduce(function ($i, $a) {
+                    return $a['quantity'] + $i;
+                }, 0);
+            });
+            return [
+                'quantity' => $quantity,
+                'product_name' => (collect($batch)->first())->first()['product']['product_name'],
+            ];
+        });
+
+        return $batches;
+        /*$sales = SaleProduct::whereIn('product_id', $products)->with(['products' => function ($query) {
+            $query->select(['id', 'product_name', 'group_id']);
+        }])->whereHas('sale', function ($query) {
+            return $query->where('discount', '!=', 100);
+        })->get();
+        $sales = collect($sales)->groupBy('product_id');
+        $sales = $sales->map(function ($sale) {
+            $count = count($sale);
+            $total_purchase_cost = collect($sale)->reduce(function ($i, $a) {
+                return $a['purchase_price'] + $i;
+            }, 0);
+            $total_cost = collect($sale)->reduce(function ($i, $a) {
+                return $a['product_price'] + $i;
+            }, 0);
+            $group_id = $sale[0]['products']['group_id'];
+            $product_name = $sale[0]['products']['product_name'];
+            return [
+                'count' => $count,
+                'total_purchase_cost' => $total_purchase_cost,
+                'total_cost' => $total_cost,
+                'group_id' => $group_id,
+                'product_name' => $product_name
+            ];
+        })->groupBy('group_id')
+        ->map(function ($product) {
+            $count = $product->reduce(function ($i, $a) {
+                return $i + $a['count'];
+            }, 0);
+            $purchase_price = $product->reduce(function ($i, $a) {
+                return $i + $a['total_purchase_cost'];
+            }, 0);
+            $product_price = $product->reduce(function ($i, $a) {
+                return $i + $a['total_cost'];
+            }, 0);
+            $product_name = $product[0]['product_name'];
+            return [
+                'product_name' => $product_name,
+                'purchase_price' => $purchase_price,
+                'product_price' => $product_price,
+                'count' => $count
+            ];
+        });
+        return $sales; */
+    }
+
     public function setTags() {
         $products = collect(Product::all());
         $brn = $products->map(function ($product) {

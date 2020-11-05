@@ -26,6 +26,10 @@ class Client extends Model
         ]);
     }
 
+    public function partnerSale() {
+        return $this->hasMany('App\Sale', 'partner_id');
+    }
+
     public function purchases() {
         return $this->hasMany('App\Sale', 'client_id');
     }
@@ -36,5 +40,9 @@ class Client extends Model
 
     public function scopeOfToken($q, $token) {
         $q->where('user_token', $token);
+    }
+
+    public function scopePartner($query) {
+        $query->where('is_partner', true);
     }
 }

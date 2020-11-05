@@ -17,6 +17,8 @@ import Rating from "../views/Rating/Rating";
 import Revision from "../views/Revision/Revision";
 import Arrivals from "../views/Arrivals/Arrivals";
 import ObserverPage from "../views/ObserverPage/ObserverPage";
+import Promocodes from "../views/Promocodes/Promocodes";
+import PartnersStats from "../views/PartnersStats/PartnersStats";
 
 const routes = [
     {
@@ -125,6 +127,20 @@ const routes = [
         meta: {
             isObserver: true
         }
+    },
+    {
+        path: '/promocode',
+        meta: {
+            isAdmin: true
+        },
+        component: Promocodes
+    },
+    {
+        path: '/stats/partners',
+        meta: {
+            isAdmin: true
+        },
+        component: PartnersStats
     }
 ];
 

@@ -87,6 +87,7 @@
                         <div>
                             <v-chip
                                 v-for="(tag, key) of product.tags"
+                                :key="key"
                                 class="mr-2 mb-2"
                                 close
                                 link

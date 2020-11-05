@@ -143,6 +143,14 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::post('arrivals', 'api\ArrivalController@createArrival');
     Route::post('arrivals/complete', 'api\ArrivalController@createBatch');
     Route::delete('arrivals/{arrival}', 'api\ArrivalController@deleteArrival');
+
+    // AnalyticsController
+    Route::get('analytics/partners', 'api\AnalyticsController@partners');
+    Route::get('analytics/partners/{id}', 'api\AnalyticsController@partnerStats');
+
+    // Promocode
+    Route::get('promocode/search/{promocode}', 'api\PromocodeController@searchPromocode');
+    Route::resource('promocode', 'api\PromocodeController');
 });
 
 
