@@ -19,6 +19,7 @@ import Arrivals from "../views/Arrivals/Arrivals";
 import ObserverPage from "../views/ObserverPage/ObserverPage";
 import Promocodes from "../views/Promocodes/Promocodes";
 import PartnersStats from "../views/PartnersStats/PartnersStats";
+import ProductsV2 from '../views/v2/Products/Products';
 
 const routes = [
     {
@@ -141,6 +142,13 @@ const routes = [
             isAdmin: true
         },
         component: PartnersStats
+    },
+    {
+        path: '/v2/products',
+        meta: {
+            isAdmin: true,
+        },
+        component: ProductsV2
     }
 ];
 

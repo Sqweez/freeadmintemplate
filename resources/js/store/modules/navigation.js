@@ -115,6 +115,19 @@ const navigationModule = {
                         url: '/stats/partners'
                     }
                 ]
+            },
+            {
+                title: 'v2/Склад',
+                url: '#',
+                icon: 'dashboard',
+                hasDropdown: true,
+                isAdmin: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/v2/products'
+                    },
+                ]
             }
         ],
     },
