@@ -115,6 +115,8 @@ class ProductController extends Controller {
         $brn = $products->map(function ($product) {
             $product_name = $product['product_name'];
             $manufacturer = $product->manufacturer[0] ?? null;
+            $category = $product->categories[0] ?? null;
+            $subcategory = $product->subcategories[0] ?? null;
             $tag = Tag::where('name', 'like', '%' . $product_name . '%')->first();
             if ($tag) {
                 ProductTag::create(
@@ -143,6 +145,40 @@ class ProductController extends Controller {
                     ]);
                 } else {
                     $tag = Tag::create(['name' => $manufacturer['manufacturer_name']]);
+                    ProductTag::create([
+                        'tag_id' => $tag['id'],
+                        'product_id' => $product['id']
+                    ]);
+                }
+            }
+
+            if ($category !== null) {
+                $tag = Tag::where('name', 'like', '%' . $category['category_name'])->first();
+
+                if ($tag) {
+                    ProductTag::create([
+                        'tag_id' => $tag['id'],
+                        'product_id' => $product['id']
+                    ]);
+                } else {
+                    $tag = Tag::create(['name' => $category['category_name']]);
+                    ProductTag::create([
+                        'tag_id' => $tag['id'],
+                        'product_id' => $product['id']
+                    ]);
+                }
+            }
+
+            if ($subcategory !== null) {
+                $tag = Tag::where('name', 'like', '%' . $subcategory['subcategory_name'])->first();
+
+                if ($tag) {
+                    ProductTag::create([
+                        'tag_id' => $tag['id'],
+                        'product_id' => $product['id']
+                    ]);
+                } else {
+                    $tag = Tag::create(['name' => $subcategory['subcategory_name']]);
                     ProductTag::create([
                         'tag_id' => $tag['id'],
                         'product_id' => $product['id']

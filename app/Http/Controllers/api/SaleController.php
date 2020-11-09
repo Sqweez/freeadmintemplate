@@ -21,6 +21,8 @@ class SaleController extends Controller {
 
     private $DECREASE = -1;
     private $INCREASE = 1;
+    protected $PARTNER_CASHBACK_PERCENT = (5 / 100);
+    protected $CLIENT_CASHBACK_PERCENT = (1 / 100);
 
     public function store(Request $request) {
         $_cart = $request->get('cart');
@@ -60,6 +62,14 @@ class SaleController extends Controller {
         $productBatch->update(['quantity' => $quantity]);
     }
 
+    private function createPartnerSale($amount, $request, $sale_id) {
+        $client = Client::find($request['partner_id']);
+        $client->update([
+            'partner_expired_at' => now()->addDays(60),
+        ]);
+        ClientTransaction::create(['client_id' => $request['partner_id'], 'sale_id' => $sale_id, 'amount' => $amount * $this->PARTNER_CASHBACK_PERCENT, 'user_id' => $request['user_id']]);
+    }
+
     private function createClientSale($id, $request) {
         $client_id = $request['client_id'];
         if ($client_id === -1) {
@@ -67,27 +77,33 @@ class SaleController extends Controller {
         }
         $discount = $request['discount'];
         $cart = $request['cart'];
-        $_amount = array_reduce($cart, function ($c, $i) {
-            return $c + ($i['product_price'] * $i['count']);
-        });
 
-        $amount = $_amount - ($_amount * $discount / 100);
+        $amount = $this->getTotalAmount($cart, $discount);
 
         ClientSale::create(['client_id' => $client_id, 'amount' => $amount, 'sale_id' => $id,]);
-        ClientTransaction::create(['client_id' => $client_id, 'sale_id' => $id, 'amount' => $amount * 0.01, 'user_id' => $request['user_id']]);
+        ClientTransaction::create(['client_id' => $client_id, 'sale_id' => $id, 'amount' => $amount * $this->CLIENT_CASHBACK_PERCENT, 'user_id' => $request['user_id']]);
 
         if ($request['balance'] > 0) {
             ClientTransaction::create(['client_id' => $client_id, 'sale_id' => $id, 'amount' => $request['balance'] * -1, 'user_id' => $request['user_id']]);
         }
 
         if (isset($request['partner_id']) && $request['partner_id']) {
-            ClientTransaction::create(['client_id' => $request['partner_id'], 'sale_id' => $id, 'amount' => $amount * 0.05, 'user_id' => $request['user_id']]);
+            $this->createPartnerSale($amount, $request, $id);
+
         }
+    }
+
+    private function getTotalAmount($cart, $discount) {
+        $_amount = array_reduce($cart, function ($c, $i) {
+            return $c + ($i['product_price'] * $i['count']);
+        });
+
+        return $_amount - ($_amount * $discount / 100);
     }
 
     public function reports(Request $request) {
 
-        $FILTERS = ['ALL_TIME' => 1, 'CURRENT_MONTH' => 2, 'TODAY' => 3, 'CUSTOM_FILTER' => 4, 'LAST_3_DAYS' => 5,];
+        $FILTERS = ['ALL_TIME' => 1, 'CURRENT_MONTH' => 2, 'TODAY' => 3, 'CUSTOM_FILTER' => 4, 'LAST_3_DAYS' => 5];
 
         $filter = intval($request->get('filter')) ?? 3;
         $start = $request->get('start') ?? null;

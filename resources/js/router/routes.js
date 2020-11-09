@@ -20,6 +20,8 @@ import ObserverPage from "../views/ObserverPage/ObserverPage";
 import Promocodes from "../views/Promocodes/Promocodes";
 import PartnersStats from "../views/PartnersStats/PartnersStats";
 import ProductsV2 from '../views/v2/Products/Products';
+import ProductsV3 from '../views/v3/Products/Products';
+import CartV3 from '../views/v3/Cart/Cart';
 
 const routes = [
     {
@@ -149,6 +151,17 @@ const routes = [
             isAdmin: true,
         },
         component: ProductsV2
+    },
+    {
+        path: '/v3/products',
+        meta: {
+            isAdmin: true
+        },
+        component: ProductsV3
+    },
+    {
+        path: '/v3/cart',
+        component: CartV3
     }
 ];
 

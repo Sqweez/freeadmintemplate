@@ -33,3 +33,8 @@ export async function getMainProducts() {
     const response = await axios.get(`/api/products/main`);
     return response.data;
 }
+
+export async function getProductsBySearch(search = "") {
+    const { data } = await axios.get(`/api/v2/products/search?search=${search}`);
+    return data;
+}

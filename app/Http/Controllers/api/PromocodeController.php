@@ -47,7 +47,7 @@ class PromocodeController extends Controller
     }
 
     public function searchPromocode($promocode) {
-        $_promocode = Promocode::where('promocode', $promocode)->first();
+        $_promocode = Promocode::where('promocode', $promocode)->where('is_active', true)->first();
         if (!$_promocode) {
             return response()->json([
                 'error' => 'Промокод не найден!'

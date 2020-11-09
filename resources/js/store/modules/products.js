@@ -7,13 +7,14 @@ import {
     deleteProduct,
     editProduct,
     getProducts,
-    getMainProducts
+    getMainProducts, getProductsBySearch
 } from "../../api/products";
 import {makeSale} from "../../api/sale";
 
 const productsModule = {
     state: {
         products: [],
+        productsSearch: [],
         total: 0,
         prev: null,
         next: null,
@@ -43,6 +44,7 @@ const productsModule = {
                 return p;
             }
         }),
+        PRODUCTS_SEARCH: state => state.productsSearch
     },
     mutations: {
         [MUTATIONS.CREATE_PRODUCT](state, payload) {
@@ -101,6 +103,9 @@ const productsModule = {
         },
         clearProducts(state) {
             state.products = [];
+        },
+        setSearchProducts(state, payload) {
+            state.productsSearch = payload;
         }
     },
     actions: {
@@ -143,6 +148,10 @@ const productsModule = {
         async [ACTIONS.GET_MAIN_PRODUCTS] ({commit}) {
             const {data} = await getMainProducts();
             commit(MUTATIONS.SET_MAIN_PRODUCTS, data);
+        },
+        async searchProducts({commit}, search) {
+            const { data } = await getProductsBySearch(search);
+            commit('setSearchProducts', data);
         }
     }
 };

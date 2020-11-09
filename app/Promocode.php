@@ -11,4 +11,8 @@ class Promocode extends Model
     public function partner() {
         return $this->belongsTo('App\Client', 'client_id');
     }
+
+    public function scopeOfPartner($query, $id) {
+        $query->where('client_id', $id);
+    }
 }

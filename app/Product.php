@@ -28,17 +28,6 @@ class Product extends Model
     public function tag() {
         return $this->belongsToMany(Tag::class, 'product_tags');
     }
-    /*
-     * TEST
-     * */
-
-   /* public function _categories() {
-        return $this->morphToMany('App\Category', 'product', 'category_product');
-    }*/
-
-    /*
-     * END TEST
-     * */
 
     public function parent()
     {

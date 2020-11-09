@@ -20,6 +20,15 @@ Route::get('excel/products', 'api\ProductController@excelProducts');
 Route::get('json/products/parse', 'api\ProductController@jsonParseProduct');
 Route::get('set-tags', 'api\ProductController@setTags');
 
+// HelpController
+Route::get('set-partner-expired-at', 'HelpController@setPartnerExpiredAt');
+
+Route::prefix('cron')->group(function() {
+    // CronController
+    Route::get('partners/disable', 'CronController@disablePartners');
+});
+
+
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('shop')->group(function () {
         Route::post('analytics/search', 'api\AnalyticsController@storeSearch');
@@ -74,7 +83,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     Route::get('setThumbsAll', 'api\ProductController@setThumbsAll');
 
-    //
+    // ProductController
 
     Route::resource('category', 'api\CategoryController');
     Route::post('products/batch', 'api\ProductController@createBatch');
@@ -85,6 +94,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::resource('manufacturers', 'api\ManufacturerController');
     Route::get('stores/types', 'api\StoreController@types');
     Route::resource('stores', 'api\StoreController');
+
+    // ProductController@v2
+
+    Route::get('v2/products/search', 'api\v2\ProductController@search');
 
     // ClientsController
     Route::resource('clients', 'api\ClientController');

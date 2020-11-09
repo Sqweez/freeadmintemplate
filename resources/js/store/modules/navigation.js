@@ -128,7 +128,24 @@ const navigationModule = {
                         url: '/v2/products'
                     },
                 ]
-            }
+            },
+            {
+                title: 'v3/Склад',
+                url: '#',
+                icon: 'dashboard',
+                hasDropdown: true,
+                isAdmin: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/v3/products'
+                    },
+                    {
+                        title: 'Корзина',
+                        url: '/v3/cart'
+                    },
+                ]
+            },
         ],
     },
     getters: {
