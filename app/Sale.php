@@ -12,11 +12,11 @@ class Sale extends Model
     public function client() {
         return $this->belongsTo('App\Client', 'client_id')->withDefault([
             'client_name' => 'Гость'
-        ]);
+        ])->withTrashed();
     }
 
     public function store() {
-        return $this->belongsTo('App\Store', 'store_id');
+        return $this->belongsTo('App\Store', 'store_id')->withTrashed();
     }
 
     public function products() {

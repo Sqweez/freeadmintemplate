@@ -5,10 +5,14 @@ namespace App;
 use App\ManufacturerProducts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Request;
 
 class Product extends Model
 {
+
+    use SoftDeletes;
+
     protected $guarded = [];
 
     public $timestamps = false;

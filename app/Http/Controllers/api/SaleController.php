@@ -58,6 +58,9 @@ class SaleController extends Controller {
 
 
     private function changeCount(ProductBatch $productBatch, $MODE) {
+        if (!$productBatch) {
+            return;
+        }
         $quantity = $productBatch['quantity'] + (1 * $MODE);
         $productBatch->update(['quantity' => $quantity]);
     }

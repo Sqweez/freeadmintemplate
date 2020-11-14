@@ -354,13 +354,6 @@ class ProductController extends Controller {
     }
 
     public function destroy(Product $product) {
-        AttributeProduct::where('product_id', $product['id'])->delete();
-        CategoryProduct::where('product_id', $product['id'])->delete();
-        ManufacturerProducts::where('product_id', $product['id'])->delete();
-        SubcategoryProduct::where('product_id', $product['id'])->delete();
-        ProductBatch::where('product_id', $product['id'])->delete();
-        SaleProduct::where('product_id', $product['id'])->delete();
-        ProductThumb::where('product_id', $product['id'])->delete();
         $product->delete();
     }
 

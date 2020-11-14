@@ -37,6 +37,7 @@ class ProductsResource extends JsonResource
             'attributes' => AttributeResource::collection($attributes),
             'product_weight' => $this->getProductWeight($attributes) ?? '',
             'product_taste' => $this->getProductWeight($attributes) ?? '',
+            'product_name_slug' => Str::slug($this->product_name, '-')
         ];
     }
 

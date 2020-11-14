@@ -122,22 +122,25 @@ class ProductController extends Controller {
         return new ProductResource($product);
     }
 
-    public function groupProducts()
-    {
-        $products = Product::all();
-        $products = $products->groupBy(['product_name', 'product_price']);
+    public function groupProducts() {
+        $products = Product::with('manufacturer')->get();
+        $products = $products->map(function ($i) {
+            $i['manufacturer_id'] = count($i['manufacturer']) ? $i['manufacturer'][0]['id'] : null;
+            unset($i['product_description']);
+            return $i;
+        });
+        $products = $products->groupBy(['product_name', 'product_price', 'manufacturer_id']);
 
-        foreach($products as $key => $product) {
-            foreach ($product as $key2 => $item) {
-                if (count ($item) > 1) {
-                    $group_id = $item[0]['id'];
-                    foreach ($item as $_i) {
-                        $pr = Product::find($_i['id']);
-                        $pr->update(['group_id' => $group_id]);
-                    }
-                }
-            }
-        }
-
+        $products->each(function ($price) {
+           collect($price)->each(function ($manufacturer) {
+               collect($manufacturer)->each(function ($product) {
+                   $ids = collect($product)->pluck('id');
+                   $group_id = $ids->first();
+                   Product::where('id', $ids)->update([
+                       'group_id' => $group_id
+                   ]);
+               });
+           });
+        });
     }
 }

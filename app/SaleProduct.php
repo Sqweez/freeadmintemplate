@@ -10,7 +10,11 @@ class SaleProduct extends Model
     public $timestamps = false;
 
     public function products() {
-        return $this->belongsTo('App\Product', 'product_id');
+        return $this->belongsTo('App\Product', 'product_id')->withDefault([
+            'product_name' => 'Неизвестно',
+            'attributes' => [],
+            'manufacturer' => collect([])
+        ])->withTrashed();
     }
 
     public function sale() {
