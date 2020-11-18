@@ -131,7 +131,7 @@ class AnalyticsController extends Controller
     public function getPartnerSales(Request $request) {
         $user_token = $request->get('user_token');
         if (!$user_token) {
-            return response()->json(['error' => 'Не передан идентификатор клиента']);
+            return response()->json(['error' => 'Не передан токен клиента']);
         }
         $client = Client::where('id', 3)
             ->with('partner_sales', 'partner_sales.products')
