@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\api;
 
 use App\Arrival;
+use App\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ExcelService;
 use App\Http\Resources\ArrivalResource;
 use App\Http\Resources\SingleTransferResource;
+use App\Order;
 use App\Store;
 use App\Transfer;
 use Carbon\Carbon;
@@ -25,7 +27,8 @@ class WaybillController extends Controller
     const DEFAULT_CELL_WIDTH = 9.14;
     const DEFAULT_ROW_HEIGHT = 15;
 
-    public function transferWaybill(Request $request) {
+    public function transferWaybill(Request $request)
+    {
         $transfer_id = $request->get('transfer') ?? -1;
         $arrival_id = $request->get('arrival') ?? -1;
 
@@ -35,16 +38,13 @@ class WaybillController extends Controller
             $cart = $transfer['products'];
             $parent_store = $transfer['parent_store'];
             $child_store = $transfer['child_store'];
-        }
-
-        else if ($arrival_id !== -1) {
+        } else if ($arrival_id !== -1) {
             $parent_store = 1;
             $child_store = 1;
             $arrival = new ArrivalResource(Arrival::find($arrival_id));
             $arrival = $arrival->toArray($request);
             $cart = $arrival['products'];
-        }
-        else {
+        } else {
             $cart = $request->get('cart');
             $parent_store = $request->get('parent_store');
             $child_store = $request->get('child_store');
@@ -63,7 +63,7 @@ class WaybillController extends Controller
         $child_city = Store::find($child_store)->name;
 
         $parent_store_name = 'IRON ADDICTS, ' . $parent_city;
-        $child_store_name = 'IRON ADDICTS, '. $child_city;
+        $child_store_name = 'IRON ADDICTS, ' . $child_city;
 
         $excelSheet->setCellValue('L18', $parent_store_name);
         $excelSheet->setCellValue('L19', $child_store_name);
@@ -85,9 +85,7 @@ class WaybillController extends Controller
                 $excelSheet->mergeCells("AF" . $currentIndex . ":AK" . $currentIndex);
                 $excelSheet->mergeCells("AL" . $currentIndex . ":AQ" . $currentIndex);
                 $excelSheet->mergeCells("AR" . $currentIndex . ":AW" . $currentIndex);
-            }
-            catch (\Exception $e) {
-
+            } catch (\Exception $e) {
             }
 
             $excelSheet->setCellValue('A' . ($currentIndex), $key + 1);
@@ -112,7 +110,7 @@ class WaybillController extends Controller
 
         $fileType = $this->getFileType($request);
 
-        $fileName =  $fileType. "_" . Carbon::today()->toDateString() . "_" . $parent_city . '-' . $child_city . "_" . Str::random(10) . '.xlsx';
+        $fileName =  $fileType . "_" . Carbon::today()->toDateString() . "_" . $parent_city . '-' . $child_city . "_" . Str::random(10) . '.xlsx';
         $fullPath = 'storage/excel/waybills/' . $fileName;
 
         $excelWriter->save($fullPath);
@@ -122,7 +120,8 @@ class WaybillController extends Controller
         ]);
     }
 
-    private function getFileType(Request $request) {
+    private function getFileType(Request $request)
+    {
         $fileType = "";
         $type = $request->get('type') ?? '';
         switch ($type) {
@@ -143,21 +142,25 @@ class WaybillController extends Controller
         return $fileType;
     }
 
-    private function getTotalCost($cart) {
+    private function getTotalCost($cart)
+    {
         $_cart = is_object($cart) ? $cart->toArray($cart) : $cart;
         return array_reduce($_cart, function ($a, $c) {
             return $c['product_price'] * $c['count'] + $a;
         }, 0);
     }
 
-    private function getProductName($item) {
-        $attributeValues = join(' | ' , array_map(function ($i) {
+    private function getProductName($item)
+    {
+        $attributeValues = join(' | ', array_map(function ($i) {
             return $i['attribute_value'];
         }, is_object($item['attributes']) ? $item['attributes']->toArray($item) : $item['attributes']));
         return $item['manufacturer'] . ' ' . $item['product_name'] . ' ' . $attributeValues;
     }
 
-    public function number2string($number) {
+
+    public function number2string($number)
+    {
 
         // обозначаем словарь в виде статической переменной функции, чтобы
         // при повторном использовании функции его не определять заново
@@ -165,44 +168,44 @@ class WaybillController extends Controller
 
             // словарь необходимых чисел
             array(
-                -2	=> 'две',
-                -1	=> 'одна',
-                1	=> 'один',
-                2	=> 'два',
-                3	=> 'три',
-                4	=> 'четыре',
-                5	=> 'пять',
-                6	=> 'шесть',
-                7	=> 'семь',
-                8	=> 'восемь',
-                9	=> 'девять',
-                10	=> 'десять',
-                11	=> 'одиннадцать',
-                12	=> 'двенадцать',
-                13	=> 'тринадцать',
-                14	=> 'четырнадцать' ,
-                15	=> 'пятнадцать',
-                16	=> 'шестнадцать',
-                17	=> 'семнадцать',
-                18	=> 'восемнадцать',
-                19	=> 'девятнадцать',
-                20	=> 'двадцать',
-                30	=> 'тридцать',
-                40	=> 'сорок',
-                50	=> 'пятьдесят',
-                60	=> 'шестьдесят',
-                70	=> 'семьдесят',
-                80	=> 'восемьдесят',
-                90	=> 'девяносто',
-                100	=> 'сто',
-                200	=> 'двести',
-                300	=> 'триста',
-                400	=> 'четыреста',
-                500	=> 'пятьсот',
-                600	=> 'шестьсот',
-                700	=> 'семьсот',
-                800	=> 'восемьсот',
-                900	=> 'девятьсот'
+                -2    => 'две',
+                -1    => 'одна',
+                1    => 'один',
+                2    => 'два',
+                3    => 'три',
+                4    => 'четыре',
+                5    => 'пять',
+                6    => 'шесть',
+                7    => 'семь',
+                8    => 'восемь',
+                9    => 'девять',
+                10    => 'десять',
+                11    => 'одиннадцать',
+                12    => 'двенадцать',
+                13    => 'тринадцать',
+                14    => 'четырнадцать',
+                15    => 'пятнадцать',
+                16    => 'шестнадцать',
+                17    => 'семнадцать',
+                18    => 'восемнадцать',
+                19    => 'девятнадцать',
+                20    => 'двадцать',
+                30    => 'тридцать',
+                40    => 'сорок',
+                50    => 'пятьдесят',
+                60    => 'шестьдесят',
+                70    => 'семьдесят',
+                80    => 'восемьдесят',
+                90    => 'девяносто',
+                100    => 'сто',
+                200    => 'двести',
+                300    => 'триста',
+                400    => 'четыреста',
+                500    => 'пятьсот',
+                600    => 'шестьсот',
+                700    => 'семьсот',
+                800    => 'восемьсот',
+                900    => 'девятьсот'
             ),
 
             // словарь порядков со склонениями для плюрализации
@@ -227,37 +230,37 @@ class WaybillController extends Controller
 
         // дополняем число нулями слева до количества цифр кратного трем,
         // например 1234, преобразуется в 001234
-        $number = str_pad($number, ceil(strlen($number)/3)*3, 0, STR_PAD_LEFT);
+        $number = str_pad($number, ceil(strlen($number) / 3) * 3, 0, STR_PAD_LEFT);
 
         // разбиваем число на части из 3 цифр (порядки) и инвертируем порядок частей,
         // т.к. мы не знаем максимальный порядок числа и будем бежать снизу
         // единицы, тысячи, миллионы и т.д.
-        $parts = array_reverse(str_split($number,3));
+        $parts = array_reverse(str_split($number, 3));
 
         // бежим по каждой части
-        foreach($parts as $i=>$part) {
+        foreach ($parts as $i => $part) {
 
             // если часть не равна нулю, нам надо преобразовать ее в текст
-            if($part>0) {
+            if ($part > 0) {
 
                 // обозначаем переменную в которую будем писать составные числа для текущей части
                 $digits = array();
 
                 // если число треххзначное, запоминаем количество сотен
-                if($part>99) {
-                    $digits[] = floor($part/100)*100;
+                if ($part > 99) {
+                    $digits[] = floor($part / 100) * 100;
                 }
 
                 // если последние 2 цифры не равны нулю, продолжаем искать составные числа
                 // (данный блок прокомментирую при необходимости)
-                if($mod1=$part%100) {
-                    $mod2 = $part%10;
-                    $flag = $i==1 && $mod1!=11 && $mod1!=12 && $mod2<3 ? -1 : 1;
-                    if($mod1<20 || !$mod2) {
-                        $digits[] = $flag*$mod1;
+                if ($mod1 = $part % 100) {
+                    $mod2 = $part % 10;
+                    $flag = $i == 1 && $mod1 != 11 && $mod1 != 12 && $mod2 < 3 ? -1 : 1;
+                    if ($mod1 < 20 || !$mod2) {
+                        $digits[] = $flag * $mod1;
                     } else {
-                        $digits[] = floor($mod1/10)*10;
-                        $digits[] = $flag*$mod2;
+                        $digits[] = floor($mod1 / 10) * 10;
+                        $digits[] = $flag * $mod2;
                     }
                 }
 
@@ -265,12 +268,12 @@ class WaybillController extends Controller
                 $last = abs(end($digits));
 
                 // преобразуем все составные числа в слова
-                foreach($digits as $j=>$digit) {
+                foreach ($digits as $j => $digit) {
                     $digits[$j] = $dic[0][$digit];
                 }
 
                 // добавляем обозначение порядка или валюту
-                $digits[] = $dic[1][$i][(($last%=100)>4 && $last<20) ? 2 : $dic[2][min($last%10,5)]];
+                $digits[] = $dic[1][$i][(($last %= 100) > 4 && $last < 20) ? 2 : $dic[2][min($last % 10, 5)]];
 
                 // объединяем составные числа в единый текст и добавляем в переменную, которую вернет функция
                 array_unshift($string, join(' ', $digits));
@@ -281,16 +284,18 @@ class WaybillController extends Controller
         return join(' ', $string);
     }
 
-    public function getRowHeight($name, $initialFormat = 36) {
+    public function getRowHeight($name, $initialFormat = 36)
+    {
         $length = strlen($name);
         return ceil($length / $initialFormat);
     }
 
-    private function mergeCells($currentIndex) {
-
+    private function mergeCells($currentIndex)
+    {
     }
 
-    private function getTotalCount($cart) {
+    private function getTotalCount($cart)
+    {
         $_cart = is_object($cart) ? $cart->toArray($cart) : $cart;
         return array_reduce($_cart, function ($a, $c) {
             return $c['count'] + $a;
@@ -309,22 +314,22 @@ class WaybillController extends Controller
             $cellLength = strlen($cell->getValue());
             $cellWidth = $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->getWidth();
             // If no column width is set, set the default
-            if($cellWidth === -1) {
+            if ($cellWidth === -1) {
                 $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->setWidth(self::DEFAULT_CELL_WIDTH);
                 $cellWidth = $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->getWidth();
             }
             // If the cell is in a merge range we need to determine the full width of the range
-            if($cell->isInMergeRange()) {
+            if ($cell->isInMergeRange()) {
                 // We only need to do this for the master (first) cell in the range, the rest need to have a line height of 1
-                if($cell->isMergeRangeValueCell()) {
+                if ($cell->isMergeRangeValueCell()) {
                     $mergeRange = $cell->getMergeRange();
-                    if($mergeRange) {
+                    if ($mergeRange) {
                         $mergeWidth = 0;
                         $mergeRefs = Coordinate::extractAllCellReferencesInRange($mergeRange);
-                        foreach($mergeRefs as $cellRef) {
+                        foreach ($mergeRefs as $cellRef) {
                             $mergeCell = $ws->getCell($cellRef);
                             $width = $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->getWidth();
-                            if($width === -1) {
+                            if ($width === -1) {
                                 $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->setWidth(self::DEFAULT_CELL_WIDTH);
                                 $width = $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->getWidth();
                             }
@@ -344,17 +349,17 @@ class WaybillController extends Controller
             $maxCellLines = $cellLines > $maxCellLines ? $cellLines : $maxCellLines;
         }
 
-        $rowDimension= $ws->getRowDimension($row->getRowIndex());
+        $rowDimension = $ws->getRowDimension($row->getRowIndex());
         $rowHeight = $rowDimension->getRowHeight();
         // If no row height is set, set the default
-        if($rowHeight === -1) {
+        if ($rowHeight === -1) {
             $rowDimension->setRowHeight(self::DEFAULT_ROW_HEIGHT);
             $rowHeight = $rowDimension->getRowHeight();
         }
 
         $rowLines = $maxCellLines <= 0 ? 1 : $maxCellLines;
 
-        $rowDimension->setRowHeight( (self::DEFAULT_ROW_HEIGHT * $rowLines) + $rowPadding);
+        $rowDimension->setRowHeight((self::DEFAULT_ROW_HEIGHT * $rowLines) + $rowPadding);
 
         return $ws;
     }

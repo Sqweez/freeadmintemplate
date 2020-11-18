@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Http\Resources\shop;
+
+use App\Client;
+use App\Product;
+use Carbon\Carbon;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class PartnerResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        $sales = $this->partner_sales;
+
+        $clients = collect(Client::find($this->clients))->push([
+            'client_name' => 'Гость',
+            'id' => -1
+        ])->map(function ($item) {
+            return collect($item)->only(['id', 'client_name']);
+        })->map(function ($item) use ($sales) {
+            $_sales = collect($sales)->filter(function ($i) use ($item){
+               return $i['client_id'] === $item['id'];
+            });
+            $item['sale_total_sum'] = $_sales->reduce(function ($a, $c) {
+                return $a + collect($c['products'])->reduce(function ($_a, $_c) {
+                    return $_a + $_c['product_price'];
+                }, 0);
+            }, 0);
+
+            $item['sale_total_bonuses'] = $item['sale_total_sum'] * 0.05;
+            $_sales = $_sales->values()->map(function ($i) {
+                $i['date'] = Carbon::parse($i['created_at'])->format('d.m.Y');
+                $products = collect($i['products'])->map(function ($i) {
+                    $product_id = $i['product_id'];
+                    $i['product'] = new OrderProductResource(Product::find($product_id));
+                    $i['bonus'] = $i['product_price'] * 0.05;
+                    return $i;
+                });
+                unset($i['products']);
+                $i['products'] = collect($products)->map(function ($item) {
+                    $item['product']['product_name'] = $item['product']['product_name'] . ' ' . $item['product']['product_weight'] . ' ' . $item['product']['product_taste'];
+                    $item['product_image'] = $item['product']->product_image;
+                    return collect($item)->only(['product_price', 'bonus', 'product']);
+                });
+                return $i;
+            });
+
+            unset($item['sales']);
+
+            $item['sales'] = $_sales->map(function ($i) {
+                return $i->only([
+                    'date', 'products'
+                ]);
+            });
+
+            return $item;
+        })->filter(function ($i) {
+            return $i['sale_total_sum'] > 0;
+        });
+
+/*        $partner_sales = $this->partner_sales;
+
+        $clients = $clients->map(function ($i) use ($partner_sales) {
+            $sales = collect($partner_sales)->filter(function ($_i) use($i) {
+                return $_i['client_id'] === $i['id'];
+            });
+            $i['sales'] = $sales->values()->all();
+            return $i;
+        });*/
+
+        return [
+            'partner_name' => $this->client_name,
+            'balance' => $this->balance,
+            'clients' => $clients,
+            'client_sales' => $this->partner_sales
+        ];
+    }
+}

@@ -6,6 +6,7 @@ use App\Http\Resources\AttributeResource;
 use App\Http\Resources\shop\ProductRangeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductsResource extends JsonResource
 {

@@ -59,6 +59,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('rating/vote', 'api\RatingController@vote');
         Route::get('revision', 'api\RevisionController@index');
         Route::get('telegram/{order}', 'api\CartController@sendTelegramMessage');
+        Route::get('partner', 'api\AnalyticsController@getPartnerSales');
     });
 
     // RevisionController

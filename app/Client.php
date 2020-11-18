@@ -30,8 +30,12 @@ class Client extends Model
         ]);
     }
 
-    public function partnerSale() {
+    public function partner_sales() {
         return $this->hasMany('App\Sale', 'partner_id');
+    }
+
+    public function getBalanceAttribute() {
+        return intval($this->transactions()->sum('amount'));
     }
 
     public function purchases() {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\AnalyticSearch;
 use App\Client;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\shop\PartnerResource;
 use App\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,8 +39,8 @@ class AnalyticsController extends Controller
     }
 
     public function partnerStats($id) {
-        $partner = collect(Client::where('id', $id)->with('partnerSale', 'partnerSale.products')->first());
-        $partner_sales = collect($partner->only('partner_sale')->collapse());
+        $partner = collect(Client::where('id', $id)->with('partner_sales', 'partner_sales.products')->first());
+        $partner_sales = collect($partner->only('partner_sales')->collapse());
         $daily_sales = $partner_sales->filter(function ($i) {
             return Carbon::parse($i['created_at'])->format('yy-m-d') === now()->format('yy-m-d');
         });
@@ -125,6 +126,28 @@ class AnalyticsController extends Controller
         } catch (\Exception $exception) {
             return [];
         }
+    }
 
+    public function getPartnerSales(Request $request) {
+        $user_token = $request->get('user_token');
+        if (!$user_token) {
+            return response()->json(['error' => 'Не передан идентификатор клиента']);
+        }
+        $client = Client::where('id', 3)
+            ->with('partner_sales', 'partner_sales.products')
+            ->first();
+
+        if (!$client) {
+            return response()->json(['error' => 'Клиент не найден']);
+        }
+
+        if (!$client->is_partner) {
+            return response()->json(['error' => 'Клиент не является партнером']);
+        }
+
+        $client['balance'] = $client->balance;
+        $client['clients'] = $this->getUniqueClientsCount($client->partner_sales);
+
+        return new PartnerResource($client);
     }
 }

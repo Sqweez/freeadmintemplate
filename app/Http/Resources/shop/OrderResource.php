@@ -15,6 +15,22 @@ class OrderResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+
+    protected $statuses = [
+        [
+            'id' => 0,
+            'text' => 'В обработке'
+        ],
+        [
+            'id' => 1,
+            'text' => 'Выполнен'
+        ],
+        [
+            'id' => -1,
+            'text' => 'Отменен'
+        ]
+    ];
+
     public function toArray($request)
     {
 
@@ -31,7 +47,14 @@ class OrderResource extends JsonResource
             'status' => $this->status ?? 1,
             'id' => $this->id,
             'products' => $productCollection,
-            'created_at' => $this->created_at,
+            'date' => Carbon::parse($this->created_at)->format('H:i:s d.m.Y'),
+            'status_text' => $this->getOrderStatusText($this->status ?? 1)
         ];
+    }
+
+    private function getOrderStatusText($status) {
+        return collect($this->statuses)->filter(function ($i) use ($status){
+            return $i['id'] === $status;
+        })->first()['text'];
     }
 }
