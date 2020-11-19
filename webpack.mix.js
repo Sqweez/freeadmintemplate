@@ -2,7 +2,7 @@ const mix = require('laravel-mix');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-mix.js('resources/js/app.js', 'public/js').version();
+mix.js('resources/js/app.js', 'public/js');
 mix.sass('resources/sass/app.scss', 'public/css')
     .webpackConfig({
         plugins: [
@@ -15,4 +15,9 @@ mix.sass('resources/sass/app.scss', 'public/css')
             }
         }
     })
+
+if (mix.inProduction()) {
+    mix.version();
+
+}
 

@@ -133,7 +133,7 @@ class AnalyticsController extends Controller
         if (!$user_token) {
             return response()->json(['error' => 'Не передан токен партнера']);
         }
-        $client = Client::where('id', 3)
+        $client = Client::ofToken($user_token)
             ->with('partner_sales', 'partner_sales.products')
             ->first();
 

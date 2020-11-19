@@ -45,7 +45,7 @@ class PartnerResource extends JsonResource
                 });
                 unset($i['products']);
                 $i['products'] = collect($products)->map(function ($item) {
-                    $item['product']['product_name'] = $item['product']['product_name'] . ' ' . $item['product']['product_weight'] . ' ' . $item['product']['product_taste'];
+                    $item['product']['product_name'] = trim($item['product']['product_name'] . ' ' . $item['product']['product_weight'] . ' ' . $item['product']['product_taste']);
                     $item['product_image'] = $item['product']->product_image;
                     return collect($item)->only(['product_price', 'bonus', 'product']);
                 });
@@ -65,21 +65,21 @@ class PartnerResource extends JsonResource
             return $i['sale_total_sum'] > 0;
         });
 
-/*        $partner_sales = $this->partner_sales;
+        $sale_total_sum = $clients->reduce(function ($a, $c) {
+            return $a + $c['sale_total_sum'];
+        }, 0);
 
-        $clients = $clients->map(function ($i) use ($partner_sales) {
-            $sales = collect($partner_sales)->filter(function ($_i) use($i) {
-                return $_i['client_id'] === $i['id'];
-            });
-            $i['sales'] = $sales->values()->all();
-            return $i;
-        });*/
+        $sale_total_bonus = $clients->reduce(function ($a, $c) {
+            return $a + $c['sale_total_bonuses'];
+        }, 0);
+
 
         return [
             'partner_name' => $this->client_name,
-            'balance' => $this->balance,
+            'balance' => $sale_total_bonus,
+            'clients_count' => count($clients),
+            'total_sum' => $sale_total_sum,
             'clients' => $clients,
-            'client_sales' => $this->partner_sales
         ];
     }
 }

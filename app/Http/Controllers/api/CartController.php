@@ -21,6 +21,8 @@ use App\ClientTransaction;
 
 
 class CartController extends Controller {
+    protected $PAYMENT_CONFIRMED = 1;
+    protected $PAYMENT_REJECTED = 0;
     public function addCart(Request $request) {
         $user_token = $request->get('user_token');
         $product = $request->get('product');
@@ -120,14 +122,19 @@ class CartController extends Controller {
         return intval($order->id);
     }
 
-    public function sendTelegramMessage(Order $order) {
-        $message = $this->getMessage($order);
+    private function sendTelegramMessage(Order $order, $result = null) {
+        $message = $this->getMessage($order, $result);
         $telegram = new TelegramService();
         $store = Store::where('id', $order['city'])->first();
         $telegram->sendMessage($store->telegram_chat_id, $message);
     }
 
-    public function getMessage(Order $order) {
+    public function telegramMessage(Order $order, Request $request) {
+        $result = intval($request->get('result'));
+        return $this->sendTelegramMessage($order, $result);
+    }
+
+    public function getMessage(Order $order, $result = null) {
         $store = Store::where('id', $order['city'])->first();
         $message = 'Новый заказ 💪💪💪' . "\n";
         $message .= 'Заказ №' . $order['id'] . "\n";
@@ -176,7 +183,11 @@ class CartController extends Controller {
         }
 
         if ($order['payment'] == 2) {
-            $payment = 'Онлайн оплата: ОПЛАЧЕНО!';
+            if ($result === $this->PAYMENT_CONFIRMED) {
+                $payment = 'Онлайн оплата: ОПЛАЧЕНО!';
+            } else {
+                $payment = 'Онлайн оплата: ОПЛАТА НЕ ПРОШЛА!';
+            }
         }
 
         $message .= 'Способ оплаты: ' . $payment . "\n";
