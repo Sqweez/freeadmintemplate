@@ -6985,6 +6985,11 @@ main {
     background-size: cover
 }
 
+.main-maloy {
+    background: url('https://sun9-36.userapi.com/c855532/v855532325/217a58/SlRkA8GAYa4.jpg') center center no-repeat !important;
+    background-size: cover!important;
+}
+
 .mdl-layout__header {
     width: 100% !important;
     margin-left: 0 !important

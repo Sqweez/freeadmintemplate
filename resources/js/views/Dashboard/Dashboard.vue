@@ -10,21 +10,6 @@
             <v-col sm="12" lg="12" md="12" v-if="CAN_SALE">
                 <PlanWidget />
             </v-col>
-            <v-col sm="9" lg="9" md="9" v-if="IS_MALOY">
-                <v-card>
-                    <v-card-title>
-                        Мотивация
-                    </v-card-title>
-                    <v-card-text>
-                        <iframe
-                            id="iframe"
-                            src="http://dojki.su/videos/vstavil-palec-vo-vlagalishche-i-poluchil-bryzgi-v-lico/"
-                            width="400"
-                            height="250"
-                            frameborder="0"></iframe>
-                    </v-card-text>
-                </v-card>
-            </v-col>
         </v-row>
     </div>
 
@@ -48,6 +33,10 @@
             ...mapGetters(['CAN_SALE', 'IS_MALOY'])
         },
         mounted() {
+            if (this.IS_MALOY) {
+                const main = document.querySelector('.mdl-layout__content');
+                main.classList.add('main-maloy')
+            }
         }
     }
 </script>

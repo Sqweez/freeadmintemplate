@@ -96,7 +96,7 @@
                 return response.data;
             },
             async createBanner() {
-                const response = await axios.post(`/api/shop/banners/`, this.banner);
+                const response = await axios.post(`/api/shop/banners`, this.banner);
                 return response.data;
             },
             async uploadPhoto(e) {

@@ -137,7 +137,8 @@
 
             <div class="avatar-dropdown" id="icon" v-if="LOGGED_IN" @click="showDropdown = !showDropdown">
                 <span>{{ USER.name}}</span>
-                <img src="../../../assets/images/iron-logo.png">
+                <img src="../../../assets/images/maloy.jpg" v-if="IS_MALOY">
+                <img src="../../../assets/images/iron-logo.png" v-else>
 
             </div>
 
@@ -221,7 +222,8 @@
         computed: {
             ...mapGetters([
                 'USER',
-                'LOGGED_IN'
+                'LOGGED_IN',
+                'IS_MALOY'
             ])
         },
         watch: {

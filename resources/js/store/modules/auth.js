@@ -21,7 +21,7 @@ const authModule = {
         IS_MODERATOR: state => state.user && +state.user.role_id === 4,
         IS_GUEST: state => !!!state.user,
         CAN_SALE: (state, getters) => (getters.IS_ADMIN || getters.IS_SELLER),
-        IS_MALOY: (state, getters) => (getters.IS_MODERATOR && state.user.login === 'maloy'),
+        IS_MALOY: (state, getters) => !!(getters.IS_MODERATOR && state.user.login === 'maloy'),
         CURRENT_ROLE: (state, getters) => {
             const roles = {
                 observer: getters.IS_OBSERVER,
