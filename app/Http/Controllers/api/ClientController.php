@@ -6,6 +6,7 @@ use App\Cart;
 use App\CartProduct;
 use App\Client;
 use App\ClientTransaction;
+use App\Store;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\shop\OrderResource;
@@ -62,15 +63,27 @@ class ClientController extends Controller {
             $client->update($_client->toArray());
             return new ClientResource($client);
         } else {
-            $_client = $request->except('site');
+            $_client = $request->except(['site', 'is_partner', 'client_discount', 'client_balance', 'city']);
             if (isset($_client['password'])) {
                 $_client['password'] = Hash::make($_client['password']);
             }
             $_client = collect($_client)->filter(function ($i) {
                 return strlen($i) > 0;
             });
+            $store = Store::where('city', 'like', '%' . $_client['client_city'] .'%')->where('type_id', 1)->first();
+            if (!$store) {
+                $_client['client_city'] = -1;
+            } else {
+                $_client['client_city'] = $store['id'];
+            }
             $client->update($_client->toArray());
-            return collect($client)->only(['client_name', 'client_phone', 'address', 'city', 'email', 'id', 'client_discount']);
+            $store = Store::find($client['client_city']);
+            if (!$store) {
+                $client['city'] = null;
+            } else {
+                $client['city'] = $store['city'];
+            }
+            return collect($client)->only(['client_name', 'client_phone', 'address', 'client_city', 'email', 'id', 'client_discount', 'city']);
         }
     }
 
@@ -82,8 +95,6 @@ class ClientController extends Controller {
      * @throws \Exception
      */
     public function destroy(Client $client) {
-        // @TODO:
-        // 1.Удалить все связанные с клиентом вещи
         $client->delete();
     }
 
@@ -155,7 +166,13 @@ class ClientController extends Controller {
             return null;
         } else {
             $client['client_balance'] = $client->transactions->sum('amount');
-            return collect($client)->only(['client_name', 'client_phone', 'address', 'city', 'email', 'id', 'client_discount', 'client_balance', 'is_partner']);
+            $store = Store::find($client['client_city']);
+            if (!$store) {
+                $client['city'] = null;
+            } else {
+                $client['city'] = $store['city'];
+            }
+            return collect($client)->only(['client_name', 'client_phone', 'address', 'client_city', 'email', 'id', 'client_discount', 'client_balance', 'is_partner', 'city']);
         }
     }
 

@@ -22,6 +22,7 @@ import PartnersStats from "../views/PartnersStats/PartnersStats";
 import ProductsV2 from '../views/v2/Products/Products';
 import ProductsV3 from '../views/v3/Products/Products';
 import CartV3 from '../views/v3/Cart/Cart';
+import Banner from "../views/Banners/Banner";
 
 const routes = [
     {
@@ -32,48 +33,77 @@ const routes = [
         path: '/users',
         component: Users,
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         }
     },
     {
         path: '/stores',
         component: Stores,
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         }
 
     },
     {
         path: '/products',
-        component: Products
+        component: Products,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+            },
+        }
     },
     {
         path: '/categories',
         component: Control,
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         }
     },
     {
         path: '/cart',
-        component: Cart
+        component: Cart,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true
+            },
+        }
     },
     {
         path: '/clients',
-        component: Clients
+        component: Clients,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+            }
+        }
     },
     {
         path: '/reports',
         component: Reports,
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+            },
         }
     },
     {
         path: '/plan',
         component: Plan,
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         }
     },
     {
@@ -94,68 +124,105 @@ const routes = [
     },
     {
         path: '/login',
+        name: 'Login',
         component: Login,
         meta: {
-            guest: true
+            CAN_ENTER: {
+                IS_GUEST: true
+            },
         }
     },
     {
         path: '/stats/mvp_products',
         component: MVPProducts,
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         }
     },
     {
         path: '/shop/rating',
         component: Rating,
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true,
+            },
+        }
+    },
+    {
+        path: '/shop/banners',
+        component: Banner,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_MODERATOR: true
+            },
         }
     },
     {
         path: '/revision',
-        component: Revision
+        component: Revision,
+        meta: {
+            CAN_ENTER: {
+                IS_SELLER: true,
+                IS_ADMIN: true
+            }
+        }
     },
     {
         path: '/arrivals',
         component: Arrivals,
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+            },
         }
     },
     {
         path: '/observer',
         component: ObserverPage,
         meta: {
-            isObserver: true
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_OBSERVER: true
+            },
         }
     },
     {
         path: '/promocode',
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         },
         component: Promocodes
     },
     {
         path: '/stats/partners',
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         },
         component: PartnersStats
     },
     {
         path: '/v2/products',
         meta: {
-            isAdmin: true,
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         },
         component: ProductsV2
     },
     {
         path: '/v3/products',
         meta: {
-            isAdmin: true
+            CAN_ENTER: {
+                IS_ADMIN: true
+            },
         },
         component: ProductsV3
     },

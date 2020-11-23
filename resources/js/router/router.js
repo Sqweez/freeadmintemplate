@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from "vue-router";
 import routes from "./routes";
 import store from "../store";
+import showToast from "../utils/toast";
+import {TOAST_TYPE} from "../config/consts";
 
 Vue.use(VueRouter);
 
@@ -19,38 +21,31 @@ Router.beforeEach(async (to, from, next) => {
         await store.dispatch('AUTH');
     }
 
-    const IS_OBSERVER = store.getters.IS_OBSERVER;
+    const CURRENT_ROLE = `IS_${store.getters.CURRENT_ROLE.toUpperCase()}`;
+    const IS_GUEST = store.getters.IS_GUEST;
+    const BASE_ROUTE = IS_GUEST ? '/login' : '/';
+    const GUEST_PAGES = !!(to.meta?.CAN_ENTER?.IS_GUEST);
 
-    if (IS_OBSERVER) {
-        if (to.meta.isObserver) {
-            next();
-        } else {
-            next('/observer');
-        }
+    const HAS_CAN_ENTER = (() => {
+        return !!(
+            to.meta.CAN_ENTER && Object.keys(to.meta.CAN_ENTER).length > 0
+        );
+    })();
+
+    if (IS_GUEST && !GUEST_PAGES) {
+        next(BASE_ROUTE);
         return;
     }
 
-    if (to.meta.isAdmin) {
-        if (store.getters.IS_ADMIN) {
-            next();
-        } else {
-            next('/');
-        }
-        return;
-    }
-
-    if (!to.meta.guest) {
-        if (store.getters.LOGGED_IN) {
-            next();
-        } else {
-            next('/login');
+    if (HAS_CAN_ENTER) {
+        const CAN_ENTER_ROLES = to.meta.CAN_ENTER;
+        const CAN_ENTER = !!CAN_ENTER_ROLES[CURRENT_ROLE];
+        if (!CAN_ENTER) {
+            next(BASE_ROUTE);
+            showToast('Доступ запрещен!', TOAST_TYPE.ERROR)
+            return;
         }
     }
-
-    if (to.meta.guest && store.getters.LOGGED_IN) {
-        next('/');
-    }
-
     next();
 });
 

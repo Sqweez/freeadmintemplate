@@ -1,22 +1,28 @@
 const navigationModule = {
     state: {
-        menu: [
+        moderatorMenu: [
             {
                 title: 'Главная страница',
                 url: '/',
                 icon: 'dashboard',
             },
             {
-                title: 'Продавцы',
+                title: 'Баннеры',
+                url: '/shop/banners',
+                icon: 'dashboard',
+            }
+        ],
+        adminMenu: [
+            {
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
+            },
+            {
+                title: 'Пользователи',
                 url: '/users',
                 icon: 'person',
                 isAdmin: true
-            },
-            {
-                title: 'Страница наблюдателя',
-                url: '/observer',
-                icon: 'dashboard',
-                isObserver: true,
             },
             {
                 title: 'Клиенты',
@@ -96,6 +102,10 @@ const navigationModule = {
                     {
                         title: 'Промокоды',
                         url: '/promocode'
+                    },
+                    {
+                        title: 'Баннеры',
+                        url: '/shop/banners'
                     }
                 ]
             },
@@ -129,39 +139,54 @@ const navigationModule = {
                     },
                 ]
             },
+        ],
+        sellerMenu: [
             {
-                title: 'v3/Склад',
-                url: '#',
+                title: 'Главная страница',
+                url: '/',
                 icon: 'dashboard',
+            },
+            {
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person'
+            },
+            {
+                title: 'Склад',
+                url: '#',
+                icon: 'home',
                 hasDropdown: true,
-                isAdmin: true,
                 children: [
                     {
-                        title: 'Товары',
-                        url: '/v3/products'
+                        title: 'Все товары',
+                        url: '/products'
                     },
                     {
                         title: 'Корзина',
-                        url: '/v3/cart'
+                        url: '/cart'
                     },
-                ]
+                    {
+                        title: 'Перемещения',
+                        url: '/transfer',
+                    },
+                    {
+                        title: 'Ревизии',
+                        url: '/revision',
+                    },
+                ],
+            },
+            {
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
             },
         ],
     },
     getters: {
-        navigations: state => state.menu,
-        ADMIN_NAVIGATIONS: state => state.menu,
-        OBSERVER_NAVIGATIONS: state => state.menu.filter(s => s.isObserver),
-        SELLER_NAVIGATIONS: state => state.menu
-            .filter(s => !s.isObserver && !s.isAdmin)
-            .map(s => {
-                let children = [];
-                if (s.children) {
-                    children = s.children.filter(c => !c.isAdmin && !c.isObserver);
-                    return {...s, children};
-                }
-                return s;
-            })
+        navigations: (state, getters) => {
+            const ROLE = getters.CURRENT_ROLE;
+            return state[`${ROLE}Menu`];
+        }
     }
 };
 

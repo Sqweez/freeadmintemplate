@@ -60,6 +60,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('revision', 'api\RevisionController@index');
         Route::get('telegram/{order}', 'api\CartController@telegramMessage');
         Route::get('partner', 'api\AnalyticsController@getPartnerSales');
+        // BannerController
+        Route::resource('banners','api\shop\BannerController');
     });
 
     // RevisionController

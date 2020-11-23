@@ -1,6 +1,8 @@
 import {auth, login} from "../../api/auth";
 import axios from 'axios';
 import showToast from "../../utils/toast";
+import _ from 'lodash';
+import {getKeyByValue} from "../../utils/objects";
 
 const authModule = {
     state: {
@@ -16,6 +18,21 @@ const authModule = {
         IS_ADMIN: state => state.user && +state.user.role_id === 1,
         IS_OBSERVER: state => state.user && +state.user.role_id === 3,
         IS_SELLER: state => state.user && +state.user.role_id === 2,
+        IS_MODERATOR: state => state.user && +state.user.role_id === 4,
+        IS_GUEST: state => !!!state.user,
+        CAN_SALE: (state, getters) => (getters.IS_ADMIN || getters.IS_SELLER),
+        IS_MALOY: (state, getters) => (getters.IS_MODERATOR && state.user.login === 'maloy'),
+        CURRENT_ROLE: (state, getters) => {
+            const roles = {
+                observer: getters.IS_OBSERVER,
+                moderator: getters.IS_MODERATOR,
+                admin: getters.IS_ADMIN,
+                guest: getters.IS_GUEST,
+                seller: getters.IS_SELLER
+            };
+
+            return getKeyByValue(roles, true);
+        },
     },
     mutations: {
         SET_TOKEN(state, token) {

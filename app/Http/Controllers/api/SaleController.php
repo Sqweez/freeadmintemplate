@@ -170,7 +170,10 @@ class SaleController extends Controller {
     public function getTotal(Request $request) {
         $dateFilter = $request->get('date_filter') ?? 'today';
         $dates = $this->getDatesFilters($dateFilter);
-        $sales = Sale::whereDate('created_at', '>=', $dates[0])->whereDate('created_at', '<=', $dates[1])->with(['products', 'products.products'])->get();
+        $sales = Sale::whereDate('created_at', '>=', $dates[0])
+            ->whereDate('created_at', '<=', $dates[1])
+            ->with(['products', 'products.products'])
+            ->get();
         return SaleByCityResource::collection($sales);
     }
 
@@ -179,7 +182,16 @@ class SaleController extends Controller {
         $startOfWeek = $today->startOf('week')->toDateString();
         $startOfMonth = $today->startOf('month')->toDateString();
 
-        return ['week' => SaleByCityResource::collection(Sale::whereDate('created_at', '>=', $startOfWeek)->get()), 'month' => SaleByCityResource::collection(Sale::whereDate('created_at', '>=', $startOfMonth)->get()),];
+        $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)->with(['products'])->get();
+
+        $weeklySales = $monthlySales->filter(function ($i){
+            return Carbon::parse($i->created_at)->gte(now()->startOfWeek());
+        });
+
+        return [
+            'week' => SaleByCityResource::collection($weeklySales),
+            'month' => SaleByCityResource::collection($monthlySales)
+        ];
     }
 
     private function getDatesFilters($dateFilter) {

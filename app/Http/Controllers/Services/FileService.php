@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Services;
 
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class FileService {
     public static function upload(Request $request) {
