@@ -25,13 +25,7 @@ const store = new Store({
     state: {},
     mutations: {},
     actions: {
-        async [ACTIONS.INIT] ({dispatch}) {
-           /* dispatch(ACTIONS.GET_CLIENTS);
-            dispatch(ACTIONS.GET_MANUFACTURERS);
-            dispatch(ACTIONS.GET_ATTRIBUTES);
-            dispatch(ACTIONS.GET_CATEGORIES);
-            dispatch(ACTIONS.GET_STORES);*/
-        }
+
     },
     modules: {
         navigationModule,

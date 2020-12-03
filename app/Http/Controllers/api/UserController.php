@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\User;
 use App\UserRole;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -16,11 +17,11 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        return UserResource::collection(User::with(['store', 'role'])->get());
     }
 
     public function indexRoles() {
@@ -31,7 +32,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return UserResource
      */
     public function store(Request $request)
@@ -42,32 +43,11 @@ class UserController extends Controller
         return new UserResource($_user);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param User $user
      * @return UserResource
      */
@@ -93,7 +73,7 @@ class UserController extends Controller
         $token = $request->get('token');
         $user = User::Token($token)->first();
         if (!$user) {
-            return response()->json(['error' => 'Неверный токен авторизации'], 200);
+            return response()->json(['error' => 'Неверный токен авторизации'], 500);
         }
         return response()->json([
             'status' => 'success',
@@ -110,7 +90,7 @@ class UserController extends Controller
                 'user' => new UserResource($user),
             ], 200);
         } else {
-            return response()->json(['error' => 'Неверные логин и пароль!']);
+            return response()->json(['message' => 'Неверные логин и пароль!'], 500);
         }
     }
 }

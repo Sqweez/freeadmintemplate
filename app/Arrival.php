@@ -12,6 +12,10 @@ class Arrival extends Model
         return $this->hasMany('App\ArrivalProducts');
     }
 
+    public function _products() {
+        return $this->belongsToMany('App\Product', 'arrival_products');
+    }
+
     public function user() {
         return $this->belongsTo('App\User');
     }

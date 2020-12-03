@@ -15,14 +15,19 @@ class SingleTransferResource extends JsonResource
     public function toArray($request)
     {
 
-        $products = BatchResource::collection($this->batches);
-        $products = $products->toArray($request);
+        //$products = BatchResource::collection($this->batches);
+        //$products = $products->toArray($request);
 
         return [
             'id' => $this->id,
             'parent_store' => $this->parent_store_id,
             'child_store' => $this->child_store_id,
-            'products' => $this->groupProducts($products)
+            'products' => BatchResource::collection($this->batches->groupBy('product_id')->map(function ($batch) {
+                return $batch->map(function ($product) use ($batch) {
+                    $product['count'] = $batch->count();
+                    return $product;
+                });
+            })->flatten()->unique('product_id')->values())
         ];
     }
     private function groupProducts($products) {

@@ -23,7 +23,8 @@
                         <v-col cols="12" xl="6">
                             <v-text-field
                                 class="mt-2"
-                                v-model="search"
+                                v-on:input="searchInput"
+                                v-model="searchValue"
                                 solo
                                 clearable
                                 label="Поиск товара"
@@ -51,7 +52,7 @@
                         </v-col>
                     </v-row>
                     <v-data-table
-                        :search="search"
+                        :search="searchQuery"
                         no-results-text="Нет результатов"
                         no-data-text="Нет данных"
                         :headers="headers"
@@ -163,6 +164,7 @@
     import axios from 'axios';
     import PriceTagModal from "../../components/Modal/PriceTagModal";
     import product from "../../mixins/product";
+    import product_search from "../../mixins/product_search";
 
     export default {
         components: {
@@ -183,7 +185,6 @@
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
         },
         data: () => ({
-            search: '',
             priceTagModal: false,
             loading: true,
             options: {},
@@ -333,7 +334,7 @@
                 showToast('Товары успешно сгруппированы!')
             }
         },
-        mixins: [product]
+        mixins: [product, product_search]
     }
 </script>
 

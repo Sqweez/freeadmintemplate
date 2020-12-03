@@ -86,6 +86,16 @@ class ProductController extends Controller {
     }
 
     private function getProductWithFilter($filters, $store_id) {
+        /*return Product::ofTag($filters['search'])
+            ->ofCategory($filters['categories'])
+            ->ofSubcategory($filters['subcategories'])
+            ->ofBrand($filters['brands'])
+            ->ofPrice($filters['prices'])
+            ->inStock($store_id)
+            ->isHit($filters['is_hit'])
+            ->where('is_site_visible', true)
+            ->groupBy('group_id')
+            ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity', 'price']);*/
         return Product::ofTag($filters['search'])
             ->ofCategory($filters['categories'])
             ->ofSubcategory($filters['subcategories'])
@@ -95,7 +105,10 @@ class ProductController extends Controller {
             ->isHit($filters['is_hit'])
             ->where('is_site_visible', true)
             ->groupBy('group_id')
-            ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity', 'price']);
+            ->with(['attributes', 'attributes.attribute_name', /*'manufacturer',*/ /*'categories',*/ 'subcategories', /*'children',*/ 'price', 'product_images'])
+            /*->with(['quantity' => function ($query) use ($store_id) {
+                return $query->where('store_id', $store_id);
+            }])*/;
     }
 
     private function getFilteredProducts($query, $store_id) {

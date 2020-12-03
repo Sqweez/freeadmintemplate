@@ -27,18 +27,18 @@ class ProductsResource extends JsonResource
             'product_id' => intval($this->id),
             'is_hit' => !!$this->is_hit,
             'product_name' => $this->product_name,
-            'category' => $this->categories[0]->category_name ?? '',
-            'category_id' => $this->categories[0]->id ?? 0,
             'subcategory' => $this->subcategories[0]->subcategory_name ?? '',
             'subcategory_id' => $this->subcategories[0]->id ?? 0,
-            'manufacturer_id' => $this->manufacturer[0]->id ?? 0,
             'product_price' => $price,
             'product_image' => url('/') . Storage::url($this->product_images[0]->product_image ?? 'products/product_image_default.jpg'),
-            'in_stock' =>collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
             'attributes' => AttributeResource::collection($attributes),
             'product_weight' => $this->getProductWeight($attributes) ?? '',
             'product_taste' => $this->getProductWeight($attributes) ?? '',
-            'product_name_slug' => Str::slug($this->product_name, '-')
+            'product_name_slug' => Str::slug($this->product_name, '-'),
+            //'category' => $this->categories[0]->category_name ?? '',
+            //'category_id' => $this->categories[0]->id ?? 0,
+            //'manufacturer_id' => $this->manufacturer[0]->id ?? 0,
+            //'in_stock' => collect(ProductRangeResource::collection($this->children))->sum('quantity') > 0,
         ];
     }
 

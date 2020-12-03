@@ -124,7 +124,8 @@
                     <v-col cols="12" xl="8">
                         <v-text-field
                             class="mt-2"
-                            v-model="search"
+                            v-model="searchValue"
+                            @input="searchInput"
                             solo
                             clearable
                             label="Поиск товара"
@@ -144,7 +145,7 @@
                 </v-row>
                 <v-data-table
                     class="background-iron-grey fz-18"
-                    :search="search"
+                    :search="searchQuery"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     :headers="headers"
@@ -203,6 +204,7 @@
     import axios from 'axios';
     import uploadFile, {deleteFile} from "../../api/upload";
     import product from "../../mixins/product";
+    import product_search from "../../mixins/product_search";
 
     export default {
         components: {
@@ -264,7 +266,7 @@
             await this.$store.dispatch(ACTIONS.GET_STORES);
             this.loading = false;
         },
-        mixins: [product],
+        mixins: [product, product_search],
         methods: {
          /*   getPrice(product) {
                 const item = product.prices.find(p => p.store_id == this.storeFilter);

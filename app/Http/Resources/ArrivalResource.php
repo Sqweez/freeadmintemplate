@@ -18,7 +18,8 @@ class ArrivalResource extends JsonResource
     public function toArray($request)
     {
 
-        $products = ProductRevisionResource::collection(Product::find($this->products->pluck('product_id')));
+        //$products = ProductRevisionResource::collection(Product::find($this->products->pluck('product_id')));
+        $products = ProductRevisionResource::collection($this->_products);
         $_products = collect($this->products);
 
         $products = collect($products)->map(function ($i) use ($_products) {

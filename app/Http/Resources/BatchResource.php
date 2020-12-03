@@ -15,16 +15,14 @@ class BatchResource extends JsonResource
      */
     public function toArray($request)
     {
-        $product = new ProductResource(Product::find($this->productBatch->product_id));
-        $product = $product->toArray($request);
-
         return [
             'batch_id' => $this->batch_id,
-            'product_id' => $this->productBatch->product_id,
-            'product_name' => $product['product_name'],
-            'attributes' => $product['attributes'],
-            'manufacturer' => $product['manufacturer'],
-            'product_price' => $product['product_price']
+            'product_id' => $this->product->id,
+            'product_name' => $this->product->product_name,
+            'attributes' => AttributeResource::collection($this->product->attributes),
+            'manufacturer' => $this->product->manufacturer[0]->manufacturer_name ?? '',
+            'product_price' => $this->product->product_price,
+            'count' => $this->count,
         ];
     }
 }

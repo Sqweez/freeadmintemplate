@@ -38,3 +38,7 @@ export async function getProductsBySearch(search = "") {
     const { data } = await axios.get(`/api/v2/products/search?search=${search}`);
     return data;
 }
+
+export async function changeProductCount({product_id, store_id, increment}) {
+    return await axios.get(`/api/v2/products/${product_id}/count?store_id=${store_id}&increment=${increment}`)
+}

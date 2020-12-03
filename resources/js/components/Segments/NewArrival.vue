@@ -17,7 +17,6 @@
                 </v-btn>
             </div>
         </div>
-        <h2 v-if="user.login === 'atan'" class="text-center">АТАН, РАБОТАЙ, БЛЯТЬ!</h2>
         <v-card class="background-iron-darkgrey mb-5 mt-5"  v-if="!emptyCart">
             <v-card-title class="justify-end">
             </v-card-title>
@@ -127,7 +126,8 @@
                     <v-col cols="12" xl="8">
                         <v-text-field
                             class="mt-2"
-                            v-model="search"
+                            v-model="searchValue"
+                            @input="searchInput"
                             solo
                             clearable
                             label="Поиск товара"
@@ -138,7 +138,7 @@
                 </v-row>
                 <v-data-table
                     class="background-iron-grey fz-18"
-                    :search="search"
+                    :search="searchQuery"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     :headers="headers"
@@ -198,6 +198,7 @@
     import {TOAST_TYPE} from "../../config/consts";
     import axios from "axios";
     import {createArrival} from "../../api/arrivals";
+    import product_search from "../../mixins/product_search";
 
     export default {
         components: {
@@ -205,6 +206,7 @@
             WayBillModal,
             ProductModal
         },
+        mixins: [product_search],
         data: () => ({
             storeFilter: null,
             moneyRate: 1,

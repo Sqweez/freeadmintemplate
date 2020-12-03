@@ -20,7 +20,26 @@ class BannerController extends Controller
     public function index(Request $request)
     {
         if ($request->has('site')) {
-            return BannerResource::collection(Banner::where('is_active', true)->get());
+            $banners = Banner::where('is_active', true)->get();
+            return BannerResource::collection(
+                $banners->sortBy('order')->map(function($i, $key) use ($banners) {
+                    $count = $banners->count();
+                    $orders = collect(range(1, $count))->map(function ($number) {
+                        return $number;
+                    });
+
+                    $_orders = $banners->pluck('order')->unique()->filter(function ($i) {
+                        return $i !== 0;
+                    });
+
+                    $diff = $orders->diff($_orders)->values();
+
+                    if ($i->order === 0) {
+                        $i->order = $diff->first();
+                    }
+                    return $i;
+                })->sortBy('order')
+            );
         }
         return BannerResource::collection(Banner::all());
     }

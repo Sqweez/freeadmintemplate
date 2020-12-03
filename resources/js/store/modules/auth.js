@@ -3,6 +3,7 @@ import axios from 'axios';
 import showToast from "../../utils/toast";
 import _ from 'lodash';
 import {getKeyByValue} from "../../utils/objects";
+import {TOAST_TYPE} from "../../config/consts";
 
 const authModule = {
     state: {
@@ -52,13 +53,17 @@ const authModule = {
     },
     actions: {
         async LOGIN ({commit, dispatch}, payload) {
-            const response = await login(payload);
-            if (response.data.status === 'success') {
+            commit('enableLoading');
+            try {
+                const response = await login(payload);
                 localStorage.setItem('token', response.data.user.token);
+                window.location = "/";
             }
-            // @TODO вернуть позже
-            // await dispatch('SET_AUTH_DATA', response);
-            return response;
+            catch (e) {
+                showToast(e.response.data.message, TOAST_TYPE.ERROR);
+            } finally {
+                commit('disableLoading');
+            }
         },
         async AUTH({commit, dispatch}) {
             const token = localStorage.getItem('token') || null;
@@ -67,19 +72,15 @@ const authModule = {
                 commit("SET_TOKEN", null);
                 return;
             }
-
-            const response = await auth({token});
-
-            if (!response.data.error) {
+            try {
+                const response = await auth({token});
                 await dispatch('SET_AUTH_DATA', response);
-            } else {
+            } catch (e) {
                 commit("SET_TOKEN", null);
                 showToast('Данные авторизации устарели', 'warning');
+            } finally {
+                commit("SET_CHECKED", true);
             }
-
-            commit("SET_CHECKED", true);
-
-            return response;
         },
         async SET_AUTH_DATA({commit}, response) {
             if (response.data.status === 'success') {

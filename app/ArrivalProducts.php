@@ -8,4 +8,8 @@ class ArrivalProducts extends Model
 {
     protected $guarded = [];
     public $timestamps = false;
+
+    public function product() {
+        return $this->belongsTo('App\Product');
+    }
 }

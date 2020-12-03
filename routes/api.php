@@ -101,6 +101,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // ProductController@v2
 
     Route::get('v2/products/search', 'api\v2\ProductController@search');
+    Route::get('v2/products/{id}/count', 'api\v2\ProductController@changeCount');
 
     // ClientsController
     Route::resource('clients', 'api\ClientController');

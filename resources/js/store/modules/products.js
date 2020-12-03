@@ -7,9 +7,11 @@ import {
     deleteProduct,
     editProduct,
     getProducts,
-    getMainProducts, getProductsBySearch
+    getMainProducts, getProductsBySearch, changeProductCount
 } from "../../api/products";
 import {makeSale} from "../../api/sale";
+import showToast from "../../utils/toast";
+import {TOAST_TYPE} from "../../config/consts";
 
 const productsModule = {
     state: {
@@ -28,7 +30,7 @@ const productsModule = {
     },
     getters: {
         products: state => state.products,
-        product: state => id =>  state.products.find(p => p.id === id),
+        product: state => id => state.products.find(p => p.id === id),
         totalProducts: state => state.total,
         prevLink: state => state.prev,
         nextLink: state => state.next,
@@ -50,10 +52,10 @@ const productsModule = {
         [MUTATIONS.CREATE_PRODUCT](state, payload) {
             state.products.push(payload);
         },
-        [MUTATIONS.SET_MAIN_PRODUCTS] (state, payload) {
-          state.main_products = payload;
+        [MUTATIONS.SET_MAIN_PRODUCTS](state, payload) {
+            state.main_products = payload;
         },
-        [MUTATIONS.SET_PRODUCTS] (state, payload) {
+        [MUTATIONS.SET_PRODUCTS](state, payload) {
             state.products = payload;
         },
         [MUTATIONS.EDIT_PRODUCT](state, payload) {
@@ -85,7 +87,7 @@ const productsModule = {
         [MUTATIONS.ADD_PRODUCT_RANGE](state, payload) {
             state.products.push(payload);
         },
-        [MUTATIONS.ON_SALE] (state, payload) {
+        [MUTATIONS.ON_SALE](state, payload) {
             state.products = state.products.map(p => {
                 const index = payload.findIndex(i => i.id === p.id);
                 if (index !== -1) {
@@ -94,7 +96,7 @@ const productsModule = {
                 return p;
             });
         },
-        setTotal (state, payload) {
+        setTotal(state, payload) {
             state.total = payload;
         },
         setLinks(state, payload) {
@@ -106,28 +108,41 @@ const productsModule = {
         },
         setSearchProducts(state, payload) {
             state.productsSearch = payload;
+        },
+        changeCount(state, payload) {
+            state.products = state.products.map(product => {
+                if (product.id == payload.product_id) {
+                    const findIndex = product.quantity.findIndex(q => q.id == payload.id);
+                    if (findIndex !== -1) {
+                        product.quantity[findIndex] = payload
+                    } else {
+                        product.quantity.push(payload);
+                    }
+                }
+                return product;
+            })
         }
     },
     actions: {
-        async [ACTIONS.GET_PRODUCT] ({commit}, store_id) {
+        async [ACTIONS.GET_PRODUCT]({commit}, store_id) {
             const response = await getProducts(store_id);
             const products = response.data.data;
             commit(MUTATIONS.SET_PRODUCTS, products);
         },
-        async [ACTIONS.CREATE_PRODUCT] ({commit}, payload) {
+        async [ACTIONS.CREATE_PRODUCT]({commit}, payload) {
             const product = await createProduct(payload);
             commit(MUTATIONS.CREATE_PRODUCT, product);
         },
-        async [ACTIONS.EDIT_PRODUCT] ({commit}, payload) {
+        async [ACTIONS.EDIT_PRODUCT]({commit}, payload) {
             const product = await editProduct(payload);
             console.log(product);
             commit(MUTATIONS.EDIT_PRODUCT, product);
         },
-        async [ACTIONS.DELETE_PRODUCT] ({commit}, payload) {
+        async [ACTIONS.DELETE_PRODUCT]({commit}, payload) {
             await deleteProduct(payload);
             commit(MUTATIONS.DELETE_PRODUCT, payload);
         },
-        async [ACTIONS.ADD_PRODUCT_QUANTITY] ({commit}, payload) {
+        async [ACTIONS.ADD_PRODUCT_QUANTITY]({commit}, payload) {
             await addProductBatch(payload);
             commit(MUTATIONS.ADD_PRODUCT_QUANTITY, {
                 id: payload.product_id,
@@ -135,23 +150,35 @@ const productsModule = {
                 store_id: payload.store_id,
             })
         },
-        async [ACTIONS.ADD_PRODUCT_RANGE] ({commit}, payload) {
+        async [ACTIONS.ADD_PRODUCT_RANGE]({commit}, payload) {
             const product = await addProductRange(payload);
             commit(MUTATIONS.ADD_PRODUCT_RANGE, product);
         },
-        async [ACTIONS.MAKE_SALE] ({commit}, payload) {
+        async [ACTIONS.MAKE_SALE]({commit}, payload) {
             const {products, client, sale_id} = await makeSale(payload);
             commit(MUTATIONS.ON_SALE, products);
             commit(MUTATIONS.EDIT_CLIENT, client);
             return sale_id;
         },
-        async [ACTIONS.GET_MAIN_PRODUCTS] ({commit}) {
+        async [ACTIONS.GET_MAIN_PRODUCTS]({commit}) {
             const {data} = await getMainProducts();
             commit(MUTATIONS.SET_MAIN_PRODUCTS, data);
         },
         async searchProducts({commit}, search) {
-            const { data } = await getProductsBySearch(search);
+            const {data} = await getProductsBySearch(search);
             commit('setSearchProducts', data);
+        },
+        async changeCount({commit}, payload) {
+            commit('enableLoading');
+            try {
+                const {data} = await changeProductCount(payload);
+                commit('changeCount', data);
+            } catch (e) {
+                showToast(e.response.data.message, TOAST_TYPE.ERROR);
+            } finally {
+                commit('disableLoading');
+            }
+
         }
     }
 };

@@ -17,13 +17,11 @@ class StoreController extends Controller
      */
     public function index(Request $request)
     {
-        $stores =
-            $request->has('store_id')
-                ?
-                Store::where('id', $request->get('store_id'))->with('type')->get()
-                :
-                Store::with('type')->get();
-        return StoreResource::collection($stores);
+        $storeQuery = Store::query()->with('type');
+        if ($request->has('store_id')) {
+            $storeQuery->where('id', $request->get('store_id'));
+        }
+        return StoreResource::collection($storeQuery->get());
     }
 
     /**

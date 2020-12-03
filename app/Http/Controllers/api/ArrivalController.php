@@ -14,7 +14,11 @@ class ArrivalController extends Controller
 
     public function index(Request $request) {
         $is_completed = $request->has('is_completed') ? $request->get('is_completed') : 0;
-        return ArrivalResource::collection(Arrival::where('is_completed', $is_completed)->get());
+        return ArrivalResource::collection(
+            Arrival::where('is_completed', $is_completed)
+                ->with(['products', '_products', '_products.manufacturer', '_products.categories', '_products.quantity', '_products.attributes', '_products.attributes.attribute_name', 'user', 'store'])
+                ->get());
+        //return ArrivalResource::collection(Arrival::where('is_completed', $is_completed)->get());
     }
 
     public function getArrival(Arrival $arrival) {

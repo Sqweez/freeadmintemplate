@@ -156,7 +156,7 @@ class SaleController extends Controller {
 
         return ReportResource::collection(
             Sale::with(
-                ['client', 'user', 'store', 'products', 'products.products', 'products.products.manufacturer', 'products.products.attributes']
+                ['client', 'user', 'store', 'products', 'products.products', 'products.products.manufacturer', 'products.products.attributes', 'products.products.attributes.attribute_name']
             )
                 ->whereDate('created_at', '>=', $dates[0])
                 ->whereDate('created_at', '<=', $dates[1])->orderBy('created_at', 'desc')->get());

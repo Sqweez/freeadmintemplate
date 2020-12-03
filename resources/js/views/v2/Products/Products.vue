@@ -13,17 +13,25 @@
             </div>
         </v-card-text>
         <v-card-text v-else>
+            <h5>Поиск: {{searchQuery}}</h5>
             <div>
-                <v-btn color="error" @click="productModal = true" v-if="is_admin">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+                <v-btn color="error" @click="productModal = true" v-if="is_admin">Добавить товар
+                    <v-icon>mdi-plus</v-icon>
+                </v-btn>
             </div>
-            <v-btn color="success" @click="groupProduct" v-if="is_admin">Сгруппировать товар <v-icon>mdi-sync</v-icon></v-btn>
+            <v-btn color="success" @click="groupProduct" v-if="is_admin">Сгруппировать товар
+                <v-icon>mdi-sync</v-icon>
+            </v-btn>
             <v-row>
                 <v-col>
                     <v-row>
+                    <!--    v-on:input="searchInput"
+                        v-model="searchValue"-->
                         <v-col cols="12" xl="4">
                             <v-text-field
                                 class="mt-2"
-                                v-model="search"
+                                v-on:input="searchInput"
+                                v-model="searchValue"
                                 solo
                                 clearable
                                 label="Поиск товара"
@@ -60,9 +68,9 @@
                         </v-col>
                     </v-row>
                     <v-data-table
-                        :search="search"
                         no-results-text="Нет результатов"
                         no-data-text="Нет данных"
+                        :search="searchQuery"
                         :headers="headers"
                         :page.sync="pagination.page"
                         :items="products"
@@ -96,7 +104,15 @@
                             <span>Количество тегов: {{ item.tags.length }}</span>
                         </template>
                         <template v-slot:item.actions="{ item }">
-                            <div>
+                            <div class="mb-2 d-flex">
+                                <v-btn color="error" class="mr-2" @click="changeCount(item.id, -1)">
+                                    <v-icon>mdi-minus</v-icon>
+                                </v-btn>
+                                <v-btn color="success" class="ml-2" @click="changeCount(item.id, 1)">
+                                    <v-icon>mdi-plus</v-icon>
+                                </v-btn>
+                            </div>
+                            <div class="product--actions">
                                 <v-btn color="primary" @click="productId = item.id; productQuantityModal = true;">
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
@@ -106,19 +122,20 @@
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
                             </div>
-                            <div>
-                                <v-btn color="primary" @click="productId = item.id; rangeMode = true; productModal = true;">
+                            <div class="product--actions">
+                                <v-btn color="primary"
+                                       @click="productId = item.id; rangeMode = true; productModal = true;">
                                     Ассортимент
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
                             </div>
-                            <div>
+                            <div class="product--actions">
                                 <v-btn color="warning" @click="productId = item.id; productModal = true;">
                                     Редактировать
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
                             </div>
-                            <div>
+                            <div class="product--actions">
                                 <v-btn color="error" @click="productId = item.id; deleteModal = true;">
                                     Удалить
                                     <v-icon>mdi-delete</v-icon>
@@ -172,6 +189,8 @@
     import axios from 'axios';
     import PriceTagModal from "../../../components/Modal/PriceTagModal";
     import product from "../../../mixins/product";
+    import _ from 'lodash';
+    import product_search from "../../../mixins/product_search";
 
     export default {
         components: {
@@ -192,7 +211,6 @@
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
         },
         data: () => ({
-            search: '',
             priceTagModal: false,
             loading: true,
             options: {},
@@ -259,21 +277,25 @@
                         break;
                 }
 
-                if (this.descriptionFilter === 0) {
-                    return products;
-                }
-
                 if (this.descriptionFilter === 1) {
-                    return products.filter(p => {
+                    products = products.filter(p => {
                         return p.product_description === null || product.product_description === "";
                     })
                 }
 
                 if (this.descriptionFilter === 2) {
-                    return products.filter(p => {
+                    products =  products.filter(p => {
                         return !(p.product_description === null || product.product_description === "");
                     })
                 }
+
+               /* if (this.searchQuery.length >= 3) {
+                    products = products.filter(product => {
+
+                    });
+                }*/
+
+                return products;
 
             },
             stores() {
@@ -334,7 +356,7 @@
                 ];
 
                 if (this.is_admin) {
-                    headers.unshift( {
+                    headers.unshift({
                         value: 'actions',
                         text: 'Действие',
                         sortable: false
@@ -371,16 +393,24 @@
             async groupProduct() {
                 await axios.get('/api/shop/products-group');
                 showToast('Товары успешно сгруппированы!')
-            }
+            },
+            async changeCount(id, increment) {
+                const params = {
+                    product_id: id,
+                    increment,
+                    store_id: this.storeFilter
+                };
+                await this.$store.dispatch('changeCount', params);
+            },
         },
-        mixins: [product]
+        mixins: [product, product_search]
     }
 </script>
 
 <style scoped>
-    .v-btn {
-        width: 250px!important;
-        text-align: left!important;
+    .product--actions .v-btn {
+        width: 250px !important;
+        text-align: left !important;
         margin-bottom: 10px;
     }
 </style>

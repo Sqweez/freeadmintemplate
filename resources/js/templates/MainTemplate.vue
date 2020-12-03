@@ -21,16 +21,12 @@
 
     import Drawer from "../components/Navigation/Drawer";
     import Header from "../components/Header/Header";
-    import ACTIONS from "../store/actions";
     import LoadingSpinner from "../components/Loaders/LoadingSpinner";
     import {mapGetters} from "vuex";
     export default {
         components: {
             LoadingSpinner,
             Drawer, Header
-        },
-        async mounted() {
-            await this.$store.dispatch(ACTIONS.INIT);
         },
         methods: {
             randomPornoSites() {

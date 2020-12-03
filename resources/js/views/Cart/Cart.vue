@@ -216,7 +216,8 @@
                     <v-col cols="12" xl="8">
                         <v-text-field
                             class="mt-2"
-                            v-model="search"
+                            v-on:input="searchInput"
+                            v-model="searchValue"
                             solo
                             clearable
                             label="Поиск товара"
@@ -239,7 +240,7 @@
                 </v-btn>
                 <v-data-table
                     class="background-iron-grey fz-18"
-                    :search="search"
+                    :search="searchQuery"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     :headers="headers"
@@ -312,6 +313,7 @@
     import CheckModal from "../../components/Modal/CheckModal";
     import axios from "axios";
     import product from "../../mixins/product";
+    import product_search from "../../mixins/product_search";
 
     export default {
         components: {
@@ -342,8 +344,10 @@
                 this.discountPercent = Math.max(0, Math.min(100, value));
             }*/
         },
-        mixins: [product],
+        mixins: [product, product_search],
         data: () => ({
+            searchQuery: '',
+            searchValue: '',
             storeFilter: null,
             waybillModal: false,
             loading: true,

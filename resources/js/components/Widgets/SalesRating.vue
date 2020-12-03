@@ -19,7 +19,7 @@
                                 <div class="d-flex justify-space-between">
                                     <span>{{ store.name }}</span>
                                     <span>
-                                        {{ getTotal(store.id) }} тнг
+                                        {{ getTotal(store.id) | priceFilters}}
                                     </span>
                                 </div>
                             </v-list-item-title>
@@ -31,7 +31,7 @@
                                 <div class="d-flex justify-space-between">
                                     <span>Итого</span>
                                     <span>
-                                        {{ totalSum }} тнг
+                                        {{ totalSum | priceFilters }}
                                     </span>
                                 </div>
                             </v-list-item-title>
@@ -73,7 +73,9 @@
             current: null,
         }),
         mounted() {
-            this.$store.dispatch('getStores');
+            if (!this.stores.length) {
+                this.$store.dispatch('getStores');
+            }
             this.$store.dispatch('getStoresReport')
             this.current = this.items[0];
         },
@@ -85,9 +87,9 @@
                 'IS_OBSERVER'
             ]),
             totalSum() {
-                return new Intl.NumberFormat('ru-RU').format(this.STORES_REPORTS.reduce((a, c) => {
+                return this.STORES_REPORTS.reduce((a, c) => {
                     return c.total_cost + a;
-                }, 0));
+                }, 0);
             },
             stores() {
                 return this.$store.getters.shops.filter(s => {
@@ -101,9 +103,9 @@
             ]),
             getTotal(store_id) {
                 const sales = this.STORES_REPORTS.filter(s => s.store_id === store_id) || [];
-                return new Intl.NumberFormat('ru-RU').format(sales.reduce((a, c) => {
+                return sales.reduce((a, c) => {
                     return c.total_cost + a;
-                }, 0));
+                }, 0)
             },
             async changeFilter() {
                 await this.$store.dispatch('getStoresReport', this.current)

@@ -28,27 +28,30 @@ use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller {
 
-    public function index() {
-        return ProductResource::collection(
-            Product::orderBy('group_id')
-                ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'quantity', 'price', 'tag'])
-                ->get()
-        );
+    public function index(Request $request) {
+        /* return ProductResource::collection(
+           Product::orderBy('group_id')
+               ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'quantity', 'price', 'tag'])
+               ->get()
+       );*/
+
+        return ProductResource::collection(Product::orderBy('group_id')->with(['manufacturer', 'price', 'attributes', 'attributes.attribute_name', 'categories', 'subcategories', 'product_images', 'tag'])
+            ->with(['quantity' => function ($q) use ($request) {
+                $q->where('quantity', '>', 0);
+                if ($request->has('store_id')) {
+                    $q->where('store_id', $request->get('store_id'));
+                }
+            }])
+            ->get());
     }
 
     public function bombbarReport() {
-        $product_ids = [
-            1778, 821, 780, 774, 844, 805, 640, 1773, 1459
-        ];
+        $product_ids = [1778, 821, 780, 774, 844, 805, 640, 1773, 1459];
 
         $products = Product::whereIn('group_id', $product_ids)->pluck('id');
-        $batches = collect(ProductBatch::whereIn('product_id', $products)
-            ->where('quantity', '>', 0)
-            ->whereIn('store_id', [1, 2, 3, 4, 5, 8, 9])
-            ->with(['product' => function ($q) {
+        $batches = collect(ProductBatch::whereIn('product_id', $products)->where('quantity', '>', 0)->whereIn('store_id', [1, 2, 3, 4, 5, 8, 9])->with(['product' => function ($q) {
                 $q->select(['id', 'product_name', 'group_id']);
-            }])
-            ->get());
+            }])->get());
         $batches = $batches->groupBy('product.group_id')->map(function ($batch) {
             return collect($batch)->groupBy('store_id');
         })->map(function ($batch) {
@@ -58,10 +61,7 @@ class ProductController extends Controller {
                     return $a['quantity'] + $i;
                 }, 0);
             });
-            return [
-                'quantity' => $quantity,
-                'product_name' => (collect($batch)->first())->first()['product']['product_name'],
-            ];
+            return ['quantity' => $quantity, 'product_name' => (collect($batch)->first())->first()['product']['product_name'],];
         });
 
         return $batches;
@@ -119,36 +119,20 @@ class ProductController extends Controller {
             $subcategory = $product->subcategories[0] ?? null;
             $tag = Tag::where('name', 'like', '%' . $product_name . '%')->first();
             if ($tag) {
-                ProductTag::create(
-                    [
-                        'tag_id' => $tag['id'],
-                        'product_id' => $product['id']
-                    ]
-                );
+                ProductTag::create(['tag_id' => $tag['id'], 'product_id' => $product['id']]);
             } else {
                 $tag = Tag::create(['name' => $product_name]);
-                ProductTag::create(
-                    [
-                        'tag_id' => $tag['id'],
-                        'product_id' => $product['id']
-                    ]
-                );
+                ProductTag::create(['tag_id' => $tag['id'], 'product_id' => $product['id']]);
             }
 
             if ($manufacturer !== null) {
                 $tag = Tag::where('name', 'like', '%' . $manufacturer['manufacturer_name'])->first();
 
                 if ($tag) {
-                    ProductTag::create([
-                        'tag_id' => $tag['id'],
-                        'product_id' => $product['id']
-                    ]);
+                    ProductTag::create(['tag_id' => $tag['id'], 'product_id' => $product['id']]);
                 } else {
                     $tag = Tag::create(['name' => $manufacturer['manufacturer_name']]);
-                    ProductTag::create([
-                        'tag_id' => $tag['id'],
-                        'product_id' => $product['id']
-                    ]);
+                    ProductTag::create(['tag_id' => $tag['id'], 'product_id' => $product['id']]);
                 }
             }
 
@@ -156,16 +140,10 @@ class ProductController extends Controller {
                 $tag = Tag::where('name', 'like', '%' . $category['category_name'])->first();
 
                 if ($tag) {
-                    ProductTag::create([
-                        'tag_id' => $tag['id'],
-                        'product_id' => $product['id']
-                    ]);
+                    ProductTag::create(['tag_id' => $tag['id'], 'product_id' => $product['id']]);
                 } else {
                     $tag = Tag::create(['name' => $category['category_name']]);
-                    ProductTag::create([
-                        'tag_id' => $tag['id'],
-                        'product_id' => $product['id']
-                    ]);
+                    ProductTag::create(['tag_id' => $tag['id'], 'product_id' => $product['id']]);
                 }
             }
 
@@ -173,16 +151,10 @@ class ProductController extends Controller {
                 $tag = Tag::where('name', 'like', '%' . $subcategory['subcategory_name'])->first();
 
                 if ($tag) {
-                    ProductTag::create([
-                        'tag_id' => $tag['id'],
-                        'product_id' => $product['id']
-                    ]);
+                    ProductTag::create(['tag_id' => $tag['id'], 'product_id' => $product['id']]);
                 } else {
                     $tag = Tag::create(['name' => $subcategory['subcategory_name']]);
-                    ProductTag::create([
-                        'tag_id' => $tag['id'],
-                        'product_id' => $product['id']
-                    ]);
+                    ProductTag::create(['tag_id' => $tag['id'], 'product_id' => $product['id']]);
                 }
             }
 
@@ -243,8 +215,7 @@ class ProductController extends Controller {
     }
 
     private function createManufacturerProduct($manufacturer, $id) {
-        if ($manufacturer)
-            ManufacturerProducts::create(['product_id' => $id, 'manufacturer_id' => $manufacturer]);
+        if ($manufacturer) ManufacturerProducts::create(['product_id' => $id, 'manufacturer_id' => $manufacturer]);
     }
 
     public function createBatch(Request $request) {
@@ -290,24 +261,13 @@ class ProductController extends Controller {
             if (!isset($tag['id'])) {
                 $_tag = Tag::where('name', $tag['name'])->first();
                 if ($_tag) {
-                    ProductTag::create([
-                        'product_id' => $product_id,
-                        'tag_id' => $_tag['id']
-                    ]);
+                    ProductTag::create(['product_id' => $product_id, 'tag_id' => $_tag['id']]);
                 } else {
-                    $_tag = Tag::create([
-                        'name' => $tag['name']
-                    ]);
-                    ProductTag::create([
-                        'product_id' => $product_id,
-                        'tag_id' => $_tag['id']
-                    ]);
+                    $_tag = Tag::create(['name' => $tag['name']]);
+                    ProductTag::create(['product_id' => $product_id, 'tag_id' => $_tag['id']]);
                 }
             } else {
-                ProductTag::create([
-                    'product_id' => $product_id,
-                    'tag_id' => $tag['id']
-                ]);
+                ProductTag::create(['product_id' => $product_id, 'tag_id' => $tag['id']]);
             }
         });
     }
@@ -317,11 +277,7 @@ class ProductController extends Controller {
             return $i['store_id'] & $i['price'];
         });
         foreach ($_prices as $price) {
-            Price::create([
-                'product_id' => $product_id,
-                'store_id' => $price['store_id'],
-                'price' => $price['price']
-            ]);
+            Price::create(['product_id' => $product_id, 'store_id' => $price['store_id'], 'price' => $price['price']]);
         }
     }
 
@@ -341,7 +297,7 @@ class ProductController extends Controller {
         $_product = $request->except(['id', 'categories', 'subcategories', 'manufacturer', 'attributes', 'product_images', 'product_thumbs', 'product_barcode', 'prices', 'tags']);
         Product::where('group_id', $group_id)->where('id', '!=', $product_id)->update($_product);
         $products = Product::where('group_id', $group_id)->where('id', '!=', $product_id)->get();
-        collect($products)->map(function ($product) use ($request){
+        collect($products)->map(function ($product) use ($request) {
             ProductThumb::where('product_id', $product['id'])->delete();
             ProductImage::where('product_id', $product['id'])->delete();
             $this->storeImages($request->get('product_images'), $product['id']);
@@ -407,7 +363,7 @@ class ProductController extends Controller {
     public function jsonProducts() {
         $products = collect(ProductRevisionResource::collection(Product::all()));
         $jsonData = json_encode($products, JSON_UNESCAPED_UNICODE);
-        $fileName = Carbon::now()->toDateString() . '_' . Str::random(10) . '_'  .'_products.json';
+        $fileName = Carbon::now()->toDateString() . '_' . Str::random(10) . '_' . '_products.json';
         $fileName = 'public/json/' . $fileName;
         Storage::put($fileName, $jsonData);
         $excelService = new ExcelService();
@@ -427,12 +383,7 @@ class ProductController extends Controller {
         $batches = json_decode($jsonContent, true);
         foreach ($batches as $batch) {
             $purchase_price = ProductBatch::where('product_id', $batch['id'])->first()['purchase_price'] ?? 0;
-            ProductBatch::create([
-                'product_id' => $batch['id'],
-                'quantity' => $batch['count'],
-                'purchase_price' => $purchase_price,
-                'store_id' => $store_id
-            ]);
+            ProductBatch::create(['product_id' => $batch['id'], 'quantity' => $batch['count'], 'purchase_price' => $purchase_price, 'store_id' => $store_id]);
         }
         return $jsonContent;
     }

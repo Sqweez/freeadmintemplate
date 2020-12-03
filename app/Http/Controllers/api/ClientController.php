@@ -23,7 +23,8 @@ class ClientController extends Controller {
      * @return AnonymousResourceCollection
      */
     public function index() {
-        return ClientResource::collection(Client::all());
+        //return ClientResource::collection(Client::with(['sales', 'transactions', 'city'])->get());
+        return ClientResource::collection(Client::with(['sales', 'transactions', 'city'])->get());
     }
 
     /**

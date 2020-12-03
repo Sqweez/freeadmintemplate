@@ -1,4 +1,6 @@
 <template>
+    <div>
+        <LoadingSpinner />
         <div class="login-container">
             <v-card class="login">
                 <v-toolbar
@@ -32,12 +34,14 @@
                 </v-card-actions>
             </v-card>
         </div>
+    </div>
 </template>
 
 <script>
-    import showToast from "../../utils/toast";
+    import LoadingSpinner from "../../components/Loaders/LoadingSpinner";
 
     export default {
+        components: {LoadingSpinner},
         data: () => ({
             login: '',
             password: '',
@@ -45,17 +49,10 @@
         }),
         methods: {
             async doLogin() {
-                const response = await this.$store.dispatch('LOGIN', {
+                await this.$store.dispatch('LOGIN', {
                     login: this.login,
                     password: this.password,
                 });
-
-                if (response.data.error) {
-                    showToast(response.data.error, 'error');
-                    return;
-                }
-
-                window.location.reload();
             }
         },
     }
