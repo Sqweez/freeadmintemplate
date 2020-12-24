@@ -63,7 +63,7 @@ class GoalController extends Controller
      * Display the specified resource.
      *
      * @param Request $request
-     * @return void
+     * @return GoalResource
      */
     public function show($slug)
     {

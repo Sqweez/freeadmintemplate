@@ -13,6 +13,7 @@ use App\ProductBatch;
 use App\Transfer;
 use App\TransferBatch;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TransferController extends Controller {
     /**
@@ -39,7 +40,7 @@ class TransferController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
      */
     public function store(Request $request) {
@@ -76,34 +77,14 @@ class TransferController extends Controller {
      * @param Transfer $transfer
      * @return SingleTransferResource
      */
-    public function show(Transfer $transfer) {
+    public function show($transfer) {
         return new SingleTransferResource(
-            $transfer
+            Transfer::where('id', $transfer)
                 ->with(['batches', 'batches.product', 'batches.product.manufacturer', 'batches.product.attributes', 'batches.product.attributes.attribute_name'])
                 ->first()
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id) {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id) {
-        //
-    }
 
     public function acceptTransfer(Request $request, Transfer $transfer) {
         $products = $request->all();

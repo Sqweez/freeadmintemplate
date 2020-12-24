@@ -14,6 +14,12 @@ export default {
         },
         toggleLoading(state) {
             state.loadingSpinner = !state.loadingSpinner;
+        },
+        showProductModal(state) {
+            state.productModal = true;
+        },
+        closeProductModal(state) {
+            state.productModal = false;
         }
     },
     actions: {}

@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\api\v2\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthorizationMiddleware;
 
@@ -79,8 +79,19 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     Route::get('setSlugs', 'api\CategoryController@slugs');
 
-    Route::post('upload', 'Services\FileService@upload');
-    Route::post('delete', 'Services\FileService@delete');
+    Route::group(['namespace' => 'Services', 'prefix' => 'v1'], function () {
+        Route::group(['prefix' => 'file'], function() {
+            Route::post('upload', 'FileService@upload');
+            Route::post('delete', 'FileService@delete');
+        });
+        Route::group(['prefix' => 'image'], function() {
+            Route::match(['get', 'post'], 'thumb', 'ImageService@generateThumb');
+        });
+
+    });
+
+
+
 
     // helpers
 
@@ -89,19 +100,19 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // ProductController
 
     Route::resource('category', 'api\CategoryController');
-    Route::post('products/batch', 'api\ProductController@createBatch');
-    Route::post('products/range', 'api\ProductController@createRange');
-    Route::get('products/main', 'api\ProductController@getMainProducts');
+    Route::prefix('products')->group(function () {
+        Route::post('batch', 'api\ProductController@createBatch');
+        Route::post('range', 'api\ProductController@createRange');
+        Route::get('main', 'api\ProductController@getMainProducts');
+    });
     Route::resource('products', 'api\ProductController');
+
+
     Route::resource('attributes', 'api\AttributeController');
     Route::resource('manufacturers', 'api\ManufacturerController');
     Route::get('stores/types', 'api\StoreController@types');
     Route::resource('stores', 'api\StoreController');
 
-    // ProductController@v2
-
-    Route::get('v2/products/search', 'api\v2\ProductController@search');
-    Route::get('v2/products/{id}/count', 'api\v2\ProductController@changeCount');
 
     // ClientsController
     Route::resource('clients', 'api\ClientController');
@@ -168,12 +179,25 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // Promocode
     Route::get('promocode/search/{promocode}', 'api\PromocodeController@searchPromocode');
     Route::resource('promocode', 'api\PromocodeController');
+
+    // Роуты v2
+
+    Route::prefix('v2')->group(function () {
+        Route::prefix('products')->group(function () {
+            Route::get('search', [ProductController::class, 'search']);
+            Route::get('{id}/count', [ProductController::class, 'changeCount']);
+            Route::get('/', [ProductController::class, 'index']);
+            Route::get('{id}', [ProductController::class, 'show']);
+            Route::post('/', [ProductController::class, 'store']);
+            Route::patch('{product}', [ProductController::class, 'update']);
+            Route::delete('{id}', [ProductController::class, 'delete']);
+            Route::get('quantity/{store}', [ProductController::class, 'getProductsQuantity']);
+            Route::post('{id}/quantity', [ProductController::class, 'addProductQuantity']);
+            //Добавление ассортимента товара
+            Route::post('{product}/sku', [ProductController::class, 'createProductSku']);
+            Route::patch('{sku}/sku', [ProductController::class, 'updateProductSku']);
+            // Тестовая группировка товаров
+            Route::get('group/set', [ProductController::class, 'groupProducts']);
+        });
+    });
 });
-
-
-
-
-
-// TransferController
-/*Route::get('transfer/products', 'Services\TransferController@transferProducts');
-Route::get('transfer/clients', 'Services\TransferController@transferClients');*/

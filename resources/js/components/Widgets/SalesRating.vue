@@ -12,16 +12,12 @@
                     class="pa-0" v-model="current"/>
             </v-card-title>
             <v-card-text class="pl-0 pr-0">
-                <v-list-item-group>
+                <v-list flat>
                     <v-list-item v-for="(store, index) of stores" :key="index" class="darken-3" :class="index % 2 ? 'grey' : 'black'" v-if="(IS_ADMIN || IS_OBSERVER ) || store.id == USER.store_id">
                         <v-list-item-content>
-                            <v-list-item-title>
-                                <div class="d-flex justify-space-between">
-                                    <span>{{ store.name }}</span>
-                                    <span>
-                                        {{ getTotal(store.id) | priceFilters}}
-                                    </span>
-                                </div>
+                            <v-list-item-title class="d-flex justify-space-between">
+                                <span>{{ store.name }}</span>
+                                <span class="font-weight-black">{{ getTotal(store.id) | priceFilters}}</span>
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
@@ -37,7 +33,7 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                </v-list-item-group>
+                </v-list>
             </v-card-text>
         </v-responsive>
     </v-card>

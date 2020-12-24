@@ -49,13 +49,13 @@
     </div>
     <div class="check-body">
         <ol class="products-list" style="padding-left: 10px;">
-            @foreach ($report['products'] as $product)
+            @foreach ($report->products as $product)
                 <li
                     style="color: #000;
                         font-size: 12px;
                         font-style: italic;
                         text-transform: uppercase;">
-                    <span class="product-name">{{ $product['product_name']  }}</span>
+                    <span class="product-name">{{ $product->product_name  }} {{ collect($product->attributes)->join(' | ') }}</span>
                     <span class="product-footer"
                           style="display: flex;
                              justify-content: space-between;
@@ -63,15 +63,15 @@
                                     <span class="product-count" style="
                                     white-space: nowrap;
                                     overflow: hidden;">
-                                        {{ $product['count']  }} х  {{ $product['product_price']  }}..........................................................................................................................................................................................................
+                                        {{ $product->count }} х  {{ $product->product_price }}..........................................................................................................................................................................................................
                                     </span>
                                      <span
-                                         class="product-cost">{{ $product['count'] * $product['product_price']  }}</span>
+                                         class="product-cost">{{ $product->count * $product->product_price  }}</span>
                                 </span>
                 </li>
             @endforeach
         </ol>
-        @if ($report['discount'] != 0 || $report['client_id'] != -1)
+        @if ($report->discount != 0 || $report->client->id != -1)
             <div class="check-divider"
                  style="margin: 10px 0;
                     width: 58mm;
@@ -88,7 +88,7 @@
                         height: 1px;
                         background-color: #000;"></div>
             </div>
-            @if ($report['client_id'] != -1)
+            @if ($report->client->id != -1)
                 <div
                     style="font-size: 12px;
                             text-transform: uppercase;
@@ -105,11 +105,11 @@
                         <span class="name"
                               style="white-space: normal;
                                      margin-left: 5px;">
-                            {{ $report['client'] }}
+                            {{ $report->client->client_name }}
                     </span>
                     </div>
                     @endif
-                    @if($report['discount'] != 0)
+                    @if($report->discount != 0)
                         <div class="client-discount"
                              style="display: flex;
                         justify-content: space-between;">
@@ -121,7 +121,7 @@
                             <span class="name"
                                   style="white-space: normal;
                              margin-left: 5px;">
-                    {{ $report['discount'] }}%
+                    {{ $report->discount }}%
                 </span>
                         </div>
                     @endif
@@ -155,7 +155,7 @@
                 к оплате..........................................................................................................................................................................................................................
             </span>
             <span class="span-total"
-                  style="font-size: 12px; white-space: nowrap; margin-left: 5px;">{{ $report['final_price'] }}</span>
+                  style="font-size: 12px; white-space: nowrap; margin-left: 5px;">{{ $report->final_price }}</span>
         </div>
         <h5 style="text-align: center; text-transform: uppercase; font-style: italic; font-size: 12px; margin-top: 15px;">
             www.iron-addicts.kz</h5>
@@ -165,7 +165,7 @@
     <div class="empty-space"></div>
 </div>
 <script>
-    window.print();
+   window.print();
 
     window.addEventListener('afterprint', (event) => {
         window.close();

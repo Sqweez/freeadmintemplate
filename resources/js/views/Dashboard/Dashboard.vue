@@ -19,11 +19,11 @@
 </template>
 
 <script>
-    import Weather from "../../components/Widgets/Weather";
-    import SalesRating from "../../components/Widgets/SalesRating";
-    import PlanWidget from "../../components/Widgets/PlanWidget";
+    import Weather from "@/components/Widgets/Weather";
+    import SalesRating from "@/components/Widgets/SalesRating";
+    import PlanWidget from "@/components/Widgets/PlanWidget";
     import {mapGetters} from 'vuex';
-    import SalesRatingWidget from "../../components/v2/Widgets/SalesRatingWidget";
+    import SalesRatingWidget from "@/components/v2/Widgets/SalesRatingWidget";
 
     export default {
         data: () => ({

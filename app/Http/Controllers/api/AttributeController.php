@@ -22,7 +22,7 @@ class AttributeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Attribute|\Illuminate\Database\Eloquent\Model
      */
     public function store(Request $request)
     {

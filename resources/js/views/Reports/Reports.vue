@@ -249,6 +249,8 @@
         LAST_3_DAYS: 5,
     };
 
+    const DATE_FORMAT = 'YYYY-MM-DD';
+
     export default {
         components: {ReportCancelModal, ConfirmationModal},
         data: () => ({
@@ -265,26 +267,41 @@
             finishMenu: null,
             today: moment(),
             finish: null,
-            currentDate: DATE_FILTERS.TODAY,
+            currentDate:  [
+                moment().format(DATE_FORMAT),
+                moment().format(DATE_FORMAT),
+            ],
             currentCity: -1,
             currentSeller: -1,
             currentType: -1,
             dateFilters: [
                 {
                     name: 'Сегодня',
-                    value: DATE_FILTERS.TODAY,
+                    value: [
+                        moment().format(DATE_FORMAT),
+                        moment().format(DATE_FORMAT),
+                    ],
                 },
                 {
                     name: 'Последние 3 дня',
-                    value: DATE_FILTERS.LAST_3_DAYS,
+                    value: [
+                        moment().subtract(3, 'days').format(DATE_FORMAT),
+                        moment().format(DATE_FORMAT),
+                    ],
                 },
                 {
                     name: 'За текущий месяц',
-                    value: DATE_FILTERS.CURRENT_MONTH,
+                    value: [
+                        moment().startOf('month').format(DATE_FORMAT),
+                        moment().format(DATE_FORMAT),
+                    ],
                 },
                 {
                     name: 'За все время',
-                    value: DATE_FILTERS.ALL_TIME,
+                    value: [
+                        moment.unix(1).format(DATE_FORMAT),
+                        moment().format(DATE_FORMAT)
+                    ],
                 },
                 {
                     name: 'Произвольно',
@@ -340,7 +357,8 @@
                     this.loading = true;
                 }
                 await this.$store.dispatch(ACTIONS.GET_REPORTS, {
-                    filter: this.currentDate,
+                    start: this.currentDate[0],
+                    finish: this.currentDate[1],
                 });
                 await this.$store.dispatch(ACTIONS.GET_STORES);
                 await this.$store.dispatch(ACTIONS.GET_USERS);
@@ -360,11 +378,11 @@
                     }
                 }
                 this.overlay = true;
-                await this.$store.dispatch(ACTIONS.GET_REPORTS, {
-                    filter: this.currentDate,
-                    start: this.start,
-                    finish: this.finish
-                });
+                const dateObject = {
+                    start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
+                    finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1]
+                };
+                await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
                 this.overlay = false;
 
             },

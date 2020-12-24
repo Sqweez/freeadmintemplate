@@ -30,25 +30,5 @@ class SingleTransferResource extends JsonResource
             })->flatten()->unique('product_id')->values())
         ];
     }
-    private function groupProducts($products) {
-        $_products = [];
-        foreach ( $products as $value ) {
-            $_products[$value['product_id']][] = $value;
-        }
-        $result = [];
-        foreach ($_products as $product) {
-            array_push($result, [
-                'count' => count($product),
-                'product_name' => $product[0]['product_name'],
-                'attributes' => $product[0]['attributes'],
-                'product_id' => $product[0]['product_id'],
-                'batch_id' => $product[0]['batch_id'],
-                'manufacturer' => $product[0]['manufacturer'],
-                'product_price' => $product[0]['product_price']
-            ]);
-        }
-
-        return $result;
-    }
 
 }

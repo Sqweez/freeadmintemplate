@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Services;
 
 
 use Illuminate\Http\Request;
+use Storage;
 
 class FileService {
     public static function upload(Request $request) {
@@ -22,6 +23,6 @@ class FileService {
     public static function delete(Request $request) {
         $file = $request->get('file');
         Storage::disk('public')->delete($file);
-        return;
+        return response()->noContent();
     }
 }

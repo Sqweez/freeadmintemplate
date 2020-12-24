@@ -38,7 +38,7 @@
             <v-card-actions>
                 <v-btn text @click="$emit('cancel')">Отмена</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn text color="success" @click="addProductRange">
+                <v-btn text color="success" @click="onSubmit">
                     Добавить
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
@@ -50,6 +50,7 @@
 <script>
     import ACTIONS from "../../store/actions";
     import showToast from "../../utils/toast";
+    import {TOAST_TYPE} from "@/config/consts";
 
     export default {
         props: {
@@ -57,11 +58,6 @@
                 type: Boolean,
                 default: false,
             },
-            id: {
-                type: Number,
-                required: true,
-                default: -1,
-            }
         },
         watch: {
             state() {
@@ -85,12 +81,13 @@
             }
         },
         methods: {
-            async addProductRange() {
-                this.batch.product_id = this.id;
-                await this.$store.dispatch(ACTIONS.ADD_PRODUCT_QUANTITY, this.batch);
-                showToast('Поставка добавлена');
-                this.$emit('cancel');
-            }
+            onSubmit() {
+                if (!(this.batch.quantity && this.batch.store_id && this.batch.purchase_price)) {
+                    showToast('Заполните все поля', TOAST_TYPE.WARNING);
+                    return;
+                }
+                this.$emit('submit', this.batch);
+            },
         }
     }
 </script>

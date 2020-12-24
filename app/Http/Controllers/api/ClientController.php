@@ -39,21 +39,11 @@ class ClientController extends Controller {
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id) {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
      * @param Client $client
-     * @return ClientResource
+     * @return \Illuminate\Support\Collection
      */
     public function update(Request $request, Client $client) {
         if (!$request->has('site')) {

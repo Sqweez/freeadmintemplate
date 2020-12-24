@@ -103,7 +103,6 @@
 </template>
 
 <script>
-    import {acceptTransfer, getTransferInfo} from "../../api/transfers";
     import showToast from "../../utils/toast";
     import {createBatch, changeArrival} from "../../api/arrivals";
 

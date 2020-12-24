@@ -76,39 +76,26 @@ class ProductController extends Controller {
 
     private function getFilterParametrs($query, $store_id) {
         return [
-            'categories' => array_map('intval', array_filter(explode(',', ($query['category'] ?? '')), 'strlen')),
-            'subcategories' => array_map('intval', array_filter(explode(',', ($query['subcategory'] ?? '')), 'strlen')),
-            'brands' => array_map('intval', array_filter(explode(',', ($query['brands'] ?? '')), 'strlen')),
-            'prices' => array_map('intval', array_filter(explode(',', ($query['prices'] ?? '')), 'strlen')),
-            'is_hit' => isset($query['is_hit']) ? ($query['is_hit'] === 'true' ? 'true' : 'false') : 'false',
-            'search' => isset($query['search']) ? $this->prepareSearchString($query['search']) : ''
+            Product::FILTER_CATEGORIES => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_CATEGORIES] ?? '')), 'strlen')),
+            Product::FILTER_SUBCATEGORIES => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_SUBCATEGORIES] ?? '')), 'strlen')),
+            Product::FILTER_BRANDS => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_BRANDS] ?? '')), 'strlen')),
+            Product::FILTER_PRICES => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_PRICES] ?? '')), 'strlen')),
+            Product::FILTER_IS_HIT => isset($query[Product::FILTER_IS_HIT]) ? ($query[Product::FILTER_IS_HIT] === 'true' ? 'true' : 'false') : 'false',
+            Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? $this->prepareSearchString($query[Product::FILTER_SEARCH]) : ''
         ];
     }
 
     private function getProductWithFilter($filters, $store_id) {
-        /*return Product::ofTag($filters['search'])
-            ->ofCategory($filters['categories'])
-            ->ofSubcategory($filters['subcategories'])
-            ->ofBrand($filters['brands'])
-            ->ofPrice($filters['prices'])
+        return Product::ofTag($filters[Product::FILTER_SEARCH])
+            ->ofCategory($filters[Product::FILTER_CATEGORIES])
+            ->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES])
+            ->ofBrand($filters[Product::FILTER_BRANDS])
+            ->ofPrice($filters[Product::FILTER_PRICES])
             ->inStock($store_id)
-            ->isHit($filters['is_hit'])
+            ->isHit($filters[Product::FILTER_IS_HIT])
             ->where('is_site_visible', true)
             ->groupBy('group_id')
-            ->with(['attributes', 'manufacturer', 'categories', 'subcategories', 'children', 'quantity', 'price']);*/
-        return Product::ofTag($filters['search'])
-            ->ofCategory($filters['categories'])
-            ->ofSubcategory($filters['subcategories'])
-            ->ofBrand($filters['brands'])
-            ->ofPrice($filters['prices'])
-            ->inStock($store_id)
-            ->isHit($filters['is_hit'])
-            ->where('is_site_visible', true)
-            ->groupBy('group_id')
-            ->with(['attributes', 'attributes.attribute_name', /*'manufacturer',*/ /*'categories',*/ 'subcategories', /*'children',*/ 'price', 'product_images'])
-            /*->with(['quantity' => function ($query) use ($store_id) {
-                return $query->where('store_id', $store_id);
-            }])*/;
+            ->with(['attributes', 'attributes.attribute_name', /*'manufacturer',*/ /*'categories',*/ 'subcategory', /*'children',*/ 'price', 'product_images']);
     }
 
     private function getFilteredProducts($query, $store_id) {
@@ -117,20 +104,6 @@ class ProductController extends Controller {
     }
 
 
-    public function getHeading(Request $request) {
-        $query = $request->all();
-        if (isset($query['category'])) {
-            return ['heading' => Category::find($query['category'])->category_name];
-        }
-        if (isset($query['subcategory'])) {
-            return ['heading' => Subcategory::find($query['subcategory'])->subcategory_name];
-        }
-
-        if (isset($query['search'])) {
-            return ['heading' => "Результаты поиска по запросу: '" . $query['search'] . "'"];
-        }
-    }
-
     public function getProduct(Product $product) {
         return new ProductResource($product);
     }
@@ -138,7 +111,7 @@ class ProductController extends Controller {
     public function groupProducts() {
         $products = Product::with('manufacturer')->get();
         $products = $products->map(function ($i) {
-            $i['manufacturer_id'] = count($i['manufacturer']) ? $i['manufacturer'][0]['id'] : null;
+            $i['manufacturer_id'] = count($i['manufacturer']) ? $i['manufacturer']['id'] : null;
             unset($i['product_description']);
             return $i;
         });

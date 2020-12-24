@@ -23,7 +23,7 @@
                             <th>Действие</th>
                             <th>Наименование</th>
                             <th>Производитель</th>
-                            <th>Атрибуты</th>
+                            <th>Параметры</th>
                             <th>Количество</th>
                         </tr>
                         </thead>
@@ -35,11 +35,11 @@
                                 />
                             </td>
                             <td>{{ item.product_name }}</td>
-                            <td>{{ item.manufacturer }}</td>
+                            <td>{{ item.manufacturer.manufacturer_name }}</td>
                             <td>
                                 <ul>
                                     <li v-for="(attr, index) of item.attributes" :key="index">
-                                        {{ attr.attribute }}: {{ attr.attribute_value }}
+                                        {{ attr }}
                                     </li>
                                 </ul>
                             </td>
@@ -60,6 +60,10 @@
                         </tbody>
                     </template>
                 </v-simple-table>
+                <v-checkbox
+                    label="Отменить полностью"
+                    v-model="fullCancel"
+                />
                 <div
                     class="text-center d-flex align-center justify-center"
                     style="min-height: 300px"
@@ -117,6 +121,24 @@
                     })
                 }
             },
+            async fullCancel(value) {
+                if (value) {
+                    this.transfer = this.transfer.map(t => {
+                        return {
+                            ...t,
+                            accepted: true,
+                            _count: t.initial_count,
+                        };
+                    });
+                } else {
+                    this.transfer = this.transfer.map(p => {
+                        p.accepted = false;
+                        p.initial_count = p.count;
+                        p._count = 0;
+                        return p;
+                    })
+                }
+            }
         },
         data: () => ({
             selected: [],
@@ -139,6 +161,7 @@
                 }
             ],
             transfer: [],
+            fullCancel: false,
         }),
         methods: {
             onCancel() {

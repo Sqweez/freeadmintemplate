@@ -4,6 +4,14 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed product_price
+ * @property mixed manufacturer
+ * @property mixed product_name
+ * @property mixed subcategory
+ * @property mixed category
+ * @property mixed id
+ */
 class MainProductsResource extends JsonResource
 {
     /**
@@ -16,9 +24,9 @@ class MainProductsResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'categories' => $this->categories->pluck('id'),
-            'subcategories' => $this->subcategories->pluck('id'),
-            'product_name' => $this->product_name . ' ' .($this->manufacturer[0]->manufacturer_name ?? '') . ' | ' . $this->product_price . ' тнг'
+            'categories' => $this->category->id,
+            'subcategories' => $this->subcategory->id,
+            'product_name' => $this->product_name . ' ' .($this->manufacturer->manufacturer_name) . ' | ' . $this->product_price . ' тнг'
         ];
     }
 }

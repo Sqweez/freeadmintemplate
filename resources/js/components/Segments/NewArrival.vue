@@ -31,6 +31,7 @@
                             <th>Количество</th>
                             <th>Стоимость</th>
                             <th>Закупочная стоимость</th>
+                            <th>Закупочная стоимость по курсу</th>
                             <th>Удалить</th>
                         </tr>
                         </thead>
@@ -52,20 +53,21 @@
                                 <v-text-field
                                     v-model.number="item.count"
                                     type="number"
-                                    style="width: 20px;"
+                                    style="min-width: 40px;"
                                 ></v-text-field> шт.
                                 <v-btn icon color="success" @click="addToCart(item)">
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
                             </td>
-                            <td>{{ item.product_price }} ₸</td>
+                            <td>{{ item.product_price | priceFilters}}</td>
                             <td>
                                 <v-text-field
                                     label="Закупочная стоимость"
                                     type="number"
-                                    v-model="item.purchase_price"
+                                    v-model="item.purchase_price_initial"
                                 ></v-text-field>
                             </td>
+                            <td>{{ item.purchase_price | priceFilters}}</td>
                             <td>
                                 <v-btn icon color="error" @click="deleteFromCart(index)">
                                     <v-icon>mdi-close</v-icon>
@@ -262,14 +264,14 @@
         methods: {
             calculatePrices() {
                 this.cart = this.cart.map(item => {
-                    item.purchase_price = Math.ceil(item.purchase_price * this.moneyRate);
+                    item.purchase_price = Math.ceil(item.purchase_price_initial * this.moneyRate);
                     return item;
                 })
             },
             addToCart(item) {
                 const index = this.cart.map(c => c.id).indexOf(item.id);
                 if (index === -1) {
-                    this.cart.push({...item, count: 1, purchase_price: 0});
+                    this.cart.push({...item, count: 1, purchase_price_initial: 0, purchase_price: 0});
                 } else {
                     this.increaseCartCount(index);
                 }

@@ -1,6 +1,6 @@
 <h1>Test view</h1>
-
-
-<ul>
-
-</ul>
+<pre>
+    <?php
+    print_r($product)
+    ?>
+</pre>

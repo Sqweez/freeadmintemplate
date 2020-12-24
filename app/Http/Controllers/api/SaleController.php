@@ -6,9 +6,11 @@ use App\Client;
 use App\ClientSale;
 use App\ClientTransaction;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Services\SaleService;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ReportResource;
+use App\Http\Resources\v2\Report\ReportsResource;
 use App\Http\Resources\SaleByCityResource;
 use App\Product;
 use App\ProductBatch;
@@ -25,7 +27,37 @@ class SaleController extends Controller {
     protected $CLIENT_CASHBACK_PERCENT = (1 / 100);
 
     public function store(Request $request) {
-        $_cart = $request->get('cart');
+        $saleService = new SaleService();
+        try {
+            \DB::beginTransaction();
+            $cart = $request->get('cart');
+            $store_id = $request->get('store_id');
+            $client_id = $request->get('client_id');
+            $discount = $request->get('discount');
+            $balance = $request->get('balance');
+            $user_id = $request->get('user_id');
+            $partner_id = $request->get('partner_id');
+            $sale = $saleService->createSale($request->except('cart'));
+            $saleService->createSaleProducts($sale, $store_id, $cart);
+            $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id);
+            \DB::commit();
+
+            return [
+                'product_quantities' => ProductBatch::whereIn('product_id', collect($cart)->pluck('id'))
+                    ->quantitiesOfStore(1)
+                    ->get(),
+                'client' => $client_id !== -1 ? new ClientResource(Client::find($client_id)) : [],
+                'sale_id' => $sale->id
+            ];
+        } catch (\Exception $exception) {
+            \DB::rollBack();
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTrace()
+            ], 500);
+        }
+
+       /* $_cart = $request->get('cart');
         $_sale = $request->except('cart');
         $sale = Sale::create($_sale);
         $sale_id = $sale['id'];
@@ -35,7 +67,7 @@ class SaleController extends Controller {
         $this->createClientSale($sale_id, $request->all());
         return ['products' => ProductResource::collection(Product::find(array_map(function ($i) {
             return $i['id'];
-        }, $_cart))), 'client' => $client_id === -1 ? [] : new ClientResource(Client::find($request->get('client_id'))), 'sale_id' => $sale_id];
+        }, $_cart))), 'client' => $client_id === -1 ? [] : new ClientResource(Client::find($request->get('client_id'))), 'sale_id' => $sale_id];*/
     }
 
     private function parseCart($sale_id, $store_id, $cart = []) {
@@ -105,6 +137,14 @@ class SaleController extends Controller {
     }
 
     public function reports(Request $request) {
+        $start = $request->get('start');
+        $finish = $request->get('finish');
+        return ReportsResource::collection(
+            Sale::report()->reportDate([$start, $finish])->get()
+        );
+    }
+
+    /*public function reports(Request $request) {
 
         $FILTERS = ['ALL_TIME' => 1, 'CURRENT_MONTH' => 2, 'TODAY' => 3, 'CUSTOM_FILTER' => 4, 'LAST_3_DAYS' => 5];
 
@@ -112,7 +152,7 @@ class SaleController extends Controller {
         $start = $request->get('start') ?? null;
         $finish = $request->get('finish') ?? null;
 
-        $dates = [];
+        $dates = [$start, $finish];
 
         $currentDate = Carbon::today();
         switch ($filter) {
@@ -158,10 +198,13 @@ class SaleController extends Controller {
             Sale::with(
                 ['client', 'user', 'store', 'products', 'products.products', 'products.products.manufacturer', 'products.products.attributes', 'products.products.attributes.attribute_name']
             )
-                ->whereDate('created_at', '>=', $dates[0])
-                ->whereDate('created_at', '<=', $dates[1])->orderBy('created_at', 'desc')->get());
+                ->whereDate('created_at', '>=', $start)
+                ->whereDate('created_at', '<=', $finish)
+                ->orderBy('created_at', 'desc')
+                ->get()
+        );
 
-    }
+    }*/
 
     public function report(Sale $sale) {
         return new ReportResource($sale);
@@ -236,7 +279,7 @@ class SaleController extends Controller {
 
     public function cancelSale(Request $request, Sale $sale) {
         $amount = 0;
-        $discount = $sale['discount'];
+        $discount = $sale->discount;
         $products = $request->all();
         foreach ($products as $product) {
             for ($i = 0; $i < $product['count']; $i++) {
@@ -278,7 +321,10 @@ class SaleController extends Controller {
     public function update(Request $request, $id) {
         $sale = Sale::findOrFail($id);
         $sale->update($request->all());
-        return new ReportResource($sale);
+        return new ReportsResource(Sale::report()
+            ->whereKey($id)
+            ->first()
+        );
     }
 
 }

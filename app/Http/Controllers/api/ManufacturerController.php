@@ -5,8 +5,10 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ManufacturerResource;
 use App\Manufacturer;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class ManufacturerController extends Controller
 {
@@ -24,8 +26,8 @@ class ManufacturerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Manufacturer|Model
      */
     public function store(Request $request)
     {
@@ -36,8 +38,8 @@ class ManufacturerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Manufacturer  $manufacturer
+     * @param Request $request
+     * @param Manufacturer $manufacturer
      * @return Manufacturer
      */
     public function update(Request $request, Manufacturer $manufacturer)
@@ -49,8 +51,9 @@ class ManufacturerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Manufacturer  $manufacturer
-     * @return \Illuminate\Http\Response
+     * @param Manufacturer $manufacturer
+     * @return void
+     * @throws \Exception
      */
     public function destroy(Manufacturer $manufacturer)
     {

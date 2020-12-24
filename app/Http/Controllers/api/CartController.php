@@ -183,7 +183,7 @@ class CartController extends Controller {
         }
 
         if ($order['payment'] == 2) {
-            if ($result === $this->PAYMENT_CONFIRMED) {
+            if (intval($result) === $this->PAYMENT_CONFIRMED) {
                 $payment = 'Онлайн оплата: ОПЛАЧЕНО!';
             } else {
                 $payment = 'Онлайн оплата: ОПЛАТА НЕ ПРОШЛА!';

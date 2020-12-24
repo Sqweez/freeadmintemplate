@@ -9,8 +9,10 @@ export default new Vuetify({
     theme: {
         themes: {
             dark: {
-                error: '#f54337',
-                dark: '#202020'
+                error: '#E53935',
+                dark: '#202020',
+                success: '#43A047',
+                warning: '#F57C00'
             },
         },
         dark: true,

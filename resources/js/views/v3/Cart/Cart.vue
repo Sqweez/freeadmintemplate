@@ -4,97 +4,95 @@
             <v-card-title class="justify-space-between">
                 <span>Корзина</span>
                 <div>
-                    <!-- <v-btn color="error" class="top-button mr-3" @click="wayBillModal = true;">
-                         Сформировать счет на оплату
-                     </v-btn>-->
-                    <v-btn color="error" class="top-button" @click="waybillModal = true;">
+                    <v-btn depressed color="error" class="top-button" @click="waybillModal = true;">
                         Сформировать накладную
                     </v-btn>
                 </div>
             </v-card-title>
             <v-card-text style="padding: 0;">
-                <div class="background-iron-grey">
-                    <h3 class="text-center my-2">Для списания с баланса после ввода суммы нажимайте "ENTER"!</h3>
-                    <h3 class="text-center my-2">Для поиска партнера по промокоду после ввода нажимайте Enter!</h3>
-                    <div class="d-flex align-center">
-                        <v-row class="ml-2">
-                            <v-col class="d-flex" cols="12" xl="3" md="6" style="padding: 0">
-                                <div class="d-flex align-center ml-2 mr-2">
-                                    <h5>Бесплатно:</h5>
-                                    <v-checkbox
-                                        v-model="isFree"
-                                        class="ml-2 margin-28"
-                                        color="white darken-2"
-                                    />
-                                </div>
-                                <div class="d-flex align-center ml-5" v-if="!isFree">
-                                    <h5>Kaspi Red:</h5>
-                                    <v-checkbox
-                                        v-model="isRed"
-                                        class="ml-2 margin-28"
-                                        color="white darken-2"
-                                    />
-                                </div>
-                            </v-col>
-                            <v-col cols="12" xl="8" md="6" style="padding: 0" v-if="!isFree">
-                                <div class="d-flex mt-2">
-                                    <div class="d-flex">
-                                        <h5>Скидка:</h5>
-                                        <v-text-field
-                                            v-model="discountPercent"
-                                            class="ml-2"
-                                            suffix="%"
-                                            type="number"
-                                            :max="100"
-                                            color="white darken-2"
-                                        />
-                                    </div>
-                                    <div class="d-flex ml-4" v-if="client && client.id !== -1 && !partner_id">
-                                        <h5>Промокод:</h5>
-                                        <v-text-field
-                                            v-model="promocode"
-                                            class="ml-2"
-                                            color="white darken-2"
-                                            @keypress.enter="searchPromocode"
-                                        />
-                                    </div>
-                                    <div class="d-flex ml-4" v-if="client && client.id !== -1">
-                                        <h5>Списать с баланса:</h5>
-                                        <v-text-field
-                                            class="ml-2"
-                                            type="number"
-                                            color="white darken-2"
-                                            v-model="balance"
-                                        />
-                                    </div>
-                                    <div class="d-flex ml-4" v-if="client && client.id !== -1">
-                                        <h5>Партнер:</h5>
-                                        <v-autocomplete
-                                            :items="partners"
-                                            item-value="id"
-                                            :disabled="promocodeSet"
-                                            item-text="client_name"
-                                            v-model="partner_id"
-                                        ></v-autocomplete>
-                                    </div>
-                                    <div class="d-flex ml-4">
-                                        <h5>Способ оплаты:</h5>
-                                        <v-select
-                                            label="Способ оплаты"
-                                            v-model="payment_type"
-                                            :items="payment_types"
-                                            item-text="name"
-                                            class="ml-2"
-                                            item-value="id"></v-select>
-                                    </div>
-                                </div>
-                            </v-col>
-                        </v-row>
+                <div class="">
+                    <div class="cart__parameters">
+                        <div>
+                            <v-checkbox
+                                label="Бесплатно"
+                                v-model="isFree"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
+                        <div v-if="!isFree">
+                            <v-checkbox
+                                label="Kaspi Red"
+                                v-model="isRed"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
+                        <div v-if="!isFree">
+                            <v-text-field
+                                v-model.number="discountPercent"
+                                class="w-100px"
+                                type="number"
+                                suffix="%"
+                                :max="100"
+                                color="white darken-2"
+                                label="Скидка"
+                                outlined
+                            />
+                        </div>
+                        <div class="cart__payment-type" v-if="!isFree">
+                            <v-select
+                                label="Способ оплаты"
+                                v-model="payment_type"
+                                :items="payment_types"
+                                item-text="name"
+                                outlined
+                                class="w-150px"
+                                item-value="id"></v-select>
+                        </div>
+
+                        <div v-if="clientChosen && !isFree">
+                            <v-text-field
+                                class="w-150px"
+                                type="number"
+                                color="white darken-2"
+                                v-model="balance"
+                                label="Списать с баланса"
+                                outlined
+                            />
+                        </div>
+                        <div v-if="clientChosen && !isFree">
+                            <v-autocomplete
+                                label="Партнер"
+                                outlined
+                                :items="partners"
+                                item-value="id"
+                                :disabled="promocodeSet"
+                                item-text="client_name"
+                                v-model="partner_id"
+                                append-outer-icon="mdi-close"
+                                @click:append-outer="partner_id = null"
+                            ></v-autocomplete>
+                        </div>
+                        <div v-if="clientChosen && !isFree">
+                            <v-text-field
+                                label="Промокод"
+                                :disabled="!!partner_id"
+                                v-model="promocode"
+                                class="w-100px"
+                                color="white darken-2"
+                                @keypress.enter="searchPromocode"
+                                hint="Для поиска промокода нажмите enter"
+                                :persistent-hint="true"
+                                outlined
+                            />
+                        </div>
                     </div>
                 </div>
-                <v-simple-table v-slot:default v-if="client">
+                <v-divider></v-divider>
+                <v-simple-table v-slot:default v-if="client && false">
                     <template>
-                        <thead class="background-iron-darkgrey fz-18">
+                        <thead>
                         <tr>
                             <th>ФИО</th>
                             <th>Телефон</th>
@@ -108,11 +106,11 @@
                         <tr>
                             <td>{{ client.client_name }}</td>
                             <td>{{ client.client_phone }}</td>
-                            <td>{{ client.total_sum }} ₸</td>
-                            <td>{{ client.client_balance }} ₸</td>
+                            <td>{{ client.total_sum | priceFilters}}</td>
+                            <td>{{ client.client_balance | priceFilters}}</td>
                             <td>{{ client.client_discount }}%</td>
                             <td>
-                                <v-btn icon @click="client = null; partner_id = null; promocode = ''; discountPercent = ''; promocodeSet = false;">
+                                <v-btn depressed icon @click="cancelClient">
                                     <v-icon>mdi-cancel</v-icon>
                                 </v-btn>
                             </td>
@@ -120,13 +118,51 @@
                         </tbody>
                     </template>
                 </v-simple-table>
+                <v-list v-if="client" class="d-flex">
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-subtitle class="client__table-heading">ФИО</v-list-item-subtitle>
+                            <v-list-item-title>{{ client.client_name }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-subtitle class="client__table-heading">Телефон</v-list-item-subtitle>
+                            <v-list-item-title>{{ client.client_phone }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-subtitle class="client__table-heading">Сумма покупок</v-list-item-subtitle>
+                            <v-list-item-title>{{ client.total_sum | priceFilters}}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-subtitle class="client__table-heading">Баланс</v-list-item-subtitle>
+                            <v-list-item-title>{{ client.client_balance | priceFilters }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-subtitle class="client__table-heading">Скидка</v-list-item-subtitle>
+                            <v-list-item-title>{{ client.client_discount }}%</v-list-item-title>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                            <v-btn depressed icon @click="cancelClient">
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                        </v-list-item-action>
+                    </v-list-item>
+                </v-list>
+                <v-divider></v-divider>
                 <v-simple-table v-slot:default>
                     <template>
-                        <thead class="background-iron-darkgrey fz-18">
+                        <thead class="fz-18">
                         <tr>
                             <th>#</th>
-                            <th>Наименование</th>
-                            <th>Атрибуты</th>
+                            <th>Товар</th>
+                            <!--<th>Атрибуты</th>-->
                             <th>Количество</th>
                             <th>Стоимость</th>
                             <th>Удалить</th>
@@ -135,37 +171,41 @@
                         <tbody class="background-iron-grey">
                         <tr v-for="(item, index) of cart" :key="item.id * 85">
                             <td>{{ index + 1 }}</td>
-                            <td>{{ item.product_name }}</td>
                             <td>
+                                <v-list class="product__list" flat>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.product_name }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </td>
+                           <!-- <td>{{ item.product_name }}</td>-->
+                            <!--<td>
                                 <ul>
                                     <li v-for="(attr, index) of item.attributes" :key="index">
-                                        {{ attr.attribute }}: {{ attr.attribute_value }}
+                                        {{ attr.attribute_name }}: {{ attr.attribute_value }}
                                     </li>
                                 </ul>
-                            </td>
+                            </td>-->
                             <td>
-                                <div v-if="!item.inputMode">
-                                    <v-btn icon color="error" @click="decreaseCartCount(index)">
+
+                                <div class="d-flex align-center">
+                                    <v-btn depressed text icon color="error" @click="decreaseCartCount(index)">
                                         <v-icon>mdi-minus</v-icon>
                                     </v-btn>
-                                    <span
-                                        @click="toggleInput(index); $set(cart[index], '_count', cart[index].count);">
-                                        {{ item.count }} шт.
-                                    </span>
-                                    <v-btn icon color="success" @click="addToCart(item)">
+                                    <v-text-field v-model="item.count" type="number" style="max-width: 40px; text-align: center"  @change="updateCount(item)" @input="updateCount(item)"/>
+                                    <v-btn depressed text icon color="success" @click="addToCart(item)">
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
                                 </div>
-                                <v-text-field
-                                    style="max-width: 50px"
-                                    v-else
-                                    solo
-                                    v-model="item._count"
-                                    @keyup.enter="changeCount(item, index)"
-                                />
-
                             </td>
-                            <td>{{ item.product_price }} ₸</td>
+                            <td class="font-weight-bold">{{ item.product_price }} ₸</td>
                             <td>
                                 <v-btn icon color="error" @click="deleteFromCart(index)">
                                     <v-icon>mdi-close</v-icon>
@@ -177,31 +217,31 @@
                 </v-simple-table>
                 <v-simple-table v-slot:default>
                     <template>
-                        <thead class="background-iron-darkgrey fz-18">
+                        <thead class="fz-18">
                         <tr>
                             <th class="text-center">Общее количество</th>
                             <th class="text-center">Общая сумма</th>
                             <th class="text-center">Процент скидки</th>
                             <th class="text-center">Скидка</th>
-                            <th class="color-text--green text-center">Итого к оплате</th>
+                            <th class="green--text darken-1 text-center">Итого к оплате</th>
                         </tr>
                         </thead>
                         <tbody class="background-iron-grey fz-18">
-                        <tr>
+                        <tr class="pt-5">
                             <td class="text-center">{{ cartCount }} шт.</td>
-                            <td class="text-center">{{ subtotal }} ₸</td>
+                            <td class="text-center">{{ subtotal | priceFilters}}</td>
                             <td class="text-center">{{ discount }}%</td>
-                            <td class="text-center">{{ discountTotal }} ₸</td>
-                            <td class="text-center color-text--green">{{ total - balance }}₸</td>
+                            <td class="text-center">{{ discountTotal | priceFilters}}</td>
+                            <td class="text-center green--text darken-1">{{ total - balance | priceFilters }}</td>
                         </tr>
                         </tbody>
                     </template>
                 </v-simple-table>
                 <div class="background-iron-grey pa-10">
-                    <v-btn color="error" block style="font-size: 16px" @click="clientCartModal = true" v-if="!client">
+                    <v-btn depressed color="error" block style="font-size: 16px" @click="clientCartModal = true" v-if="!client">
                         Выбрать клиента
                     </v-btn>
-                    <v-btn color="error" block style="font-size: 16px" @click="onSale" v-else>
+                    <v-btn depressed color="error" block style="font-size: 16px" @click="onSale" v-else>
                         Оформить заказ
                     </v-btn>
                 </div>
@@ -211,19 +251,43 @@
             <v-card-title>
                 Товары
             </v-card-title>
-            <v-card-text style="padding: 0;">
+            <v-card-text >
                 <v-row>
-                    <v-col cols="12" xl="8">
+                    <v-col cols="12" xl="10">
                         <v-text-field
                             class="mt-2"
-                            v-model="search"
+                            v-on:input="searchInput"
+                            v-model="searchValue"
                             solo
                             clearable
                             label="Поиск товара"
                             single-line
-                            @keypress.enter="searchProducts"
                             hide-details
                         ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" xl="2">
+                        <v-checkbox
+                            v-model="hideNotInStock"
+                            label="Скрывать отсутствующие"
+                        />
+                    </v-col>
+                    <v-col cols="12" xl="4">
+                        <v-autocomplete
+                            :items="categories"
+                            item-text="name"
+                            v-model="categoryId"
+                            item-value="id"
+                            label="Категория"
+                        />
+                    </v-col>
+                    <v-col cols="12" xl="4">
+                        <v-autocomplete
+                            :items="manufacturers"
+                            item-text="manufacturer_name"
+                            v-model="manufacturerId"
+                            item-value="id"
+                            label="Бренд"
+                        />
                     </v-col>
                     <v-col cols="12" xl="4" v-if="is_admin">
                         <v-select
@@ -235,25 +299,16 @@
                         />
                     </v-col>
                 </v-row>
-                <v-btn icon primary @click="refreshProducts">
+                <v-btn depressed icon primary @click="refreshProducts">
                     <v-icon>mdi-refresh</v-icon>
                 </v-btn>
-                <v-text-field
-                    class="mt-2"
-                    v-model="searchFilter"
-                    solo
-                    clearable
-                    label="Фильтр"
-                    single-line
-                    hide-details
-                ></v-text-field>
                 <v-data-table
                     class="background-iron-grey fz-18"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     :headers="headers"
                     :loading="loading"
-                    :search="searchFilter"
+                    :search="searchQuery"
                     loading-text="Идет загрузка товаров..."
                     :items="products"
                     :footer-props="{
@@ -261,23 +316,40 @@
                             'items-per-page-text': 'Записей на странице',
                         }"
                 >
-                    <template v-slot:item.attributes="{ item }">
-                        <ul>
-                            <li v-for="(attr, index) of item.attributes" :key="index">
-                                {{ attr.attribute }}: {{ attr.attribute_value }}
-                            </li>
-                        </ul>
+                    <template v-slot:item.product_name="{item}">
+                        <v-list flat>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ item.product_name }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
                     </template>
+                    <!--<template v-slot:item.attributes="{ item }">
+                        <v-list>
+                            <v-list-item v-for="(attr, idx) of item.attributes" :key="`attribute-${idx}`">
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ attr.attribute_value }}</v-list-item-title>
+                                    <v-list-item-subtitle>{{ attr.attribute_name }}</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </template>-->
+                   <!-- <template v-slot:item.manufacturer="{ item }">
+                        {{ item.manufacturer.manufacturer_name }}
+                    </template>-->
                     <template v-slot:item.actions="{item}">
-                        <v-btn icon @click="addToCart(item)" color="success">
+                        <v-btn depressed icon @click="addToCart(item)" color="success">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </template>
-                    <template v-slot:item.product_price="{item}">
-                        {{ getPrice(item) }}
-                    </template>
                     <template v-slot:item.quantity="{item}">
-                        {{ getQuantity(item.quantity) - getCartCount(item.id) }}
+                        {{ item.quantity - getCartCount(item.id) }}
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -312,16 +384,17 @@
 </template>
 
 <script>
-    import ClientCart from "../../../components/Modal/ClientCart";
-    import ConfirmationModal from "../../../components/Modal/ConfirmationModal";
-    import WayBillModal from "../../../components/Modal/WayBillModal";
-    import showToast from "../../../utils/toast";
-    import {TOAST_TYPE} from "../../../config/consts";
-    import ACTIONS from "../../../store/actions";
+    import ClientCart from "@/components/Modal/ClientCart";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import WayBillModal from "@/components/Modal/WayBillModal";
+    import showToast from "@/utils/toast";
+    import {TOAST_TYPE} from "@/config/consts";
+    import ACTIONS from "@/store/actions";
     import {mapActions} from 'vuex';
-    import CheckModal from "../../../components/Modal/CheckModal";
+    import CheckModal from "@/components/Modal/CheckModal";
     import axios from "axios";
-    import product from "../../../mixins/product";
+    import product from "@/mixins/product";
+    import product_search from "@/mixins/product_search";
 
     export default {
         components: {
@@ -332,8 +405,11 @@
         },
         async created() {
             this.loading = this.products.length === 0 || false;
+            await this.$store.dispatch('GET_PRODUCTS_v2');
             const store_id = this.is_admin ? null : this.user.store_id;
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             this.loading = false;
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
@@ -344,16 +420,37 @@
             stores() {
                 this.storeFilter = this.stores[0].id;
             },
-            balance() {
-                this.balance = Math.min(this.client.client_balance, Math.max(0, this.balance));
+            discountPercent(value) {
+                this.$nextTick(() => {
+                    if (this.discountPercent > 99) {
+                        this.discountPercent = 100;
+                    }
+                    if (value.toString().length > 3) {
+                        this.discountPercent = +(value.toString().slice(0, 3));
+                    }
+
+                    this.isFree = this.discountPercent === 100;
+                })
             },
-            /* discountPercent(value) {
-                 this.discountPercent = Math.max(0, Math.min(100, value));
-             }*/
+            balance() {
+                this.$nextTick(() => {
+                    this.balance = Math.min(this.client.client_balance, Math.max(0, this.balance));
+                })
+            },
+            isFree(value) {
+                if (value) {
+                    this.discountPercent = 100;
+                } else {
+                    this.discountPercent = 0;
+                }
+            }
         },
-        mixins: [product],
+        mixins: [product, product_search],
         data: () => ({
             storeFilter: null,
+            manufacturerId: -1,
+            categoryId: -1,
+            hideNotInStock: true,
             waybillModal: false,
             loading: true,
             cart: [],
@@ -364,8 +461,6 @@
             partner_id: null,
             discountPercent: '',
             promocode: "",
-            search: '',
-            searchFilter: '',
             clientCartModal: false,
             confirmationModal: false,
             wayBillModal: false,
@@ -383,11 +478,13 @@
                 },
                 {
                     text: 'Атрибуты',
-                    value: 'attributes'
+                    value: 'attributes',
+                    align: ' d-none'
                 },
                 {
-                    value: 'manufacturer',
-                    text: 'Производитель'
+                    value: 'manufacturer.manufacturer_name',
+                    text: 'Производитель',
+                    align: ' d-none'
                 },
                 {
                     text: 'Остаток',
@@ -414,6 +511,20 @@
                 ACTIONS.GET_CLIENTS,
                 ACTIONS.GET_STORES,
             ]),
+            cancelClient() {
+                this.client = null;
+                this.partner_id = null;
+                this.promocode = '';
+                this.discountPercent = 0;
+                this.promocodeSet = false;
+            },
+            updateCount(item) {
+                this.$nextTick(() => {
+                    const index = this.cart.findIndex(c => c.id === item.id);
+                    console.log(index);
+                    this.$set(this.cart[index], 'count', Math.min(this.cart[index].quantity, Math.max(this.cart[index].count, 0)));
+                })
+            },
             async searchPromocode() {
                 this.$loading();
                 try {
@@ -431,22 +542,25 @@
             },
             async refreshProducts() {
                 this.loading = true;
+                await this.$store.dispatch('GET_PRODUCTS_v2');
                 const store_id = this.is_admin ? null : this.user.store_id;
-                await this.$store.dispatch(ACTIONS.GET_PRODUCT, store_id);
+                await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+                await this.$store.dispatch(ACTIONS.GET_CLIENTS);
+                showToast('Список товаров обновлен!');
+                await this.getProductQuantities(this.storeFilter);
                 this.loading = false;
-                showToast('Список товаров обновлен!')
             },
-            setBalance(e) {
+           /* setBalance(e) {
                 this.balance = Math.min(+e.target.value, this.client.client_balance);
-            },
+            },*/
             addToCart(item) {
-                if (!this.checkAvailability(item)) {
+                if (item.count - item.quantity === 0) {
                     showToast('Недостаточно товара', TOAST_TYPE.WARNING);
                     return;
                 }
-                const index = this.cart.map(c => c.id).indexOf(item.id);
+                const index = this.cart.findIndex(c => c.id === item.id);
                 if (index === -1) {
-                    this.cart.push({...item, count: 1, product_price: this.getPrice(item)});
+                    this.cart.push({...item, count: 1, product_price: item.product_price});
                 } else {
                     this.increaseCartCount(index);
                 }
@@ -455,7 +569,7 @@
                 this.$set(this.cart[index], 'inputMode', !this.cart[index].inputMode);
             },
             changeCount(item, index) {
-                this.$set(this.cart[index], 'count', Math.min(this.cart[index]._count, this.getQuantity(item.quantity)));
+                this.$set(this.cart[index], 'count', Math.min(this.cart[index]._count, item.quantity));
                 this.toggleInput(index);
             },
             checkAvailability(item = {}) {
@@ -472,7 +586,7 @@
                 this.client = client;
             },
             async onSale() {
-                this.overlay = true;
+
                 const sale = {
                     cart: this.cart.map(c => {
                         return {id: c.id, product_price: c.product_price, count: c.count};
@@ -481,47 +595,41 @@
                     user_id: this.user.id,
                     client_id: this.client.id,
                     discount: this.discount,
-                    kaspi_red: this.isRed,
+                    kaspi_red: this.isRed && !this.isFree,
                     balance: this.balance,
                     partner_id: this.partner_id,
                     payment_type: this.payment_type
                 };
 
-                this.sale_id = await this.$store.dispatch(ACTIONS.MAKE_SALE, sale);
+                console.log(sale);
 
-                this.overlay = false;
+                return;
 
-                showToast('Продажа совершена успешно!');
-                this.confirmationModal = true;
+                try {
+                    this.overlay = true;
+                    this.sale_id = await this.$store.dispatch('MAKE_SALE_v2', sale);
 
-                this.cart = [];
-                this.client = null;
-                this.discountPercent = '';
-                this.isRed = false;
-                this.isFree = false;
-                this.balance = 0;
-                this.payment_type = 0;
-                this.partner_id = false;
+                    showToast('Продажа совершена успешно!');
+                    this.confirmationModal = true;
+
+                    this.cart = [];
+                    this.client = null;
+                    this.discountPercent = '';
+                    this.isRed = false;
+                    this.isFree = false;
+                    this.balance = 0;
+                    this.payment_type = 0;
+                    this.partner_id = false;
+                } catch (e) {
+                    showToast('Произошла ошибка', TOAST_TYPE.ERROR);
+                } finally {
+                    this.overlay = false;
+                }
+
             },
             printCheck() {
                 this.confirmationModal = false;
                 window.open(`/check/${this.sale_id}`, '_blank');
-            },
-            getQuantity(quantity = []) {
-                if (typeof quantity === 'number') {
-                    return quantity;
-                }
-                if (!quantity.length) {
-                    return 0;
-                }
-                return quantity
-                    .filter(q => {
-                        return +q.store_id === +this.storeFilter
-                    })
-                    .map(q => q.quantity)
-                    .reduce((a, c) => {
-                        return +a + +c;
-                    }, 0)
             },
             getCartCount(id) {
                 const index = this.cart.map(c => c.id).indexOf(id);
@@ -535,23 +643,26 @@
             },
             async getWayBill() {
                 this.waybillModal = false;
-                const { data } = await axios.post('/api/excel/transfer/waybill?type=sale', {
-                    child_store: this.storeFilter,
-                    parent_store: this.storeFilter,
-                    cart: this.cart,
-                });
+                try {
+                    this.overlay = true;
+                    const { data } = await axios.post('/api/excel/transfer/waybill?type=sale', {
+                        child_store: this.storeFilter,
+                        parent_store: this.storeFilter,
+                        cart: this.cart,
+                    });
 
-                const link = document.createElement('a');
-                link.href = data.path;
-                link.click();
+                    const link = document.createElement('a');
+                    link.href = `${window.location.origin}/${data.path}`;
+                    link.click();
+
+                } catch (e) {
+                    showToast('При создании накладной произошла ошибка!', TOAST_TYPE.ERROR);
+                } finally {
+                    this.overlay = false;
+                }
             },
             async searchProducts() {
-                if (this.search.trim().length <= 3) {
-                    return;
-                }
-                this.loading = true;
-                await this.$store.dispatch('searchProducts', this.search);
-                this.loading = false;
+
             },
         },
         computed: {
@@ -565,7 +676,19 @@
                 return this.$store.getters.IS_ADMIN;
             },
             products() {
-                return this.$store.getters.PRODUCTS_SEARCH;
+                let products = this.$store.getters.PRODUCTS_v2;
+                if (this.manufacturerId !== -1) {
+                    products = products.filter(product => product.manufacturer.id === this.manufacturerId);
+                }
+                if (this.hideNotInStock) {
+                    products = products.filter(product => product.quantity > 0);
+                }
+
+                if (this.categoryId !== -1) {
+                    products = products.filter(product => product.category.id === this.categoryId);
+                }
+
+                return products;
             },
             emptyCart() {
                 return !!!this.cart.length;
@@ -593,9 +716,6 @@
                     return 100;
                 }
                 if (!this.client) {
-                    if (!this.discountPercent.length) {
-                        return 0;
-                    }
                     return Math.min(this.discountPercent, 100);
                 }
                 return Math.min(Math.max(this.discountPercent, this.client.client_discount, 0), 100);
@@ -605,25 +725,33 @@
             },
             payment_types() {
                 return this.$store.getters.payment_types;
-            }
+            },
+            manufacturers() {
+                return [
+                    {
+                        id: -1,
+                        manufacturer_name: 'Все'
+                    }, ...this.$store.getters.manufacturers];
+            },
+            categories() {
+                return [
+                    {
+                        id: -1,
+                        name: 'Все'
+                    }, ...this.$store.getters.categories
+                ];
+            },
+            clientChosen() {
+                return this.client && this.client.id !== -1;
+            },
+           /* isFree() {
+                return this.discountPercent === 100;
+            }*/
         },
     }
 </script>
 
-<style scoped>
-    * {
-    }
-
-    h5 {
-        color: #fff;
-        font-weight: 300;
-        font-size: 18px;
-    }
-
-    .top-button {
-        width: 340px;
-    }
-
+<style>
     .background-iron-grey {
         background-color: #444444;
     }
@@ -632,15 +760,33 @@
         background-color: #333333;
     }
 
+    .fz-18 > tr > td, th {
+        font-size: 16px!important;
+    }
+
     .margin-28 {
         margin-top: 28px;
     }
 
-    .fz-18 th, td {
-        font-size: 18px !important;
+    .w-50px {
+        width: 50px;
+    }
+    .cart__parameters {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+        padding: 15px 25px;
     }
 
-    .v-data-table {
-        font-size: 18px !important;
+    .cart__parameters > div:nth-child(2n+1):last-child {
+        grid-column: 1 / 3;
+    }
+
+    .client__table-heading {
+        padding-bottom: 10px;
+    }
+
+    .product__list {
+        background-color: #444444!important;
     }
 </style>

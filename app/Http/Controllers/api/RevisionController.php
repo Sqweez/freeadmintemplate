@@ -19,7 +19,7 @@ class RevisionController extends Controller
 {
     public function getRevisionProducts(Request $request) {
         $products = collect(ProductRevisionResource::collection(Product::all()))
-            ->groupBy(['categories', 'product_name'])->collapse()->collapse();
+            ->groupBy(['category', 'product_name'])->collapse()->collapse();
         $excelService = new ExcelService();
         return $excelService->createRevisionExcel($products);
     }

@@ -5,8 +5,8 @@ export async function makeSale(payload) {
     return response.data;
 }
 
-export async function getReports({filter = 3, start = null , finish = null}) {
-    const response = await axios.get(`/api/reports?filter=${filter}&start=${start}&finish=${finish}`);
+export async function getReports({start, finish}) {
+    const response = await axios.get(`/api/reports?start=${start}&finish=${finish}`);
     return response.data.data;
 }
 

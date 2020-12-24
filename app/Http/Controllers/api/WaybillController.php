@@ -49,7 +49,7 @@ class WaybillController extends Controller
             $parent_store = $request->get('parent_store');
             $child_store = $request->get('child_store');
         }
-
+        $fileType = $this->getFileType($request);
         $excelService = new ExcelService();
         $excelTemplate = $excelService->loadFile('waybill_transfer_template', 'xls');
         $excelSheet = $excelTemplate->getActiveSheet();
@@ -66,7 +66,9 @@ class WaybillController extends Controller
         $child_store_name = 'IRON ADDICTS, ' . $child_city;
 
         $excelSheet->setCellValue('L18', $parent_store_name);
-        $excelSheet->setCellValue('L19', $child_store_name);
+        if ($fileType !== 'Продажа') {
+            $excelSheet->setCellValue('L19', $child_store_name);
+        }
 
         foreach ($cart as $key => $item) {
             $currentIndex = $key + $INITIAL_PRODUCT_ROW;
@@ -107,8 +109,6 @@ class WaybillController extends Controller
         $excelSheet->setCellValue('N' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COUNT));
 
         $excelWriter = new Xlsx($excelTemplate);
-
-        $fileType = $this->getFileType($request);
 
         $fileName =  $fileType . "_" . Carbon::today()->toDateString() . "_" . $parent_city . '-' . $child_city . "_" . Str::random(10) . '.xlsx';
         $fullPath = 'storage/excel/waybills/' . $fileName;
@@ -155,7 +155,7 @@ class WaybillController extends Controller
         $attributeValues = join(' | ', array_map(function ($i) {
             return $i['attribute_value'];
         }, is_object($item['attributes']) ? $item['attributes']->toArray($item) : $item['attributes']));
-        return $item['manufacturer'] . ' ' . $item['product_name'] . ' ' . $attributeValues;
+        return $item['manufacturer']['manufacturer_name'] . ' ' . $item['product_name'] . ' ' . $attributeValues;
     }
 
 

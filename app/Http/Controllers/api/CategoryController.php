@@ -19,12 +19,7 @@ class CategoryController extends Controller {
      * @throws \Exception
      */
     public function index() {
-        if (Cache::has('categories')) {
-            return Cache::get('categories');
-        } else
-        return cache()->remember('categories', 24 * 60 * 60 * 30 * 365, function () {
-            return CategoryResource::collection(Category::all());
-        });
+        return CategoryResource::collection(Category::all());
     }
 
 

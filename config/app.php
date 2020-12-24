@@ -177,7 +177,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\ProductServiceProvider::class,
+        App\Providers\CartServiceProvider::class,
     ],
 
     /*
@@ -230,7 +231,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
-
+        'ProductService' => App\Facades\ProductServiceFacade::class,
+        'CartService' => App\Facades\CartServiceFacade::class
 
     ],
 

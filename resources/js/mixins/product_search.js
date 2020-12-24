@@ -10,7 +10,7 @@ export default {
         async searchInput(value) {
             if (!this.awaitingSearch) {
                 const searchDebouncedFn = _.debounce(() => {
-                    if (this.searchValue.length >= 3) {
+                    if (this.searchValue && this.searchValue.length >= 3) {
                         this.searchQuery = this.searchValue;
                     } else {
                         this.searchQuery = "";

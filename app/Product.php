@@ -2,14 +2,87 @@
 
 namespace App;
 
-use App\ManufacturerProducts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Request;
 
-class Product extends Model
-{
+/**
+ * App\Product
+ *
+ * @property int $id
+ * @property string $product_name
+ * @property string|null $product_description
+ * @property int $product_price
+ * @property string $product_barcode
+ * @property int|null $group_id
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property int $is_hit
+ * @property int $is_site_visible
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\AttributeProduct[] $attributes
+ * @property-read int|null $attributes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Category[] $categories
+ * @property-read int|null $categories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $children
+ * @property-read int|null $children_count
+ * @property-read mixed $current_price
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Manufacturer[] $manufacturer
+ * @property-read int|null $manufacturer_count
+ * @property-read Product|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Price[] $price
+ * @property-read int|null $price_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ProductImage[] $product_images
+ * @property-read int|null $product_images_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ProductQuantity[] $product_quantity
+ * @property-read int|null $product_quantity_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ProductThumb[] $product_thumbs
+ * @property-read int|null $product_thumbs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ProductBatch[] $quantity
+ * @property-read int|null $quantity_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Subcategory[] $subcategories
+ * @property-read int|null $subcategories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Tag[] $tag
+ * @property-read int|null $tag_count
+ * @method static Builder|Product inStock($store_id = 1)
+ * @method static Builder|Product isHit($param = 'false')
+ * @method static Builder|Product main()
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product ofBrand($param)
+ * @method static Builder|Product ofCategory($param)
+ * @method static Builder|Product ofPrice($param)
+ * @method static Builder|Product ofSearch($search)
+ * @method static Builder|Product ofSubcategory($param)
+ * @method static Builder|Product ofTag($search)
+ * @method static \Illuminate\Database\Query\Builder|Product onlyTrashed()
+ * @method static Builder|Product query()
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereDeletedAt($value)
+ * @method static Builder|Product whereGroupId($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereIsHit($value)
+ * @method static Builder|Product whereIsSiteVisible($value)
+ * @method static Builder|Product whereProductBarcode($value)
+ * @method static Builder|Product whereProductDescription($value)
+ * @method static Builder|Product whereProductName($value)
+ * @method static Builder|Product whereProductPrice($value)
+ * @method static Builder|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Product withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Product withoutTrashed()
+ * @mixin \Eloquent
+ * @property int|null $category_id
+ * @property int|null $manufacturer_id
+ * @method static Builder|Product whereCategoryId($value)
+ * @method static Builder|Product whereManufacturerId($value)
+ * @property int $product_discount_price
+ * @property int $grouping_attribute_id
+ * @property int $subcategory_id
+ * @method static Builder|Product whereGroupingAttributeId($value)
+ * @method static Builder|Product whereProductDiscountPrice($value)
+ * @method static Builder|Product whereSubcategoryId($value)
+ */
+class Product extends Model {
 
     use SoftDeletes;
 
@@ -33,13 +106,11 @@ class Product extends Model
         return $this->belongsToMany(Tag::class, 'product_tags');
     }
 
-    public function parent()
-    {
+    public function parent() {
         return $this->belongsTo('App\Product', 'group_id');
     }
 
-    public function children()
-    {
+    public function children() {
         return $this->hasMany('App\Product', 'group_id', 'group_id');
     }
 
@@ -83,8 +154,7 @@ class Product extends Model
         return 1000;
     }
 
-    public function scopeMain(Builder $query)
-    {
+    public function scopeMain(Builder $query) {
         return $query->whereHas('children');
     }
 

@@ -24,7 +24,7 @@
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn text color="success" @click="download">
-                    Пополнить
+                    Распечать
                     <v-icon>mdi-check</v-icon>
                 </v-btn>
             </v-card-actions>

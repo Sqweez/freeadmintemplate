@@ -23,7 +23,7 @@ class ProductResource extends JsonResource
         return [
             'product_id' => intval($this->id),
             'product_price' => $price,
-            'subcategory' => $this->subcategories[0]->subcategory_name ?? '',
+            'subcategory' => $this->subcategory->subcategory_name,
             'product_name' => $this->product_name,
             'product_description' => $this->product_description,
             'product_images' => $this->getProductImages($this->product_images, 'image'),

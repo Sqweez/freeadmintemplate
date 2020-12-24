@@ -5,6 +5,8 @@
         </v-overlay>
         <v-card>
             <v-card-text>
+                <h5>Общая сумма: {{totalPurchasePrice | priceFilters}}</h5>
+                <h5>Общая продажная сумма: {{totalProductPrice | priceFilters}}</h5>
                 <v-data-table
                         class="background-iron-grey fz-18 mt-2"
                         no-results-text="Нет результатов"
@@ -161,7 +163,18 @@
                 this.loading = false;
             }
         },
-        computed: {},
+        computed: {
+            totalPurchasePrice() {
+                return this.arrivals.reduce((a, c) => {
+                    return a + +c.total_cost;
+                }, 0);
+            },
+            totalProductPrice() {
+                return this.arrivals.reduce((a, c) => {
+                    return a + +c.total_sale_cost;
+                }, 0);
+            }
+        },
         async mounted() {
             await this.getArrivals();
         }

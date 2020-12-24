@@ -6,6 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * App\Goal
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string $image
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\GoalPart[] $parts
+ * @property-read int|null $parts_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Goal extends Model
 {
     protected $guarded = [];

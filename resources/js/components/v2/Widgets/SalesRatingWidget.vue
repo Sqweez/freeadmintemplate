@@ -17,12 +17,12 @@
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
-                                    <span>{{ store.name }}</span>
-                                    <span>
-                                        {{ getTotal(store.id) | priceFilters}}
-                                    </span>
+                                    {{ store.name }}
                                 </div>
                             </v-list-item-title>
+                            <v-list-item-subtitle>
+                                {{ getTotal(store.id) | priceFilters}}
+                            </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item class="darken-3 black" v-if="(IS_ADMIN || IS_OBSERVER)">

@@ -19,6 +19,8 @@ import statsModule from "./modules/stats";
 import ratingModule from "./modules/rating";
 import promocodeModule from "./modules/promocode";
 import frontEndModule from "./modules/frontend";
+import productsModule_v2 from "./modules/v2/products";
+import modalModule from "@/store/modules/modals";
 Vue.use(Vuex);
 
 const store = new Store({
@@ -45,7 +47,9 @@ const store = new Store({
         statsModule,
         ratingModule,
         promocodeModule,
-        frontEndModule
+        frontEndModule,
+        productsModule_v2,
+        modals: modalModule,
     }
 });
 

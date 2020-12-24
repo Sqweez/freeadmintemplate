@@ -40,30 +40,30 @@ const navigationModule = {
                         url: '/stores',
                         isAdmin: true
                     },
-                    {
+                  /*  {
                         title: 'Все товары',
                         url: '/products'
-                    },
+                    },*/
                     {
                         title: 'Категории',
                         url: '/categories',
                         isAdmin: true
                     },
-                    {
+            /*        {
                         title: 'Корзина',
                         url: '/cart'
-                    },
-                    {
+                    },*/
+                 /*   {
                         title: 'Перемещения',
                         url: '/transfer',
                         //isAdmin: true
-                    },
+                    },*/
                     {
                         title: 'План продаж',
                         url: '/plan',
                         isAdmin: true
                     },
-                    {
+/*                    {
                         title: 'Ревизии',
                         url: '/revision',
                     },
@@ -71,15 +71,15 @@ const navigationModule = {
                         title: 'Поступления',
                         url: '/arrivals',
                         isAdmin: true,
-                    },
+                    },*/
                 ],
             },
-            {
+/*            {
                 title: 'Отчеты по продажам',
                 url: '/reports',
                 icon: 'report',
                 isAdmin: true
-            },
+            },*/
             {
                 title: 'Интернет-магазин',
                 url: '#',
@@ -109,7 +109,7 @@ const navigationModule = {
                     }
                 ]
             },
-            {
+   /*         {
                 title: 'Статистика',
                 url: '#',
                 icon: 'dashboard',
@@ -137,6 +137,27 @@ const navigationModule = {
                         title: 'Товары',
                         url: '/v2/products'
                     },
+                ]
+            },*/
+            {
+                title: 'v3/Склад',
+                url: '#',
+                icon: 'dashboard',
+                hasDropdown: true,
+                isAdmin: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/v3/products'
+                    },
+                    {
+                        title: 'Корзина',
+                        url: '/v3/cart'
+                    },
+                    {
+                        title: 'Отчеты',
+                        url: '/v3/reports'
+                    }
                 ]
             },
         ],
@@ -180,6 +201,24 @@ const navigationModule = {
                 url: '/reports',
                 icon: 'report',
             },
+            {
+                title: 'v3/Склад',
+                url: '#',
+                icon: 'dashboard',
+                hasDropdown: true,
+                isAdmin: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/v3/products'
+                    },
+                    {
+                        title: 'Корзина',
+                        url: '/v3/cart'
+                    },
+                ]
+            },
+
         ],
     },
     getters: {

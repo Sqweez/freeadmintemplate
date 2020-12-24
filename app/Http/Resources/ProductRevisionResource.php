@@ -4,6 +4,14 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed category
+ * @property mixed product_name
+ * @property mixed id
+ * @property mixed attributes
+ * @property mixed manufacturer
+ * @property mixed product_price
+ */
 class ProductRevisionResource extends JsonResource
 {
     /**
@@ -23,9 +31,9 @@ class ProductRevisionResource extends JsonResource
         return [
             'id' => intval($this->id),
             'product_name' => $this->product_name,
-            'categories' => $this->categories->first()->category_name ?? 'Неизвестно',
+            'categories' => $this->category->category_name,
             'attributes' => AttributeResource::collection($this->attributes),
-            'manufacturer' => $this->manufacturer->first()->manufacturer_name ?? 'Неизвестно',
+            'manufacturer' => $this->manufacturer->manufacturer_name,
             'product_price' => $this->product_price,
             'quantity' => $quantity
         ];

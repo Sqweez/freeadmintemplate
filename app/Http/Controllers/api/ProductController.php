@@ -50,8 +50,8 @@ class ProductController extends Controller {
 
         $products = Product::whereIn('group_id', $product_ids)->pluck('id');
         $batches = collect(ProductBatch::whereIn('product_id', $products)->where('quantity', '>', 0)->whereIn('store_id', [1, 2, 3, 4, 5, 8, 9])->with(['product' => function ($q) {
-                $q->select(['id', 'product_name', 'group_id']);
-            }])->get());
+            $q->select(['id', 'product_name', 'group_id']);
+        }])->get());
         $batches = $batches->groupBy('product.group_id')->map(function ($batch) {
             return collect($batch)->groupBy('store_id');
         })->map(function ($batch) {
@@ -241,7 +241,6 @@ class ProductController extends Controller {
     private function createAdditionalFields(Request $request, $product_id) {
         $product_images = $request->get('product_images');
         $this->storeImages($product_images, $product_id);
-        $this->storeThumbs($product_images, $product_id);
         $categories = $request->get('categories');
         $this->createCategoryProducts($categories, $product_id);
         $subcategories = $request->get('subcategories');

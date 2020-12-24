@@ -78,11 +78,7 @@
                             {{ getPrice(item) | priceFilters }}
                         </template>
                         <template v-slot:item.categories="{ item }">
-                            <ul>
-                                <li v-for="(cat, index) of item.categories" :key="index">
-                                   {{ cat.category_name }}
-                                </li>
-                            </ul>
+                            <span>{{ item.categories.category_name }}</span>
                         </template>
                         <template v-slot:item.tags="{item}">
                             <span>Количество тегов: {{ item.tags.length }}</span>
@@ -287,10 +283,6 @@
                     {
                         value: 'categories',
                         text: 'Категория'
-                    },
-                    {
-                        value: 'tags',
-                        text: 'Теги'
                     }
                 ];
 

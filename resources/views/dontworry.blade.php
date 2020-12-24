@@ -8,10 +8,6 @@
     <title>Document</title>
 </head>
 <body>
-<h1>{{ request()->get('name') ?? 'Андрюха'  }}, не грусти!</h1>
-<h1>Все хорошо</h1>
+
 </body>
-<script>
-    window.print();
-</script>
 </html>

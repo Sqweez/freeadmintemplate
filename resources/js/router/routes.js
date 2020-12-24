@@ -23,6 +23,7 @@ import ProductsV2 from '../views/v2/Products/Products';
 import ProductsV3 from '../views/v3/Products/Products';
 import CartV3 from '../views/v3/Cart/Cart';
 import Banner from "../views/Banners/Banner";
+import ReportsV3 from '@/views/v3/Reports/Reports';
 
 const routes = [
     {
@@ -229,6 +230,10 @@ const routes = [
     {
         path: '/v3/cart',
         component: CartV3
+    },
+    {
+        path: '/v3/reports',
+        component: ReportsV3
     }
 ];
 

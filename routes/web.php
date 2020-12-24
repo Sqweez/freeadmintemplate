@@ -8,5 +8,6 @@ Route::get('/relax', function () {
 });
 
 Route::get('/test', 'TestController@index');
+Route::get('/test-2', 'TestController@index2');
 
 Route::get('/{any}', 'VueController@index')->where('any', '.*');
