@@ -4,9 +4,9 @@
             Отчеты по продажам
         </v-card-title>
         <v-card-text>
-            <v-overlay :value="overlay">
+            <!--<v-overlay :value="overlay">
                 <v-progress-circular indeterminate size="64"></v-progress-circular>
-            </v-overlay>
+            </v-overlay>-->
             <v-row>
                 <v-col cols="12" xl="3" justify="center">
                     <v-list>
@@ -425,28 +425,13 @@
             headers: [
                 {text: 'Список проданных товаров', value: 'products', align: ' min-w-250 w-30'},
                 {text: 'Дата', value: 'date', align: ' font-weight-black'},
-               /* {text: 'Клиент', value: 'client'},
-                {text: 'Продавец', value: 'user'},
-                {text: 'Магазин', value: 'store'},*/
                 {text: 'Способ оплаты', value: 'payment_type_text', align: ' font-weight-bold'},
                 {text: 'Данные', value: 'sale_data'},
                 {text: 'Экономические показатели', value: 'economy'},
                 {text: 'Дополнительные данные', value: 'additional_data'},
-               /* {text: 'Закупочная цена', value: 'purchase_price'},
-                {text: 'Фактическая цена', value: 'fact_price'},
-                {text: 'Продажная цена', value: 'final_price'},
-                {text: 'Прибыль', value: 'margin'},*/
-                /*{text: 'Скидка', value: 'discount'},
-                {text: 'Списано с баланса', value: 'balance'},*/
                 {
                     text: 'Действие', value: 'action'
                 },
-               /* {
-                    text: 'Отмена', value: 'actions'
-                },
-                {
-                    text: 'Действие', value: 'print'
-                }*/
             ],
         }),
         async mounted() {
@@ -469,13 +454,14 @@
                 this.cancelModal = false;
             },
             async init() {
-                if (this.salesReport.length === 0) {
+                /*if (this.salesReport.length === 0) {
                     this.overlay = true;
                     this.loading = false;
                 } else {
                     this.overlay = false;
                     this.loading = true;
-                }
+                }*/
+                this.loading = true;
                 await this.$store.dispatch(ACTIONS.GET_REPORTS, {
                     start: this.currentDate[0],
                     finish: this.currentDate[1],
@@ -498,12 +484,14 @@
                     }
                 }
                 this.overlay = true;
+                this.loading = true;
                 const dateObject = {
                     start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
                     finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1]
                 };
                 await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
                 this.overlay = false;
+                this.loading = false;
 
             },
             async changeCustomDate() {

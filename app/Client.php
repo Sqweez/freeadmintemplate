@@ -2,8 +2,10 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Client
@@ -13,8 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $client_phone
  * @property string $client_card
  * @property int $client_discount
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string $password
  * @property string $address
  * @property string $user_token
@@ -22,18 +24,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $is_partner
  * @property int $client_city
  * @property string|null $partner_expired_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $deleted_at
  * @property-read \App\Store $city
  * @property-read mixed $balance
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
+ * @property-read Collection|Order[] $orders
  * @property-read int|null $orders_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Sale[] $partner_sales
+ * @property-read Collection|Sale[] $partner_sales
  * @property-read int|null $partner_sales_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Sale[] $purchases
+ * @property-read Collection|Sale[] $purchases
  * @property-read int|null $purchases_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\ClientSale[] $sales
+ * @property-read Collection|ClientSale[] $sales
  * @property-read int|null $sales_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\ClientTransaction[] $transactions
+ * @property-read Collection|ClientTransaction[] $transactions
  * @property-read int|null $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|Client newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Client newQuery()
@@ -67,6 +69,17 @@ class Client extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+    const DISCOUNT = [
+        [
+            'amount' => 30000,
+            'discount' => 10
+        ],
+        [
+            'amount' => 15000,
+            'discount' => 5
+        ]
+    ];
 
     public function transactions() {
         return $this->hasMany('App\ClientTransaction', 'client_id');
@@ -108,5 +121,13 @@ class Client extends Model
 
     public function scopePartner($query) {
         $query->where('is_partner', true);
+    }
+
+    public function calculateDiscountPercent() {
+        $total = $this->sales->sum('amount');
+        $discountByAmount = collect(self::DISCOUNT)->search(function ($item) use ($total) {
+            return $total >= $item['amount'];
+        }) ?? 0;
+        return min(max($this->client_discount, $discountByAmount), 100);
     }
 }

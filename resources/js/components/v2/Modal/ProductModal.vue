@@ -666,7 +666,7 @@
                         default:
                             break;
                     }
-                    //await this.$emit('cancel', this.modalEvent);
+                    await this.$emit('cancel', this.action);
                 } catch (e) {
                     showToast('При добавлении товара произошла ошибка',  TOAST_TYPE.ERROR);
                 }

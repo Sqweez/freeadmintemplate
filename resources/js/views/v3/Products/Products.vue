@@ -96,14 +96,6 @@
                                     Печать ценника
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>-->
-                                <!--<v-btn color="primary" @click="priceTag = item; priceTagModal = true;">
-                                    Печать ценника
-                                    <v-icon>mdi-plus</v-icon>
-                                </v-btn>
-                                <v-btn color="primary" @click="showProductModal(item.id, true)">
-                                    Ассортимент
-                                    <v-icon>mdi-plus</v-icon>
-                                </v-btn>-->
                                 <v-btn color="warning" @click="showProductModal(item.id, 'editProduct')">
                                     Товар
                                     <v-icon>mdi-pencil</v-icon>
@@ -148,22 +140,6 @@
             :priceTag="priceTag"
             @cancel="priceTagModal = false"
         />-->
-       <!-- <ProductQuantityModal
-            :id="productId"
-            :state="productQuantityModal"
-            v-on:cancel="productId = -1; productQuantityModal = false;"
-        />
-        <ConfirmationModal
-            :message="modalText"
-            :state="deleteModal"
-            :on-confirm="deleteProduct"
-            v-on:cancel="productId = -1; deleteModal = false;"
-        />
-        <PriceTagModal
-            :state="priceTagModal"
-            :priceTag="priceTag"
-            @cancel="priceTagModal = false"
-        />-->
     </v-card>
 </template>
 
@@ -191,14 +167,11 @@
             ProductRangeModal
         },
         async created() {
-            this.loading = true;
             const store_id = this.is_admin ? null : this.user.store_id;
             try {
                 await this.$store.dispatch('GET_PRODUCTS_v2');
             } catch (e) {
                 console.log(e.response);
-            } finally {
-                this.loading = false;
             }
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
@@ -208,7 +181,7 @@
         data: () => ({
             priceTagModal: false,
             waitingQuantities: false,
-            loading: true,
+            loading: false,
             options: {},
             productModal: false,
             productRangeModal: false,

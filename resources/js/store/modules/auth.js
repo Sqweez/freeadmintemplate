@@ -89,6 +89,7 @@ const authModule = {
                 commit('SET_TOKEN', token);
                 commit('SET_USER', user);
                 axios.defaults.headers.authorization = token;
+                axios.defaults.headers.store_id = user.store_id;
             }
         },
         async LOGOUT({commit}) {

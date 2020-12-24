@@ -19,8 +19,11 @@ import statsModule from "./modules/stats";
 import ratingModule from "./modules/rating";
 import promocodeModule from "./modules/promocode";
 import frontEndModule from "./modules/frontend";
+import cartModule from "./modules/cart";
 import productsModule_v2 from "./modules/v2/products";
 import modalModule from "@/store/modules/modals";
+import createPersistedState from "vuex-persistedstate";
+
 Vue.use(Vuex);
 
 const store = new Store({
@@ -50,7 +53,23 @@ const store = new Store({
         frontEndModule,
         productsModule_v2,
         modals: modalModule,
-    }
+        cartModule
+    },
+    plugins: [createPersistedState({
+        paths: [
+            'userModule',
+            'storeModule',
+            'categoryModule',
+            'manufacturerModule',
+            'attributeModule',
+            'clientModule',
+            'plansModule',
+            'statsModule',
+            'ratingModule',
+            'productsModule_v2',
+            'cartModule'
+        ]
+    })],
 });
 
 export default store;

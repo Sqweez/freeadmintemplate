@@ -155,14 +155,13 @@
                         </v-list-item-action>
                     </v-list-item>
                 </v-list>
-                <v-divider></v-divider>
+                <v-divider v-if="client"></v-divider>
                 <v-simple-table v-slot:default>
                     <template>
                         <thead class="fz-18">
                         <tr>
                             <th>#</th>
                             <th>Товар</th>
-                            <!--<th>Атрибуты</th>-->
                             <th>Количество</th>
                             <th>Стоимость</th>
                             <th>Удалить</th>
@@ -185,14 +184,6 @@
                                     </v-list-item>
                                 </v-list>
                             </td>
-                           <!-- <td>{{ item.product_name }}</td>-->
-                            <!--<td>
-                                <ul>
-                                    <li v-for="(attr, index) of item.attributes" :key="index">
-                                        {{ attr.attribute_name }}: {{ attr.attribute_value }}
-                                    </li>
-                                </ul>
-                            </td>-->
                             <td>
 
                                 <div class="d-flex align-center">
@@ -238,10 +229,10 @@
                     </template>
                 </v-simple-table>
                 <div class="background-iron-grey pa-10">
-                    <v-btn depressed color="error" block style="font-size: 16px" @click="clientCartModal = true" v-if="!client">
+                    <v-btn :disabled="disabled" depressed color="error" block style="font-size: 16px" @click="clientCartModal = true" v-if="!client">
                         Выбрать клиента
                     </v-btn>
-                    <v-btn depressed color="error" block style="font-size: 16px" @click="onSale" v-else>
+                    <v-btn :disabled="disabled" depressed color="error" block style="font-size: 16px" @click="onSale" v-else>
                         Оформить заказ
                     </v-btn>
                 </div>
@@ -379,6 +370,7 @@
             :state="waybillModal"
             message="Сформировать накладную?"
             :on-confirm="getWayBill"
+            @cancel="wayBillModal = false;"
         />
     </div>
 </template>
@@ -390,7 +382,7 @@
     import showToast from "@/utils/toast";
     import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
-    import {mapActions} from 'vuex';
+    import {mapActions, mapMutations} from 'vuex';
     import CheckModal from "@/components/Modal/CheckModal";
     import axios from "axios";
     import product from "@/mixins/product";
@@ -404,6 +396,7 @@
             WayBillModal
         },
         async created() {
+            console.time('start');
             this.loading = this.products.length === 0 || false;
             await this.$store.dispatch('GET_PRODUCTS_v2');
             const store_id = this.is_admin ? null : this.user.store_id;
@@ -412,10 +405,16 @@
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             this.loading = false;
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
+            await this.$store.dispatch('SYNC_CART_COUNT');
+            this.disabled = false;
+            console.timeEnd('start');
         },
         watch: {
-            storeFilter() {
-                this.cart = [];
+            storeFilter(value) {
+                if (this.store_id !== value) {
+                    this.$store.commit('CLEAR_CART');
+                }
+                this.store_id = value;
             },
             stores() {
                 this.storeFilter = this.stores[0].id;
@@ -443,7 +442,7 @@
                 } else {
                     this.discountPercent = 0;
                 }
-            }
+            },
         },
         mixins: [product, product_search],
         data: () => ({
@@ -453,18 +452,19 @@
             hideNotInStock: true,
             waybillModal: false,
             loading: true,
-            cart: [],
-            isRed: false,
+            disabled: true,
+            //cart: [],
+           /* isRed: false,
             isFree: false,
             payment_type: 0,
             promocodeSet: false,
             partner_id: null,
             discountPercent: '',
-            promocode: "",
+            promocode: "", */
             clientCartModal: false,
             confirmationModal: false,
             wayBillModal: false,
-            client: null,
+           // client: null,
             overlay: false,
             sale_id: null,
             balance: 0,
@@ -511,18 +511,37 @@
                 ACTIONS.GET_CLIENTS,
                 ACTIONS.GET_STORES,
             ]),
+            ...mapActions({
+                addToCart: 'ADD_TO_CART',
+            }),
+            ...mapMutations({
+                increaseCartCount: 'INCREASE_CART',
+                decreaseCartCount: 'DECREASE_CART',
+                deleteFromCart: 'DELETE_FROM_CART',
+            }),
             cancelClient() {
-                this.client = null;
+                this.$store.commit('SET_CART_CLIENT', null);
+                this.$store.commit('SET_CART_PARAMS', {
+                    partner_id: null,
+                    promocode: '',
+                    discountPercent: 0,
+                    promocodeSet: false,
+                });
+
                 this.partner_id = null;
                 this.promocode = '';
                 this.discountPercent = 0;
                 this.promocodeSet = false;
             },
-            updateCount(item) {
+            /*updateCount(item) {
                 this.$nextTick(() => {
                     const index = this.cart.findIndex(c => c.id === item.id);
-                    console.log(index);
                     this.$set(this.cart[index], 'count', Math.min(this.cart[index].quantity, Math.max(this.cart[index].count, 0)));
+                })
+            },*/
+            updateCount(item) {
+                this.$nextTick(() => {
+                    this.$store.commit('UPDATE_CART_COUNT', item);
                 })
             },
             async searchPromocode() {
@@ -550,11 +569,8 @@
                 await this.getProductQuantities(this.storeFilter);
                 this.loading = false;
             },
-           /* setBalance(e) {
-                this.balance = Math.min(+e.target.value, this.client.client_balance);
-            },*/
-            addToCart(item) {
-                if (item.count - item.quantity === 0) {
+          /*  addToCart(item) {
+                /!*if (item.count - item.quantity === 0) {
                     showToast('Недостаточно товара', TOAST_TYPE.WARNING);
                     return;
                 }
@@ -563,27 +579,20 @@
                     this.cart.push({...item, count: 1, product_price: item.product_price});
                 } else {
                     this.increaseCartCount(index);
-                }
-            },
-            toggleInput(index) {
-                this.$set(this.cart[index], 'inputMode', !this.cart[index].inputMode);
-            },
-            changeCount(item, index) {
-                this.$set(this.cart[index], 'count', Math.min(this.cart[index]._count, item.quantity));
-                this.toggleInput(index);
-            },
+                }*!/
+            },*/
             checkAvailability(item = {}) {
                 return !((this.getQuantity(item.quantity) - this.getCartCount(item.id)) === 0);
             },
-            increaseCartCount(index) {
+           /* increaseCartCount(index) {
                 this.$set(this.cart[index], 'count', this.cart[index].count + 1);
             },
             decreaseCartCount(index) {
                 this.$set(this.cart[index], 'count', Math.max(1, this.cart[index].count - 1))
-            },
+            },*/
             onClientChosen(client) {
                 this.clientCartModal = false;
-                this.client = client;
+                this.$store.commit('SET_CART_CLIENT', client);
             },
             async onSale() {
 
@@ -601,10 +610,6 @@
                     payment_type: this.payment_type
                 };
 
-                console.log(sale);
-
-                return;
-
                 try {
                     this.overlay = true;
                     this.sale_id = await this.$store.dispatch('MAKE_SALE_v2', sale);
@@ -612,6 +617,8 @@
                     showToast('Продажа совершена успешно!');
                     this.confirmationModal = true;
 
+                    await this.$store.dispatch('AFTER_SALE');
+/*
                     this.cart = [];
                     this.client = null;
                     this.discountPercent = '';
@@ -619,7 +626,7 @@
                     this.isFree = false;
                     this.balance = 0;
                     this.payment_type = 0;
-                    this.partner_id = false;
+                    this.partner_id = false;*/
                 } catch (e) {
                     showToast('Произошла ошибка', TOAST_TYPE.ERROR);
                 } finally {
@@ -638,9 +645,9 @@
                 }
                 return this.cart[index].count;
             },
-            deleteFromCart(index) {
+           /* deleteFromCart(index) {
                 this.cart.splice(index, 1);
-            },
+            },*/
             async getWayBill() {
                 this.waybillModal = false;
                 try {
@@ -668,6 +675,90 @@
         computed: {
             user() {
                 return this.$store.getters.USER;
+            },
+            cart () {
+                return this.$store.getters.CART;
+            },
+            client() {
+                return this.$store.getters.CART_CLIENT;
+            },
+            store_id: {
+                get() {
+                    return this.$store.getters.CART_PARAMS.store_id;
+                },
+                set(value) {
+                    this.$nextTick(() => {
+                        this.$store.commit('SET_CART_PARAMS', {store_id: value});
+                    })
+                }
+            },
+            isRed: {
+                get() {
+                    return this.$store.getters.CART_PARAMS.isRed;
+                },
+                set(value) {
+                    this.$nextTick(() => {
+                        this.$store.commit('SET_CART_PARAMS', {isRed: value})
+                    })
+                },
+            },
+            isFree: {
+                get() {
+                    return this.$store.getters.CART_PARAMS.isFree;
+                },
+                set(value) {
+                    this.$nextTick(() => {
+                        this.$store.commit('SET_CART_PARAMS', {isFree: value})
+                    })
+                },
+            },
+            payment_type: {
+                get() {
+                    return this.$store.getters.CART_PARAMS.payment_type;
+                },
+                set(value) {
+                    this.$nextTick(() => {
+                        this.$store.commit('SET_CART_PARAMS', {payment_type: value})
+                    })
+                }
+            },
+            partner_id: {
+                get() {
+                    return this.$store.getters.CART_PARAMS.partner_id;
+                },
+                set(value) {
+                    this.$nextTick(() => {
+                        this.$store.commit('SET_CART_PARAMS', {partner_id: value})
+                    })
+                }
+            },
+            discountPercent: {
+                get() {
+                    return this.$store.getters.CART_PARAMS.discountPercent;
+                },
+                set(value) {
+                    this.$nextTick(() => {
+                        this.$store.commit('SET_CART_PARAMS', {discountPercent: value})
+                    })
+                },
+            },
+            promocode: {
+                get() {
+                    return this.$store.getters.CART_PARAMS.promocode;
+                },
+                set(value) {
+                    this.$nextTick(() => {
+                        this.$store.commit('SET_CART_PARAMS', {promocode: value})
+                    })
+                },
+            },
+            promocodeSet: {
+                get() {
+                    return this.$store.getters.CART_PARAMS.promocodeSet;
+                },
+                set(value) {
+                    this.$store.commit('SET_CART_PARAMS', {promocodeSet: value})
+                },
             },
             partners() {
                 return this.$store.getters.PARTNERS;
@@ -744,9 +835,6 @@
             clientChosen() {
                 return this.client && this.client.id !== -1;
             },
-           /* isFree() {
-                return this.discountPercent === 100;
-            }*/
         },
     }
 </script>

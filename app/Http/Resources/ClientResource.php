@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Client;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClientResource extends JsonResource
@@ -9,7 +11,9 @@ class ClientResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * Class Client
+     * @mixin \App\Client
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
@@ -24,7 +28,7 @@ class ClientResource extends JsonResource
             'client_name' => $this->client_name,
             'client_phone' => $this->client_phone,
             'client_card' => $this->client_card,
-            'client_discount' => min(max($this->client_discount, $sale_discount), 100),
+            'client_discount' => $this->calculateDiscountPercent(),
             'client_balance' => $this->transactions->sum('amount'),
             'total_sum' => $total,
             'is_partner' => !!$this->is_partner,
