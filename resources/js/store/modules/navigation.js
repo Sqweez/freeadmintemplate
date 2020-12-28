@@ -158,7 +158,7 @@ const navigationModule = {
                         title: 'Отчеты',
                         url: '/v3/reports'
                     },
-                   /* {
+                    {
                         title: 'Перемещения',
                         url: '/transfer',
                     },
@@ -166,7 +166,7 @@ const navigationModule = {
                         title: 'Поступления',
                         url: '/arrivals',
                         isAdmin: true,
-                    },*/
+                    },
                 ]
             },
         ],

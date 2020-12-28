@@ -34,12 +34,18 @@ class Arrival extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'is_completed' => 'boolean',
+        'count' => 'integer',
+        'purchase_price' => 'integer'
+    ];
+
     public function products() {
         return $this->hasMany('App\ArrivalProducts');
     }
 
     public function _products() {
-        return $this->belongsToMany('App\Product', 'arrival_products');
+        return $this->belongsToMany('App\v2\Models\ProductSku', 'arrival_products');
     }
 
     public function user() {

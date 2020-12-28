@@ -31,7 +31,6 @@
                         <tr>
                             <th>#</th>
                             <th>Наименование</th>
-                            <th>Атрибуты</th>
                             <th>Количество</th>
                             <th>Стоимость</th>
                             <th>Удалить</th>
@@ -40,24 +39,30 @@
                         <tbody class="background-iron-grey">
                         <tr v-for="(item, index) of cart" :key="item.id * 85">
                             <td>{{ index + 1 }}</td>
-                            <td>{{ item.product_name }}</td>
-                            <td>
-                                <ul>
-                                    <li v-for="(attr, index) of item.attributes" :key="index">
-                                        {{ attr.attribute }}: {{ attr.attribute_value }}
-                                    </li>
-                                </ul>
-                            </td>
+                            <td><v-list class="product__list" flat>
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            {{ item.product_name }}
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list></td>
                             <td class="d-flex align-center">
                                 <v-btn icon color="error" @click="decreaseCartCount(index)">
                                     <v-icon>mdi-minus</v-icon>
                                 </v-btn>
                                 <v-text-field
                                     v-model.number="item.count"
-                                    style="width: 20px;"
+                                    @input="updateCount($event, item)"
+                                    @change="updateCount($event, item)"
+                                    style="min-width: 40px; max-width: 40px; text-align: center"
                                     type="number"
                                 ></v-text-field>
-                                <v-btn icon color="success" @click="addToCart(item)">
+                                <v-btn icon color="success" @click="increaseCartCount(index)">
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
                             </td>
@@ -133,6 +138,30 @@
                             hide-details
                         ></v-text-field>
                     </v-col>
+                    <v-col cols="12" xl="2">
+                        <v-checkbox
+                            v-model="hideNotInStock"
+                            label="Скрывать отсутствующие"
+                        />
+                    </v-col>
+                    <v-col cols="12" xl="4">
+                        <v-autocomplete
+                            :items="categories"
+                            item-text="name"
+                            v-model="categoryId"
+                            item-value="id"
+                            label="Категория"
+                        />
+                    </v-col>
+                    <v-col cols="12" xl="4">
+                        <v-autocomplete
+                            :items="manufacturers"
+                            item-text="manufacturer_name"
+                            v-model="manufacturerId"
+                            item-value="id"
+                            label="Бренд"
+                        />
+                    </v-col>
                     <v-col cols="12" xl="4">
                         <v-select
                             :items="stores"
@@ -155,15 +184,22 @@
                             'items-per-page-text': 'Записей на странице',
                         }"
                 >
-                    <template v-slot:item.attributes="{ item }">
-                        <ul>
-                            <li v-for="(attr, index) of item.attributes" :key="index">
-                                {{ attr.attribute }}: {{ attr.attribute_value }}
-                            </li>
-                        </ul>
+                    <template v-slot:item.product_name="{item}">
+                        <v-list flat>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ item.product_name }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
                     </template>
                     <template v-slot:item.product_price="{ item }">
-                        {{ getPrice(item) | priceFilters}}
+                        {{ item.product_price | priceFilters}}
                     </template>
                     <template v-slot:item.actions="{item}">
                         <v-btn icon @click="addToCart(item)" color="success">
@@ -171,7 +207,7 @@
                         </v-btn>
                     </template>
                     <template v-slot:item.quantity="{item}">
-                        {{ getQuantity(item.quantity) - getCartCount(item.id) }}
+                        {{ item.quantity - getCartCount(item.id) }}
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -205,6 +241,7 @@
     import uploadFile, {deleteFile} from "@/api/upload";
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
+    import cart from "@/mixins/cart";
 
     export default {
         components: {
@@ -217,7 +254,6 @@
             },
         },
         data: () => ({
-            storeFilter: null,
             cart: [],
             search: '',
             confirmationModal: false,
@@ -235,11 +271,13 @@
                 },
                 {
                     text: 'Атрибуты',
-                    value: 'attributes'
+                    value: 'attributes',
+                    align: ' d-none'
                 },
                 {
-                    value: 'manufacturer',
-                    text: 'Производитель'
+                    value: 'manufacturer.manufacturer_name',
+                    text: 'Производитель',
+                    align: ' d-none'
                 },
                 {
                     text: 'Остаток',
@@ -262,41 +300,14 @@
         }),
         async mounted() {
             this.loading = this.products.length === 0;
-            await this.$store.dispatch(ACTIONS.GET_PRODUCT);
+            await this.$store.dispatch('GET_PRODUCTS_v2');
             await this.$store.dispatch(ACTIONS.GET_STORES);
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             this.loading = false;
         },
-        mixins: [product, product_search],
+        mixins: [product, product_search, cart],
         methods: {
-         /*   getPrice(product) {
-                const item = product.prices.find(p => p.store_id == this.storeFilter);
-                return item ? item.price : product.product_price;
-            },*/
-            addToCart(item) {
-                if (!this.checkAvailability(item)) {
-                    showToast('Недостаточно товара', TOAST_TYPE.WARNING);
-                    return;
-                }
-                const index = this.cart.map(c => c.id).indexOf(item.id);
-                if (index === -1) {
-                    this.cart.push({...item, count: 1});
-                } else {
-                    this.increaseCartCount(index);
-                }
-            },
-            checkAvailability(item = {}) {
-                return !((this.getQuantity(item.quantity) - this.getCartCount(item.id)) === 0);
-            },
-            increaseCartCount(index) {
-                this.$set(this.cart[index], 'count', this.cart[index].count + 1);
-            },
-            decreaseCartCount(index) {
-                this.$set(this.cart[index], 'count', Math.max(1, this.cart[index].count - 1))
-            },
-            onClientChosen(client) {
-                this.clientCartModal = false;
-                this.client = client;
-            },
             async uploadPhoto(e) {
                 const file = e.target.files[0];
                 const result = await uploadFile(file, 'file', 'transfers');
@@ -307,16 +318,6 @@
                 this.photos.splice(key, 1);
             },
             async onTransfer() {
-
-                const check = this.cart.filter(c => {
-                    return c.count > this.getQuantity(c.quantity) || c.count <= 0;
-                }).length
-
-                if (check) {
-                    showToast('Некорректное количество товара в перемещении, вы выбрали товара больше чем есть или меньше нуля!', TOAST_TYPE.ERROR);
-                    return ;
-                }
-
                 this.overlay = true;
 
                 const sale = {
@@ -351,65 +352,13 @@
                 link.click();
                 this.cart = [];
             },
-            getQuantity(quantity = []) {
-                if (typeof quantity === 'number') {
-                    return quantity;
-                }
-                if (!quantity.length) {
-                    return 0;
-                }
-                return quantity
-                    .filter(q => +q.store_id === +this.storeFilter)
-                    .map(q => q.quantity)
-                    .reduce((a, c) => {
-                        return +a + +c;
-                    }, 0)
-            },
-            getCartCount(id) {
-                const index = this.cart.map(c => c.id).indexOf(id);
-                if (index === -1) {
-                    return 0;
-                }
-                return this.cart[index].count;
-            },
-            deleteFromCart(index) {
-                this.cart.splice(index, 1);
-            }
         },
         computed: {
-            products() {
-                return this.$store.getters.products;
-            },
-            emptyCart() {
-                return !!!this.cart.length;
-            },
-            cartCount() {
-                return this.cart
-                    .map(c => c.count)
-                    .reduce((a, c) => {
-                        return a + c;
-                    }, 0)
-            },
-            subtotal() {
-                return this.cart.reduce((a, c) => {
-                    return (c.product_price * c.count) + a;
-                }, 0);
-            },
-            stores() {
-                const stores = this.$store.getters.stores;
-                if (stores.length > 0) {
-                    this.storeFilter = stores[0].id;
-                }
-                return stores;
-            },
             _stores() {
                 const stores = this.stores.filter(s => s.id !== this.storeFilter);
                 this.child_store = stores[0].id;
                 return stores;
             },
-            user() {
-                return this.$store.getters.USER;
-            }
         }
     }
 </script>

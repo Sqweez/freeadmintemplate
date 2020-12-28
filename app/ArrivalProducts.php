@@ -29,6 +29,6 @@ class ArrivalProducts extends Model
     public $timestamps = false;
 
     public function product() {
-        return $this->belongsTo('App\Product')->withTrashed();
+        return $this->belongsTo('App\v2\Models\ProductSku')->withTrashed();
     }
 }

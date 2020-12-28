@@ -35,6 +35,6 @@ class TransferBatch extends Model
     }
 
     public function product() {
-        return $this->belongsTo('App\Product', 'product_id');
+        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id');
     }
 }

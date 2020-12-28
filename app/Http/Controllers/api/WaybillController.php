@@ -43,7 +43,7 @@ class WaybillController extends Controller
             $child_store = 1;
             $arrival = new ArrivalResource(Arrival::find($arrival_id));
             $arrival = $arrival->toArray($request);
-            $cart = $arrival['products'];
+            $cart = $arrival['products']->toArray($request);
         } else {
             $cart = $request->get('cart');
             $parent_store = $request->get('parent_store');

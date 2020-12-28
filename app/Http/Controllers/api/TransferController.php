@@ -26,14 +26,11 @@ class TransferController extends Controller {
         $mode = $request->get('mode');
         $transfers = Transfer::where('is_confirmed', !($mode === 'current'))
             ->with(['parent_store', 'child_store'])
-            ->with(['batches' => function ($query) {
-                return $query
-                    ->leftJoin('product_batches', 'product_batches.id', '=', 'transfer_batches.batch_id')
-                    ->leftJoin('products', 'products.id', '=', 'transfer_batches.product_id')
-                    ->select('transfer_batches.*', 'product_batches.purchase_price as purchase_price', 'products.product_price as product_price');
-            }])
-            ->select('id', 'parent_store_id', 'child_store_id', 'user_id', 'photos')
+            ->with(['batches', 'batches.productBatch:id,purchase_price', 'batches.product:id,product_id,self_price', 'batches.product.product:id,product_price'])
+            ->select('id', 'parent_store_id', 'child_store_id', 'user_id', 'photos', 'created_at')
+            ->orderByDesc('created_at')
             ->get();
+
         return TransferResource::collection($transfers);
     }
 
@@ -46,22 +43,23 @@ class TransferController extends Controller {
     public function store(Request $request) {
         $_transfer = $request->except('cart');
         $transfer = Transfer::create($_transfer);
-        $transfer_id = $transfer['id'];
         $store_id = $request->get('parent_store_id');
         $cart = $request->get('cart');
-        $this->parseCart($transfer_id, $store_id, $cart);
+        $this->parseCart($transfer, $store_id, $cart);
         return ['products' => ProductResource::collection(Product::find(array_map(function ($i) {
             return $i['id'];
         }, $cart))),];
     }
 
-    private function parseCart($id, $store_id, $cart = []) {
+    private function parseCart(Transfer $transfer, $store_id, $cart = []) {
         foreach ($cart as $item) {
             for ($i = 0; $i < $item['count']; $i++) {
                 $product_batch = ProductBatch::where('product_id', $item['id'])->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
-                $batch_transfer = ['batch_id' => $product_batch['id'], 'product_id' => $item['id'], 'transfer_id' => $id,];
-                $this->decreaseCount($product_batch);
-                TransferBatch::create($batch_transfer);
+                $transfer->batches()->create([
+                    'batch_id' => $product_batch['id'], 'product_id' => $item['id'],
+                ]);
+                $product_batch->decrement('quantity');
+                $product_batch->save();
             };
         }
     }
@@ -80,7 +78,9 @@ class TransferController extends Controller {
     public function show($transfer) {
         return new SingleTransferResource(
             Transfer::where('id', $transfer)
-                ->with(['batches', 'batches.product', 'batches.product.manufacturer', 'batches.product.attributes', 'batches.product.attributes.attribute_name'])
+                ->with([
+                    'batches',
+                    'batches.product', 'batches.product.product.manufacturer', 'batches.product.product.attributes', 'batches.product.attributes'])
                 ->first()
         );
     }

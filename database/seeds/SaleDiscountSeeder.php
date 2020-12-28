@@ -1,4 +1,5 @@
 <?php
+namespace database\seeds;
 
 use App\Sale;
 use App\SaleProduct;

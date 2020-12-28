@@ -68,9 +68,9 @@
 </template>
 
 <script>
-    import {deleteArrival, getArrival, getArrivals} from "../../../api/arrivals";
-    import ArrivalInfoModal from "../../Modal/ArrivalInfoModal";
-    import ConfirmationModal from "../../Modal/ConfirmationModal";
+    import {deleteArrival, getArrival, getArrivals} from "@/api/arrivals";
+    import ArrivalInfoModal from "@/components/Modal/ArrivalInfoModal";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import axios from "axios";
 
     export default {

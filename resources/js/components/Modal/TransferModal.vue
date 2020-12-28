@@ -21,7 +21,6 @@
                         <tr>
                             <th v-if="confirmMode">Действие</th>
                             <th>Наименование</th>
-                            <th>Атрибуты</th>
                             <th>Количество</th>
                         </tr>
                         </thead>
@@ -32,13 +31,19 @@
                                     v-model="item.accepted"
                                 />
                             </td>
-                            <td>{{ item.product_name }}</td>
                             <td>
-                                <ul>
-                                    <li v-for="(attr, index) of item.attributes" :key="index">
-                                        {{ attr.attribute }}: {{ attr.attribute_value }}
-                                    </li>
-                                </ul>
+                                <v-list flat>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.product_name }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
                             </td>
                             <td>
 

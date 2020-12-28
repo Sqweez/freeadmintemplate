@@ -118,6 +118,16 @@
                     sortable: false
                 },
                 {
+                    text: 'Дата',
+                    value: 'date',
+                    sortable: false
+                },
+                {
+                    text: 'Дата принятия',
+                    value: 'date_updated',
+                    sortable: false
+                },
+                {
                     text: 'Отправитель',
                     value: 'parent_store',
                     sortable: false

@@ -18,11 +18,13 @@ class ArrivalController extends Controller
             Arrival::where('is_completed', $is_completed)
                 ->with([
                     'products', 'products.product',
-                    'products.product.manufacturer',
+                    'products.product.product',
+                    'products.product.product.manufacturer',
                     'products.product.attributes',
-                    'products.product.attributes.attribute_name',
+                    'products.product.product.attributes',
                     'user', 'store'
                 ])
+                ->orderByDesc('created_at')
                 ->get()
                 ->map(function ($arrival) {
                     $products = collect($arrival->products)->filter(function ($batch) {
@@ -41,12 +43,13 @@ class ArrivalController extends Controller
     public function createArrival(Request $request) {
         $arrival = Arrival::create($request->except('products'));
         foreach ($request->get('products') as $item) {
-            ArrivalProducts::create([
-                'product_id' => $item['id'],
-                'arrival_id' => $arrival->id,
-                'count' => $item['count'],
-                'purchase_price' => $item['purchase_price']
-            ]);
+            $arrival->products()->create(
+                [
+                    'product_id' => $item['id'],
+                    'count' => $item['count'],
+                    'purchase_price' => $item['purchase_price']
+                ]
+            );
         }
 
         return new ArrivalResource($arrival);

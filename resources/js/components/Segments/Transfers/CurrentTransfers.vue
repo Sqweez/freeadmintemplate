@@ -23,10 +23,10 @@
                         }"
         >
             <template v-slot:item.total_cost="{item}">
-                {{ new Intl.NumberFormat('ru-RU').format(item.total_cost) }}₸
+                {{ item.total_cost | priceFilters }}
             </template>
             <template v-slot:item.total_purchase_cost="{item}">
-                {{ new Intl.NumberFormat('ru-RU').format(item.total_purchase_cost) }}₸
+                {{ item.total_purchase_cost | priceFilters }}
             </template>
             <template v-slot:item.product_count="{item}">
                 {{ item.product_count }} шт.
@@ -77,10 +77,10 @@
     import ConfirmationModal from "../../Modal/ConfirmationModal";
     import TransferPhotoModal from "../../Modal/TransferPhotoModal";
     import TransferModal from "../../Modal/TransferModal";
-    import {declineTransfer} from "../../../api/transfers";
+    import {declineTransfer} from "@/api/transfers";
     import axios from "axios";
     import showToast from "../../../utils/toast";
-    import {TOAST_TYPE} from "../../../config/consts";
+    import {TOAST_TYPE} from "@/config/consts";
     export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'current'});
@@ -118,6 +118,11 @@
                 {
                     text: 'Пользователь',
                     value: 'user',
+                    sortable: false
+                },
+                {
+                    text: 'Дата создания',
+                    value: 'date',
                     sortable: false
                 },
                 {

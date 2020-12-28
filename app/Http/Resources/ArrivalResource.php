@@ -25,7 +25,7 @@ class ArrivalResource extends JsonResource
             'store_id' => $this->store_id,
             'user_id' => $this->user_id,
             'user' => $this->user->name,
-            'is_completed' => !!$this->is_completed,
+            'is_completed' => $this->is_completed,
             'products' => ArrivalProductResource::collection($this->products),
             'position_count' => $this->products->count(),
             'product_count' => $this->products->sum('count'),
@@ -35,7 +35,7 @@ class ArrivalResource extends JsonResource
             'total_sale_cost' => $this->products->reduce(function ($a, $c) {
                 return $a + intval($c->count) * intval($c->product->product_price ?? 0);
             }, 0),
-            'date' => Carbon::parse($this->created_at)->format('d.m.Y'),
+            'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
         ];
     }
 }
