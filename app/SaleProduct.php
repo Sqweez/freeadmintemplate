@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $sale_id
  * @property int $purchase_price
  * @property int $product_price
+ * @property int $discount
  * @property-read Product $product
  * @property-read Sale $sale
  * @method static \Illuminate\Database\Eloquent\Builder|SaleProduct newModelQuery()
@@ -36,7 +37,8 @@ class SaleProduct extends Model
 
     protected $casts = [
         'purchase_price' => 'integer',
-        'product_price' => 'integer'
+        'product_price' => 'integer',
+        'discount' => 'integer'
     ];
 
     public function product() {
@@ -53,6 +55,14 @@ class SaleProduct extends Model
 
     public function brothers() {
         return $this->hasMany('App\SaleProduct', 'id', 'id');
+    }
+
+    public function getFinalPriceAttribute() {
+        return $this->product_price - ($this->discount /  100) * $this->product_price;
+    }
+
+    public function getMarginAttribute() {
+        return ceil($this->discount === 100 ? 0 : $this->final_price - $this->purchase_price);
     }
 
     /*public function getCountAttribute() {

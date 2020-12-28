@@ -41,20 +41,24 @@ class TestController extends Controller
 {
     public function index(Request $request) {
 
-        $start = $request->get('start');
-        $finish = $request->get('finish');
-        $reports =  ReportsResource::collection(
-            Sale::with(['client', 'user', 'store','products.product', 'products.product.product:id,product_name,manufacturer_id'])
-                ->with(['products' => function ($query) {
-                    return $query->groupBy('product_id')->addSelect(\DB::raw('*, count(*) as product_count'));
-                }])
-                ->take(50)
-                ->report([$start, $finish])
-                ->get()
-        );
+        $sales =  Sale::where('discount', '!=', 0)->cursor();
+        foreach ($sales as $sale) {
+            SaleProduct::whereSaleId($sale['id'])->update([
+                'discount' => $sale['discount']
+            ]);
+        }
+        /*return Sale::where('discount', '!=', 0)->whereHas('products', function ($query) {
+            return $query->where('discount', 0);
+        })->chunk(100, function ($sales) {
+            $sales->each(function ($sale) {
+                SaleProduct::whereKey($sale['id'])->update([
+                    'discount' => $sale['discount']
+                ]);
+            });
+        });*/
 
         return view('test', [
-            'product' => $reports->toArray($request)
+            'product' => $sales
         ]);
     }
 

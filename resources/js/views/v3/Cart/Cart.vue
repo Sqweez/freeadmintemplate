@@ -155,7 +155,7 @@
                         </v-list-item-action>
                     </v-list-item>
                 </v-list>
-                <v-divider v-if="client"></v-divider>
+                <v-divider></v-divider>
                 <v-simple-table v-slot:default>
                     <template>
                         <thead class="fz-18">
@@ -163,12 +163,14 @@
                             <th>#</th>
                             <th>Товар</th>
                             <th>Количество</th>
+                            <th>Скидка</th>
+                            <th>Цена</th>
                             <th>Стоимость</th>
                             <th>Удалить</th>
                         </tr>
                         </thead>
                         <tbody class="background-iron-grey">
-                        <tr v-for="(item, index) of cart" :key="item.id * 85">
+                        <tr v-for="(item, index) of cart" :key="`product-id-${item.uuid}`">
                             <td>{{ index + 1 }}</td>
                             <td>
                                 <v-list class="product__list" flat>
@@ -190,13 +192,23 @@
                                     <v-btn depressed text icon color="error" @click="decreaseCartCount(index)">
                                         <v-icon>mdi-minus</v-icon>
                                     </v-btn>
-                                    <v-text-field v-model="item.count" type="number" style="max-width: 40px; text-align: center"  @change="updateCount(item)" @input="updateCount(item)"/>
-                                    <v-btn depressed text icon color="success" @click="addToCart(item)">
+                                    <v-text-field v-model="item.count" type="number" style="min-width: 40px; max-width: 40px; text-align: center"  @change="updateCount($event, item)" @input="updateCount($event, item)"/>
+                                    <v-btn depressed text icon color="success" @click="increaseCartCount(index)">
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
                                 </div>
                             </td>
-                            <td class="font-weight-bold">{{ item.product_price }} ₸</td>
+                            <td>
+                                <v-text-field
+                                    type="number"
+                                    v-model="item.discount"
+                                    @input="updateDiscount(item)"
+                                    suffix="%"
+                                    @change="updateDiscount(item)"
+                                />
+                            </td>
+                            <td>{{ item.product_price | priceFilters}}</td>
+                            <td>{{ item.product_price * item.count - (Math.max(discountPercent, item.discount) / 100 * item.product_price * item.count) | priceFilters }}</td>
                             <td>
                                 <v-btn icon color="error" @click="deleteFromCart(index)">
                                     <v-icon>mdi-close</v-icon>
@@ -229,10 +241,10 @@
                     </template>
                 </v-simple-table>
                 <div class="background-iron-grey pa-10">
-                    <v-btn :disabled="disabled" depressed color="error" block style="font-size: 16px" @click="clientCartModal = true" v-if="!client">
+                    <v-btn depressed color="error" block style="font-size: 16px" @click="clientCartModal = true" v-if="!client">
                         Выбрать клиента
                     </v-btn>
-                    <v-btn :disabled="disabled" depressed color="error" block style="font-size: 16px" @click="onSale" v-else>
+                    <v-btn depressed color="error" block style="font-size: 16px" @click="onSale" v-else>
                         Оформить заказ
                     </v-btn>
                 </div>
@@ -321,22 +333,12 @@
                             </v-list-item>
                         </v-list>
                     </template>
-                    <!--<template v-slot:item.attributes="{ item }">
-                        <v-list>
-                            <v-list-item v-for="(attr, idx) of item.attributes" :key="`attribute-${idx}`">
-                                <v-list-item-content>
-                                    <v-list-item-title>{{ attr.attribute_value }}</v-list-item-title>
-                                    <v-list-item-subtitle>{{ attr.attribute_name }}</v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-list>
-                    </template>-->
-                   <!-- <template v-slot:item.manufacturer="{ item }">
-                        {{ item.manufacturer.manufacturer_name }}
-                    </template>-->
                     <template v-slot:item.actions="{item}">
                         <v-btn depressed icon @click="addToCart(item)" color="success">
                             <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                        <v-btn depressed icon @click="addToCart(item, true)" color="success"  v-if="cart.find(c => c.id === item.id)">
+                            <span>+1</span>
                         </v-btn>
                     </template>
                     <template v-slot:item.quantity="{item}">
@@ -362,15 +364,10 @@
             :on-confirm="printCheck"
             @cancel="confirmationModal = false"
         />
-        <!--<WayBillModal
-            :state="wayBillModal"
-            v-on:cancel="wayBillModal = false"
-        />-->
         <ConfirmationModal
             :state="waybillModal"
             message="Сформировать накладную?"
             :on-confirm="getWayBill"
-            @cancel="wayBillModal = false;"
         />
     </div>
 </template>
@@ -382,12 +379,11 @@
     import showToast from "@/utils/toast";
     import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
-    import {mapActions, mapMutations} from 'vuex';
+    import {mapActions} from 'vuex';
     import CheckModal from "@/components/Modal/CheckModal";
     import axios from "axios";
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
-
     export default {
         components: {
             CheckModal,
@@ -396,7 +392,6 @@
             WayBillModal
         },
         async created() {
-            console.time('start');
             this.loading = this.products.length === 0 || false;
             await this.$store.dispatch('GET_PRODUCTS_v2');
             const store_id = this.is_admin ? null : this.user.store_id;
@@ -405,16 +400,10 @@
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             this.loading = false;
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
-            await this.$store.dispatch('SYNC_CART_COUNT');
-            this.disabled = false;
-            console.timeEnd('start');
         },
         watch: {
-            storeFilter(value) {
-                if (this.store_id !== value) {
-                    this.$store.commit('CLEAR_CART');
-                }
-                this.store_id = value;
+            storeFilter() {
+                this.cart = [];
             },
             stores() {
                 this.storeFilter = this.stores[0].id;
@@ -427,7 +416,6 @@
                     if (value.toString().length > 3) {
                         this.discountPercent = +(value.toString().slice(0, 3));
                     }
-
                     this.isFree = this.discountPercent === 100;
                 })
             },
@@ -442,7 +430,7 @@
                 } else {
                     this.discountPercent = 0;
                 }
-            },
+            }
         },
         mixins: [product, product_search],
         data: () => ({
@@ -452,19 +440,18 @@
             hideNotInStock: true,
             waybillModal: false,
             loading: true,
-            disabled: true,
-            //cart: [],
-           /* isRed: false,
+            cart: [],
+            isRed: false,
             isFree: false,
             payment_type: 0,
             promocodeSet: false,
             partner_id: null,
             discountPercent: '',
-            promocode: "", */
+            promocode: "",
             clientCartModal: false,
             confirmationModal: false,
             wayBillModal: false,
-           // client: null,
+            client: null,
             overlay: false,
             sale_id: null,
             balance: 0,
@@ -511,38 +498,30 @@
                 ACTIONS.GET_CLIENTS,
                 ACTIONS.GET_STORES,
             ]),
-            ...mapActions({
-                addToCart: 'ADD_TO_CART',
-            }),
-            ...mapMutations({
-                increaseCartCount: 'INCREASE_CART',
-                decreaseCartCount: 'DECREASE_CART',
-                deleteFromCart: 'DELETE_FROM_CART',
-            }),
             cancelClient() {
-                this.$store.commit('SET_CART_CLIENT', null);
-                this.$store.commit('SET_CART_PARAMS', {
-                    partner_id: null,
-                    promocode: '',
-                    discountPercent: 0,
-                    promocodeSet: false,
-                });
-
+                this.client = null;
                 this.partner_id = null;
                 this.promocode = '';
                 this.discountPercent = 0;
                 this.promocodeSet = false;
             },
-            /*updateCount(item) {
+            updateCount(e, item) {
                 this.$nextTick(() => {
-                    const index = this.cart.findIndex(c => c.id === item.id);
-                    this.$set(this.cart[index], 'count', Math.min(this.cart[index].quantity, Math.max(this.cart[index].count, 0)));
+                    const index = this.cart.findIndex(c => c.uuid === item.uuid);
+                    const currentCount = this.cart.filter(c => c.id === item.id && c.uuid !== item.uuid)
+                        .reduce((a, c) => {
+                            return a + +c.count
+                        }, 0);
+
+                    const quantity = this.cart[index].quantity - currentCount;
+                    this.$set(this.cart[index], 'count', Math.min(quantity, Math.max(+e, 0)));
                 })
-            },*/
-            updateCount(item) {
+            },
+            updateDiscount(item) {
                 this.$nextTick(() => {
-                    this.$store.commit('UPDATE_CART_COUNT', item);
-                })
+                    const index = this.cart.findIndex(c => c.uuid === item.uuid);
+                    this.$set(this.cart[index], 'discount', Math.max(0, Math.min(100, item.discount)));
+                });
             },
             async searchPromocode() {
                 this.$loading();
@@ -557,7 +536,6 @@
                 } finally {
                     this.$loading();
                 }
-
             },
             async refreshProducts() {
                 this.loading = true;
@@ -569,36 +547,54 @@
                 await this.getProductQuantities(this.storeFilter);
                 this.loading = false;
             },
-          /*  addToCart(item) {
-                /!*if (item.count - item.quantity === 0) {
+            addToCart(item, merge = false) {
+                if (item.quantity - this.getCartCount(item.id) === 0) {
                     showToast('Недостаточно товара', TOAST_TYPE.WARNING);
                     return;
                 }
+
                 const index = this.cart.findIndex(c => c.id === item.id);
-                if (index === -1) {
-                    this.cart.push({...item, count: 1, product_price: item.product_price});
+                if (index === -1 || merge) {
+                    this.cart.push({...item, count: 1, product_price: item.product_price, discount: 0, uuid: Math.random()});
                 } else {
                     this.increaseCartCount(index);
-                }*!/
-            },*/
+                }
+            },
+            toggleInput(index) {
+                this.$set(this.cart[index], 'inputMode', !this.cart[index].inputMode);
+            },
+            changeCount(item, index) {
+                this.$set(this.cart[index], 'count', Math.min(this.cart[index]._count, item.quantity));
+                this.toggleInput(index);
+            },
             checkAvailability(item = {}) {
                 return !((this.getQuantity(item.quantity) - this.getCartCount(item.id)) === 0);
             },
-           /* increaseCartCount(index) {
+            increaseCartCount(index) {
+                const item = this.cart[index];
+                const currentCount = Math.min(this.cart[index].quantity, this.cart.filter(c => c.id === item.id).reduce((a, c) => {
+                    return a + +c.count
+                }, 0));
+
+
+                if (item.quantity - currentCount === 0) {
+                    showToast('Недостаточно товара', TOAST_TYPE.WARNING);
+                    return;
+                }
+
                 this.$set(this.cart[index], 'count', this.cart[index].count + 1);
             },
             decreaseCartCount(index) {
                 this.$set(this.cart[index], 'count', Math.max(1, this.cart[index].count - 1))
-            },*/
+            },
             onClientChosen(client) {
                 this.clientCartModal = false;
-                this.$store.commit('SET_CART_CLIENT', client);
+                this.client = client;
             },
             async onSale() {
-
                 const sale = {
                     cart: this.cart.map(c => {
-                        return {id: c.id, product_price: c.product_price, count: c.count};
+                        return {id: c.id, product_price: c.product_price, count: c.count, discount: c.discount};
                     }),
                     store_id: this.storeFilter,
                     user_id: this.user.id,
@@ -609,16 +605,11 @@
                     partner_id: this.partner_id,
                     payment_type: this.payment_type
                 };
-
                 try {
                     this.overlay = true;
                     this.sale_id = await this.$store.dispatch('MAKE_SALE_v2', sale);
-
                     showToast('Продажа совершена успешно!');
                     this.confirmationModal = true;
-
-                    await this.$store.dispatch('AFTER_SALE');
-/*
                     this.cart = [];
                     this.client = null;
                     this.discountPercent = '';
@@ -626,28 +617,32 @@
                     this.isFree = false;
                     this.balance = 0;
                     this.payment_type = 0;
-                    this.partner_id = false;*/
+                    this.partner_id = false;
                 } catch (e) {
                     showToast('Произошла ошибка', TOAST_TYPE.ERROR);
                 } finally {
                     this.overlay = false;
                 }
-
             },
             printCheck() {
                 this.confirmationModal = false;
                 window.open(`/check/${this.sale_id}`, '_blank');
             },
             getCartCount(id) {
-                const index = this.cart.map(c => c.id).indexOf(id);
+                return this.cart
+                    .filter(c => c.id === id)
+                    .reduce((a, c) => {
+                        return a + c.count;
+                    }, 0);
+               /* const index = this.cart.map(c => c.id).indexOf(id);
                 if (index === -1) {
                     return 0;
                 }
-                return this.cart[index].count;
+                return this.cart[index].count;*/
             },
-           /* deleteFromCart(index) {
+            deleteFromCart(index) {
                 this.cart.splice(index, 1);
-            },*/
+            },
             async getWayBill() {
                 this.waybillModal = false;
                 try {
@@ -657,11 +652,9 @@
                         parent_store: this.storeFilter,
                         cart: this.cart,
                     });
-
                     const link = document.createElement('a');
                     link.href = `${window.location.origin}/${data.path}`;
                     link.click();
-
                 } catch (e) {
                     showToast('При создании накладной произошла ошибка!', TOAST_TYPE.ERROR);
                 } finally {
@@ -669,96 +662,11 @@
                 }
             },
             async searchProducts() {
-
             },
         },
         computed: {
             user() {
                 return this.$store.getters.USER;
-            },
-            cart () {
-                return this.$store.getters.CART;
-            },
-            client() {
-                return this.$store.getters.CART_CLIENT;
-            },
-            store_id: {
-                get() {
-                    return this.$store.getters.CART_PARAMS.store_id;
-                },
-                set(value) {
-                    this.$nextTick(() => {
-                        this.$store.commit('SET_CART_PARAMS', {store_id: value});
-                    })
-                }
-            },
-            isRed: {
-                get() {
-                    return this.$store.getters.CART_PARAMS.isRed;
-                },
-                set(value) {
-                    this.$nextTick(() => {
-                        this.$store.commit('SET_CART_PARAMS', {isRed: value})
-                    })
-                },
-            },
-            isFree: {
-                get() {
-                    return this.$store.getters.CART_PARAMS.isFree;
-                },
-                set(value) {
-                    this.$nextTick(() => {
-                        this.$store.commit('SET_CART_PARAMS', {isFree: value})
-                    })
-                },
-            },
-            payment_type: {
-                get() {
-                    return this.$store.getters.CART_PARAMS.payment_type;
-                },
-                set(value) {
-                    this.$nextTick(() => {
-                        this.$store.commit('SET_CART_PARAMS', {payment_type: value})
-                    })
-                }
-            },
-            partner_id: {
-                get() {
-                    return this.$store.getters.CART_PARAMS.partner_id;
-                },
-                set(value) {
-                    this.$nextTick(() => {
-                        this.$store.commit('SET_CART_PARAMS', {partner_id: value})
-                    })
-                }
-            },
-            discountPercent: {
-                get() {
-                    return this.$store.getters.CART_PARAMS.discountPercent;
-                },
-                set(value) {
-                    this.$nextTick(() => {
-                        this.$store.commit('SET_CART_PARAMS', {discountPercent: value})
-                    })
-                },
-            },
-            promocode: {
-                get() {
-                    return this.$store.getters.CART_PARAMS.promocode;
-                },
-                set(value) {
-                    this.$nextTick(() => {
-                        this.$store.commit('SET_CART_PARAMS', {promocode: value})
-                    })
-                },
-            },
-            promocodeSet: {
-                get() {
-                    return this.$store.getters.CART_PARAMS.promocodeSet;
-                },
-                set(value) {
-                    this.$store.commit('SET_CART_PARAMS', {promocodeSet: value})
-                },
             },
             partners() {
                 return this.$store.getters.PARTNERS;
@@ -774,11 +682,9 @@
                 if (this.hideNotInStock) {
                     products = products.filter(product => product.quantity > 0);
                 }
-
                 if (this.categoryId !== -1) {
                     products = products.filter(product => product.category.id === this.categoryId);
                 }
-
                 return products;
             },
             emptyCart() {
@@ -797,7 +703,9 @@
                 }, 0);
             },
             discountTotal() {
-                return this.subtotal * (this.discount / 100);
+                return this.cart.reduce((a, c) => {
+                    return a + Math.max(this.discountPercent, c.discount) /100 * c.product_price * c.count;
+                }, 0);
             },
             total() {
                 return this.subtotal - this.discountTotal;
@@ -843,19 +751,15 @@
     .background-iron-grey {
         background-color: #444444;
     }
-
     .background-iron-darkgrey {
         background-color: #333333;
     }
-
     .fz-18 > tr > td, th {
         font-size: 16px!important;
     }
-
     .margin-28 {
         margin-top: 28px;
     }
-
     .w-50px {
         width: 50px;
     }
@@ -865,15 +769,12 @@
         grid-gap: 10px;
         padding: 15px 25px;
     }
-
     .cart__parameters > div:nth-child(2n+1):last-child {
         grid-column: 1 / 3;
     }
-
     .client__table-heading {
         padding-bottom: 10px;
     }
-
     .product__list {
         background-color: #444444!important;
     }

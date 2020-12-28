@@ -143,6 +143,7 @@
             ]),
         },
         async created() {
+            this.loading = !(this.shops.length && this._plans.length && this.planReports.length);
             await this.$store.dispatch(ACTIONS.GET_PLANS);
             if (!this.shops.length) {
                 await this.$store.dispatch(ACTIONS.GET_STORES);

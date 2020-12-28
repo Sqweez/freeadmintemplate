@@ -34,9 +34,10 @@
 </template>
 
 <script>
-    import TransferHistory from "../../components/Segments/TransferHistory";
-    import NewTransferSegment from "../../components/Segments/NewTransferSegment";
-    import CurrentTransfers from "../../components/Segments/CurrentTransfers";
+    import TransferHistory from "@/components/Segments/Transfers/TransferHistory";
+    import NewTransferSegment from "@/components/Segments/Transfers/NewTransferSegment";
+    import CurrentTransfers from "@/components/Segments/Transfers/CurrentTransfers";
+
     export default {
         components: {TransferHistory, NewTransferSegment, CurrentTransfers},
         data: () => ({

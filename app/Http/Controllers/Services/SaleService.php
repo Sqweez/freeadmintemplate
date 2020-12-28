@@ -18,17 +18,32 @@ class SaleService {
         collect($cart)->each(function ($product) use ($sale, $store_id) {
             for ($i = 0; $i < $product['count']; $i++) {
                 $batch = ProductBatch::whereProductId($product['id'])->whereStoreId($store_id)->where('quantity', '>', 0)->first();
+                $discount = max($product['discount'], $sale->discount);
                 $sale->products()->create([
                     'product_batch_id' => $batch->id,
                     'product_id' => $product['id'],
                     'purchase_price' => $batch->purchase_price,
-                    'product_price' => $product['product_price']
+                    'product_price' => $product['product_price'],
+                    'discount' => $discount,
                 ]);
                 $batch->decrement('quantity');
                 $batch->save();
             }
         });
     }
+
+    /*private function calculateProductSaleDiscount(Sale $sale, $discount) {
+        if ($sale->discount > $discount) {
+            return 0;
+        }
+
+        if ($sale->discount === $discount) {
+            return 0;
+        }
+
+        return $discount;
+
+    }*/
 
     public function createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale_id, $partner_id) {
         $client = Client::find($client_id);
@@ -78,7 +93,7 @@ class SaleService {
     public function getTotalCost($cart, $discount) {
         return collect($cart)->reduce(function ($a, $c) use ($discount) {
             $price = $c['product_price'] * $c['count'];
-            $price = $price - ($price * $discount / 100);
+            $price = $price - ($price * max($discount, $c['discount']) / 100);
             return $a + $price;
         }, 0);
     }

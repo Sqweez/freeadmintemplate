@@ -184,29 +184,12 @@
                             </v-list-item-content>
                             <v-list-item-action>
                                 <span>{{ product.count }} шт</span>
+                                <span v-if="product.discount > 0">Скидка: {{ product.discount }}%</span>
                             </v-list-item-action>
                            <!-- <span>{{ product.product_name }}</span> <b style="white-space: nowrap">{{ product.count }}
                             шт.</b>-->
                         </v-list-item>
                     </v-list>
-                </template>
-                <template v-slot:item.user="{item}">
-                    {{ item.user.name}}
-                </template>
-                <template v-slot:item.store="{item}">
-                    {{ item.store.name}}
-                </template>
-                <template v-slot:item.purchase_price="{item}">
-                    {{ item.purchase_price | priceFilters}}
-                </template>
-                <template v-slot:item.fact_price="{item}">
-                    {{ item.fact_price | priceFilters}}
-                </template>
-                <template v-slot:item.final_price="{item}">
-                    {{ item.final_price | priceFilters}}
-                </template>
-                <template v-slot:item.margin="{item}">
-                    {{ item.margin | priceFilters }}
                 </template>
                 <template v-slot:item.sale_data="{item}">
                     <v-list>
@@ -252,7 +235,7 @@
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-content>
-                                <v-list-item-title>{{ item.margin | priceFilters}} (<span class="green--text">{{ Math.ceil(item.margin * 100 / item.final_price) }}%</span>)</v-list-item-title>
+                                <v-list-item-title>{{ item.margin | priceFilters}} (<span v-if="item.final_price > 0" :class="Math.ceil(item.margin * 100 / item.final_price) > 0 ? 'green--text' : 'red--text'">{{ Math.ceil(item.margin * 100 / item.final_price) }}%</span>)</v-list-item-title>
                                 <v-list-item-subtitle>Прибыль</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
@@ -260,12 +243,6 @@
                 </template>
                 <template v-slot:item.additional_data="{item}">
                     <v-list>
-                        <v-list-item>
-                            <v-list-item-content>
-                                <v-list-item-title>{{ item.discount }}%</v-list-item-title>
-                                <v-list-item-subtitle>Скидка</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
                         <v-list-item>
                             <v-list-item-content>
                                 <v-list-item-title>{{ item.balance | priceFilters}}</v-list-item-title>

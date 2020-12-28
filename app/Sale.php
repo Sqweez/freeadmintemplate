@@ -100,6 +100,11 @@ class Sale extends Model
         return $this->hasMany('App\SaleProduct', 'sale_id');
     }
 
+
+    public function product_count() {
+        return $this->hasMany('App\SaleProduct', 'sale_id')->groupBy(['product_id', 'sale_id'])->count();
+    }
+
     public function user() {
         return $this->belongsTo('App\User', 'user_id')->withDefault([
             'name' => 'Неизвестно',
@@ -116,20 +121,24 @@ class Sale extends Model
     }
 
     public function scopeReport($q) {
-        return $q->with(['client', 'user', 'store','products.product'])
+        return $q->with(['client', 'user', 'store','products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes'])
-            ->with(['products' => function ($query) {
-                return $query->groupBy(['product_id', 'sale_id'])->addSelect(\DB::raw('*, count(*) as product_count'));
-            }]);
+            /*->with(['products' => function ($query) {
+                return $query->groupBy(['product_id', 'sale_id', 'discount'])->addSelect(\DB::raw('*, count(*) as product_count'));
+            }])*/;
     }
 
     public function getPurchasePriceAttribute() {
-        return intval($this->products->sum('purchase_price'));
+        return intval($this->products->reduce(function ($a, $c) {
+            return $a + $c->purchase_price;
+        }, 0));
     }
 
     public function getProductPriceAttribute() {
-        return intval($this->products->sum('product_price'));
+        return intval($this->products->reduce(function ($a, $c) {
+            return $a + $c->product_price;
+        }, 0));
     }
 
     public function getDiscountPercentAttribute() {
@@ -137,7 +146,9 @@ class Sale extends Model
     }
 
     public function getFinalPriceAttribute() {
-        $price = (1 - $this->discount_percent) * $this->product_price;
+        $price = intval($this->products->reduce(function ($a, $c) {
+            return $a + $c->final_price;
+        }, 0));;
         if ($this->kaspi_red) {
             $price -= $price * self::KASPI_RED_PERCENT;
         }
@@ -145,7 +156,9 @@ class Sale extends Model
     }
 
     public function getMarginAttribute() {
-        return ceil($this->discount === 100 ? 0 : $this->final_price - $this->purchase_price);
+        return intval($this->products->reduce(function ($a, $c) {
+            return $a + $c->margin;
+        }, 0));
     }
 
     public function getDateAttribute() {

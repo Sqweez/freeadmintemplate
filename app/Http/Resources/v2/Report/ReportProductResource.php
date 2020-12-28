@@ -29,7 +29,8 @@ class ReportProductResource extends JsonResource
             })),
             'manufacturer' => $this->product->manufacturer,
             'product_price' => $this->product_price,
-            'count' => $this->product_count
+          /*  'count' => $this->count,*/
+            'discount' => $this->discount
         ];
     }
 }

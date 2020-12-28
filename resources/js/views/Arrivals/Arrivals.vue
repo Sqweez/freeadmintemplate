@@ -34,9 +34,9 @@
 </template>
 
 <script>
-    import ArrivalHistory from "../../components/Segments/ArrivalHistory";
-    import CurrentArrivals from "../../components/Segments/CurrentArrivals";
-    import NewArrival from "../../components/Segments/NewArrival";
+    import ArrivalHistory from "@/components/Segments/Arrivals/ArrivalHistory";
+    import CurrentArrivals from "@/components/Segments/Arrivals/CurrentArrivals";
+    import NewArrival from "@/components/Segments/Arrivals/NewArrival";
 
     export default {
         components: {

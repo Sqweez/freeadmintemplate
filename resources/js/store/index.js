@@ -66,8 +66,8 @@ const store = new Store({
             'plansModule',
             'statsModule',
             'ratingModule',
-            'productsModule_v2',
-            'cartModule'
+            'reportsModule.storesReports',
+            'reportsModule.planReports'
         ]
     })],
 });

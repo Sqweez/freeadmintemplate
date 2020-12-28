@@ -6,6 +6,7 @@ use App\Client;
 use App\ClientSale;
 use App\ClientTransaction;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Services\ReportService;
 use App\Http\Controllers\Services\SaleService;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\ProductResource;
@@ -139,9 +140,7 @@ class SaleController extends Controller {
     public function reports(Request $request) {
         $start = $request->get('start');
         $finish = $request->get('finish');
-        return ReportsResource::collection(
-            Sale::report()->reportDate([$start, $finish])->get()
-        );
+        return ReportService::getReports($start, $finish);
     }
 
     /*public function reports(Request $request) {

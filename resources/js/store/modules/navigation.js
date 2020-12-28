@@ -106,7 +106,7 @@ const navigationModule = {
                     {
                         title: 'Баннеры',
                         url: '/shop/banners'
-                    }
+                    },
                 ]
             },
    /*         {
@@ -157,7 +157,16 @@ const navigationModule = {
                     {
                         title: 'Отчеты',
                         url: '/v3/reports'
-                    }
+                    },
+                   /* {
+                        title: 'Перемещения',
+                        url: '/transfer',
+                    },
+                    {
+                        title: 'Поступления',
+                        url: '/arrivals',
+                        isAdmin: true,
+                    },*/
                 ]
             },
         ],
@@ -216,6 +225,15 @@ const navigationModule = {
                         title: 'Корзина',
                         url: '/v3/cart'
                     },
+                   /* {
+                        title: 'Перемещения',
+                        url: '/transfer',
+                    },
+                    {
+                        title: 'Поступления',
+                        url: '/arrivals',
+                        isAdmin: true,
+                    },*/
                 ]
             },
 

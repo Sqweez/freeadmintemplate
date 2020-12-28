@@ -17,6 +17,11 @@ class ReportsResource extends JsonResource
      */
     public function toArray($request)
     {
+      /*  dd($this->products->groupBy(['product_id', 'discount'])->map(function ($product, $product_id) {
+            return collect($product)->map(function ($p, $discount) {
+                return array_merge(['count' => count($p)], $p[0]->toArray());
+            });
+        })->flatten(1));*/
         return [
             'id' => $this->id,
             'client' => $this->client->only(['id', 'client_name']),
@@ -27,12 +32,16 @@ class ReportsResource extends JsonResource
             'payment_type' => $this->payment_type,
             'discount' => $this->discount,
             'balance' => $this->balance,
-            'products' => ReportProductResource::collection($this->products),
+            'products' => collect(ReportProductResource::collection($this->products)->toArray($request))->groupBy(['product_id', 'discount'])->map(function ($product, $product_id) {
+                return collect($product)->map(function ($p, $discount) {
+                    return array_merge(['count' => count($p)], $p[0]);
+                });
+            })->flatten(1),
             'store_type' => intval($this->store->type_id),
             'purchase_price' => $this->purchase_price,
             'fact_price' => $this->product_price,
             'final_price' => $this->final_price,
-            'margin' => $this->margin
+            'margin' => $this->margin,
         ];
     }
 }
