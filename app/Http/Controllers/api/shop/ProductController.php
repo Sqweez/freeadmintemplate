@@ -6,8 +6,9 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\shop\ProductsResource;
+use App\Manufacturer;
 use App\Subcategory;
-use App\Product;
+use App\v2\Models\Product;
 use App\ManufacturerProducts;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
@@ -28,11 +29,6 @@ class ProductController extends Controller {
         return $this->getFilters($query, $store_id);
     }
 
-    public function getBySearch(Request $request) {
-        $search = $this->prepareSearchString($request->get('search') ?? "");
-        return Product::ofSearch($search)->paginate(15);
-    }
-
     private function prepareSearchString($search) {
         return "%" . str_replace(' ', '%', $search) . "%";
     }
@@ -45,18 +41,17 @@ class ProductController extends Controller {
         ];
 
     }
-
     private function getBrands($filters, $store_id) {
         $_filters = $filters;
         $_filters['brands'] = [];
-        $products_ids = $this->getProductWithFilter($_filters, $store_id)->get()->pluck('id');
-        return ManufacturerProducts::has('manufacturer')->whereIn('product_id', $products_ids)->get()->pluck('manufacturer')->unique('id');
+        $ids = $this->getProductWithFilter($_filters, $store_id)->without(['subcategory', 'attributes', 'product_images'])->select(['manufacturer_id'])->groupBy(['manufacturer_id'])->get()->pluck('manufacturer_id');
+        return Manufacturer::whereIn('id', $ids)->get();
     }
 
     private function getPrices($filters, $store_id) {
         $_filters = $filters;
         $_filters['prices'] = [];
-        $productsPrices = $this->getProductWithFilter($_filters, $store_id)->get()->pluck('product_price');
+        $productsPrices = $this->getProductWithFilter($_filters, $store_id)->without(['subcategory', 'attributes', 'product_images'])->groupBy('product_price')->select(['product_price'])->get()->pluck('product_price');
         return [
             $productsPrices->min(),
             $productsPrices->max()
@@ -86,16 +81,37 @@ class ProductController extends Controller {
     }
 
     private function getProductWithFilter($filters, $store_id) {
-        return Product::ofTag($filters[Product::FILTER_SEARCH])
-            ->ofCategory($filters[Product::FILTER_CATEGORIES])
-            ->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES])
-            ->ofBrand($filters[Product::FILTER_BRANDS])
-            ->ofPrice($filters[Product::FILTER_PRICES])
-            ->inStock($store_id)
-            ->isHit($filters[Product::FILTER_IS_HIT])
-            ->where('is_site_visible', true)
-            ->groupBy('group_id')
-            ->with(['attributes', 'attributes.attribute_name', /*'manufacturer',*/ /*'categories',*/ 'subcategory', /*'children',*/ 'price', 'product_images']);
+        $productQuery = Product::query()->whereIsSiteVisible(true);
+
+        if (count ($filters[Product::FILTER_CATEGORIES]) > 0) {
+            $productQuery->ofCategory($filters[Product::FILTER_CATEGORIES]);
+        }
+
+        if (count ($filters[Product::FILTER_SUBCATEGORIES]) > 0) {
+            $productQuery->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
+        }
+
+        if (count ($filters[Product::FILTER_BRANDS]) > 0) {
+            $productQuery->ofBrand($filters[Product::FILTER_BRANDS]);
+        }
+
+        if (count ($filters[Product::FILTER_PRICES]) > 0) {
+            $productQuery->ofPrice($filters[Product::FILTER_PRICES]);
+        }
+
+        if ($filters[Product::FILTER_IS_HIT] === 'true') {
+            $productQuery->isHit(Product::FILTER_IS_HIT);
+        }
+
+        if (strlen($filters[Product::FILTER_SEARCH]) > 0) {
+            $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
+        }
+
+        $productQuery->inStock($store_id);
+
+        $productQuery->with(['subcategory', 'attributes', 'product_images']);
+
+        return $productQuery;
     }
 
     private function getFilteredProducts($query, $store_id) {
@@ -108,25 +124,4 @@ class ProductController extends Controller {
         return new ProductResource($product);
     }
 
-    public function groupProducts() {
-        $products = Product::with('manufacturer')->get();
-        $products = $products->map(function ($i) {
-            $i['manufacturer_id'] = count($i['manufacturer']) ? $i['manufacturer']['id'] : null;
-            unset($i['product_description']);
-            return $i;
-        });
-        $products = $products->groupBy(['product_name', 'product_price', 'manufacturer_id']);
-
-        $products->each(function ($price) {
-           collect($price)->each(function ($manufacturer) {
-               collect($manufacturer)->each(function ($product) {
-                   $ids = collect($product)->pluck('id');
-                   $group_id = $ids->first();
-                   Product::where('id', $ids)->update([
-                       'group_id' => $group_id
-                   ]);
-               });
-           });
-        });
-    }
 }

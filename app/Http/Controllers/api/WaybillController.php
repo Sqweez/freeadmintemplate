@@ -43,7 +43,7 @@ class WaybillController extends Controller
             $child_store = 1;
             $arrival = new ArrivalResource(Arrival::find($arrival_id));
             $arrival = $arrival->toArray($request);
-            $cart = $arrival['products']->toArray($request);
+            $cart = $arrival['products'];
         } else {
             $cart = $request->get('cart');
             $parent_store = $request->get('parent_store');
@@ -71,6 +71,7 @@ class WaybillController extends Controller
         }
 
         foreach ($cart as $key => $item) {
+            $item = $item->toArray($request);
             $currentIndex = $key + $INITIAL_PRODUCT_ROW;
             try {
                 $excelSheet->insertNewRowBefore($currentIndex, 1);

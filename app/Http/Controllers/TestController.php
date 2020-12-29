@@ -41,12 +41,12 @@ class TestController extends Controller
 {
     public function index(Request $request) {
 
-        $sales =  Sale::where('discount', '!=', 0)->cursor();
-        foreach ($sales as $sale) {
-            SaleProduct::whereSaleId($sale['id'])->update([
-                'discount' => $sale['discount']
-            ]);
-        }
+//        $sales =  Sale::where('discount', '!=', 0)->cursor();
+//        foreach ($sales as $sale) {
+//            SaleProduct::whereSaleId($sale['id'])->update([
+//                'discount' => $sale['discount']
+//            ]);
+//        }
         /*return Sale::where('discount', '!=', 0)->whereHas('products', function ($query) {
             return $query->where('discount', 0);
         })->chunk(100, function ($sales) {
@@ -57,143 +57,98 @@ class TestController extends Controller
             });
         });*/
 
+        $filters = [
+            'category' => [],
+            'subcategory' => [],
+            'brands' => [],
+            'prices' => [],
+            'is_hit' => 'false',
+            'search' => '%iso%',
+        ];
+
+        $output =  [
+            'brands' => ($this->getBrands($filters, 1)),
+            //'prices' => $this->getPrices($filters, $store_id),
+        ];
+
+        /*$productQuery = Product::query()->whereIsSiteVisible(true);
+
+        if (count ($filters[Product::FILTER_CATEGORIES]) > 0) {
+            $productQuery->ofCategory($filters[Product::FILTER_CATEGORIES]);
+        }
+
+        if (count ($filters[Product::FILTER_SUBCATEGORIES]) > 0) {
+            $productQuery->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
+        }
+
+        if (count ($filters[Product::FILTER_BRANDS]) > 0) {
+            $productQuery->ofBrand($filters[Product::FILTER_BRANDS]);
+        }
+
+        if (count ($filters[Product::FILTER_PRICES]) > 0) {
+            $productQuery->ofPrice($filters[Product::FILTER_PRICES]);
+        }
+
+        if ($filters[Product::FILTER_IS_HIT] === 'true') {
+            $productQuery->isHit(Product::FILTER_IS_HIT);
+        }
+
+        if (strlen($filters[Product::FILTER_SEARCH]) > 0) {
+            $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
+        }
+
+        $productQuery->inStock(1);
+
+        $productQuery->with(['subcategory', 'attributes', 'product_images']);
+
+
+        $products =  \App\Http\Resources\shop\ProductsResource::collection($productQuery->paginate(24));*/
+
+
+
         return view('test', [
-            'product' => $sales
+            'product' => $output
         ]);
     }
 
-    public function index2() {
-
-    }
-
-    public function getProducts(Request $request) {
-        $query = $request->except('store_id');
-        $store_id = $request->get('store_id') ?? 1;
-        return $this->getFilteredProducts($query, $store_id);
-    }
-
-    public function filters(Request $request) {
-        $query = $request->all();
-        $store_id = $request->cookie('store_id') ?? 1;
-        return $this->getFilters($query, $store_id);
-    }
-
-    public function getBySearch(Request $request) {
-        $search = $this->prepareSearchString($request->get('search') ?? "");
-        return Product::ofSearch($search)->paginate(15);
-    }
-
-    private function prepareSearchString($search) {
-        return "%" . str_replace(' ', '%', $search) . "%";
-    }
-
-    private function getFilters($query, $store_id) {
-        $filters = $this->getFilterParametrs($query, $store_id);
-        return [
-            'brands' => array_filter($this->convertToArray($this->getBrands($filters, $store_id)), function ($i) { return $i; }),
-            'prices' => $this->getPrices($filters, $store_id),
-        ];
-
-    }
-
-    private function getBrands($filters, $store_id) {
+    public function getBrands($filters, $store_id) {
         $_filters = $filters;
         $_filters['brands'] = [];
-        $products_ids = $this->getProductWithFilter($_filters, $store_id)->get()->pluck('id');
-        return ManufacturerProducts::has('manufacturer')->whereIn('product_id', $products_ids)->get()->pluck('manufacturer')->unique('id');
-    }
-
-    private function getPrices($filters, $store_id) {
-        $_filters = $filters;
-        $_filters['prices'] = [];
-        $productsPrices = $this->getProductWithFilter($_filters, $store_id)->get()->pluck('product_price');
-        return [
-            $productsPrices->min(),
-            $productsPrices->max()
-        ];
-    }
-
-    private function convertToArray($filters) {
-        $array = [];
-
-        foreach ($filters as $key => $filter) {
-            $array[] = $filter;
-        }
-
-        return $array;
-    }
-
-
-    private function getFilterParametrs($query, $store_id) {
-        return [
-            'categories' => array_map('intval', array_filter(explode(',', ($query['category'] ?? '')), 'strlen')),
-            'subcategories' => array_map('intval', array_filter(explode(',', ($query['subcategory'] ?? '')), 'strlen')),
-            'brands' => array_map('intval', array_filter(explode(',', ($query['brands'] ?? '')), 'strlen')),
-            'prices' => array_map('intval', array_filter(explode(',', ($query['prices'] ?? '')), 'strlen')),
-            'is_hit' => isset($query['is_hit']) ? ($query['is_hit'] === 'true' ? 'true' : 'false') : 'false',
-            'search' => isset($query['search']) ? $this->prepareSearchString($query['search']) : ''
-        ];
+        $ids = $this->getProductWithFilter($_filters, $store_id)->without(['subcategory', 'attributes', 'product_images'])->select(['manufacturer_id'])->groupBy(['manufacturer_id'])->get()->pluck('manufacturer_id');
+        return Manufacturer::whereIn('id', $ids)->get();
     }
 
     private function getProductWithFilter($filters, $store_id) {
-        return Product::ofTag($filters['search'])
-            ->ofCategory($filters['categories'])
-            ->ofSubcategory($filters['subcategories'])
-            ->ofBrand($filters['brands'])
-            ->ofPrice($filters['prices'])
-            /*->inStock($store_id)*/
-            ->isHit($filters['is_hit'])
-            ->where('is_site_visible', true)
-            ->groupBy('group_id')
-            ->with(['attributes', 'attributes.attribute_name', /*'manufacturer',*/ /*'categories',*/ 'subcategory', /*'children',*/ 'price', 'product_images'])
-            /*->with(['quantity' => function ($query) use ($store_id) {
-                return $query->where('store_id', $store_id);
-            }])*/;
-    }
+        $productQuery = Product::query()->whereIsSiteVisible(true);
 
-    private function getFilteredProducts($query, $store_id) {
-        $filters = $this->getFilterParametrs($query, $store_id);
-        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id)->paginate(24));
-    }
-
-
-    public function getHeading(Request $request) {
-        $query = $request->all();
-        if (isset($query['category'])) {
-            return ['heading' => Category::find($query['category'])->category_name];
-        }
-        if (isset($query['subcategory'])) {
-            return ['heading' => Subcategory::find($query['subcategory'])->subcategory_name];
+        if (count ($filters[Product::FILTER_CATEGORIES]) > 0) {
+            $productQuery->ofCategory($filters[Product::FILTER_CATEGORIES]);
         }
 
-        if (isset($query['search'])) {
-            return ['heading' => "Результаты поиска по запросу: '" . $query['search'] . "'"];
+        if (count ($filters[Product::FILTER_SUBCATEGORIES]) > 0) {
+            $productQuery->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
         }
-    }
 
-    public function getProduct(Product $product) {
-        return new \App\Http\Resources\shop\ProductResource($product);
-    }
+        if (count ($filters[Product::FILTER_BRANDS]) > 0) {
+            $productQuery->ofBrand($filters[Product::FILTER_BRANDS]);
+        }
 
-    public function groupProducts() {
-        $products = Product::with('manufacturer')->get();
-        $products = $products->map(function ($i) {
-            $i['manufacturer_id'] = count($i['manufacturer']) ? $i['manufacturer']['id'] : null;
-            unset($i['product_description']);
-            return $i;
-        });
-        $products = $products->groupBy(['product_name', 'product_price', 'manufacturer_id']);
+        if (count ($filters[Product::FILTER_PRICES]) > 0) {
+            $productQuery->ofPrice($filters[Product::FILTER_PRICES]);
+        }
 
-        $products->each(function ($price) {
-            collect($price)->each(function ($manufacturer) {
-                collect($manufacturer)->each(function ($product) {
-                    $ids = collect($product)->pluck('id');
-                    $group_id = $ids->first();
-                    Product::where('id', $ids)->update([
-                        'group_id' => $group_id
-                    ]);
-                });
-            });
-        });
+        if ($filters[Product::FILTER_IS_HIT] === 'true') {
+            $productQuery->isHit(Product::FILTER_IS_HIT);
+        }
+
+        if (strlen($filters[Product::FILTER_SEARCH]) > 0) {
+            $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
+        }
+
+        $productQuery->inStock($store_id);
+
+        $productQuery->with(['subcategory', 'attributes', 'product_images']);
+
+        return $productQuery;
     }
 }
