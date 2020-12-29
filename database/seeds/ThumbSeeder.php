@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\v2\Models\Image;
 
 class ThumbSeeder extends Seeder
 {
