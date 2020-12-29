@@ -1,8 +1,6 @@
 <?php
 
-use App\ProductImage;
 use Illuminate\Database\Seeder;
-use App\v2\Models\Image;
 
 class ImageSeeder extends Seeder
 {
