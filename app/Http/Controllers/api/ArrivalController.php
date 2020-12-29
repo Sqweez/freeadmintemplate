@@ -21,7 +21,9 @@ class ArrivalController extends Controller
                     'products.product.product',
                     'products.product.product.manufacturer',
                     'products.product.attributes',
+                    'products.product.attributes.attribute_name',
                     'products.product.product.attributes',
+                    'products.product.product.attributes.attribute_name',
                     'user', 'store'
                 ])
                 ->orderByDesc('created_at')

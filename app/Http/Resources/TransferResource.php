@@ -26,7 +26,7 @@ class TransferResource extends JsonResource
             'product_count' => $this->batches->count(),
             'position_count' => $this->batches->unique('product_id')->count(),
             'total_cost' => $this->batches->reduce(function ($a, $c) {
-                return $a + intval($c->product->product->product_price);
+                return $a + intval($c->product->product->product_price ?? 0);
             }, 0),
             'total_purchase_cost' => $this->batches->reduce(function ($a, $c) {
                 return $a + intval($c->productBatch->purchase_price ?? 0);

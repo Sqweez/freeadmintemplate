@@ -74,8 +74,9 @@ const mutations = {
         })
     },
     CREATE_PRODUCT_SKU(state, {id, product}) {
-        const findIndex = state.products_v2.findIndex(p => p.id === id);
-        return state.products_v2.splice(findIndex + 1, 0, product)
+        state.products_v2.push(product);
+        /*const findIndex = state.products_v2.findIndex(p => p.id === id);
+        return state.products_v2.splice(findIndex + 1, 0, product)*/
     },
     UPDATE_PRODUCT_SKU(state, {id, product}) {
         state.products_v2 = state.products_v2.map(p => {

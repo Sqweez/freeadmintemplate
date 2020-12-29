@@ -31,10 +31,10 @@ class TransferBatch extends Model
     public $timestamps = false;
 
     public function productBatch() {
-        return $this->belongsTo('App\ProductBatch', 'batch_id');
+        return $this->belongsTo('App\ProductBatch', 'batch_id')->withTrashed();
     }
 
     public function product() {
-        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id');
+        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id')->withTrashed();
     }
 }

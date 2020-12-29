@@ -25,6 +25,8 @@ class TransferController extends Controller {
     public function index(Request $request) {
         $mode = $request->get('mode');
         $transfers = Transfer::where('is_confirmed', !($mode === 'current'))
+            ->whereHas('batches.product')
+            ->whereHas('batches.product.product')
             ->with(['parent_store', 'child_store'])
             ->with(['batches', 'batches.productBatch:id,purchase_price', 'batches.product:id,product_id,self_price', 'batches.product.product:id,product_price'])
             ->select('id', 'parent_store_id', 'child_store_id', 'user_id', 'photos', 'created_at')
@@ -80,7 +82,7 @@ class TransferController extends Controller {
             Transfer::where('id', $transfer)
                 ->with([
                     'batches',
-                    'batches.product', 'batches.product.product.manufacturer', 'batches.product.product.attributes', 'batches.product.attributes'])
+                    'batches.product', 'batches.product.product.manufacturer', 'batches.product.product.attributes', 'batches.product.attributes', 'batches.product.product.attributes.attribute_name', 'batches.product.attributes.attribute_name',])
                 ->first()
         );
     }
