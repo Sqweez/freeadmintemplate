@@ -15,24 +15,11 @@ class CartResource extends JsonResource {
      */
     public function toArray($request) {
 
-        $_products = $this->filterProduct($this->products, $this->store_id, $this->id);
-
         return [
             'id' => $this->id,
             'user_token' => $this->user_token,
-            'products' => CartProductResource::collection($_products)
+            'products' => collect(CartProductResource::collection($this->products->filter(function($q) {return $q['product'];})))
         ];
-    }
-
-    private function filterProduct($products, $store_id, $cart_id) {
-        return collect($products)->map(function ($product) use ($store_id, $cart_id) {
-            $currentCount = ProductBatch::ofProduct($product['product_id'])->ofStore($store_id)->sum('quantity');
-            if ($product['count'] > $currentCount) {
-                $product['count'] = $currentCount;
-                CartProduct::Cart($cart_id)->Product($product['product_id'])->update(['count' => $product['count']]);
-            }
-            return $product;
-        });
     }
 
 }

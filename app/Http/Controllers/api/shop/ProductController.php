@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers\api\shop;
 
-use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\shop\ProductsResource;
 use App\Manufacturer;
-use App\Subcategory;
+use App\v2\Models\ProductSku;
 use App\v2\Models\Product;
-use App\ManufacturerProducts;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use \Illuminate\Contracts\Encryption\Encrypter;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller {
 
@@ -36,7 +32,7 @@ class ProductController extends Controller {
     private function getFilters($query, $store_id) {
         $filters = $this->getFilterParametrs($query, $store_id);
         return [
-            'brands' => array_filter($this->convertToArray($this->getBrands($filters, $store_id)), function ($i) { return $i; }),
+            'brands' => $this->getBrands($filters, $store_id),
             'prices' => $this->getPrices($filters, $store_id),
         ];
 
@@ -109,7 +105,7 @@ class ProductController extends Controller {
 
         $productQuery->inStock($store_id);
 
-        $productQuery->with(['subcategory', 'attributes', 'product_images']);
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs']);
 
         return $productQuery;
     }
@@ -121,7 +117,7 @@ class ProductController extends Controller {
 
 
     public function getProduct(Product $product) {
-        return new ProductResource($product);
+        return new ProductResource(Product::with(['sku', 'sku.attributes', 'sku.batches', 'product_images', 'attributes'])->whereKey($product->id)->first());
     }
 
 }

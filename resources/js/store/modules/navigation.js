@@ -202,11 +202,6 @@ const navigationModule = {
                 ],
             },
             {
-                title: 'Отчеты по продажам',
-                url: '/reports',
-                icon: 'report',
-            },
-            {
                 title: 'v3/Склад',
                 url: '#',
                 icon: 'dashboard',

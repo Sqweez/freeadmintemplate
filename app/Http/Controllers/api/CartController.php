@@ -9,7 +9,7 @@ use App\Http\Controllers\Services\TelegramService;
 use App\Http\Resources\shop\CartResource;
 use App\Order;
 use App\OrderProduct;
-use App\Product;
+use App\v2\Models\ProductSku;
 use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
@@ -18,23 +18,50 @@ use Illuminate\Http\Request;
 use App\Client;
 use App\ClientSale;
 use App\ClientTransaction;
+use Illuminate\Support\Facades\DB;
 
 
 class CartController extends Controller {
     protected $PAYMENT_CONFIRMED = 1;
     protected $PAYMENT_REJECTED = 0;
+
     public function addCart(Request $request) {
         $user_token = $request->get('user_token');
         $product = $request->get('product');
         $count = $request->get('count');
         $type = $request->get('type') ?? 'web';
         $store_id = $request->get('store_id') ?? 1;
-        if ($this->getCount($product, $store_id) < $count) {
-            return ['error' => 'Недостаточно товара на складе'];
+        $cart = Cart
+            ::where('user_token', $user_token)
+            ->firstOrCreate([
+                    'user_token' => $user_token,
+                    'type' => $type,
+                    'store_id' => $store_id
+                ]
+            );
+        $products = $cart->products()->where('product_id', $product)->first();
+        if ($products) {
+            $products->count += $count;
+            $products->save();
+        } else {
+            $cart->products()->create([
+                'product_id' => $product,
+                'count' => $count
+            ]);
         }
-        $cart_id = $this->createCart($user_token, $type, $store_id);
-        $this->createCartProduct($product, $cart_id, $count);
-        return new CartResource(Cart::find($cart_id));
+
+
+
+        return new CartResource(
+            Cart::whereKey($cart->id)
+                ->with([
+                    'products', 'products.product',
+                    'products.product.attributes', 'products.product.product.attributes'])
+                ->with(['products.product.batches' => function ($q) use ($store_id) {
+                    return $q->where('store_id', $store_id)->where('quantity', '>', 0);
+                }])
+                ->first()
+        );
     }
 
     public function increaseCount(Request $request) {
@@ -43,12 +70,19 @@ class CartController extends Controller {
         $store_id = $request->get('store_id') ?? 1;
         $count = $request->get('count');
         if ($this->getCount($product, $store_id) <= $count) {
-            return ['error' => 'Недостаточно товара на складе'];
+            return response()->json(['error' => 'Недостаточно товара на складе'], 419);
         }
 
         $cartProduct = CartProduct::Cart($cart)->Product($product)->first();
-        $cartProduct->update(['count' => $cartProduct['count'] + 1]);
-        return new CartResource(Cart::find($cart));
+        $cartProduct->increment('count');
+        $cartProduct->save();
+
+        $cartProduct->fresh();
+
+        return response()->json([
+            'id' => $cartProduct->product_id,
+            'count' => $cartProduct->count
+        ], 200);
     }
 
     public function deleteCart(Request $request) {
@@ -57,9 +91,9 @@ class CartController extends Controller {
 
         $product = $request->get('product');
 
-        CartProduct::Cart($cart)->Product($product)->delete();
+        CartProduct::where('cart_id', $cart)->where('product_id', $product)->delete();
 
-        return new CartResource(Cart::find($cart));
+        return response()->json([]);
 
     }
 
@@ -74,16 +108,30 @@ class CartController extends Controller {
         if (intval($cartProduct['count']) === 1) {
             $cartProduct->delete();
         } else {
-            $cartProduct->update(['count' => $cartProduct['count'] - 1]);
+            $cartProduct->decrement('count');
+            $cartProduct->save();
         }
 
-        return new CartResource(Cart::find($cart));
+        $cartProduct->fresh();
+
+        return response()->json([
+            'id' => $cartProduct->product_id,
+            'count' => $cartProduct->count
+        ], 200);
+
     }
 
     public function getCart(Request $request) {
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
-        $cart = Cart::ofUser($user_token)->first() ?? null;
+        $cart = Cart::with([
+                'products', 'products.product',
+                'products.product.attributes', 'products.product.product.attributes'])
+                ->ofUser($user_token)
+                ->with(['products.product.batches' => function ($q) use ($store_id) {
+                    return $q->where('store_id', $store_id)->where('quantity', '>', 0);
+                }])
+                ->first() ?? null;
         if ($cart && $store_id != $cart['store_id']) {
             CartProduct::where('cart_id', $cart['id'])->delete();
             $cart->delete();
@@ -106,20 +154,33 @@ class CartController extends Controller {
             $discount = Client::find($client_id)['client_discount'];
         };
 
-        $order = $this->createOrder($user_token, $store_id, $customer_info, $client_id, $discount);
-        $products = CartProduct::where('cart_id', $cart)->get();
-        $this->createOrderProducts($order, $store_id, $products);
-        CartProduct::where('cart_id', $cart)->delete();
 
-        if ($customer_info['is_paid']) {
-            try {
-                $this->sendTelegramMessage($order);
-            } catch (\Exception $e) {
-                dd($e->getMessage());
+        try {
+            DB::beginTransaction();
+            $order = $this->createOrder($user_token, $store_id, $customer_info, $client_id, $discount);
+            $products = CartProduct::where('cart_id', $cart)->get();
+            $this->createOrderProducts($order, $store_id, $products);
+            CartProduct::where('cart_id', $cart)->delete();
+
+            if ($customer_info['is_paid']) {
+                try {
+                    $this->sendTelegramMessage($order);
+                } catch (\Exception $e) {
+                    dd($e->getMessage());
+                }
             }
+            DB::commit();
+
+            return response()->json([
+                'order' => intval($order->id)
+            ], 200);
+        } catch (\Exception $exception) {
+            DB::rollBack();;
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 500);
         }
 
-        return intval($order->id);
     }
 
     private function sendTelegramMessage(Order $order, $result = null) {
@@ -145,7 +206,7 @@ class CartController extends Controller {
 
         $discount = $order['discount'];
 
-        $products = Product::with('attributes')->whereIn('id', $order->items->pluck('product_id'))->get();
+        $products = ProductSku::with(['product', 'product.attributes', 'attributes'])->whereIn('id', $order->items->pluck('product_id'))->get();
         $cartProducts = collect($order->items);
 
         foreach ($products as $key => $product) {
@@ -278,17 +339,18 @@ class CartController extends Controller {
 
     public function getTotal(Request $request) {
         $user_token = $request->get('user_token');
-        $order = Cart::where('user_token', $user_token)->first();
+        $order = Cart::with(['products', 'products.product.product:id,product_price'])->select(['id'])->where('user_token', $user_token)->first();
         if (!$order) {
             return null;
         }
 
-        $products = $order->products;
+        $total =  $order->products->reduce(function ($a, $c) {
+            return $a + $c['count'] * $c['product']['product_price'];
+        }, 0);
 
-        return intval(collect($products)->reduce(function ($i, $a) {
-            $product_price = Product::find($a['product_id'])['product_price'];
-            return $i + ($a['count'] * $product_price);
-        }, 0));
+        return response()->json([
+            'total' => $total
+        ], 200);
     }
 
     /*
@@ -316,33 +378,34 @@ class CartController extends Controller {
     }
 
     private function createOrderProducts($order, $store_id, $products) {
-        foreach ($products as $product) {
-            $count = intval($product['count']);
-            for ($i = 0; $i < $count; $i++) {
-                $product_batch = ProductBatch::where('product_id', $product['product_id'])->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
-                if ($product_batch) {
-                    $product_sale = ['product_batch_id' => $product_batch['id'], 'product_id' => $product['product_id'], 'order_id' => $order['id'], 'purchase_price' => $product_batch['purchase_price'], 'product_price' => Product::find($product['product_id'])['product_price']];
+        try {
+            foreach ($products as $product) {
+                $count = intval($product['count']);
+                for ($i = 0; $i < $count; $i++) {
+                    $product_batch = ProductBatch::where('product_id', $product['product_id'])->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
+                    if ($product_batch) {
+                        $product_sale = [
+                            'product_batch_id' => $product_batch['id'],
+                            'product_id' => $product['product_id'],
+                            'order_id' => $order['id'],
+                            'purchase_price' => $product_batch['purchase_price'],
+                            'product_price' => ProductSku::find($product['product_id'])['product_price']
+                        ];
 
-                    OrderProduct::create($product_sale);
+                        OrderProduct::create($product_sale);
 
-                    $quantity = $product_batch['quantity'] - 1;
-                    $product_batch->update(['quantity' => $quantity]);
+                        $quantity = $product_batch['quantity'] - 1;
+                        $product_batch->update(['quantity' => $quantity]);
+                    }
                 }
             }
-        }
-    }
-
-    private function createCart($user_token, $type, $store_id) {
-        $cart = Cart::where('user_token', $user_token)->first();
-        if (!$cart) {
-            return Cart::create(['user_token' => $user_token, 'type' => $type, 'store_id' => $store_id])['id'];
-        } else {
-            return $cart['id'];
+        } catch (\Exception $exception) {
+            throw new $exception;
         }
     }
 
     private function getCount($product, $store_id) {
-        return ProductBatch::where('product_id', $product)->where('store_id', $store_id)->sum('quantity');
+        return intval(ProductBatch::where('product_id', $product)->where('store_id', $store_id)->sum('quantity'));
     }
 
     private function createCartProduct($product, $cart_id, $count) {

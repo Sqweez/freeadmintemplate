@@ -34,6 +34,6 @@ class OrderProduct extends Model
     protected $guarded = [];
 
     public function product() {
-        return $this->belongsTo('App\Product', 'product_id');
+        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id');
     }
 }

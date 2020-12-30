@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources\shop;
 
-use App\Http\Resources\AttributeResource;
-use App\Http\Resources\shop\ProductRangeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -26,7 +24,7 @@ class ProductsResource extends JsonResource
             'subcategory' => $this->subcategory->subcategory_name,
             'subcategory_id' => $this->subcategory->id,
             'product_price' => $this->product_price,
-            'product_image' => url('/') . Storage::url($this->product_images[0]->product_image ?? 'products/product_image_default.jpg'),
+            'product_image' => url('/') . Storage::url($this->product_thumbs[0]->image ?? 'products/product_image_default.jpg'),
             'attributes' => $this->attributes->pluck('attribute_value'),
             'product_name_slug' => Str::slug($this->product_name, '-'),
         ];

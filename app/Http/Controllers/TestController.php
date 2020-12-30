@@ -6,7 +6,7 @@ use App\Arrival;
 use App\AttributeProduct;
 use App\Category;
 use App\CategoryProduct;
-use App\Http\Resources\v2\Product\ProductResource;
+use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\ReportResource;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\Http\Resources\TransferResource;
@@ -66,10 +66,6 @@ class TestController extends Controller
             'search' => '%iso%',
         ];
 
-        $output =  [
-            'brands' => ($this->getBrands($filters, 1)),
-            //'prices' => $this->getPrices($filters, $store_id),
-        ];
 
         /*$productQuery = Product::query()->whereIsSiteVisible(true);
 
@@ -104,10 +100,12 @@ class TestController extends Controller
 
         $products =  \App\Http\Resources\shop\ProductsResource::collection($productQuery->paginate(24));*/
 
+        $output =  new ProductResource(Product::with(['sku', 'sku.attributes', 'sku.batches', 'product_images'])->whereKey(1)->first());
+
 
 
         return view('test', [
-            'product' => $output
+            'product' => $output->toArray($request)
         ]);
     }
 

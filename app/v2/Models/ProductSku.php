@@ -105,7 +105,11 @@ class ProductSku extends Model
     }
 
     public function batches() {
-        return $this->hasMany('App\ProductBatch', 'product_id');
+        $batches = $this->hasMany('App\ProductBatch', 'product_id');
+        if (is_null($batches)) {
+            return [];
+        }
+        return $batches;
     }
 
     public function relativeSku() {

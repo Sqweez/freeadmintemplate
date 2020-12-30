@@ -27,14 +27,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|CartProduct whereUpdatedAt($value)
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|CartProduct ofProduct($product_id)
- * @method static \Illuminate\Database\Eloquent\Builder|CartProduct product($product_id)
  */
 class CartProduct extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'count' => 'integer'
+    ];
+
     public function product() {
-        return $this->belongsTo('App\Product', 'product_id');
+        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id');
     }
 
     public function scopeCart($query, $cart_id) {

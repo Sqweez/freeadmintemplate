@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\shop;
 
+use App\CartProduct;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CartProductResource extends JsonResource
@@ -14,10 +15,28 @@ class CartProductResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $quantity = $this->product->batches->where('store_id', $request->get('store_id', 1))->sum('quantity') ?? 0;
+        $count = $this->count;
+        $change = false;
+        if ($quantity < $count) {
+            $count = $quantity;
+            $change = true;
+            CartProduct::where('cart_id', $this->cart_id)->where('product_id', $this->product_id)->update(['count' => $count]);
+        }
+
         return [
-            'product' => new ProductResource($this->product),
-            'count' => intval($this->count),
-            'id' => intval($this->product->id)
+            'id' => $this->product->id,
+            'count' => $count,
+            'quantity' => $quantity,
+            'change' => $change,
+            'product_name' => $this->product->product_name,
+            'product_image' => url('/') . \Storage::url($this->product->general_thumbs->pluck('image')->first() ?? 'products/thumbs/product_image_default_300x300.jpg'),
+            'attributes' => $this->product->attributes->pluck('attribute_value'),
+            'custom_attributes' => $this->product->product->attributes->pluck('attribute_value'),
+            'subcategory' => $this->product->subcategory->subcategory_name,
+            'is_site_visible' => $this->product->is_site_visible,
+            'product_price' => $this->product->product_price
         ];
     }
 }
