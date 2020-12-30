@@ -40,45 +40,23 @@ const navigationModule = {
                         url: '/stores',
                         isAdmin: true
                     },
-                  /*  {
-                        title: 'Все товары',
-                        url: '/products'
-                    },*/
                     {
                         title: 'Категории',
                         url: '/categories',
                         isAdmin: true
                     },
-            /*        {
-                        title: 'Корзина',
-                        url: '/cart'
-                    },*/
-                 /*   {
-                        title: 'Перемещения',
-                        url: '/transfer',
-                        //isAdmin: true
-                    },*/
                     {
                         title: 'План продаж',
                         url: '/plan',
                         isAdmin: true
                     },
-/*                    {
-                        title: 'Ревизии',
-                        url: '/revision',
-                    },
-                    {
-                        title: 'Поступления',
-                        url: '/arrivals',
-                        isAdmin: true,
-                    },*/
                     {
                         title: 'Товары',
-                        url: '/v3/products'
+                        url: '/products'
                     },
                     {
                         title: 'Корзина',
-                        url: '/v3/cart'
+                        url: '/cart'
                     },
                     {
                         title: 'Перемещения',
@@ -93,7 +71,7 @@ const navigationModule = {
             },
             {
                 title: 'Отчеты по продажам',
-                url: '/v3/reports',
+                url: '/reports',
                 icon: 'report',
                 isAdmin: true
             },
@@ -220,6 +198,7 @@ const navigationModule = {
                         title: 'Ревизии',
                         url: '/revision',
                     },
+
                 ],
             },
             {
@@ -236,11 +215,11 @@ const navigationModule = {
                 children: [
                     {
                         title: 'Товары',
-                        url: '/v3/products'
+                        url: '/products'
                     },
                     {
                         title: 'Корзина',
-                        url: '/v3/cart'
+                        url: '/cart'
                     },
                    /* {
                         title: 'Перемещения',

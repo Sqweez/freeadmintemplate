@@ -49,7 +49,7 @@ const routes = [
         }
 
     },
-    {
+   /* {
         path: '/products',
         component: Products,
         meta: {
@@ -58,7 +58,7 @@ const routes = [
                 IS_SELLER: true,
             },
         }
-    },
+    },*/
     {
         path: '/categories',
         component: Control,
@@ -68,7 +68,7 @@ const routes = [
             },
         }
     },
-    {
+    /*{
         path: '/cart',
         component: Cart,
         meta: {
@@ -77,7 +77,7 @@ const routes = [
                 IS_SELLER: true
             },
         }
-    },
+    },*/
     {
         path: '/clients',
         component: Clients,
@@ -88,7 +88,7 @@ const routes = [
             }
         }
     },
-    {
+   /* {
         path: '/reports',
         component: Reports,
         meta: {
@@ -97,7 +97,7 @@ const routes = [
                 IS_SELLER: true,
             },
         }
-    },
+    },*/
     {
         path: '/plan',
         component: Plan,
@@ -219,7 +219,7 @@ const routes = [
         component: ProductsV2
     },
     {
-        path: '/v3/products',
+        path: '/products',
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true
@@ -228,11 +228,11 @@ const routes = [
         component: ProductsV3
     },
     {
-        path: '/v3/cart',
+        path: '/cart',
         component: CartV3
     },
     {
-        path: '/v3/reports',
+        path: '/reports',
         component: ReportsV3
     }
 ];

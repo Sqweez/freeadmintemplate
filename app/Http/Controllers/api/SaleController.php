@@ -214,7 +214,7 @@ class SaleController extends Controller {
         $dates = $this->getDatesFilters($dateFilter);
         $sales = Sale::whereDate('created_at', '>=', $dates[0])
             ->whereDate('created_at', '<=', $dates[1])
-            ->with(['products', 'products.products'])
+            ->with(['products', 'products.product'])
             ->get();
         return SaleByCityResource::collection($sales);
     }
