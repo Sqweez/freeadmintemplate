@@ -32,8 +32,8 @@ class CartProductResource extends JsonResource
             'change' => $change,
             'product_name' => $this->product->product_name,
             'product_image' => url('/') . \Storage::url($this->product->general_thumbs->pluck('image')->first() ?? 'products/thumbs/product_image_default_300x300.jpg'),
-            'attributes' => $this->product->attributes->pluck('attribute_value'),
-            'custom_attributes' => $this->product->product->attributes->pluck('attribute_value'),
+            'attribute_sku' => $this->product->attributes->pluck('attribute_value'),
+            'attribute_product' => $this->product->product->attributes->pluck('attribute_value'),
             'subcategory' => $this->product->subcategory->subcategory_name,
             'is_site_visible' => $this->product->is_site_visible,
             'product_price' => $this->product->product_price

@@ -440,7 +440,7 @@
             payment_type: 0,
             promocodeSet: false,
             partner_id: null,
-            discountPercent: '',
+            discountPercent: 0,
             promocode: "",
             clientCartModal: false,
             confirmationModal: false,
@@ -604,7 +604,7 @@
             },
             discountTotal() {
                 return this.cart.reduce((a, c) => {
-                    return a + Math.max(this.discountPercent, c.discount) /100 * c.product_price * c.count;
+                    return a + Math.max(this.discount, c.discount) /100 * c.product_price * c.count;
                 }, 0);
             },
             total() {

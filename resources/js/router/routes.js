@@ -58,6 +58,7 @@ const routes = [
                 IS_SELLER: true,
             },
         }
+        }
     },*/
     {
         path: '/categories',
