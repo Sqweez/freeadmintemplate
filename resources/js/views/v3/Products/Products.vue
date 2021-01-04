@@ -80,7 +80,7 @@
                                     Ассортимент
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)">
+                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)" v-if="item.sku_can_be_created">
                                     Ассортимент
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
@@ -279,6 +279,12 @@
                         value: 'actions',
                         text: 'Действие',
                         sortable: false
+                    });
+
+                    headers.unshift({
+                        value: 'id',
+                        text: 'ID',
+                        sortable: true
                     })
                 }
 

@@ -107,6 +107,8 @@ class ProductController extends Controller {
 
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs']);
 
+        $productQuery->orderBy('product_name');
+
         return $productQuery;
     }
 
