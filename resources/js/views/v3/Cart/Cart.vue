@@ -558,7 +558,7 @@
                 this.certificateModal = false;
                 try {
                     this.$loading();
-                    const { data } = await axios.post(`/api/v2/certificates/`, certificate);
+                    const { data } = await axios.post(`/api/v2/certificates`, certificate);
                     this.certificate = data;
                 } catch (e) {
                     showToast('При создании сертификата произошла ошибка', TOAST_TYPE.ERROR);

@@ -242,7 +242,7 @@ const actions = {
         }
     },
     async GET_CERTIFICATES({commit}) {
-        const { data } = await axios.get('/api/v2/certificates/');
+        const { data } = await axios.get('/api/v2/certificates');
         commit('SET_CERTIFICATES', data);
     }
 };
