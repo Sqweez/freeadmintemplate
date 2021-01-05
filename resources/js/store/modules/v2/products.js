@@ -10,17 +10,20 @@ import showToast from "@/utils/toast";
 import {TOAST_TYPE} from "@/config/consts";
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
+import axios from 'axios';
 
 const state = {
     products_v2: [],
     quantities: [],
-    product_v2: null
+    product_v2: null,
+    certificates: [],
 };
 
 const getters = {
     PRODUCTS_v2: state => state.products_v2,
     QUANTITIES_v2: state => state.quantities,
     PRODUCT_v2: state => state.product_v2,
+    CERTIFICATES: s => s.certificates,
 };
 
 const mutations = {
@@ -95,6 +98,12 @@ const mutations = {
                     quantity: item.quantity
                 })
             }
+        });
+    },
+    SET_CERTIFICATES(state, payload) {
+        state.certificates = payload.filter(cert => cert.used_sale_id === 0).map(cert => {
+            cert.name = `${cert.barcode} (${cert.amount}) тенге`
+            return cert;
         });
     }
 };
@@ -231,6 +240,10 @@ const actions = {
         } finally {
             commit('disableLoading');
         }
+    },
+    async GET_CERTIFICATES({commit}) {
+        const { data } = await axios.get('/api/v2/certificates/');
+        commit('SET_CERTIFICATES', data);
     }
 };
 

@@ -17,6 +17,7 @@ use App\Product;
 use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
+use App\v2\Models\Certificate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -38,11 +39,23 @@ class SaleController extends Controller {
             $balance = $request->get('balance');
             $user_id = $request->get('user_id');
             $partner_id = $request->get('partner_id');
-            $sale = $saleService->createSale($request->except('cart'));
+            $certificate = $request->get('certificate', null);
+            $used_certificate = $request->get('used_certificate', null);
+            $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate']));
             $saleService->createSaleProducts($sale, $store_id, $cart);
             $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id);
+            if ($certificate) {
+                $_certificate = Certificate::find($certificate['id']);
+                $_certificate->sale_id = $sale->id;
+                $_certificate->save();
+            }
+            if ($used_certificate) {
+                $_certificate = Certificate::find($used_certificate['id']);
+                $_certificate->used_sale_id = $sale->id;
+                $_certificate->active = false;
+                $_certificate->save();
+            }
             \DB::commit();
-
             return [
                 'product_quantities' => ProductBatch::whereIn('product_id', collect($cart)->pluck('id'))
                     ->quantitiesOfStore(1)
@@ -57,85 +70,8 @@ class SaleController extends Controller {
                 'trace' => $exception->getTrace()
             ], 500);
         }
-
-       /* $_cart = $request->get('cart');
-        $_sale = $request->except('cart');
-        $sale = Sale::create($_sale);
-        $sale_id = $sale['id'];
-        $store_id = $request->get('store_id');
-        $client_id = $request->get('client_id');
-        $this->parseCart($sale_id, $store_id, $_cart);
-        $this->createClientSale($sale_id, $request->all());
-        return ['products' => ProductResource::collection(Product::find(array_map(function ($i) {
-            return $i['id'];
-        }, $_cart))), 'client' => $client_id === -1 ? [] : new ClientResource(Client::find($request->get('client_id'))), 'sale_id' => $sale_id];*/
     }
 
-    private function parseCart($sale_id, $store_id, $cart = []) {
-        $products = [];
-        foreach ($cart as $item) {
-            for ($i = 0; $i < $item['count']; $i++) {
-                $product_batch = ProductBatch::where('product_id', $item['id'])->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
-                $product_sale = ['product_batch_id' => $product_batch['id'], 'product_id' => $item['id'], 'sale_id' => $sale_id, 'purchase_price' => $product_batch['purchase_price'], 'product_price' => $item['product_price']];
-
-                $this->createProductSale($product_sale);
-
-                $this->changeCount($product_batch, $this->DECREASE);
-            };
-        }
-    }
-
-    private function createProductSale($cartItem) {
-        SaleProduct::create($cartItem);
-    }
-
-
-    private function changeCount(ProductBatch $productBatch, $MODE) {
-        if (!$productBatch) {
-            return;
-        }
-        $quantity = $productBatch['quantity'] + (1 * $MODE);
-        $productBatch->update(['quantity' => $quantity]);
-    }
-
-    private function createPartnerSale($amount, $request, $sale_id) {
-        $client = Client::find($request['partner_id']);
-        $client->update([
-            'partner_expired_at' => now()->addDays(60),
-        ]);
-        ClientTransaction::create(['client_id' => $request['partner_id'], 'sale_id' => $sale_id, 'amount' => $amount * $this->PARTNER_CASHBACK_PERCENT, 'user_id' => $request['user_id']]);
-    }
-
-    private function createClientSale($id, $request) {
-        $client_id = $request['client_id'];
-        if ($client_id === -1) {
-            return;
-        }
-        $discount = $request['discount'];
-        $cart = $request['cart'];
-
-        $amount = $this->getTotalAmount($cart, $discount);
-
-        ClientSale::create(['client_id' => $client_id, 'amount' => $amount, 'sale_id' => $id,]);
-        ClientTransaction::create(['client_id' => $client_id, 'sale_id' => $id, 'amount' => $amount * $this->CLIENT_CASHBACK_PERCENT, 'user_id' => $request['user_id']]);
-
-        if ($request['balance'] > 0) {
-            ClientTransaction::create(['client_id' => $client_id, 'sale_id' => $id, 'amount' => $request['balance'] * -1, 'user_id' => $request['user_id']]);
-        }
-
-        if (isset($request['partner_id']) && $request['partner_id']) {
-            $this->createPartnerSale($amount, $request, $id);
-
-        }
-    }
-
-    private function getTotalAmount($cart, $discount) {
-        $_amount = array_reduce($cart, function ($c, $i) {
-            return $c + ($i['product_price'] * $i['count']);
-        });
-
-        return $_amount - ($_amount * $discount / 100);
-    }
 
     public function reports(Request $request) {
         $start = $request->get('start');
@@ -143,80 +79,18 @@ class SaleController extends Controller {
         return ReportService::getReports($start, $finish);
     }
 
-    /*public function reports(Request $request) {
-
-        $FILTERS = ['ALL_TIME' => 1, 'CURRENT_MONTH' => 2, 'TODAY' => 3, 'CUSTOM_FILTER' => 4, 'LAST_3_DAYS' => 5];
-
-        $filter = intval($request->get('filter')) ?? 3;
-        $start = $request->get('start') ?? null;
-        $finish = $request->get('finish') ?? null;
-
-        $dates = [$start, $finish];
-
-        $currentDate = Carbon::today();
-        switch ($filter) {
-            case $FILTERS['TODAY']:
-            {
-                $dates = [$currentDate->toDateString(),];
-                break;
-            }
-            case $FILTERS['CURRENT_MONTH']:
-            {
-                $dates = [$currentDate->subDays(30)->toDateString(),];
-                break;
-            }
-            case $FILTERS['ALL_TIME']:
-            {
-                $dates = [Carbon::createFromTimestamp(0)->toDateString()];
-                break;
-            }
-
-            case $FILTERS['LAST_3_DAYS']:
-            {
-                $dates = [$currentDate->subDays(3)->toDateString()];
-                break;
-            }
-
-            case $FILTERS['CUSTOM_FILTER']:
-            {
-                $dates = [Carbon::parse($start), Carbon::parse($finish)];
-                break;
-            }
-
-            default:
-            {
-                $dates = [Carbon::now()->toDateString()];
-            }
-        }
-
-        if (count($dates) === 1) {
-            $dates[] = Carbon::now()->toDateString();
-        }
-
-        return ReportResource::collection(
-            Sale::with(
-                ['client', 'user', 'store', 'products', 'products.products', 'products.products.manufacturer', 'products.products.attributes', 'products.products.attributes.attribute_name']
-            )
-                ->whereDate('created_at', '>=', $start)
-                ->whereDate('created_at', '<=', $finish)
-                ->orderBy('created_at', 'desc')
-                ->get()
-        );
-
-    }*/
-
     public function report(Sale $sale) {
         return new ReportResource($sale);
     }
 
     public function getTotal(Request $request) {
-        $dateFilter = $request->get('date_filter') ?? 'today';
-        $dates = $this->getDatesFilters($dateFilter);
-        $sales = Sale::whereDate('created_at', '>=', $dates[0])
-            ->whereDate('created_at', '<=', $dates[1])
-            ->with(['products', 'products.product'])
+        $dateFilter = $request->get('date_filter');
+        $sales = Sale::whereDate('created_at', '>=', $dateFilter)
+            ->with(['products:product_price,discount,sale_id'])
+            ->select(['id', 'store_id', 'kaspi_red', 'balance'])
             ->get();
-        return SaleByCityResource::collection($sales);
+
+        return $this->calculateTotalAmount($sales);
     }
 
     public function getPlanReports() {
@@ -224,57 +98,40 @@ class SaleController extends Controller {
         $startOfWeek = $today->startOf('week')->toDateString();
         $startOfMonth = $today->startOf('month')->toDateString();
 
-        $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)->with(['products'])->get();
+        $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)
+            ->with(['products:product_price,discount,sale_id'])
+            ->select(['id', 'store_id', 'kaspi_red', 'balance'])
+            ->get();
 
         $weeklySales = $monthlySales->filter(function ($i){
             return Carbon::parse($i->created_at)->gte(now()->startOfWeek());
         });
 
         return [
-            'week' => SaleByCityResource::collection($weeklySales),
-            'month' => SaleByCityResource::collection($monthlySales)
+            'week' => $this->calculateTotalAmount($weeklySales),
+            'month' =>  $this->calculateTotalAmount($monthlySales)
         ];
     }
 
-    private function getDatesFilters($dateFilter) {
-        $dates = [];
-        $currentDate = Carbon::today();
-        switch ($dateFilter) {
-            case 'today':
-            {
-                $dates = [$currentDate->toDateString(),];
-                break;
-            }
-            case 'week':
-            {
-                $dates = [$currentDate->subDays(7)->toDateString(),];
-                break;
-            }
-            case 'month':
-            {
-                $dates = [$currentDate->subDays(30)->toDateString(),];
-                break;
-            }
-            case '3months':
-            {
-                $dates = [$currentDate->subDays(90)->toDateString()];
-                break;
-            }
-            case 'alltime':
-            {
-                $dates = [Carbon::createFromTimestamp(0)->toDateString()];
-                break;
-            }
-            default:
-            {
-                $dates = [Carbon::now()->toDateString()];
-            }
-        }
-
-        array_push($dates, Carbon::now()->toDateString());
-        return $dates;
-
+    private function calculateTotalAmount($sales) {
+        return collect($sales)->groupBy('store_id')
+            ->map(function ($sale, $store_id) {
+                return [
+                    'store_id' => $store_id,
+                    'amount' => ceil(collect($sale)->reduce(function ($a, $c){
+                        return $a + collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
+                                $price = $_c['product_price'] - ($_c['product_price'] * $_c['discount'] / 100);
+                                if ($c['kaspi_red']) {
+                                    $price -= $price * Sale::KASPI_RED_PERCENT;
+                                }
+                                $price -= $c['balance'];
+                                return $_a + $price;
+                            }, 0);
+                    }, 0))
+                ];
+            });
     }
+
 
     public function cancelSale(Request $request, Sale $sale) {
         $amount = 0;
@@ -285,7 +142,8 @@ class SaleController extends Controller {
                 $saleProduct = SaleProduct::where('product_id', $product['product_id'])->where('sale_id', $sale['id'])->first();
                 $amount += $saleProduct['product_price'];
                 $productBatch = ProductBatch::find($saleProduct['product_batch_id']);
-                $this->changeCount($productBatch, $this->INCREASE);
+                $productBatch->increment('quantity');
+                $productBatch->save();
                 $saleProduct->delete();
             }
         }
@@ -313,7 +171,7 @@ class SaleController extends Controller {
             $clientTransaction->update(['amount' => $newAmount]);
         }
 
-        return new ReportResource($sale);
+        return new ReportsResource($sale);
 
     }
 

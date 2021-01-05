@@ -32,18 +32,6 @@ class SaleService {
         });
     }
 
-    /*private function calculateProductSaleDiscount(Sale $sale, $discount) {
-        if ($sale->discount > $discount) {
-            return 0;
-        }
-
-        if ($sale->discount === $discount) {
-            return 0;
-        }
-
-        return $discount;
-
-    }*/
 
     public function createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale_id, $partner_id) {
         $client = Client::find($client_id);

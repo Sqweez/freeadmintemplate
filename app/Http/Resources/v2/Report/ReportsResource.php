@@ -17,11 +17,6 @@ class ReportsResource extends JsonResource
      */
     public function toArray($request)
     {
-      /*  dd($this->products->groupBy(['product_id', 'discount'])->map(function ($product, $product_id) {
-            return collect($product)->map(function ($p, $discount) {
-                return array_merge(['count' => count($p)], $p[0]->toArray());
-            });
-        })->flatten(1));*/
         return [
             'id' => $this->id,
             'client' => $this->client->only(['id', 'client_name']),
@@ -36,12 +31,21 @@ class ReportsResource extends JsonResource
                 return collect($product)->map(function ($p, $discount) {
                     return array_merge(['count' => count($p)], $p[0]);
                 });
-            })->flatten(1),
+            })->flatten(1)->merge([$this->certificate->id ? collect([
+                'product_name' => $this->certificate->used ? 'Сертификат на сумму '.  $this->certificate->amount .' тенге (Использован)' : 'Сертификат на сумму '.  $this->certificate->amount .' тенге',
+                'count' => 1,
+                'discount' => 0,
+                'attributes' => [],
+                'manufacturer' => [
+                    'manufacturer_name' => ''
+                ]
+            ]) : []])->filter(function ($q) {return count($q) > 0;}),
             'store_type' => intval($this->store->type_id),
             'purchase_price' => $this->purchase_price,
-            'fact_price' => $this->product_price,
-            'final_price' => $this->final_price,
-            'margin' => $this->margin,
+            'fact_price' => $this->product_price + $this->certificate->final_amount,
+            'final_price' => $this->final_price + $this->certificate->final_amount,
+            'margin' => $this->margin + $this->certificate->final_amount + $this->certificate_margin,
+            'certificate' => $this->used_certificate
         ];
     }
 }

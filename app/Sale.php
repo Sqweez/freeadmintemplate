@@ -92,6 +92,16 @@ class Sale extends Model
         ])->withTrashed();
     }
 
+    public function certificate() {
+        return $this->hasOne('App\v2\Models\Certificate', 'sale_id')->withDefault([
+            'amount' => 0
+        ]);
+    }
+
+    public function used_certificate() {
+        return $this->hasOne('App\v2\Models\Certificate', 'used_sale_id');
+    }
+
     public function store() {
         return $this->belongsTo('App\Store', 'store_id')->withTrashed();
     }
@@ -123,10 +133,8 @@ class Sale extends Model
     public function scopeReport($q) {
         return $q->with(['client', 'user', 'store','products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
-            ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes'])
-            /*->with(['products' => function ($query) {
-                return $query->groupBy(['product_id', 'sale_id', 'discount'])->addSelect(\DB::raw('*, count(*) as product_count'));
-            }])*/;
+            ->with(['certificate'])
+            ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
     }
 
     public function getPurchasePriceAttribute() {
@@ -163,6 +171,10 @@ class Sale extends Model
 
     public function getDateAttribute() {
         return Carbon::parse($this->created_at)->format('d.m.Y H:i:s');
+    }
+
+    public function getCertificateMarginAttribute() {
+        return max(0, $this->used_certificate ? $this->used_certificate->amount - $this->final_price : 0);
     }
 
     protected static function boot() {

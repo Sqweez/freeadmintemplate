@@ -180,14 +180,12 @@
                         <v-list-item v-for="(product, index) of item.products" :key="index">
                             <v-list-item-content>
                                 <v-list-item-title>{{ product.product_name }}</v-list-item-title>
-                                <v-list-item-subtitle>{{ product.attributes.join(", ") }}, {{ product.manufacturer.manufacturer_name }}</v-list-item-subtitle>
+                                <v-list-item-subtitle>{{ product.attributes.join(", ") }}<span v-if="product.manufacturer.manufacturer_name">,</span> {{ product.manufacturer.manufacturer_name }}</v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>
                                 <span>{{ product.count }} шт</span>
                                 <span v-if="product.discount > 0">Скидка: {{ product.discount }}%</span>
                             </v-list-item-action>
-                           <!-- <span>{{ product.product_name }}</span> <b style="white-space: nowrap">{{ product.count }}
-                            шт.</b>-->
                         </v-list-item>
                     </v-list>
                 </template>
@@ -247,6 +245,12 @@
                             <v-list-item-content>
                                 <v-list-item-title>{{ item.balance | priceFilters}}</v-list-item-title>
                                 <v-list-item-subtitle>Списано с баланса</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="item.certificate">
+                            <v-list-item-content>
+                                <v-list-item-title>{{ item.certificate.amount | priceFilters}}</v-list-item-title>
+                                <v-list-item-subtitle>Оплачено сертификатом</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                     </v-list>
@@ -431,13 +435,6 @@
                 this.cancelModal = false;
             },
             async init() {
-                /*if (this.salesReport.length === 0) {
-                    this.overlay = true;
-                    this.loading = false;
-                } else {
-                    this.overlay = false;
-                    this.loading = true;
-                }*/
                 this.loading = true;
                 await this.$store.dispatch(ACTIONS.GET_REPORTS, {
                     start: this.currentDate[0],

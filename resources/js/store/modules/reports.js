@@ -1,5 +1,6 @@
-import {cancelSale, getPlanReports, getReports, getStoreReports, updateSale} from '../../api/sale'
+import {cancelSale, getPlanReports, getReports, getStoreReports, updateSale} from '@/api/sale'
 import ACTIONS from '../actions/index';
+import moment from 'moment';
 
 const reportsModule = {
     state: {
@@ -35,9 +36,9 @@ const reportsModule = {
         }
     },
     actions: {
-        async getStoresReport({commit}, payload = 'today') {
+        async getStoresReport({commit}, payload = moment().format('YYYY-MM-DD')) {
             const {data} = await getStoreReports(payload);
-            commit('setStoresReport', data.data);
+            commit('setStoresReport', data);
         },
         async [ACTIONS.GET_REPORTS] ({commit}, payload) {
             const data = await getReports(payload);

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card class="background-iron-darkgrey mb-5" v-if="!emptyCart">
+        <v-card class="background-iron-darkgrey mb-5" v-if="!emptyCart || certificate">
             <v-card-title class="justify-space-between">
                 <span>Корзина</span>
                 <div>
@@ -50,7 +50,22 @@
                                 class="w-150px"
                                 item-value="id"></v-select>
                         </div>
-
+                        <div v-if="!isFree">
+                            <v-autocomplete
+                                :items="certificates"
+                                :item-text="function(item) {
+                                  return `${item.barcode} номинал: ${item.amount} тенге`;
+                                }"
+                                :item-value="function(item) {
+                                  return item;
+                                }"
+                                label="Сертификат"
+                                no-data-text="Нет данных"
+                                v-model="used_certificate"
+                                append-outer-icon="mdi-close"
+                                @click:append-outer="used_certificate = null"
+                            />
+                        </div>
                         <div v-if="clientChosen && !isFree">
                             <v-text-field
                                 class="w-150px"
@@ -170,6 +185,40 @@
                         </tr>
                         </thead>
                         <tbody class="background-iron-grey">
+                        <tr v-if="certificate">
+                            <td>#</td>
+                            <td>
+                                <v-list class="product__list" flat>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                Сертификат
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                На сумму {{ certificate.amount | priceFilters }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </td>
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                0%
+                            </td>
+                            <td>
+                                {{ certificate.amount | priceFilters }}
+                            </td>
+                            <td>
+                                {{ certificate.amount | priceFilters }}
+                            </td>
+                            <td>
+                                <v-btn icon color="error" @click="deleteCertificate">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
                         <tr v-for="(item, index) of cart" :key="`product-id-${item.uuid}`">
                             <td>{{ index + 1 }}</td>
                             <td>
@@ -235,7 +284,7 @@
                             <td class="text-center">{{ subtotal | priceFilters}}</td>
                             <td class="text-center">{{ discount }}%</td>
                             <td class="text-center">{{ discountTotal | priceFilters}}</td>
-                            <td class="text-center green--text darken-1">{{ total - balance | priceFilters }}</td>
+                            <td class="text-center green--text darken-1">{{ finalPrice | priceFilters }}</td>
                         </tr>
                         </tbody>
                     </template>
@@ -305,6 +354,9 @@
                 <v-btn depressed icon primary @click="refreshProducts">
                     <v-icon>mdi-refresh</v-icon>
                 </v-btn>
+                <v-btn depressed color="success" class="float-right" @click="certificateModal = true;">
+                    Добавить сертификат +
+                </v-btn>
                 <v-data-table
                     class="background-iron-grey fz-18"
                     no-results-text="Нет результатов"
@@ -369,6 +421,10 @@
             message="Сформировать накладную?"
             :on-confirm="getWayBill"
         />
+        <CertificateModal
+            @cancel="certificateModal = false"
+            @submit="createCertificate"
+            :state="certificateModal"/>
     </div>
 </template>
 
@@ -385,8 +441,10 @@
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
+    import CertificateModal from "@/components/Modal/CertificateModal";
     export default {
         components: {
+            CertificateModal,
             CheckModal,
             ConfirmationModal,
             ClientCart,
@@ -399,6 +457,7 @@
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+            await this.$store.dispatch('GET_CERTIFICATES');
             this.loading = false;
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
@@ -433,8 +492,11 @@
         mixins: [product, product_search, cart],
         data: () => ({
             waybillModal: false,
+            certificateModal: false,
             loading: true,
             cart: [],
+            certificate: null,
+            used_certificate: null,
             isRed: false,
             isFree: false,
             payment_type: 0,
@@ -492,6 +554,30 @@
                 ACTIONS.GET_CLIENTS,
                 ACTIONS.GET_STORES,
             ]),
+            async createCertificate(certificate) {
+                this.certificateModal = false;
+                try {
+                    this.$loading();
+                    const { data } = await axios.post(`/api/v2/certificates/`, certificate);
+                    this.certificate = data;
+                } catch (e) {
+                    showToast('При создании сертификата произошла ошибка', TOAST_TYPE.ERROR);
+                } finally {
+                    this.$loading();
+                }
+            },
+            async deleteCertificate() {
+                try {
+                    this.$loading();
+                    await axios.delete(`/api/v2/certificates/${this.certificate.id}`);
+                    this.certificate = null;
+                }
+                catch (e) {
+                    showToast('Произошла ошибка!', TOAST_TYPE.ERROR);
+                } finally {
+                    this.$loading();
+                }
+            },
             cancelClient() {
                 this.client = null;
                 this.partner_id = null;
@@ -549,7 +635,9 @@
                     kaspi_red: this.isRed && !this.isFree,
                     balance: this.balance,
                     partner_id: this.partner_id,
-                    payment_type: this.payment_type
+                    payment_type: this.payment_type,
+                    certificate: this.certificate,
+                    used_certificate: this.used_certificate
                 };
                 try {
                     this.overlay = true;
@@ -564,6 +652,8 @@
                     this.balance = 0;
                     this.payment_type = 0;
                     this.partner_id = false;
+                    this.certificate = null;
+                    this.used_certificate = null;
                 } catch (e) {
                     showToast('Произошла ошибка', TOAST_TYPE.ERROR);
                 } finally {
@@ -599,6 +689,9 @@
             partners() {
                 return this.$store.getters.PARTNERS;
             },
+            certificates() {
+                return this.$store.getters.CERTIFICATES;
+            },
             is_admin() {
                 return this.$store.getters.IS_ADMIN;
             },
@@ -625,6 +718,16 @@
             clientChosen() {
                 return this.client && this.client.id !== -1;
             },
+            finalPrice() {
+                let total = this.total;
+                if (this.balance > 0) {
+                    total -= this.balance;
+                }
+                if (this.used_certificate) {
+                    total -= this.used_certificate.amount;
+                }
+                return Math.max(0, total);
+            }
         },
     }
 </script>

@@ -95,6 +95,7 @@
     import showToast from "../../utils/toast";
     import {cancelSale} from "../../api/sale";
     import ACTIONS from "../../store/actions";
+    import {TOAST_TYPE} from "@/config/consts";
 
     export default {
         props: {
@@ -175,13 +176,18 @@
                         product_id: t.product_id
                     }
                 });
-                await this.$store.dispatch(ACTIONS.CANCEL_SALE, {
-                    canceled: canceled,
-                    id: this.id,
-                });
-                showToast('Продажа отменена');
-                this.$emit('confirm');
-                this.loading = false;
+                try {
+                    await this.$store.dispatch(ACTIONS.CANCEL_SALE, {
+                        canceled: canceled,
+                        id: this.id,
+                    });
+                    showToast('Продажа отменена');
+                    this.$emit('confirm');
+                } catch (e) {
+                    showToast('При отмене произошла ошибка, перезагрузите страницу!', TOAST_TYPE.ERROR)
+                } finally {
+                    this.loading = false;
+                }
             },
             decreaseCount(idx) {
                 const newValue = {

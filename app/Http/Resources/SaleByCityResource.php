@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Sale;
+use App\v2\Models\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SaleByCityResource extends JsonResource
@@ -21,14 +23,16 @@ class SaleByCityResource extends JsonResource
 
         $balance = intval($this->balance);
 
+        $kaspi_red = intval($this->kaspi_red);
+
         return [
             'id' => $this->id,
             'store_id' => intval($this->store_id),
-            'total_cost' => $this->getFinalPrice($discount, $cost, $balance)
+            'total_cost' => $this->getFinalPrice($discount, $cost, $balance, $kaspi_red)
         ];
     }
 
-    private function getFinalPrice($discount, $price, $balance) {
-        return intval(($price - $price * $discount / 100) - $balance);
+    private function getFinalPrice($discount, $price, $balance, $kaspi_red) {
+        return intval((($price - $price * $discount / 100) - $price * Sale::KASPI_RED_PERCENT * $kaspi_red) - $balance);
     }
 }

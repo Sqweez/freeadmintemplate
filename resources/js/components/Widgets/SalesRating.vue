@@ -17,11 +17,11 @@
                         <v-list-item-content>
                             <v-list-item-title class="d-flex justify-space-between">
                                 <span>{{ store.name }}</span>
-                                <span class="font-weight-black">{{ getTotal(store.id) | priceFilters}}</span>
+                                <span class="font-weight-black">{{ getAmount(store.id) | priceFilters}}</span>
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item class="darken-3 black" v-if="(IS_ADMIN || IS_OBSERVER)">
+                    <!--<v-list-item class="darken-3 black" v-if="(IS_ADMIN || IS_OBSERVER)">
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
@@ -32,7 +32,7 @@
                                 </div>
                             </v-list-item-title>
                         </v-list-item-content>
-                    </v-list-item>
+                    </v-list-item>-->
                 </v-list>
             </v-card-text>
         </v-responsive>
@@ -41,29 +41,33 @@
 
 <script>
     import {mapActions, mapGetters} from 'vuex';
+    import moment from 'moment';
+
+
+    const DATE_FORMAT = 'YYYY-MM-DD';
 
     export default {
         data: () => ({
             items: [
                 {
                     name: 'Сегодня',
-                    value: 'today'
+                    value: moment().format(DATE_FORMAT)
                 },
                 {
                     name: 'За неделю',
-                    value: 'week'
+                    value: moment().subtract(7, 'days').format(DATE_FORMAT)
                 },
                 {
                     name: 'За месяц',
-                    value: 'month'
+                    value: moment().subtract(30, 'days').format(DATE_FORMAT)
                 },
                 {
                     name: 'За 3 месяца',
-                    value: '3months'
+                    value: moment().subtract(90, 'days').format(DATE_FORMAT)
                 },
                 {
                     name: 'За все время',
-                    value: 'alltime'
+                    value:  moment.unix(1).format(DATE_FORMAT),
                 }
             ],
             current: null,
@@ -102,6 +106,9 @@
                 return sales.reduce((a, c) => {
                     return c.total_cost + a;
                 }, 0)
+            },
+            getAmount(store_id) {
+                return this.STORES_REPORTS[store_id] ? this.STORES_REPORTS[store_id].amount : 0;
             },
             async changeFilter() {
                 await this.$store.dispatch('getStoresReport', this.current)

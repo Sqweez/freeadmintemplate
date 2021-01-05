@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\v2\ProductController;
+use App\Http\Controllers\api\v2\CertificateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthorizationMiddleware;
 
@@ -198,6 +199,12 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::patch('{sku}/sku', [ProductController::class, 'updateProductSku']);
             // Тестовая группировка товаров
             Route::get('group/set', [ProductController::class, 'groupProducts']);
+        });
+
+        Route::prefix('certificates')->group(function () {
+            Route::post('/', [CertificateController::class, 'create']);
+            Route::get('/', [CertificateController::class, 'index']);
+            Route::delete('/{id}', [CertificateController::class, 'delete']);
         });
     });
 });

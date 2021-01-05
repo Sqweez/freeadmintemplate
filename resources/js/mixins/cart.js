@@ -113,12 +113,12 @@ export default {
                 .map(c => c.count)
                 .reduce((a, c) => {
                     return a + c;
-                }, 0)
+                }, 0) + (this.certificate ? 1 : 0);
         },
         subtotal() {
             return this.cart.reduce((a, c) => {
                 return (c.product_price * c.count) + a;
-            }, 0);
+            }, 0) + (this.certificate ? this.certificate.amount : 0);
         },
         user() {
             return this.$store.getters.USER;
