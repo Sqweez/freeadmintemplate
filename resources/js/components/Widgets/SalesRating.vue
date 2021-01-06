@@ -87,7 +87,8 @@
                 'IS_OBSERVER'
             ]),
             totalSum() {
-                return this.STORES_REPORTS.reduce((a, c) => {
+                const values = Object.values(this.STORES_REPORTS);
+                return values.reduce((a, c) => {
                     return c.amount + a;
                 }, 0);
             },
