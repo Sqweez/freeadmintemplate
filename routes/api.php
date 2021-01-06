@@ -206,5 +206,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/', [CertificateController::class, 'index']);
             Route::delete('/{id}', [CertificateController::class, 'delete']);
         });
+
+
+        Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
     });
 });

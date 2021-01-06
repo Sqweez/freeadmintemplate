@@ -24,10 +24,14 @@
                         item-text="type"
                         item-value="id"
                     />
-                    <v-text-field
+                    <v-autocomplete
                         class="mt-3"
                         label="Город"
-                        v-model="store.city"
+                        v-model="store.city_id"
+                        item-text="name"
+                        item-value="id"
+                        no-data-text="Нет данных"
+                        :items="cities"
                     />
                 </v-form>
             </v-card-text>
@@ -71,6 +75,9 @@
         computed: {
             store_types() {
                 return this.$store.getters.store_types;
+            },
+            cities() {
+                return this.$store.getters.cities;
             }
         },
         data: () => ({

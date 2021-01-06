@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\StoreResource;
 use App\Store;
 use App\StoreType;
+use App\v2\Models\City;
 use Illuminate\Http\Request;
 
 class StoreController extends Controller
@@ -17,7 +18,7 @@ class StoreController extends Controller
      */
     public function index(Request $request)
     {
-        $storeQuery = Store::query()->with('type');
+        $storeQuery = Store::query()->with('type')->with('city_name');
         if ($request->has('store_id')) {
             $storeQuery->where('id', $request->get('store_id'));
         }
@@ -66,5 +67,9 @@ class StoreController extends Controller
 
     public function types() {
         return StoreType::all();
+    }
+
+    public function getCities() {
+        return City::all();
     }
 }

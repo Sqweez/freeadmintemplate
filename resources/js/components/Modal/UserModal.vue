@@ -2,7 +2,7 @@
     <v-dialog max-width="900" v-model="state" persistent>
         <v-card>
             <v-card-title class="headline justify-space-between">
-                <span class="white--text">{{ id !== null ? 'Редактирование' : 'Добавление' }} продавца</span>
+                <span class="white--text">{{ id !== null ? 'Редактирование' : 'Добавление' }} пользователя</span>
                 <v-btn icon text class="float-right" @click="$emit('cancel')">
                     <v-icon color="white">
                         mdi-close

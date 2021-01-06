@@ -10,7 +10,7 @@ class CheckController extends Controller
 {
     public function index($sale, Request $request) {
         return view('check', [
-            'report' => $this->getReport($sale, $request)->getData()
+            'report' => (object) $this->getReport($sale, $request)->getData(true)
         ]);
     }
 

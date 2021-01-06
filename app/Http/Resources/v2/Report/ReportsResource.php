@@ -38,7 +38,9 @@ class ReportsResource extends JsonResource
                 'attributes' => [],
                 'manufacturer' => [
                     'manufacturer_name' => ''
-                ]
+                ],
+                'certificate_id' => $this->certificate->id,
+                'product_price' => $this->certificate->amount
             ]) : []])->filter(function ($q) {return count($q) > 0;}),
             'store_type' => intval($this->store->type_id),
             'purchase_price' => $this->purchase_price,

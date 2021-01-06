@@ -173,7 +173,8 @@
                 const canceled = this.transfer.filter(t => t.accepted).map(t => {
                     return {
                         count: t._count,
-                        product_id: t.product_id
+                        product_id: t.product_id,
+                        certificate_id: t.certificate_id,
                     }
                 });
                 try {

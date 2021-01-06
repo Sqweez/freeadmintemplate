@@ -21,7 +21,7 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <!--<v-list-item class="darken-3 black" v-if="(IS_ADMIN || IS_OBSERVER)">
+                    <v-list-item class="darken-3 black" v-if="(IS_ADMIN || IS_OBSERVER)">
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
@@ -32,7 +32,7 @@
                                 </div>
                             </v-list-item-title>
                         </v-list-item-content>
-                    </v-list-item>-->
+                    </v-list-item>
                 </v-list>
             </v-card-text>
         </v-responsive>
@@ -88,7 +88,7 @@
             ]),
             totalSum() {
                 return this.STORES_REPORTS.reduce((a, c) => {
-                    return c.total_cost + a;
+                    return c.amount + a;
                 }, 0);
             },
             stores() {

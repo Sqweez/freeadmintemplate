@@ -1,17 +1,19 @@
 import ACTIONS from "../actions";
 import MUTATIONS from "../mutations";
-import {createStore, deleteStore, editStore, getStores, getStoreTypes} from "../../api/stores";
+import {createStore, deleteStore, editStore, getCities, getStores, getStoreTypes} from "../../api/stores";
 
 const storeModule = {
     state: {
         stores: [],
+        cities: [],
         store_types: [],
     },
     getters: {
         stores: state => state.stores,
         store: state => id => state.stores.find(s => s.id === id),
         store_types: state => state.store_types,
-        shops: state => state.stores.filter(s => s.type_id == 1)
+        shops: state => state.stores.filter(s => s.type_id == 1),
+        cities: state => state.cities,
     },
     mutations: {
         async [MUTATIONS.DELETE_STORE] (state, payload) {
@@ -28,12 +30,15 @@ const storeModule = {
                 return s;
             })
         },
-        async [MUTATIONS.SET_STORE_TYPES] (state, payload) {
+        [MUTATIONS.SET_STORE_TYPES] (state, payload) {
             state.store_types = payload;
         },
-        async [MUTATIONS.SET_STORES] (state, payload) {
+        [MUTATIONS.SET_STORES] (state, payload) {
             state.stores = payload;
         },
+        [MUTATIONS.SET_CITIES] (state, payload) {
+            state.cities = payload;
+        }
     },
     actions: {
         async [ACTIONS.DELETE_STORE] ({commit}, payload) {
@@ -56,6 +61,10 @@ const storeModule = {
         async [ACTIONS.GET_STORE_TYPES] ({commit}) {
             const store_types = await getStoreTypes();
             commit(MUTATIONS.SET_STORE_TYPES, store_types);
+        },
+        async [ACTIONS.GET_CITIES] ({commit}) {
+            const cities = await getCities();
+            commit(MUTATIONS.SET_CITIES, cities);
         }
     }
 };

@@ -24,3 +24,8 @@ export async function editStore(payload) {
     const response = await axios.patch(`/api/stores/${payload.id}`, payload);
     return response.data.data;
 }
+
+export async function getCities() {
+    const { data } = await axios.get('/api/v2/cities');
+    return data;
+}

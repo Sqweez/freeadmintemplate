@@ -57,4 +57,5 @@ export default {
     CREATE_CRITERIA: 'createCriteria',
     EDIT_CRITERIA: 'editCriteria',
     DELETE_CRITERIA: 'deleteCriteria',
+    GET_CITIES: 'getCities'
 }

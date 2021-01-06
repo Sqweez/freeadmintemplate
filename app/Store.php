@@ -49,4 +49,8 @@ class Store extends Model
     public function type() {
         return $this->belongsTo('App\StoreType', 'type_id');
     }
+
+    public function city_name() {
+        return $this->belongsTo('App\v2\Models\City', 'city_id');
+    }
 }

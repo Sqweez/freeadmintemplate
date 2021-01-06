@@ -139,12 +139,19 @@ class SaleController extends Controller {
         $products = $request->all();
         foreach ($products as $product) {
             for ($i = 0; $i < $product['count']; $i++) {
-                $saleProduct = SaleProduct::where('product_id', $product['product_id'])->where('sale_id', $sale['id'])->first();
-                $amount += $saleProduct['product_price'];
-                $productBatch = ProductBatch::find($saleProduct['product_batch_id']);
-                $productBatch->increment('quantity');
-                $productBatch->save();
-                $saleProduct->delete();
+                if (isset($product['product_id']) && $product['product_id']) {
+                    $saleProduct = SaleProduct::where('product_id', $product['product_id'])->where('sale_id', $sale['id'])->first();
+                    $amount += $saleProduct['product_price'];
+                    $productBatch = ProductBatch::find($saleProduct['product_batch_id']);
+                    $productBatch->increment('quantity');
+                    $productBatch->save();
+                    $saleProduct->delete();
+                }
+                if (isset($product['certificate_id']) && $product['certificate_id']) {
+                    $certificate = Certificate::find($product['certificate_id']);
+                    $certificate->sale_id = 0;
+                    $certificate->save();
+                }
             }
         }
 
