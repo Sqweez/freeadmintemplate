@@ -263,6 +263,11 @@
                         text: 'Производитель'
                     },
                     {
+                        value: 'manufacturer.manufacturer_name',
+                        text: 'Название производителя',
+                        align: ' d-none'
+                    },
+                    {
                         value: 'category',
                         text: 'Категория'
                     }
