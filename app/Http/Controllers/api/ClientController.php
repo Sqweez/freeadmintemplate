@@ -189,13 +189,32 @@ class ClientController extends Controller {
 
     public function getOrders(Request $request) {
         $user_token = $request->get('user_token');
-        $client = Client::ofToken($user_token)->first();
+        $client = Client::ofToken($user_token)->with([
+            'orders',
+            'orders.items.product',
+            'orders.items.product.product',
+            'purchases',
+            'purchases.products.product'
+        ])->with(['orders.items' => function ($q) {
+            return $q->has('product');
+        }])->with(['purchases.products' => function ($q) {
+            return $q->has('product');
+        }])->first();
         if (!$client) {
-            return response()->json(['error' => 'Клиент не найден']);
+            return response()->json(['error' => 'Клиент не найден'], 500);
         }
 
-        $orders = OrderResource::collection($client->orders->where('status', '!=', 1));
-        $sales = OrderResource::collection($client->purchases);
+
+        $orders = $client->orders->filter(function ($q) {
+            return count($q['items']) > 0;
+        })->values();
+
+        $sales = $client->purchases->filter(function ($q) {
+            return count($q['products']) > 0;
+        })->values();
+
+        $orders = OrderResource::collection($orders);
+        $sales = OrderResource::collection($sales);
 
         return collect($orders)->merge(collect($sales));
     }

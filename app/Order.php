@@ -52,6 +52,23 @@ class Order extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'status' => 'integer',
+        'id' => 'integer'
+    ];
+
+    const ORDER_STATUS = [
+        0 => [
+            'text' => 'В обработке'
+        ],
+        1 => [
+            'text' => 'Выполнен'
+        ],
+        -1 => [
+            'text' => 'Отменен'
+        ],
+    ];
+
     public function items() {
         return $this->hasMany('App\OrderProduct', 'order_id');
     }

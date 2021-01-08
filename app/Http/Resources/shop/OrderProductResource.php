@@ -20,35 +20,11 @@ class OrderProductResource extends JsonResource
     {
 
         return [
-            'product_id' => intval($this->id),
-            'product_price' => $this->product_price,
-            'product_name' => $this->product_name,
-            'product_image' => $this->getProductImages($this->product_images, 'image')[0],
-            'product_weight' => $this->getProductWeight($this->attributes) ?? '',
-            'product_taste' => $this->getProductTaste($this->attributes) ?? '-',
+            'product_id' => $this->product->id,
+            'product_price' => $this->product->product_price,
+            'product_name' => $this->product->product_name,
+            'product_image' => url('/') . Storage::url($this->product->general_images->first()->image ?? 'products/product_image_default.jpg'),
+            'attributes' => $this->product->attributes->merge($this->product->product->attributes)->pluck('attribute_value')
         ];
-    }
-
-    private function getProductImages($_images, $type) {
-        if ($_images->count() === 0) {
-            return [
-                url('/') . Storage::url($type === 'image' ? 'products/product_image_default.jpg': 'product_thumbs/product_image_default.jpg')
-            ];
-        }
-        return $_images->map(function ($i) use ($type) {
-            return url('/') . Storage::url($i->product_image ?? ($type === 'image' ? 'products/product_image_default.jpg': 'product_thumbs/product_image_default.jpg'));
-        });
-    }
-
-    private function getProductWeight($attributes) {
-        return $attributes->filter(function ($i) {
-                return $i['attribute_id'] == 2;
-            })->first()['attribute_value'] ?? '';
-    }
-
-    private function getProductTaste($attributes) {
-        return $attributes->filter(function ($i) {
-                return $i['attribute_id'] == 1;
-            })->first()['attribute_value'] ?? '';
     }
 }
