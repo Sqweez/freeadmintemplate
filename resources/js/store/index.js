@@ -57,15 +57,6 @@ const store = new Store({
     },
     plugins: [createPersistedState({
         paths: [
-            'userModule',
-            'storeModule',
-            'categoryModule',
-            'manufacturerModule',
-            'attributeModule',
-            'clientModule',
-            'plansModule',
-            'statsModule',
-            'ratingModule',
             'reportsModule.storesReports',
             'reportsModule.planReports'
         ]

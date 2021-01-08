@@ -171,6 +171,7 @@
                 console.log(e.response);
             }
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+            this.storeFilter = this.stores[0].id;
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
@@ -219,11 +220,7 @@
                 return this.$store.getters.PRODUCTS_v2;
             },
             stores() {
-                const stores = this.$store.getters.stores;
-                if (stores.length > 0) {
-                    this.storeFilter = stores[0].id;
-                }
-                return stores;
+                return this.$store.getters.stores;
             },
             categories() {
                 return this.$store.getters.categories;
