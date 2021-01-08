@@ -481,6 +481,7 @@
                     store_id: null,
                     price: null
                 }];
+
                 this.product_attributes = this.product.attributes.length ? this.product.attributes : [
                     {
                         attribute_id: null,
@@ -488,11 +489,14 @@
                     }
                 ];
 
+
                 if (this.isEditing) {
                     this.product_attributes = this.product_attributes.filter(a => {
                         return a.attribute_id !== this.product.grouping_attribute_id;
                     })
                 }
+
+                console.log(this.product_attributes);
 
                 this.attributesSelect = new Array(this.product_attributes.length - 1).fill(VSelect);
                 this.pricesSelect = new Array(this.prices.length - 1).fill(VSelect);

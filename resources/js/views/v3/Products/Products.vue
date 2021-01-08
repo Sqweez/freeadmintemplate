@@ -16,9 +16,6 @@
             <div class="mb-5">
                 <v-btn color="error" @click="showProductModal()" v-if="is_admin">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
             </div>
-            <!--<v-btn color="success" @click="groupProduct" v-if="is_admin">Сгруппировать товар <v-icon>mdi-sync</v-icon></v-btn>-->
-
-            <!--<v-btn color="success" @click="groupProduct" v-if="is_admin">Сгруппировать товар <v-icon>mdi-sync</v-icon></v-btn>-->
             <v-row>
                 <v-col>
                     <v-row>

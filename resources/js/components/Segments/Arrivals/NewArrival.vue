@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="d-flex align-center">
-            <v-btn color="error" @click="productModal = true">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+            <v-btn color="error" @click="showProductModal()">Добавить товар
+                <v-icon>mdi-plus</v-icon>
+            </v-btn>
             <v-btn color="error" class="top-button" @click="wayBillModal = true;" style="margin-left: 10px;">
                 Сформировать накладную
             </v-btn>
@@ -17,7 +19,7 @@
                 </v-btn>
             </div>
         </div>
-        <v-card class="background-iron-darkgrey mb-5 mt-5"  v-if="!emptyCart">
+        <v-card class="background-iron-darkgrey mb-5 mt-5" v-if="!emptyCart">
             <v-card-title class="justify-end">
             </v-card-title>
             <v-card-text style="padding: 0;">
@@ -45,7 +47,8 @@
                                                 {{ item.product_name }}
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
-                                                {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                                {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{
+                                                item.manufacturer.manufacturer_name }}
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
@@ -61,7 +64,8 @@
                                     style="min-width: 60px; max-width: 60px; text-align: center"
                                     @input="changeCount($event, item, index)"
                                     @change="changeCount($event, item, index)"
-                                ></v-text-field> шт.
+                                ></v-text-field>
+                                шт.
                                 <v-btn icon color="success" @click="increaseCartCount(index)">
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
@@ -185,7 +189,8 @@
                                         {{ item.product_name }}
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
-                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{
+                                        item.manufacturer.manufacturer_name }}
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
@@ -201,6 +206,10 @@
                         <v-btn icon @click="addToCart(item, true)" color="success">
                             +1
                         </v-btn>
+                        <v-btn color="success" outlined v-if="item.sku_can_be_created" @click="showProductSkuModal(item.id)">
+                            Ассортимент
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -212,10 +221,11 @@
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
         <ProductModal
-            :id="productId"
-            v-on:cancel="productId = -1; rangeMode = false; productModal = false;"
-            :range-mode="rangeMode"
-            :state="productModal"/>
+            @cancel="$store.commit('modals/closeProductModal')"
+        />
+        <SkuModal
+            @cancel="$store.commit('modals/closeProductSkuModal')"
+        />
         <ConfirmationModal
             message="Распечатать накладную?"
             :state="wayBillModal"
@@ -225,19 +235,21 @@
 </template>
 
 <script>
-    import ProductModal from "@/components/Modal/ProductModal";
+    import ProductModal from "@/components/v2/Modal/ProductModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import WayBillModal from "@/components/Modal/WayBillModal";
     import ACTIONS from "@/store/actions";
     import showToast from "@/utils/toast";
-    import {TOAST_TYPE} from "@/config/consts";
+    import {PRODUCT_MODAL_EVENTS, TOAST_TYPE} from "@/config/consts";
     import axios from "axios";
     import {createArrival} from "@/api/arrivals";
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
+    import SkuModal from "@/components/v2/Modal/SkuModal";
 
     export default {
         components: {
+            SkuModal,
             ConfirmationModal,
             WayBillModal,
             ProductModal
@@ -298,6 +310,24 @@
                     this.$set(this.cart[index], 'count', Math.max(1, Math.min(10000, e)))
                 });
             },
+            async showProductModal(id = null, action = PRODUCT_MODAL_EVENTS.ADD_PRODUCT) {
+                if (id !== null) {
+                    this.productId = id;
+                    await this.$store.dispatch('GET_PRODUCT_v2', id);
+                }
+                return this.$store.commit('modals/showProductModal', {
+                    id, action
+                });
+            },
+            async showProductSkuModal(id = null, edit = false) {
+                if (id === null) {
+                    return false
+                }
+                await this.$store.dispatch('GET_PRODUCT_v2', id);
+                return this.$store.commit('modals/showProductSkuModal', {
+                    id, edit
+                });
+            },
             updatePurchasePrice(e, index) {
                 this.$nextTick(() => {
                     this.$set(this.cart[index], 'purchase_price_initial', Math.max(0, Math.min(999999999, +e)));
@@ -313,7 +343,13 @@
             addToCart(item, merge = false) {
                 const index = this.cart.map(c => c.id).indexOf(item.id);
                 if (index === -1 || merge) {
-                    this.cart.push({...item, count: 1, purchase_price_initial: 0, purchase_price: 0, uuid: Math.random()});
+                    this.cart.push({
+                        ...item,
+                        count: 1,
+                        purchase_price_initial: 0,
+                        purchase_price: 0,
+                        uuid: Math.random()
+                    });
                 } else {
                     this.increaseCartCount(index);
                 }
@@ -326,7 +362,7 @@
             },
             async getWayBill() {
                 this.wayBillModal = false;
-                const { data } = await axios.post('/api/excel/transfer/waybill', {
+                const {data} = await axios.post('/api/excel/transfer/waybill', {
                     child_store: this.storeFilter,
                     parent_store: this.storeFilter,
                     cart: this.cart,

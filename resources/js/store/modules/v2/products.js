@@ -120,16 +120,8 @@ const actions = {
         }
     },
     async GET_PRODUCTS_QUANTITIES({commit, dispatch, getters}, store_id) {
-        const quantities = getters.QUANTITIES_v2;
-        if (!quantities[store_id]) {
-            commit('enableLoading');
-        } else {
-            commit('SET_PRODUCT_QUANTITIES_v2', {
-                quantities: quantities[store_id],
-                store_id
-            })
-        }
         try {
+            commit('enableLoading');
             const { data } = await getProductsQuantity(store_id);
             commit('SET_PRODUCT_QUANTITIES_v2', {
                 quantities: data,
