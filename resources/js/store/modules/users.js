@@ -1,6 +1,6 @@
 import ACTIONS from "../actions";
 import MUTATIONS from '../mutations';
-import {createUser, deleteUser, editUser, getUserRoles, getUsers} from "../../api/users";
+import {createUser, deleteUser, editUser, getUserRoles, getUsers} from "@/api/users";
 
 const userModule = {
     state: {

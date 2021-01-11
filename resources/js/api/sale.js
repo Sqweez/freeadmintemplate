@@ -5,8 +5,12 @@ export async function makeSale(payload) {
     return response.data;
 }
 
-export async function getReports({start, finish}) {
-    const response = await axios.get(`/api/reports?start=${start}&finish=${finish}`);
+export async function getReports({start, finish, user_id = null}) {
+    let query = `?start=${start}&finish=${finish}`;
+    if (user_id) {
+        query += `&user_id=${user_id}`
+    }
+    const response = await axios.get(`/api/reports${query}`);
     return response.data.data;
 }
 

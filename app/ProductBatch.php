@@ -38,7 +38,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|ProductBatch withoutTrashed()
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch quantitiesOfStore($store_id)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch positive()
  */
 class ProductBatch extends Model
 {
@@ -48,7 +47,8 @@ class ProductBatch extends Model
 
     protected $casts = [
         'quantity' => 'integer',
-        'product_id' => 'integer'
+        'product_id' => 'integer',
+        'id' => 'integer'
     ];
 
     public function scopeOfStore($query, $store) {

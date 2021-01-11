@@ -73,7 +73,6 @@ const navigationModule = {
                 title: 'Отчеты по продажам',
                 url: '/reports',
                 icon: 'report',
-                isAdmin: true
             },
             {
                 title: 'Интернет-магазин',
@@ -183,49 +182,20 @@ const navigationModule = {
                 hasDropdown: true,
                 children: [
                     {
-                        title: 'Все товары',
-                        url: '/products'
-                    },
-                    {
                         title: 'Корзина',
                         url: '/cart'
                     },
                     {
                         title: 'Перемещения',
                         url: '/transfer',
-                    },
-                    {
-                        title: 'Ревизии',
-                        url: '/revision',
                     },
 
                 ],
             },
             {
-                title: 'v3/Склад',
-                url: '#',
-                icon: 'dashboard',
-                hasDropdown: true,
-                isAdmin: true,
-                children: [
-                    {
-                        title: 'Товары',
-                        url: '/products'
-                    },
-                    {
-                        title: 'Корзина',
-                        url: '/cart'
-                    },
-                   /* {
-                        title: 'Перемещения',
-                        url: '/transfer',
-                    },
-                    {
-                        title: 'Поступления',
-                        url: '/arrivals',
-                        isAdmin: true,
-                    },*/
-                ]
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
             },
 
         ],

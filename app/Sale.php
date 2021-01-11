@@ -82,6 +82,9 @@ class Sale extends Model
         ],
         3 => [
             'name' => 'Перевод на карту'
+        ],
+        4 => [
+            'name' => 'Kaspi Магазин'
         ]
     ];
 

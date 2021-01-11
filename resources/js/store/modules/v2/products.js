@@ -11,6 +11,7 @@ import {TOAST_TYPE} from "@/config/consts";
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
 import axios from 'axios';
+import {changeProductCount} from "@/api/products";
 
 const state = {
     products_v2: [],
@@ -105,6 +106,14 @@ const mutations = {
             cert.name = `${cert.barcode} (${cert.amount}) тенге`
             return cert;
         });
+    },
+    CHANGE_COUNT_v2(state, payload) {
+        state.products_v2 = state.products_v2.map(product => {
+            if (product.id === payload.product_id) {
+                product.quantity = payload.quantity;
+            }
+            return product;
+        })
     }
 };
 
@@ -236,6 +245,20 @@ const actions = {
     async GET_CERTIFICATES({commit}) {
         const { data } = await axios.get('/api/v2/certificates');
         commit('SET_CERTIFICATES', data);
+    },
+    async CHANGE_COUNT_v2({commit}, payload) {
+        commit('enableLoading');
+        try {
+            const response = await changeProductCount(payload);
+            console.log(response);
+            commit('CHANGE_COUNT_v2', response.data);
+        } catch (e) {
+            console.log(e);
+            showToast(e.response.data.message, TOAST_TYPE.ERROR);
+        } finally {
+            commit('disableLoading');
+        }
+
     }
 };
 

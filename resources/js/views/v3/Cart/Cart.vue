@@ -45,6 +45,7 @@
                                 label="Способ оплаты"
                                 v-model="payment_type"
                                 :items="payment_types"
+                                :disabled="isRed"
                                 item-text="name"
                                 outlined
                                 class="w-150px"
@@ -487,6 +488,13 @@
                 } else {
                     this.discountPercent = 0;
                 }
+            },
+            isRed(value) {
+                if (value) {
+                    this.payment_type = 2;
+                } else {
+                    this.payment_type = 0;
+                }
             }
         },
         mixins: [product, product_search, cart],
@@ -710,7 +718,7 @@
                 if (!this.client) {
                     return Math.min(this.discountPercent, 100);
                 }
-                return Math.min(Math.max(this.discountPercent, this.client.client_discount, 0), 100);
+                return Math.min(Math.max(this.discountPercent, (!this.isRed ? this.client.client_discount : 0), 0), 100);
             },
             payment_types() {
                 return this.$store.getters.payment_types;

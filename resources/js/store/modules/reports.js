@@ -40,7 +40,10 @@ const reportsModule = {
             const {data} = await getStoreReports(payload);
             commit('setStoresReport', data);
         },
-        async [ACTIONS.GET_REPORTS] ({commit}, payload) {
+        async [ACTIONS.GET_REPORTS] ({commit, getters}, payload) {
+            if (!getters.IS_ADMIN) {
+                payload.user_id = getters.USER.id;
+            }
             const data = await getReports(payload);
             commit('setReports', data);
         },

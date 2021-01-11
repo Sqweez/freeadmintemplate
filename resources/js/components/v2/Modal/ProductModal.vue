@@ -119,7 +119,7 @@
                         v-model.number="product_price"
                         type="number"/>
                     <v-text-field
-                        v-if="!isEditing"
+                        v-if="!isEditing || (grouping_attribute_id === 0 || grouping_attribute_id === null)"
                         label="Штрихкод"
                         v-model.number="product_barcode"
                         type="text"/>

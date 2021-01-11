@@ -76,7 +76,8 @@ class SaleController extends Controller {
     public function reports(Request $request) {
         $start = $request->get('start');
         $finish = $request->get('finish');
-        return ReportService::getReports($start, $finish);
+        $user_id = $request->get('user_id', null);
+        return ReportService::getReports($start, $finish, $user_id);
     }
 
     public function report(Sale $sale) {

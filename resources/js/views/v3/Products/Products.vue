@@ -101,6 +101,14 @@
                                     Удалить
                                     <v-icon>mdi-delete</v-icon>
                                 </v-btn>
+                                <div class="mb-2 d-flex justify-space-between">
+                                    <v-btn color="error" class="mr-2" @click="changeCount(item.id, -1)">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                    <v-btn color="success" class="ml-2" @click="changeCount(item.id, 1)">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </div>
                             </div>
                         </template>
                         <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
@@ -291,6 +299,14 @@
             }
         },
         methods: {
+            async changeCount(id, increment) {
+                const params = {
+                    product_id: id,
+                    increment,
+                    store_id: this.storeFilter
+                };
+                await this.$store.dispatch('CHANGE_COUNT_v2', params);
+            },
             async deleteProduct() {
                 try {
                     await this.$store.dispatch('DELETE_PRODUCT_v2',

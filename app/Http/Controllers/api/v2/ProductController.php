@@ -61,6 +61,11 @@ class ProductController extends Controller
         $product_fields = ProductService::getRelationFields($request);
         ProductService::updateProduct($product, $product_attributes, $product_fields);
         $product->fresh();
+        if ($request->get('grouping_attribute_id') === 0 || $request->get('grouping_attribute_id') === null) {
+            $productSku = ProductSku::whereProductId($product->id)->first();
+            $product_sku_attributes = ProductService::getSkuFields($request);
+            ProductService::updateSku($productSku, $product_sku_attributes);
+        }
         return ProductsResource::collection(ProductSku::whereProductId($product->id)->with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)->get());
     }
 
@@ -68,22 +73,6 @@ class ProductController extends Controller
         ProductService::delete($id);
     }
 
-    public function groupProducts() {
-        $products = Product::select(['id', 'product_price', 'product_name', 'manufacturer_id'])->get();
-        $products = $products->groupBy(['product_name', 'product_price', 'manufacturer_id']);
-
-        $products->each(function ($price) {
-            collect($price)->each(function ($manufacturer) {
-                collect($manufacturer)->each(function ($product) {
-                    $ids = collect($product)->pluck('id');
-                    $group_id = $ids->first();
-                    Product::where('id', $ids)->update([
-                        'group_id' => $group_id
-                    ]);
-                });
-            });
-        });
-    }
 
     public function addProductQuantity($id, Request $request) {
         $validator = Validator::make($request->all(), [

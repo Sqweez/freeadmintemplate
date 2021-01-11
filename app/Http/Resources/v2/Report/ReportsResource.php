@@ -17,6 +17,7 @@ class ReportsResource extends JsonResource
      */
     public function toArray($request)
     {
+        $user_id = $request->get('user_id', null) === null;
         return [
             'id' => $this->id,
             'client' => $this->client->only(['id', 'client_name']),
@@ -43,10 +44,10 @@ class ReportsResource extends JsonResource
                 'product_price' => $this->certificate->amount
             ]) : []])->filter(function ($q) {return count($q) > 0;}),
             'store_type' => intval($this->store->type_id),
-            'purchase_price' => $this->purchase_price,
+            'purchase_price' => $user_id ? $this->purchase_price : 0,
             'fact_price' => $this->product_price + $this->certificate->final_amount,
             'final_price' => $this->final_price + $this->certificate->final_amount,
-            'margin' => $this->margin + $this->certificate->final_amount + $this->certificate_margin,
+            'margin' => $user_id ? $this->margin + $this->certificate->final_amount + $this->certificate_margin : 0,
             'certificate' => $this->used_certificate
         ];
     }

@@ -84,6 +84,9 @@ class ProductService {
     public function updateSku(ProductSku $productSku, array $_attributes) {
         try {
             DB::beginTransaction();
+            $productSku->update([
+                'product_barcode' => $_attributes['product_barcode']
+            ]);
             $this->updateProductSkuRelations($productSku, $_attributes, $productSku->grouping_attribute_id);
             DB::commit();
             $productSku->fresh();
