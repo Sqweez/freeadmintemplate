@@ -496,9 +496,8 @@
                     })
                 }
 
-                console.log(this.product_attributes);
 
-                this.attributesSelect = new Array(this.product_attributes.length - 1).fill(VSelect);
+                this.attributesSelect = this.product_attributes.length >= 1 ? new Array(this.product_attributes.length - 1).fill(VSelect) : [];
                 this.pricesSelect = new Array(this.prices.length - 1).fill(VSelect);
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Arrival;
+use App\Attribute;
 use App\AttributeProduct;
 use App\Category;
 use App\CategoryProduct;
@@ -39,6 +40,51 @@ use ProductService;
 
 class TestController extends Controller
 {
+
+    public function ungroupped(Request $request) {
+        $products = ProductSku::with(['product', 'attributes', 'product.attributes.attribute_name', 'product.manufacturer', 'product.category'])->get();
+        $products =  $products->map(function ($product) {
+            return [
+                'id' => $product['id'],
+                'product_id' => $product['product_id'],
+                'product_name' => $product['product']['product_name'],
+                'product_price' => $product['product']['product_price'],
+                'attributes' => collect($product['attributes'])->merge($product['product']['attributes']),
+                'manufacturer' => $product['manufacturer']['manufacturer_name'],
+                'category' => $product['category']['category_name'],
+                'grouping_attribute_id' => $product['product']['grouping_attribute_id']
+            ];
+        })->filter(function ($product) {
+            return $product['grouping_attribute_id'] > 0 && count($product['attributes']) === 1 || collect($product['attributes'])->filter(function ($attr) {
+                    return $attr['attribute_value'] === 'Нейтральный' || $attr['attribute_value'] === '-' || $attr['attribute_value'] === 'Неизвестно';
+                })->count() > 0;
+        })->values();
+        $attributes = Attribute::all();
+        return view('ungroupped', compact('products', 'attributes'));
+    }
+
+    public function ungroupProduct($id) {
+        $product = Product::whereKey($id)->first();
+        $product->grouping_attribute_id = null;
+        $product->save();
+        $productSku = ProductSku::whereProductId($id)->first();
+        DB::table('attributable')
+            ->where('attributable_id', $productSku->id)
+            ->where('attributable_type', 'App\v2\Models\ProductSku')
+            ->update([
+                'attributable_id' => $id,
+                'attributable_type' => 'App\v2\Models\Product'
+            ]);
+
+        DB::table('attributable')
+            ->where('attributable_id', $id)
+            ->where('attributable_type', 'App\v2\Models\Product')
+            ->whereIn('attribute_value_id', [36, 7])
+            ->delete();
+
+        return back();
+    }
+
     public function index(Request $request) {
 
 //        $sales =  Sale::where('discount', '!=', 0)->cursor();
