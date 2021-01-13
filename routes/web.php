@@ -7,7 +7,7 @@ Route::get('/relax', function () {
     return view('dontworry');
 });
 
-Route::get('/test', 'TestController@index');
+Route::get('/bestsellers', 'TestController@index');
 Route::get('/test-2', 'TestController@index2');
 
 Route::get('/ungroupped', 'TestController@ungroupped');

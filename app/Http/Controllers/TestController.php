@@ -86,72 +86,52 @@ class TestController extends Controller
     }
 
     public function index(Request $request) {
-
-//        $sales =  Sale::where('discount', '!=', 0)->cursor();
-//        foreach ($sales as $sale) {
-//            SaleProduct::whereSaleId($sale['id'])->update([
-//                'discount' => $sale['discount']
-//            ]);
-//        }
-        /*return Sale::where('discount', '!=', 0)->whereHas('products', function ($query) {
-            return $query->where('discount', 0);
-        })->chunk(100, function ($sales) {
-            $sales->each(function ($sale) {
-                SaleProduct::whereKey($sale['id'])->update([
-                    'discount' => $sale['discount']
-                ]);
-            });
-        });*/
-
-        $filters = [
-            'category' => [],
-            'subcategory' => [],
-            'brands' => [],
-            'prices' => [],
-            'is_hit' => 'false',
-            'search' => '%iso%',
-        ];
-
-
-        /*$productQuery = Product::query()->whereIsSiteVisible(true);
-
-        if (count ($filters[Product::FILTER_CATEGORIES]) > 0) {
-            $productQuery->ofCategory($filters[Product::FILTER_CATEGORIES]);
-        }
-
-        if (count ($filters[Product::FILTER_SUBCATEGORIES]) > 0) {
-            $productQuery->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
-        }
-
-        if (count ($filters[Product::FILTER_BRANDS]) > 0) {
-            $productQuery->ofBrand($filters[Product::FILTER_BRANDS]);
-        }
-
-        if (count ($filters[Product::FILTER_PRICES]) > 0) {
-            $productQuery->ofPrice($filters[Product::FILTER_PRICES]);
-        }
-
-        if ($filters[Product::FILTER_IS_HIT] === 'true') {
-            $productQuery->isHit(Product::FILTER_IS_HIT);
-        }
-
-        if (strlen($filters[Product::FILTER_SEARCH]) > 0) {
-            $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
-        }
-
-        $productQuery->inStock(1);
-
-        $productQuery->with(['subcategory', 'attributes', 'product_images']);
-
-
-        $products =  \App\Http\Resources\shop\ProductsResource::collection($productQuery->paginate(24));*/
-
-        $output =  new ProductResource(Product::with(['sku', 'sku.attributes', 'sku.batches', 'product_images'])->whereKey(1)->first());
-
-
-
+        $products = ProductSku::whereIn('product_id', [3, 2, 1271, 1320, 1205, 825, 600, 601, 602, 624, 621, 10, 29, 73, 98, 99, 198, 718, 1059, 171, 1002, 449, 724, 1315, 192, 612, 109, 385, 1304, 751])->get()->pluck('id');
+        $sales = Sale::whereDate('created_at', '>=', '2020-12-10')
+            ->whereDate('created_at', '<=', '2021-01-10')
+            ->whereHas('products', function ($q) use ($products) {
+                return $q->whereIn('product_id', $products);
+            })
+            /*->with(['products' => function ($q) use ($products) {
+                return $q->whereIn('product_id', $products);
+            }])*/
+            ->with(['products.product.product:id,product_name', 'user:id,name'])
+            ->get()->filter(function ($sale) {
+                return count($sale['products']) > 0;
+            })->values()->map(function ($sales)  use ($products) {
+                $products = collect($sales['products'])->filter(function ($product) use ($products) {
+                    return $products->contains($product['product_id']);
+                })->values()->map(function ($product) use ($sales){
+                    return [
+                        'product_id' => $product['product']['product_id'],
+                        'product_name' => $product['product']['product']['product_name'],
+                    ];
+                });
+                return [
+                    'products' => $products,
+                    'user_id' => $sales['user_id'],
+                    'user' => $sales['user']['name'],
+                    'id' => $sales['id']
+                ];
+            })
+            ->groupBy('user_id')->map(function ($sale, $key) {
+                $products = collect($sale)->pluck('products')
+                    ->flatten(1)
+                    ->groupBy('product_id')->map(function ($product) {
+                        return [
+                            'count' => count($product),
+                          /*  'product_name' => $product[0]['product_name'],*/
+                            'product_id' => $product[0]['product_id'],
+                        ];
+                    })->values();
+                return [
+                    'products' => $products,
+                    'user' => $sale[0]['user']
+                ];
+            })->values();
         return view('test', [
-            'product' => $output->toArray($request)
+            'products' => Product::find([3, 2, 1271, 1320, 1205, 825, 600, 601, 602, 624, 621, 10, 29, 73, 98, 99, 198, 718, 1059, 171, 1002, 449, 724, 1315, 192, 612, 109, 385, 1304, 751]),
+            'sales' => $sales,
         ]);
     }
 

@@ -32,6 +32,7 @@
                         item-text="name"
                         item-value="value"
                         v-model="currentDate"
+                        v-if="is_admin"
                         label="Время:"
                         @change="loadReport"
                     />

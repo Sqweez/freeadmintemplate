@@ -21,7 +21,7 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item class="darken-3 black" v-if="(IS_ADMIN || IS_OBSERVER)">
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN">
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">

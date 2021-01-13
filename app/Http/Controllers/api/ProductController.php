@@ -46,68 +46,78 @@ class ProductController extends Controller {
     }
 
     public function bombbarReport() {
-        $product_ids = [1778, 821, 780, 774, 844, 805, 640, 1773, 1459];
+        $product_ids = [596, 278, 323, 329, 1073, 325, 764, 317];
 
-        $products = Product::whereIn('group_id', $product_ids)->pluck('id');
-        $batches = collect(ProductBatch::whereIn('product_id', $products)->where('quantity', '>', 0)->whereIn('store_id', [1, 2, 3, 4, 5, 8, 9])->with(['product' => function ($q) {
-            $q->select(['id', 'product_name', 'group_id']);
-        }])->get());
-        $batches = $batches->groupBy('product.group_id')->map(function ($batch) {
-            return collect($batch)->groupBy('store_id');
-        })->map(function ($batch) {
-            //$product_name = $batch[0]['product'];
-            $quantity = collect($batch)->map(function ($_batch) {
-                return collect($_batch)->reduce(function ($i, $a) {
-                    return $a['quantity'] + $i;
-                }, 0);
-            });
-            return ['quantity' => $quantity, 'product_name' => (collect($batch)->first())->first()['product']['product_name'],];
-        });
+        $products = ProductSku::whereIn('product_id', $product_ids)->get()->pluck('id');
 
-        return $batches;
-        /*$sales = SaleProduct::whereIn('product_id', $products)->with(['products' => function ($query) {
-            $query->select(['id', 'product_name', 'group_id']);
-        }])->whereHas('sale', function ($query) {
-            return $query->where('discount', '!=', 100);
-        })->get();
-        $sales = collect($sales)->groupBy('product_id');
+        $sales = SaleProduct::whereIn('product_id', $products)->with(['product.product:id,product_name'])
+            ->where('discount', '!=', 100)
+            ->whereHas('sale', function ($q) {
+                $q->whereDate('created_at', '>=', '2020-11-04');
+            })
+            ->with('sale')
+            ->whereHas('sale.store', function ($q) {
+                return $q->where('type_id', 1);
+            })
+            ->with('sale.store')
+            ->get();
+        $sales = collect($sales)->groupBy(['sale.store_id', 'product_id']);
         $sales = $sales->map(function ($sale) {
-            $count = count($sale);
-            $total_purchase_cost = collect($sale)->reduce(function ($i, $a) {
-                return $a['purchase_price'] + $i;
-            }, 0);
-            $total_cost = collect($sale)->reduce(function ($i, $a) {
-                return $a['product_price'] + $i;
-            }, 0);
-            $group_id = $sale[0]['products']['group_id'];
-            $product_name = $sale[0]['products']['product_name'];
+            return collect($sale)->map(function($sale) {
+                return [
+                    'count' => count($sale),
+                    'total_purchase_price' => collect($sale)->reduce(function ($a, $c) {
+                        return $a + $c['purchase_price'];
+                    }, 0),
+                    'total_product_price' => collect($sale)->reduce(function ($a, $c) {
+                        return $a + $c['product_price'];
+                    }, 0),
+                    'margin' => collect($sale)->reduce(function ($a, $c) {
+                            return $a + $c['product_price'];
+                        }, 0) - collect($sale)->reduce(function ($a, $c) {
+                            return $a + $c['purchase_price'];
+                        }, 0),
+                    //'sale' => $sale,
+                    'product_id' => $sale[0]['product']['product_id'],
+                    'product_name' => $sale[0]['product']['product']['product_name'],
+                    'store' => $sale[0]['sale']['store']['name']
+                ];
+            })->values()->groupBy('product_id')->map(function ($sale) {
+                return [
+                    'count' => collect($sale)->reduce(function ($a, $c) {
+                        return $a + $c['count'];
+                    }, 0),
+                    'total_purchase_price' => collect($sale)->reduce(function ($a, $c) {
+                        return $a + $c['total_purchase_price'];
+                    }, 0),
+                    'total_product_price' => collect($sale)->reduce(function ($a, $c) {
+                        return $a + $c['total_product_price'];
+                    }, 0),
+                    'product_name' => $sale[0]['product_name'],
+                    'store' => $sale[0]['store'],
+                    'product_id' => $sale[0]['product_id']
+                ];
+            })->values();
+        })->values()->flatten(1);
+
+        $saleItog = $sales->groupBy('product_id')->map(function ($sale) {
             return [
-                'count' => $count,
-                'total_purchase_cost' => $total_purchase_cost,
-                'total_cost' => $total_cost,
-                'group_id' => $group_id,
-                'product_name' => $product_name
+                'count' => collect($sale)->reduce(function ($a, $c) {
+                    return $a + $c['count'];
+                }, 0),
+                'total_purchase_price' => collect($sale)->reduce(function ($a, $c) {
+                    return $a + $c['total_purchase_price'];
+                }, 0),
+                'total_product_price' => collect($sale)->reduce(function ($a, $c) {
+                    return $a + $c['total_product_price'];
+                }, 0),
+                'product_name' => $sale[0]['product_name'],
+                'store' => 'Итого',
+                'product_id' => $sale[0]['product_id']
             ];
-        })->groupBy('group_id')
-        ->map(function ($product) {
-            $count = $product->reduce(function ($i, $a) {
-                return $i + $a['count'];
-            }, 0);
-            $purchase_price = $product->reduce(function ($i, $a) {
-                return $i + $a['total_purchase_cost'];
-            }, 0);
-            $product_price = $product->reduce(function ($i, $a) {
-                return $i + $a['total_cost'];
-            }, 0);
-            $product_name = $product[0]['product_name'];
-            return [
-                'product_name' => $product_name,
-                'purchase_price' => $purchase_price,
-                'product_price' => $product_price,
-                'count' => $count
-            ];
-        });
-        return $sales; */
+        })->values();
+
+        return $sales->merge($saleItog)->sortBy('product_id')->groupBy('store');
     }
 
     public function setTags() {
