@@ -49,7 +49,7 @@
                             {{ store.month_percent }}%
                         </td>
                     </tr>
-                    <tr class="total">
+                    <tr class="total" v-if="is_admin">
                         <td><b>Итого:</b></td>
                         <td>
                             {{ totalWeekPlan | priceFilters }}
@@ -87,6 +87,9 @@
             loading: true,
         }),
         computed: {
+            is_admin() {
+                return this.$store.getters.IS_ADMIN;
+            },
             shops() {
                 return this.$store.getters.shops;
             },
