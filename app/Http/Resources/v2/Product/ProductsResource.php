@@ -23,6 +23,7 @@ class ProductsResource extends JsonResource
             'id' => $this->id,
             'product_name' => $this->product_name,
             'category' => $this->category,
+            'subcategory_id' => $this->product->subcategory_id,
             'manufacturer' => $this->manufacturer,
             'attributes' => collect($this->attributes)->map(function ($attribute) {
                 return [

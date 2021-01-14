@@ -29,22 +29,4 @@ class ProductsResource extends JsonResource
             'product_name_slug' => Str::slug($this->product_name, '-'),
         ];
     }
-
-    private function getProductWeight($attributes) {
-        return $attributes->filter(function ($i) {
-                return $i['attribute_id'] == 2;
-            })->first()['attribute_value'] ?? '';
-    }
-
-    private function inStock($quantity) {
-        return array_reduce($quantity->toArray($quantity), function ($a, $c) {
-                return $a + $c['quantity'];
-            } , 0) > 0;
-    }
-
-    private function getProductTaste($attributes) {
-        return $attributes->filter(function ($i) {
-                return $i['attribute_id'] == 1;
-            })->first()['attribute_value'] ?? '';
-    }
 }

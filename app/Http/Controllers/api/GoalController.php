@@ -7,6 +7,7 @@ use App\GoalPart;
 use App\GoalPartProducts;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GoalResource;
+use App\v2\Models\ProductSku;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -15,14 +16,31 @@ class GoalController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function index(Request $request)
     {
+
+       /* $goalProductParts = GoalPartProducts::all();
+        return $goalProductParts->map(function ($products) {
+            $product_id = ProductSku::find($products['product_id'])->product_id;
+            unset($products['product_id']);
+            $products['product_id'] = $product_id;
+            return $products;
+        })->groupBy('goal_part_id')->each(function ($product, $key) {
+            $ids = collect($product)->pluck('product_id');
+            GoalPart::find($key)->update([
+                'products' => $ids
+            ]);
+        });*/
+
         if ($request->has('home')) {
             return Goal::all();
         }
-        return GoalResource::collection(Goal::with('parts')->get());
+
+        return Goal::with(['parts'])->whereHas('parts', function ($q) {
+            return $q->where('products', '!=', null);
+        })->get();
     }
 
     /**
@@ -39,7 +57,7 @@ class GoalController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
      */
     public function store(Request $request)
     {
@@ -55,7 +73,9 @@ class GoalController extends Controller
 
         $this->createParts($parts, $goal);
 
-        return GoalResource::collection(Goal::with('parts')->get());
+        return Goal::with(['parts'])->whereHas('parts', function ($q) {
+            return $q->where('products', '!=', null);
+        })->whereKey($goal->id)->first();
 
     }
 
@@ -75,23 +95,18 @@ class GoalController extends Controller
      *
      * @param Request $request
      * @param Goal $goal
-     * @return AnonymousResourceCollection
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
      */
     public function update(Request $request, Goal $goal)
     {
         $_goal = $request->only(['image', 'name']);
         $goal->update($_goal);
-        $goal_parts = $goal->parts;
-        collect($goal_parts)->map(function ($i) {
-            GoalPartProducts::where('goal_part_id', $i['id'])->delete();
-            $i->delete();
-        });
-
+        $goal->parts()->delete();
         $parts = $request->get('parts') ?? [];
-
         $this->createParts($parts, $goal);
-
-        return GoalResource::collection(Goal::with('parts')->get());
+        return Goal::with(['parts'])->whereHas('parts', function ($q) {
+            return $q->where('products', '!=', null);
+        })->whereKey($goal->id)->first();
     }
 
     private function createParts($parts, Goal $goal) {
@@ -101,15 +116,9 @@ class GoalController extends Controller
                 'category_id' => $part['category_id'],
                 'subcategory_id' => $part['subcategory_id'],
                 'description' => $part['description'],
-                'name' => $part['name']
+                'name' => $part['name'],
+                'products' => $part['products']
             ]);
-
-            foreach ($part['products'] as $product) {
-                GoalPartProducts::create([
-                    'goal_part_id' => $goal_part->id,
-                    'product_id' => $product
-                ]);
-            }
         }
     }
 

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\shop\ProductsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Product;
+use App\v2\Models\Product;
 use Illuminate\Support\Facades\Storage;
 
 class GoalPartResource extends JsonResource
@@ -19,16 +19,13 @@ class GoalPartResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'category_id' => intval($this->category_id),
-            'subcategory_id' => intval($this->subcategory_id),
+            'category_id' => $this->category_id,
+            'subcategory_id' => $this->subcategory_id,
             'name' => $this->name,
-            'category' => $this->category,
-            'subcategory' => $this->subcategory,
-            'products' => ProductsResource::collection(Product::find($this->products->pluck('product_id'))),
+            'category' => $this->category->category_name,
+            'subcategory' => $this->subcategory->subcategory_name,
+            'products' => ProductsResource::collection(Product::with(['subcategory', 'attributes', 'product_thumbs'])->whereIn('id', $this->products)->get()),
             'description' => $this->description,
-            'product_ids' => $this->products->pluck('product_id')->map(function ($i) {
-                return intval($i);
-            })
         ];
     }
 }

@@ -85,9 +85,9 @@
             }
         },
         async mounted () {
+            await this.$store.dispatch('GET_PRODUCTS_v2');
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_GOALS);
-            await this.$store.dispatch(ACTIONS.GET_MAIN_PRODUCTS);
         }
     }
 </script>

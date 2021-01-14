@@ -32,6 +32,10 @@ class Goal extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'id' => 'integer'
+    ];
+
     public function parts() {
         return $this->hasMany('App\GoalPart', 'goal_id');
     }

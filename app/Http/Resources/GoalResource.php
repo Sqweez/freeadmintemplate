@@ -16,7 +16,7 @@ class GoalResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => intval($this->id),
+            'id' => $this->id,
             'name' => $this->name,
             'parts' => GoalPartResource::collection($this->parts),
             'image' => $this->image ? url('/') . Storage::url($this->image) : null,

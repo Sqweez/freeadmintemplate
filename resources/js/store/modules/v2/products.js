@@ -22,6 +22,16 @@ const state = {
 
 const getters = {
     PRODUCTS_v2: state => state.products_v2,
+    MAIN_PRODUCTS_v2: state => {
+        const array = [];
+        return state.products_v2.filter(product => {
+            if (array.findIndex(a => a.product_id === product.product_id) === -1) {
+                array.push(product);
+                return true;
+            }
+            return false;
+        });
+    },
     QUANTITIES_v2: state => state.quantities,
     PRODUCT_v2: state => state.product_v2,
     CERTIFICATES: s => s.certificates,

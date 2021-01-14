@@ -33,9 +33,13 @@ class GoalPart extends Model
     protected $guarded = [];
     public $timestamps = false;
 
-    public function products() {
-        return $this->hasMany('App\GoalPartProducts', 'goal_part_id');
-    }
+    protected $casts = [
+        'category_id' => 'integer',
+        'subcategory_id' => 'integer',
+        'goal_id' => 'integer',
+        'products' => 'array'
+    ];
+
 
     public function category() {
         return $this->belongsTo('App\Category')->withDefault([

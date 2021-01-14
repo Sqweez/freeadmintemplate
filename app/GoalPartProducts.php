@@ -23,4 +23,8 @@ class GoalPartProducts extends Model
     protected $guarded = [];
     public $timestamps = false;
 
+    public function product() {
+        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id');
+    }
+
 }

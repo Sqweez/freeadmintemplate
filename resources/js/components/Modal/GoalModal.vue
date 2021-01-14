@@ -62,8 +62,10 @@
                                     v-if="goal.parts[key].category_id"
                                     label="Товар"
                                     class="flex-1"
-                                    item-text="product_name"
-                                    item-value="id"
+                                    :item-text="function(item) {
+                                        return `${item.product_name} | ${item.manufacturer.manufacturer_name} | ${item.product_price}`;
+                                    }"
+                                    item-value="product_id"
                                     :items="getProducts(goal.parts[key].category_id, goal.parts[key].subcategory_id)"
                                     v-model="goal.parts[key].products[idx]"
                                 ></v-autocomplete>
@@ -139,14 +141,14 @@
                 this.$emit('cancel');
             },
             getSubcategories(category_id) {
-                return this.categories.find(c => c.id == category_id).subcategories;
+                return this.categories.find(c => c.id === category_id).subcategories;
             },
             getProducts(category_id, subcategory_id) {
                 return this.mainProducts.filter(products => {
                     if (!subcategory_id) {
-                        return products.categories.includes(category_id)
+                        return products.category.id === category_id;
                     }
-                    return products.categories.includes(category_id) && products.subcategories.includes(subcategory_id);
+                    return products.category.id === category_id && products.subcategory_id === subcategory_id;
                 });
             },
             async uploadPhoto(e) {
@@ -190,7 +192,7 @@
                 return this.$store.getters.categories;
             },
             mainProducts() {
-                return this.$store.getters.main_products;
+                return this.$store.getters.MAIN_PRODUCTS_v2;
             }
         },
         props: {
