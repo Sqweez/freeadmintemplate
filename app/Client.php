@@ -89,6 +89,10 @@ class Client extends Model
         return $this->hasMany('App\ClientSale', 'client_id');
     }
 
+    public function promocodes() {
+        return $this->hasMany('App\Promocode', 'client_id');
+    }
+
     public function orders() {
         return $this->hasMany('App\Order', 'client_id');
     }

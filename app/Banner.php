@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Banner
@@ -12,8 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $is_active
  * @property string|null $description
  * @property int $order
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Banner newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Banner newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Banner query()
@@ -28,5 +29,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Banner extends Model
 {
-    protected $fillable = ['image', 'is_active', 'order', 'description'];
+    protected $guarded = [
+        'is_active' => 'boolean',
+        'order' => 'integer'
+    ];
+
+    protected $fillable = ['image', 'is_active', 'order', 'description', 'mobile_image'];
 }

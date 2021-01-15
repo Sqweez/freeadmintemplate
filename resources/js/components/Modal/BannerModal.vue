@@ -20,13 +20,24 @@
                         Загрузить фото
                         <v-icon>mdi-photo</v-icon>
                     </v-btn>
+                    <v-btn text class="mt-3" @click="$refs.fileInputMobile.click()">
+                        Загрузить мобильное фото
+                        <v-icon>mdi-photo</v-icon>
+                    </v-btn>
                     <img
                         class="d-block"
                         v-if="banner.image"
                         width="400"
                         :src="`../storage/${banner.image}`"
                         alt="">
+                    <img
+                        class="d-block"
+                        v-if="banner.mobile_image"
+                        width="400"
+                        :src="`../storage/${banner.mobile_image}`"
+                        alt="">
                     <input type="file" class="d-none" ref="fileInput" @change="uploadPhoto">
+                    <input type="file" class="d-none" ref="fileInputMobile" @change="uploadMobilePhoto">
                     <v-divider></v-divider>
                     <v-text-field
                         label="Описание"
@@ -73,6 +84,7 @@
         data: () => ({
             banner: {
                 image: null,
+                mobile_image: null,
                 description: '',
                 is_active: true,
                 order: 0
@@ -104,6 +116,11 @@
                 const result = await uploadFile(file, 'file', 'banners');
                 this.banner.image = result.data;
             },
+            async uploadMobilePhoto(e) {
+                const file = e.target.files[0];
+                const result = await uploadFile(file, 'file', 'banners');
+                this.banner.mobile_image = result.data;
+            }
         },
         computed: {},
         watch: {

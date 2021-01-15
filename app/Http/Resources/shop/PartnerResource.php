@@ -3,7 +3,8 @@
 namespace App\Http\Resources\shop;
 
 use App\Client;
-use App\Product;
+use App\v2\Models\ProductSku;
+use App\SaleProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -39,13 +40,14 @@ class PartnerResource extends JsonResource
                 $i['date'] = Carbon::parse($i['created_at'])->format('d.m.Y');
                 $products = collect($i['products'])->map(function ($i) {
                     $product_id = $i['product_id'];
-                    $i['product'] = new OrderProductResource(Product::find($product_id));
+                    unset($i['product']);
+                    $i['product'] = new OrderProductResource(SaleProduct::with('product')->whereKey($i['id'])->first());
                     $i['bonus'] = $i['product_price'] * 0.05;
                     return $i;
                 });
                 unset($i['products']);
                 $i['products'] = collect($products)->map(function ($item) {
-                    $item['product']['product_name'] = trim($item['product']['product_name'] . ' ' . $item['product']['product_weight'] . ' ' . $item['product']['product_taste']);
+                    $item['product']['product_name'] = trim($item['product']['product_name']);
                     $item['product_image'] = $item['product']->product_image;
                     return collect($item)->only(['product_price', 'bonus', 'product']);
                 });
@@ -80,6 +82,7 @@ class PartnerResource extends JsonResource
             'clients_count' => count($clients),
             'total_sum' => $sale_total_sum,
             'clients' => $clients,
+            'promocodes' => $this->promocodes->where('is_active', 1)
         ];
     }
 }

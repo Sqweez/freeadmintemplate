@@ -134,7 +134,7 @@ class AnalyticsController extends Controller
             return response()->json(['error' => 'Не передан токен партнера']);
         }
         $client = Client::ofToken($user_token)
-            ->with('partner_sales', 'partner_sales.products')
+            ->with('partner_sales', 'partner_sales.products', 'partner_sales.products.product', 'partner_sales.products.product.product', 'promocodes:client_id,promocode,is_active')
             ->first();
 
         if (!$client) {
@@ -144,6 +144,7 @@ class AnalyticsController extends Controller
         if (!$client->is_partner) {
             return response()->json(['error' => 'Клиент не является партнером']);
         }
+
 
         $client['balance'] = $client->balance;
         $client['clients'] = $this->getUniqueClientsCount($client->partner_sales);
