@@ -23,11 +23,6 @@ use Illuminate\Http\Request;
 
 class SaleController extends Controller {
 
-    private $DECREASE = -1;
-    private $INCREASE = 1;
-    protected $PARTNER_CASHBACK_PERCENT = (5 / 100);
-    protected $CLIENT_CASHBACK_PERCENT = (1 / 100);
-
     public function store(Request $request) {
         $saleService = new SaleService();
         try {
@@ -87,8 +82,7 @@ class SaleController extends Controller {
     public function getTotal(Request $request) {
         $dateFilter = $request->get('date_filter');
         $sales = Sale::whereDate('created_at', '>=', $dateFilter)
-            ->with(['products:product_price,discount,sale_id'])
-            ->select(['id', 'store_id', 'kaspi_red', 'balance'])
+            ->with(['products'])
             ->get();
 
         return $this->calculateTotalAmount($sales);
@@ -119,15 +113,15 @@ class SaleController extends Controller {
             ->map(function ($sale, $store_id) {
                 return [
                     'store_id' => $store_id,
-                    'amount' => ceil(collect($sale)->reduce(function ($a, $c){
-                        return $a + collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
-                                $price = $_c['product_price'] - ($_c['product_price'] * $_c['discount'] / 100);
-                                if ($c['kaspi_red']) {
-                                    $price -= $price * Sale::KASPI_RED_PERCENT;
-                                }
-                                $price -= $c['balance'];
-                                return $_a + $price;
-                            }, 0);
+                    'amount' => (collect($sale)->reduce(function ($a, $c){
+                        $price = intval(collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
+                            $price = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
+                            return $_a + $price;
+                        }, 0));
+                        if ($c['kaspi_red']) {
+                            $price -= $price * Sale::KASPI_RED_PERCENT;
+                        }
+                        return $a + ceil($price - $c['balance']);
                     }, 0))
                 ];
             });

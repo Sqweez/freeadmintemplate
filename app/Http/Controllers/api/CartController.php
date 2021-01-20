@@ -137,6 +137,11 @@ class CartController extends Controller {
             $cart->delete();
             $cart = null;
         }
+
+        if ($cart === null) {
+            return null;
+        }
+
         return new CartResource($cart);
     }
 

@@ -163,6 +163,7 @@ class Sale extends Model
         if ($this->kaspi_red) {
             $price -= $price * self::KASPI_RED_PERCENT;
         }
+
         return ceil($price - $this->balance);
     }
 

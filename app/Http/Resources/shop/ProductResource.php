@@ -32,6 +32,8 @@ class ProductResource extends JsonResource
             'skus' => collect(ProductSkuResource::collection($this->sku))->filter(function ($i) {
                 return $i['quantity'] > 0;
             })->toArray(),
+            'category_id' => $this->category_id,
+            'subcategory_id' => $this->subcategory_id,
         ];
     }
 }

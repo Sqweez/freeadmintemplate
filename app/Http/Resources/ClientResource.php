@@ -32,7 +32,7 @@ class ClientResource extends JsonResource
             'client_balance' => $this->transactions->sum('amount'),
             'total_sum' => $total,
             'is_partner' => !!$this->is_partner,
-            'city' => $this->city->city,
+            'city' => $this->city->name,
             'client_city' => $this->client_city
         ];
     }

@@ -1,6 +1,6 @@
 import ACTIONS from "../actions";
 import MUTATIONS from "../mutations";
-import {createStore, deleteStore, editStore, getCities, getStores, getStoreTypes} from "../../api/stores";
+import {createStore, deleteStore, editStore, getCities, getStores, getStoreTypes} from "@/api/stores";
 
 const storeModule = {
     state: {

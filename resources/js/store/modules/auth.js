@@ -1,9 +1,9 @@
-import {auth, login} from "../../api/auth";
+import {auth, login} from "@/api/auth";
 import axios from 'axios';
-import showToast from "../../utils/toast";
+import showToast from "@/utils/toast";
 import _ from 'lodash';
-import {getKeyByValue} from "../../utils/objects";
-import {TOAST_TYPE} from "../../config/consts";
+import {getKeyByValue} from "@/utils/objects";
+import {TOAST_TYPE} from "@/config/consts";
 
 const authModule = {
     state: {

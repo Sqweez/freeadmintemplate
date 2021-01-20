@@ -207,6 +207,11 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::delete('/{id}', [CertificateController::class, 'delete']);
         });
 
+        Route::prefix('images')->group(function() {
+            Route::get('category', 'api\ImageController@category');
+            Route::get('products', 'api\ImageController@products');
+        });
+
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
     });

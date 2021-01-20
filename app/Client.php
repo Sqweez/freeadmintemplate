@@ -68,6 +68,10 @@ class Client extends Model
 
     use SoftDeletes;
 
+    protected $casts = [
+        'client_city' => 'integer'
+    ];
+
     protected $guarded = [];
 
     const DISCOUNT = [
@@ -98,8 +102,8 @@ class Client extends Model
     }
 
     public function city() {
-        return $this->belongsTo('App\Store', 'client_city')->withDefault([
-            'city' => 'Город не указан'
+        return $this->belongsTo('App\v2\Models\City', 'client_city')->withDefault([
+            'name' => 'Город не указан'
         ]);
     }
 

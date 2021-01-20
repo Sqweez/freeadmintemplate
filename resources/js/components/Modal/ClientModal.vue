@@ -42,8 +42,8 @@
                    <v-select
                        class="mt-3"
                        label="Город"
-                       :items="shops"
-                       item-text="city"
+                       :items="cities"
+                       item-text="name"
                        item-value="id"
                        v-model="client.client_city"
                    />
@@ -115,8 +115,8 @@
             }
         },
         computed: {
-            shops() {
-                return [{id: -1, city: 'Город не указан'}, ...this.$store.getters.shops];
+            cities() {
+                return [{id: -1, name: 'Город не указан'}, ...this.$store.getters.cities];
             }
         },
         props: {

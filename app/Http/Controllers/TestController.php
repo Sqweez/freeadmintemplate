@@ -7,6 +7,7 @@ use App\Attribute;
 use App\AttributeProduct;
 use App\Category;
 use App\CategoryProduct;
+use App\Client;
 use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\ReportResource;
 use App\Http\Resources\v2\Product\ProductsResource;
@@ -42,25 +43,21 @@ class TestController extends Controller
 {
 
     public function ungroupped(Request $request) {
-        $products = ProductSku::with(['product', 'attributes', 'product.attributes.attribute_name', 'product.manufacturer', 'product.category'])->get();
-        $products =  $products->map(function ($product) {
-            return [
-                'id' => $product['id'],
-                'product_id' => $product['product_id'],
-                'product_name' => $product['product']['product_name'],
-                'product_price' => $product['product']['product_price'],
-                'attributes' => collect($product['attributes'])->merge($product['product']['attributes']),
-                'manufacturer' => $product['manufacturer']['manufacturer_name'],
-                'category' => $product['category']['category_name'],
-                'grouping_attribute_id' => $product['product']['grouping_attribute_id']
-            ];
-        })->filter(function ($product) {
-            return $product['grouping_attribute_id'] > 0 && count($product['attributes']) === 1 || collect($product['attributes'])->filter(function ($attr) {
-                    return $attr['attribute_value'] === 'Нейтральный' || $attr['attribute_value'] === '-' || $attr['attribute_value'] === 'Неизвестно';
-                })->count() > 0;
-        })->values();
-        $attributes = Attribute::all();
-        return view('ungroupped', compact('products', 'attributes'));
+        Client::where('client_city', '=', 1)->update([
+           'client_city' => 9
+       ]);
+        Client::where('client_city', '=', 2)->update([
+            'client_city' => 13
+        ]);
+        Client::where('client_city', '=', 3)->update([
+            'client_city' => 12
+        ]);
+        Client::where('client_city', '=', 4)->update([
+            'client_city' => 10
+        ]);
+        Client::where('client_city', '=', 5)->update([
+            'client_city' => 5
+        ]);
     }
 
     public function ungroupProduct($id) {
