@@ -39,7 +39,7 @@
                        v-model="client.client_discount"
                    />
 
-                   <v-select
+                   <v-autocomplete
                        class="mt-3"
                        label="Город"
                        :items="cities"
