@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+axios.defaults.headers = {
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+};
+
 export default async function uploadFile(file, fileName = 'file', path = 'uploads') {
     let formData = new FormData();
     formData.append(fileName, file);

@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+axios.defaults.headers = {
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+};
+
 export async function makeSale(payload) {
     const response = await axios.post('/api/sales', payload);
     return response.data;

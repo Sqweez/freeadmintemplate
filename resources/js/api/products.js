@@ -1,5 +1,11 @@
 import axios from 'axios'
 
+axios.defaults.headers = {
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+};
+
 export async function getProducts(store_id) {
     const getParams = store_id ? `?store_id=${store_id}` : ``;
     return await axios.get(`/api/products${getParams}`);

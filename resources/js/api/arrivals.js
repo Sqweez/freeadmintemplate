@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+axios.defaults.headers = {
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+};
+
 export async function getArrivals(payload) {
     const { data } = await axios.get(`/api/arrivals?is_completed=${+payload}`);
     return data;
