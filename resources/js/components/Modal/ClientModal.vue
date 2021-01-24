@@ -80,6 +80,9 @@
             client: {},
             loading: false,
         }),
+        async created() {
+            await this.$store.dispatch(ACTIONS.GET_CITIES);
+        },
         mounted() {
             const phoneInput = document.getElementById('client_phone');
             if (phoneInput) {
