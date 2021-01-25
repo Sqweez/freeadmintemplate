@@ -386,6 +386,7 @@
                     class="background-iron-grey fz-18"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
+                    @current-items="getFiltered"
                     :headers="headers"
                     :loading="loading"
                     :search="searchQuery"
@@ -553,6 +554,7 @@
             sale_id: null,
             balance: 0,
             showCheckModal: false,
+            currentItems: [],
             headers: [
                 {
                     text: 'Наименование',
@@ -605,6 +607,13 @@
                     showToast('При создании сертификата произошла ошибка', TOAST_TYPE.ERROR);
                 } finally {
                     this.$loading();
+                }
+            },
+            getFiltered(e) {
+                if (e.length === 1 && e[0].product_barcode === this.searchQuery) {
+                    this.addToCart(e[0], false);
+                    this.searchQuery = "";
+                    this.searchValue = "";
                 }
             },
             async deleteCertificate() {

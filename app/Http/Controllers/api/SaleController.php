@@ -53,7 +53,10 @@ class SaleController extends Controller {
             \DB::commit();
             return [
                 'product_quantities' => ProductBatch::whereIn('product_id', collect($cart)->pluck('id'))
-                    ->quantitiesOfStore(1)
+                    ->whereStoreId($store_id)
+                    ->groupBy('product_id')
+                    ->select('product_id')
+                    ->selectRaw('sum(quantity) as quantity')
                     ->get(),
                 'client' => $client_id !== -1 ? new ClientResource(Client::find($client_id)) : [],
                 'sale_id' => $sale->id
