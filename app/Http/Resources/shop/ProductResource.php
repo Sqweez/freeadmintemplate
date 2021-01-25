@@ -34,7 +34,7 @@ class ProductResource extends JsonResource
             })->toArray(),
             'category_id' => $this->category_id,
             'subcategory_id' => $this->subcategory_id,
-            'has_group' => !!$this->grouping_attribite_id,
+            'has_group' => intval($this->grouping_attribute_id) > 0,
         ];
     }
 }

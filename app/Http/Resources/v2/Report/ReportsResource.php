@@ -48,7 +48,14 @@ class ReportsResource extends JsonResource
             'fact_price' => $this->product_price + $this->certificate->final_amount,
             'final_price' => $this->final_price + $this->certificate->final_amount,
             'margin' => $user_id ? $this->margin + $this->certificate->final_amount + $this->certificate_margin : 0,
-            'certificate' => $this->used_certificate
+            'certificate' => $this->used_certificate,
+            'split_payment' => $this->split_payment !== null ?
+                collect($this->split_payment)->map(function ($split) {
+                    $split['payment_text'] = Sale::PAYMENT_TYPES[intval($split['payment_type'])]['name'];
+                    $split['payment_type'] = intval($split['payment_type']);
+                    return $split;
+                })
+                : null
         ];
     }
 }

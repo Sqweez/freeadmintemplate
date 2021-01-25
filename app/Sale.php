@@ -52,7 +52,7 @@ use function foo\func;
  */
 class Sale extends Model
 {
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     protected $casts = [
         'id' => 'integer',
@@ -64,6 +64,7 @@ class Sale extends Model
         'balance' => 'integer',
         'kaspi_red' => 'boolean',
         'partner_id' => 'integer',
+        'split_payment' => 'array'
     ];
 
     const CLIENT_CASHBACK_PERCENT = 0.01;
@@ -85,6 +86,9 @@ class Sale extends Model
         ],
         4 => [
             'name' => 'Kaspi Магазин'
+        ],
+        5 => [
+            'name' => 'Раздельная оплата'
         ]
     ];
 

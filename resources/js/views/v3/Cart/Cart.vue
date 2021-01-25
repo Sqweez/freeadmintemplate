@@ -11,7 +11,7 @@
             </v-card-title>
             <v-card-text style="padding: 0;">
                 <div class="">
-                    <div class="cart__parameters">
+                    <div class="cart__parameters__checkboxes">
                         <div>
                             <v-checkbox
                                 label="Бесплатно"
@@ -29,6 +29,16 @@
                             />
                         </div>
                         <div v-if="!isFree">
+                            <v-checkbox
+                                label="Раздельная оплата"
+                                v-model="isSplitPayment"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
+                    </div>
+                    <div class="cart__parameters">
+                        <div v-if="!isFree">
                             <v-text-field
                                 v-model.number="discountPercent"
                                 class="w-100px"
@@ -45,7 +55,7 @@
                                 label="Способ оплаты"
                                 v-model="payment_type"
                                 :items="payment_types"
-                                :disabled="isRed"
+                                :disabled="isRed || isSplitPayment"
                                 item-text="name"
                                 outlined
                                 class="w-150px"
@@ -104,6 +114,20 @@
                             />
                         </div>
                     </div>
+                    <div class="split__payment" v-if="isSplitPayment">
+                        <div v-for="(type, index) of payment_types_without_split" :key="`split_type-${type.id}`">
+                            <p>{{ type.name }}</p>
+                            <v-text-field
+                                class="w-100px"
+                                type="number"
+                                color="white darken-2"
+                                outlined
+                                v-model.number="splitPayment[index].amount"
+                            />
+                        </div>
+                        <p>Оставьте значение 0, там где оплата не производится</p>
+                    </div>
+
                 </div>
                 <v-divider></v-divider>
                 <v-simple-table v-slot:default v-if="client && false">
@@ -495,6 +519,13 @@
                 } else {
                     this.payment_type = 0;
                 }
+            },
+            isSplitPayment(value) {
+                if (value) {
+                    this.payment_type = 5;
+                } else {
+                    this.payment_type = 0;
+                }
             }
         },
         mixins: [product, product_search, cart],
@@ -507,6 +538,8 @@
             used_certificate: null,
             isRed: false,
             isFree: false,
+            isSplitPayment: false,
+            splitPayment: [],
             payment_type: 0,
             promocodeSet: false,
             partner_id: null,
@@ -632,6 +665,20 @@
                 this.client = client;
             },
             async onSale() {
+                const split_payment = this.isSplitPayment ? this.splitPayment.filter(p => p.amount > 0) : null;
+                if (split_payment !== null && !split_payment.length) {
+                    showToast('Раздельная оплата не заполнена', TOAST_TYPE.ERROR);
+                    return;
+                }
+                if (split_payment !== null) {
+                    const total = split_payment.reduce((a, c) => {
+                        return a + c.amount;
+                    }, 0)
+                    if (total !== this.finalPrice) {
+                        showToast('Суммарная раздельная оплата не совпадает с итоговой суммой', TOAST_TYPE.ERROR);
+                        return;
+                    }
+                }
                 const sale = {
                     cart: this.cart.map(c => {
                         return {id: c.id, product_price: c.product_price, count: c.count, discount: c.discount};
@@ -645,7 +692,8 @@
                     partner_id: this.partner_id,
                     payment_type: this.payment_type,
                     certificate: this.certificate,
-                    used_certificate: this.used_certificate
+                    used_certificate: this.used_certificate,
+                    split_payment: split_payment
                 };
                 try {
                     this.overlay = true;
@@ -723,6 +771,11 @@
             payment_types() {
                 return this.$store.getters.payment_types;
             },
+            payment_types_without_split() {
+                const payments = this.$store.getters.payment_types.filter(p => p.id !== 5);
+                this.splitPayment = payments.map(p => ({payment_type: p.id, amount: 0}));
+                return payments;
+            },
             clientChosen() {
                 return this.client && this.client.id !== -1;
             },
@@ -740,7 +793,7 @@
     }
 </script>
 
-<style>
+<style lang="scss">
     .background-iron-grey {
         background-color: #444444;
     }
@@ -756,6 +809,12 @@
     .w-50px {
         width: 50px;
     }
+    .cart__parameters__checkboxes {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 10px;
+        padding: 15px 25px;
+    }
     .cart__parameters {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -770,5 +829,17 @@
     }
     .product__list {
         background-color: #444444!important;
+    }
+
+    .split__payment {
+        padding: 15px 25px;
+
+        div {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            grid-gap: 10px;
+            align-content: center;
+            align-items: center;
+        }
     }
 </style>

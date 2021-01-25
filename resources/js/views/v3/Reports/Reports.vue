@@ -4,9 +4,6 @@
             Отчеты по продажам
         </v-card-title>
         <v-card-text>
-            <!--<v-overlay :value="overlay">
-                <v-progress-circular indeterminate size="64"></v-progress-circular>
-            </v-overlay>-->
             <v-row>
                 <v-col cols="12" xl="3" justify="center">
                     <v-list>
@@ -23,8 +20,6 @@
                             </v-list-item-content>
                         </v-list-item>
                     </v-list>
-                    <!--<h5><b>Общая сумма продаж:</b> {{ totalSales | priceFilters }}</h5>
-                    <h5><b>Общая сумма прибыли:</b> {{ totalMargin | priceFilters}}</h5>-->
                 </v-col>
                 <v-col cols="12" xl="3">
                     <v-select
@@ -257,6 +252,14 @@
                                 <v-list-item-subtitle>Оплачено сертификатом</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
+                        <div v-if="item.split_payment">
+                            <v-list-item v-for="payment of item.split_payment" :key="`split_payment-${item.id}-${payment.payment_text}`">
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ payment.amount | priceFilters }}</v-list-item-title>
+                                    <v-list-item-subtitle>{{ payment.payment_text }}</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </div>
                     </v-list>
                 </template>
                 <template v-slot:item.payment_type_text="{item}">
@@ -507,7 +510,11 @@
             totalSales() {
                 return this._salesReport
                     .reduce((a, c) => {
-                        return a + c.final_price
+                        if (c.split_payment === null || this.currentType === -1) {
+                            return a + c.final_price
+                        } else {
+                            return a + +c.split_payment.find(s => s.payment_type == this.currentType).amount;
+                        }
                     }, 0);
             },
             totalMargin() {
@@ -539,6 +546,12 @@
                         if (this.currentType == -1) {
                             return s;
                         } else {
+                            if (this.currentType == 5 && s.payment_type === 5) {
+                                return true;
+                            }
+                            if (s.split_payment !== null) {
+                                return s.split_payment.find(s => s.payment_type == this.currentType);
+                            }
                             return s.payment_type == this.currentType;
                         }
                     })

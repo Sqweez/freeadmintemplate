@@ -8,8 +8,8 @@ import {
     editProduct,
     getProducts,
     getMainProducts, getProductsBySearch, changeProductCount
-} from "../../api/products";
-import {makeSale} from "../../api/sale";
+} from "@/api/products";
+import {makeSale} from "@/api/sale";
 import showToast from "../../utils/toast";
 import {TOAST_TYPE} from "@/config/consts";
 
@@ -27,6 +27,7 @@ const productsModule = {
             {id: 2, name: 'Kaspi RED/PayDa!'},
             {id: 3, name: 'Перевод на карту'},
             {id: 4, name: 'Kaspi Магазин'},
+            {id: 5, name: 'Раздельная оплата'},
         ]
     },
     getters: {
