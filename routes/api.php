@@ -188,6 +188,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('search', [ProductController::class, 'search']);
             Route::get('{id}/count', [ProductController::class, 'changeCount']);
             Route::get('/', [ProductController::class, 'index']);
+            Route::get('related', [ProductController::class, 'related']);
+            Route::post('related', [ProductController::class, 'relatedCreate']);
             Route::get('{id}', [ProductController::class, 'show']);
             Route::post('/', [ProductController::class, 'store']);
             Route::patch('{product}', [ProductController::class, 'update']);
@@ -197,8 +199,6 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             //Добавление ассортимента товара
             Route::post('{product}/sku', [ProductController::class, 'createProductSku']);
             Route::patch('{sku}/sku', [ProductController::class, 'updateProductSku']);
-            // Тестовая группировка товаров
-            Route::get('group/set', [ProductController::class, 'groupProducts']);
         });
 
         Route::prefix('certificates')->group(function () {

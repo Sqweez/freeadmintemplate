@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\api\v2;
 
+use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductCreateRequest;
+use App\Http\Resources\RelatedProductsResource;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\Http\Resources\v2\Product\ProductResource;
 use App\v2\Models\Product;
@@ -111,5 +113,29 @@ class ProductController extends Controller
         $batch->save();
 
         return $batch;
+    }
+
+    public function related(Request $request) {
+        return RelatedProductsResource::collection(Category::with(
+            [
+                'relatedProducts', 'relatedProducts.product', 'relatedProducts.product.manufacturer', 'relatedProducts.product.category'
+            ]
+        )->get());
+    }
+
+    public function relatedCreate(Request $request) {
+        $products = $request->get('products');
+        $category = $request->get('category_id');
+        $category = Category::find($category);
+        $products = array_map(function ($item) {
+            return [
+                'product_id' => $item
+            ];
+        }, $products);
+        $category->relatedProducts()->delete();
+        $category->relatedProducts()->createMany($products);
+        return new RelatedProductsResource(Category::with([
+            'relatedProducts', 'relatedProducts.product', 'relatedProducts.product.manufacturer', 'relatedProducts.product.category'
+        ])->whereKey($category)->first());
     }
 }

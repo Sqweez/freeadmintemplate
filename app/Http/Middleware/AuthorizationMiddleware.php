@@ -16,17 +16,16 @@ class AuthorizationMiddleware
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {        return $next($request);
-
-
-        if (!$request->hasHeader('authorization')) {
-            return response()->json(['error' => 'Access denied'], 404);
+    {
+        return $next($request);
+        if (!$request->hasHeader('Authorization')) {
+            return response()->json(['error' => 'Access denied'], 403);
         }
-        $authToken = $request->header('authorization');
+        $authToken = $request->header('Authorization');
         $user = User::where('token', $authToken)->first();
 
         if (!$user) {
-            return response()->json(['error' => 'Access denied']);
+            return response()->json(['error' => 'Access denied'], 403);
         }
 
         return $next($request);

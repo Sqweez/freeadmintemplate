@@ -1,11 +1,8 @@
 import Dashboard from "../views/Dashboard/Dashboard";
 import Users from "../views/Users/Users";
 import Stores from "../views/Stores/Stores";
-import Products from "../views/Products/Products";
 import Control from "../views/Control/Control";
-import Cart from "../views/Cart/Cart";
 import Clients from "../views/Clients/Clients";
-import Reports from "../views/Reports/Reports";
 import Transfers from "../views/Transfers/Transfers";
 import Hits from '../views/Hits/Hits';
 import Login from "../views/Login/Login";
@@ -24,7 +21,7 @@ import ProductsV3 from '../views/v3/Products/Products';
 import CartV3 from '../views/v3/Cart/Cart';
 import Banner from "../views/Banners/Banner";
 import ReportsV3 from '@/views/v3/Reports/Reports';
-
+import RelatedProducts from '@/views/v3/RelatedProducts/RelatedProducts';
 const routes = [
     {
         path: '/',
@@ -49,17 +46,6 @@ const routes = [
         }
 
     },
-   /* {
-        path: '/products',
-        component: Products,
-        meta: {
-            CAN_ENTER: {
-                IS_ADMIN: true,
-                IS_SELLER: true,
-            },
-        }
-        }
-    },*/
     {
         path: '/categories',
         component: Control,
@@ -69,16 +55,6 @@ const routes = [
             },
         }
     },
-    /*{
-        path: '/cart',
-        component: Cart,
-        meta: {
-            CAN_ENTER: {
-                IS_ADMIN: true,
-                IS_SELLER: true
-            },
-        }
-    },*/
     {
         path: '/clients',
         component: Clients,
@@ -89,16 +65,6 @@ const routes = [
             }
         }
     },
-   /* {
-        path: '/reports',
-        component: Reports,
-        meta: {
-            CAN_ENTER: {
-                IS_ADMIN: true,
-                IS_SELLER: true,
-            },
-        }
-    },*/
     {
         path: '/plan',
         component: Plan,
@@ -160,6 +126,15 @@ const routes = [
                 IS_ADMIN: true,
                 IS_MODERATOR: true
             },
+        }
+    },
+    {
+        path: '/shop/related',
+        component: RelatedProducts,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
         }
     },
     {

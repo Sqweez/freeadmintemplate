@@ -1,7 +1,6 @@
 import {auth, login} from "@/api/auth";
 import axios from 'axios';
 import showToast from "@/utils/toast";
-import _ from 'lodash';
 import {getKeyByValue} from "@/utils/objects";
 import {TOAST_TYPE} from "@/config/consts";
 
@@ -88,14 +87,14 @@ const authModule = {
                 const user = response.data.user;
                 commit('SET_TOKEN', token);
                 commit('SET_USER', user);
-                axios.defaults.headers.authorization = token;
+                axios.defaults.headers.Authorization = token;
                 axios.defaults.headers.store_id = user.store_id;
             }
         },
         async LOGOUT({commit}) {
             commit('SET_TOKEN', null);
             commit("SET_USER", null);
-            axios.defaults.headers.authorization = null;
+            axios.defaults.headers.Authorization = null;
         }
     }
 };

@@ -101,6 +101,10 @@ const navigationModule = {
                         title: 'Баннеры',
                         url: '/shop/banners'
                     },
+                    {
+                        title: "Связанные товары",
+                        url: '/shop/related'
+                    }
                 ]
             },
    /*         {

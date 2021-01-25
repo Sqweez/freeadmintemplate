@@ -61,6 +61,10 @@ class Category extends Model
         });
     }
 
+    public function relatedProducts() {
+        return $this->hasMany('App\v2\Models\RelatedProduct', 'category_id');
+    }
+
     private function clearCache() {
         Cache::forget('categories');
         Cache::forget('shop-categories');

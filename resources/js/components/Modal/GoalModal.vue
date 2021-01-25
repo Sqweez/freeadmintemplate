@@ -144,7 +144,7 @@
                 return this.categories.find(c => c.id === category_id).subcategories;
             },
             getProducts(category_id, subcategory_id) {
-                return this.mainProducts.filter(products => {
+                return this.products.filter(products => {
                     if (!subcategory_id) {
                         return products.category.id === category_id;
                     }
@@ -191,7 +191,7 @@
             categories() {
                 return this.$store.getters.categories;
             },
-            mainProducts() {
+            products() {
                 return this.$store.getters.MAIN_PRODUCTS_v2;
             }
         },
