@@ -212,6 +212,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('products', 'api\ImageController@products');
         });
 
+        Route::prefix('kaspi')->group(function() {
+            Route::get('products/xml', 'api\v2\KaspiController@getProductsXML');
+        });
+
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
     });
