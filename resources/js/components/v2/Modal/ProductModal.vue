@@ -416,7 +416,7 @@
             manufacturer: null,
             product_barcode: null,
             product_price: null,
-            kaspi_product_price: null,
+            kaspi_product_price: 0,
             product_attributes: [
                 {
                     attribute_id: null,
@@ -471,6 +471,8 @@
                         attribute_value: ''
                     }
                 ];
+                this.kaspi_product_price = 0;
+                this.is_kaspi_visible = false;
             },
             assignFields() {
                 this.product_name = this.product.product_name;
