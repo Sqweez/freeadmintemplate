@@ -75,6 +75,19 @@ const navigationModule = {
                 icon: 'report',
             },
             {
+                title: 'Kaspi',
+                url: '#',
+                icon: 'home',
+                hasDropdown: true,
+                isAdmin: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/kaspi/products'
+                    },
+                ]
+            },
+            {
                 title: 'Интернет-магазин',
                 url: '#',
                 icon: 'home',
