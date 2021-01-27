@@ -62,6 +62,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|Client withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Client withoutTrashed()
  * @mixin \Eloquent
+ * @property-read Collection|\App\Promocode[] $promocodes
+ * @property-read int|null $promocodes_count
  */
 class Client extends Model
 {
@@ -81,6 +83,17 @@ class Client extends Model
         ],
         [
             'amount' => 15000,
+            'discount' => 5
+        ]
+    ];
+
+    const TOTAL_DISCOUNT = [
+        [
+            'amount' => 60000,
+            'discount' => 10
+        ],
+        [
+            'amount' => 30000,
             'discount' => 5
         ]
     ];
@@ -133,9 +146,9 @@ class Client extends Model
 
     public function calculateDiscountPercent() {
         $total = $this->sales->sum('amount');
-        $discountByAmount = collect(self::DISCOUNT)->search(function ($item) use ($total) {
+        $discountByAmount = collect(self::TOTAL_DISCOUNT)->search(function ($item) use ($total) {
             return $total >= $item['amount'];
-        }) ?? 0;
+        })['discount'] ?? 0;
         return min(max($this->client_discount, $discountByAmount), 100);
     }
 }

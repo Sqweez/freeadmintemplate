@@ -30,6 +30,8 @@ use function foo\func;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\CategoryProduct[] $category_product
  * @property-read int|null $category_product_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\RelatedProduct[] $relatedProducts
+ * @property-read int|null $related_products_count
  */
 class Category extends Model
 {

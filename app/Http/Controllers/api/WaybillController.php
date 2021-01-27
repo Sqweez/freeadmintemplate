@@ -104,7 +104,6 @@ class WaybillController extends Controller
             $excelTemplate->getActiveSheet()->getStyle('C' . $currentIndex)->getAlignment()->setWrapText(true);
         }
 
-
         $excelSheet->setCellValue('AR' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), $TOTAL_COST);
         $excelSheet->setCellValue('AE' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COST));
         $excelSheet->setCellValue('N' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COUNT));
@@ -163,6 +162,7 @@ class WaybillController extends Controller
     public function number2string($number)
     {
 
+        return $number;
         // обозначаем словарь в виде статической переменной функции, чтобы
         // при повторном использовании функции его не определять заново
         static $dic = array(
@@ -285,15 +285,6 @@ class WaybillController extends Controller
         return join(' ', $string);
     }
 
-    public function getRowHeight($name, $initialFormat = 36)
-    {
-        $length = strlen($name);
-        return ceil($length / $initialFormat);
-    }
-
-    private function mergeCells($currentIndex)
-    {
-    }
 
     private function getTotalCount($cart)
     {

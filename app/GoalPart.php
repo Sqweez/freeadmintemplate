@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|GoalPart whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GoalPart whereSubcategoryId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|GoalPart whereProducts($value)
  */
 class GoalPart extends Model
 {

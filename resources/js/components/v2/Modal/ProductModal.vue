@@ -119,6 +119,10 @@
                         v-model.number="product_price"
                         type="number"/>
                     <v-text-field
+                        label="Стоимость в Kaspi Магазине"
+                        v-model.number="kaspi_product_price"
+                        type="number"/>
+                    <v-text-field
                         v-if="!isEditing || (grouping_attribute_id === 0 || grouping_attribute_id === null)"
                         label="Штрихкод"
                         v-model.number="product_barcode"
@@ -140,6 +144,10 @@
                     <v-checkbox
                         label="Виден на сайте"
                         v-model="is_site_visible"
+                    />
+                    <v-checkbox
+                        label="Виден в Kaspi магазине"
+                        v-model="is_kaspi_visible"
                     />
                     <p>
                         Отвечает за видимость на сайте iron-addicts.kz
@@ -219,7 +227,10 @@
                     </div>
 
                     <div class="d-flex">
-                        <v-select
+                        <v-btn text @click="addAttributesSelect">
+                            Добавить атрибут<v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                        <!--<v-select
                             style="max-width: 300px;"
                             :items="getAttributes(0)"
                             item-text="attribute_name"
@@ -234,23 +245,23 @@
                         ></v-text-field>
                         <v-btn icon @click="addAttributesSelect">
                             <v-icon>mdi-plus</v-icon>
-                        </v-btn>
+                        </v-btn>-->
                     </div>
                     <div class="d-flex" v-for="(attrs, idx) of attributesSelect" :key="`attribute-select-${idx}`" v-if="attributesSelect.length !== 0">
                         <component
                             v-if="attributesSelect.length !== 0"
                             style="max-width: 300px;"
                             :is="attrs"
-                            :items="getAttributes(idx + 1)"
+                            :items="getAttributes(idx)"
                             item-text="attribute_name"
                             item-value="id"
                             label="Атрибут"
-                            v-model="product_attributes[idx + 1].attribute_id"
+                            v-model="product_attributes[idx].attribute_id"
                         />
                         <v-spacer/>
                         <v-text-field
                             label="Значение"
-                            v-model="product_attributes[idx + 1].attribute_value"
+                            v-model="product_attributes[idx].attribute_value"
                         ></v-text-field>
                         <v-btn icon @click="removeAttributeSelect(idx)">
                             <v-icon>mdi-minus</v-icon>
@@ -405,6 +416,7 @@
             manufacturer: null,
             product_barcode: null,
             product_price: null,
+            kaspi_product_price: null,
             product_attributes: [
                 {
                     attribute_id: null,
@@ -422,6 +434,7 @@
             product_thumbs: [],
             is_hit: false,
             is_site_visible: true,
+            is_kaspi_visible: false,
             attributesSelect: [],
             pricesSelect: [],
             groupProduct: false,
@@ -474,6 +487,8 @@
                 this.product_price = this.product.product_price;
                 this.withoutAnotherSku = this.product.grouping_attribute_id === null;
                 this.grouping_attribute_id = this.product.grouping_attribute_id;
+                this.kaspi_product_price = this.product.kaspi_product_price;
+                this.is_kaspi_visible = this.product.is_kaspi_visible;
                 if (this.grouping_attribute_id === null) {
                     this.withoutAnotherSku = true;
                 }
@@ -497,7 +512,7 @@
                 }
 
 
-                this.attributesSelect = this.product_attributes.length >= 1 ? new Array(this.product_attributes.length - 1).fill(VSelect) : [];
+                this.attributesSelect = this.product_attributes.length >= 1 ? new Array(this.product_attributes.length).fill(VSelect) : [];
                 this.pricesSelect = new Array(this.prices.length - 1).fill(VSelect);
 
 
@@ -562,7 +577,7 @@
             },
             removeAttributeSelect(idx) {
                 this.attributesSelect.splice(idx, 1);
-                this.product_attributes.splice(idx + 1, 1);
+                this.product_attributes.splice(idx, 1);
             },
             async createProduct() {
                 const product = this.getProductObject();
@@ -577,7 +592,7 @@
             async editProduct() {
                 const product = this.getProductObject();
                 if (!this.validate(product)) {
-                    return null;
+                    throw new Error();
                 }
                 await this.$store.dispatch('EDIT_PRODUCT_v2', {
                     product,
@@ -589,7 +604,7 @@
             async addRange() {
                 const product = this.getProductObject();
                 if (!this.validate(product)) {
-                    return null;
+                    throw new Error();
                 }
                 await this.$store.dispatch('CREATE_PRODUCT_v2', product);
                 showToast('Товар успешно добавлен');
@@ -599,9 +614,11 @@
                     product_name: this.product_name,
                     product_description: this.product_description,
                     product_price: this.product_price,
+                    kaspi_product_price: this.kaspi_product_price,
                     product_barcode: this.product_barcode,
                     is_hit: this.is_hit,
                     is_site_visible: this.is_site_visible,
+                    is_kaspi_visible: this.is_kaspi_visible,
                     category: this.category,
                     subcategory: this.subcategory,
                     manufacturer: this.manufacturer,
@@ -639,6 +656,12 @@
                     showErrorToast('Cтоимость');
                     return false;
                 }
+
+                if (!product.kaspi_product_price && product.is_kaspi_visible === true) {
+                    showErrorToast('Cтоимость в Kaspi Магазине');
+                    return false;
+                }
+
                 if (!product.product_barcode) {
                     showErrorToast('Штрих-код');
                     return false;
@@ -647,6 +670,7 @@
                     showErrorToast('Производитель');
                     return false;
                 }
+
 
                 if (product.grouping_attribute_id === null && !this.withoutAnotherSku) {
                     showToast('Необходимо выбрать группирующий атрибут или поставить галочку "без ассортимента"', TOAST_TYPE.ERROR);

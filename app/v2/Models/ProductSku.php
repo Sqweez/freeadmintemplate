@@ -56,6 +56,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|ProductSku[] $relativeSku
  * @property-read int|null $relative_sku_count
  * @property-read mixed $all_attributes
+ * @property-read mixed $is_kaspi_visible
+ * @property-read mixed $kaspi_product_price
  */
 class ProductSku extends Model
 {
@@ -183,5 +185,13 @@ class ProductSku extends Model
 
     public function getAllAttributesAttribute() {
         return collect($this->attributes)->merge(collect($this->product->attributes));
+    }
+
+    public function getKaspiProductPriceAttribute() {
+        return $this->product->kaspi_product_price;
+    }
+
+    public function getIsKaspiVisibleAttribute() {
+        return $this->product->is_kaspi_visible;
     }
 }

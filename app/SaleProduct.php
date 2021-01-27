@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|SaleProduct[] $brothers
  * @property-read int|null $brothers_count
+ * @property-read mixed $final_price
+ * @property-read mixed $margin
+ * @method static \Illuminate\Database\Eloquent\Builder|SaleProduct whereDiscount($value)
  */
 class SaleProduct extends Model
 {

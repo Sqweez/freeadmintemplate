@@ -49,6 +49,11 @@ use function foo\func;
  * @property-read mixed $final_price
  * @property-read mixed $margin
  * @method static \Illuminate\Database\Eloquent\Builder|Sale reportDate($dates)
+ * @property array|null $split_payment
+ * @property-read \App\v2\Models\Certificate $certificate
+ * @property-read mixed $certificate_margin
+ * @property-read \App\v2\Models\Certificate|null $used_certificate
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereSplitPayment($value)
  */
 class Sale extends Model
 {

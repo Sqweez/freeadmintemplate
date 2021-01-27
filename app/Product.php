@@ -81,6 +81,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Product whereGroupingAttributeId($value)
  * @method static Builder|Product whereProductDiscountPrice($value)
  * @method static Builder|Product whereSubcategoryId($value)
+ * @property int $is_kaspi_visible
+ * @property int $kaspi_product_price
+ * @method static Builder|Product whereIsKaspiVisible($value)
+ * @method static Builder|Product whereKaspiProductPrice($value)
  */
 class Product extends Model {
 

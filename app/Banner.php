@@ -26,6 +26,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Banner whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Banner whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $mobile_image
+ * @method static \Illuminate\Database\Eloquent\Builder|Banner whereMobileImage($value)
  */
 class Banner extends Model
 {

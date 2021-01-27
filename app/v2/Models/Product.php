@@ -99,6 +99,12 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereGroupingAttributeId($value)
  * @method static Builder|Product whereProductDiscountPrice($value)
  * @method static Builder|Product whereSubcategoryId($value)
+ * @property bool $is_kaspi_visible
+ * @property int $kaspi_product_price
+ * @property-read Collection|ProductBatch[] $batches
+ * @property-read int|null $batches_count
+ * @method static Builder|Product whereIsKaspiVisible($value)
+ * @method static Builder|Product whereKaspiProductPrice($value)
  */
 class Product extends Model
 {
@@ -129,6 +135,8 @@ class Product extends Model
     const PRICE = 'price';
     const PRODUCT_IMAGES = 'product_images';
     const PRODUCT_THUMBS = 'product_thumbs';
+    const KASPI_PRODUCT_PRICE = 'kaspi_product_price';
+    const IS_KASPI_VISIBLE = 'is_kaspi_visible';
 
     // filters constants
     const FILTER_CATEGORIES = 'category';
@@ -151,7 +159,9 @@ class Product extends Model
         'product_price' => 'integer',
         'is_hit' => 'boolean',
         'is_site_visible' => 'boolean',
-        'group_id' => 'integer'
+        'group_id' => 'integer',
+        'kaspi_product_price' => 'integer',
+        'is_kaspi_visible' => 'boolean'
     ];
 
     public $timestamps = true;
@@ -236,14 +246,6 @@ class Product extends Model
         $query->where('product_name', 'like', $search);
     }
 
-    /*public function scopeOfTag($query, $search) {
-        if (!$search) {
-            return $query;
-        }
-        $tags = Tag::where('name', 'like', $search)->pluck('id');
-        $ids = ProductTag::whereIn('tag_id', $tags)->pluck('product_id');
-        $query->whereIn('id', $ids);
-    }*/
 
 
     public function scopeOfCategory($query, $categories) {

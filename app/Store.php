@@ -38,6 +38,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @mixin \Eloquent
  * @property int $city_id
  * @method static \Illuminate\Database\Eloquent\Builder|Store whereCityId($value)
+ * @property-read \App\v2\Models\City $city_name
  */
 class Store extends Model
 {

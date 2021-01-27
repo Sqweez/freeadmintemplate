@@ -59,6 +59,8 @@ class ProductResource extends JsonResource
             'product_id' => $this->product_id,
             'product_sku_images' => $this->product_images,
             'product_sku_thumbs' => $this->product_thumbs,
+            'kaspi_product_price' => $this->kaspi_product_price,
+            'is_kaspi_visible' => $this->is_kaspi_visible
            /* 'tags' => $this->tags,
             'prices' => $this->price,
             'product_images' => $this->product_images->map(function ($image) {

@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|GoalPartProducts whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GoalPartProducts whereProductId($value)
  * @mixin \Eloquent
+ * @property-read \App\v2\Models\ProductSku $product
  */
 class GoalPartProducts extends Model
 {
