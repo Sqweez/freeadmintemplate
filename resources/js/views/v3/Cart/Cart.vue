@@ -126,6 +126,7 @@
                             />
                         </div>
                         <p>Оставьте значение 0, там где оплата не производится</p>
+                        <p>Остаток: {{ splitPrice | priceFilters }}</p>
                     </div>
 
                 </div>
@@ -797,6 +798,11 @@
                     total -= this.used_certificate.amount;
                 }
                 return Math.max(0, total);
+            },
+            splitPrice() {
+                return this.finalPrice - this.splitPayment.reduce((a, c) => {
+                    return a + c.amount;
+                }, 0);
             }
         },
     }
