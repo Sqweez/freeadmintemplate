@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $discount
  * @property int|null $balance
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OrderProduct[] $items
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Store $store
  * @property-read int|null $items_count
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -71,6 +72,10 @@ class Order extends Model
 
     public function items() {
         return $this->hasMany('App\OrderProduct', 'order_id');
+    }
+
+    public function store() {
+        return $this->belongsTo('App\Store','store_id');
     }
 
 }

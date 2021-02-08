@@ -85,6 +85,10 @@ const navigationModule = {
                         title: 'Товары',
                         url: '/kaspi/products'
                     },
+                    {
+                        title: 'Заказы',
+                        url: '/kaspi/orders'
+                    }
                 ]
             },
             {

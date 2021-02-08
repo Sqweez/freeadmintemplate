@@ -15,7 +15,7 @@ class ProductController extends Controller {
 
     public function getProducts(Request $request) {
         $query = $request->except('store_id');
-        $store_id = $request->get('store_id') ?? 1;
+        $store_id = $request->get('store_id', 1);
         return $this->getFilteredProducts($query, $store_id);
     }
 
@@ -103,9 +103,15 @@ class ProductController extends Controller {
             $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
         }
 
-        $productQuery->inStock($store_id);
+        //$productQuery->inStock($store_id);
 
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs']);
+
+        $productQuery->whereHas('batches', function ($q) {
+            return $q->where('quantity', '>', 0);
+        })->with(['batches' => function ($q) {
+            return $q->where('quantity', '>', 0);
+        }]);
 
         $productQuery->orderBy('product_name');
 
@@ -114,7 +120,7 @@ class ProductController extends Controller {
 
     private function getFilteredProducts($query, $store_id) {
         $filters = $this->getFilterParametrs($query, $store_id);
-        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id)->paginate(24));
+        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id)->paginate(36));
     }
 
 

@@ -309,9 +309,9 @@ class CartController extends Controller {
 
         $order->update();
 
-        if (intval($order['balance']) > 0) {
+        $message = 'Заказ №' . $order->id . ' выполнен 💪💪💪';
 
-        }
+        (new TelegramService())->sendMessage($order->store->telegram_chat_id, urlencode($message));
 
         return 'Заказ выполнен!';
     }
@@ -336,6 +336,10 @@ class CartController extends Controller {
             $productBatch->quantity = $productBatch->quantity + 1;
             $productBatch->update();
         }
+
+        $message = 'Заказ №' . $order->id . ' отменен 😠😠😠';
+
+        (new TelegramService())->sendMessage($order->store->telegram_chat_id, urlencode($message));
 
         return 'Заказ отменен!';
 

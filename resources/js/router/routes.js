@@ -23,6 +23,7 @@ import Banner from "../views/Banners/Banner";
 import ReportsV3 from '@/views/v3/Reports/Reports';
 import RelatedProducts from '@/views/v3/RelatedProducts/RelatedProducts';
 import KaspiProducts from "@/views/Kaspi/KaspiProducts";
+import KaspiOrders from "@/views/Kaspi/KaspiOrders";
 const routes = [
     {
         path: '/',
@@ -220,6 +221,15 @@ const routes = [
                 IS_ADMIN: true
             },
         },
+    },
+    {
+        path: '/kaspi/orders',
+        component: KaspiOrders,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
+        }
     }
 ];
 
