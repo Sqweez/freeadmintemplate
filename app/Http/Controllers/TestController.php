@@ -43,21 +43,24 @@ class TestController extends Controller
 {
 
     public function ungroupped(Request $request) {
-        Client::where('client_city', '=', 1)->update([
-           'client_city' => 9
-       ]);
-        Client::where('client_city', '=', 2)->update([
-            'client_city' => 13
-        ]);
-        Client::where('client_city', '=', 3)->update([
-            'client_city' => 12
-        ]);
-        Client::where('client_city', '=', 4)->update([
-            'client_city' => 10
-        ]);
-        Client::where('client_city', '=', 5)->update([
-            'client_city' => 5
-        ]);
+        $clients = Client::with('sales.sale.store.city_name')->with('city:name')->get();
+        return $clients->filter(function ($client) {
+            return count($client['sales']) > 0;
+        })->values()->map(function ($client) {
+            $sale = collect($client['sales'])->map(function ($sale) {
+                return $sale['sale']['store']['city_name']['name'];
+            })->unique();
+            unset($client['sales']);
+            $client['cities'] = $sale;
+            return $client;
+        })->map(function ($client) {
+            return [
+                'Имя' => $client['client_name'],
+                'Телефон' => $client['client_phone'],
+                'Указанный город' => $client['city']['name'],
+                'Города, где были продажи' => collect($client['cities'])->join(', ')
+            ];
+        });
     }
 
     public function ungroupProduct($id) {

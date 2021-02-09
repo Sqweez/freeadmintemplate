@@ -465,12 +465,8 @@
                         price: null
                     }
                 ];
-                this.product_attributes = [
-                    {
-                        attribute_id: null,
-                        attribute_value: ''
-                    }
-                ];
+                this.product_attributes = [];
+                this.attributesSelect = [];
                 this.kaspi_product_price = 0;
                 this.is_kaspi_visible = false;
             },

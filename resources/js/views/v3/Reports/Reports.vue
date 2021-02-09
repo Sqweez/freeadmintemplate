@@ -136,7 +136,7 @@
                         label="Тип магазина:"
                     >
                     </v-select>
-                    <v-autocomplete
+                    <v-select
                         v-if="is_admin"
                         :items="shops"
                         item-text="name"
@@ -144,22 +144,22 @@
                         v-model="currentCity"
                         label="Город:"
                     >
-                    </v-autocomplete>
-                    <v-autocomplete
+                    </v-select>
+                    <v-select
                         v-if="is_admin"
                         :items="sellers"
                         label="Продавец:"
                         v-model="currentSeller"
                         item-value="id"
                         item-text="name">
-                    </v-autocomplete>
-                    <v-autocomplete
+                    </v-select>
+                    <v-select
                         :items="payment_types"
                         label="Способ оплаты:"
                         v-model="currentType"
                         item-value="id"
                         item-text="name">
-                    </v-autocomplete>
+                    </v-select>
                 </v-col>
             </v-row>
             <v-data-table

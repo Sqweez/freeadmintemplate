@@ -27,4 +27,8 @@ use Illuminate\Database\Eloquent\Model;
 class ClientSale extends Model
 {
     protected $guarded = [];
+
+    public function sale() {
+        return $this->belongsTo('App\Sale');
+    }
 }
