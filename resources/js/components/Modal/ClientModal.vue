@@ -71,7 +71,6 @@
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
     import showToast from "../../utils/toast";
     import InputMask from 'inputmask';
 
@@ -80,9 +79,6 @@
             client: {},
             loading: false,
         }),
-        async created() {
-            await this.$store.dispatch(ACTIONS.GET_CITIES);
-        },
         mounted() {
             const phoneInput = document.getElementById('client_phone');
             if (phoneInput) {

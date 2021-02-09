@@ -3,7 +3,17 @@
         <v-card-title>Список клиентов</v-card-title>
         <v-card-text>
             <v-container>
-                <v-btn color="error" @click="clientModal = true">Добавить клиента <v-icon>mdi-plus</v-icon></v-btn>
+                <div class="d-flex justify-space-between align-center">
+                    <v-btn color="error" @click="clientModal = true">Добавить клиента <v-icon>mdi-plus</v-icon></v-btn>
+                    <v-select
+                        style="max-width: 270px;"
+                        label="Города"
+                        :items="cities"
+                        item-value="id"
+                        item-text="name"
+                        v-model="cityFilter"
+                    />
+                </div>
                 <v-row>
                     <v-col>
                         <v-text-field
@@ -102,6 +112,7 @@
         async created() {
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
             await this.$store.dispatch(ACTIONS.GET_STORES);
+            await this.$store.dispatch(ACTIONS.GET_CITIES);
         },
         data: () => ({
             confirmationModal: false,
@@ -115,6 +126,7 @@
                 page: 1
             },
             pageCount: 1,
+            cityFilter: 0,
             headers: [
                 {
                     value: 'client_name',
@@ -154,11 +166,22 @@
         }),
         computed: {
             clients() {
-                return this.$store.getters.clients;
+                if (this.cityFilter === 0) {
+                    return this.$store.getters.clients;
+                } else {
+                    return this.$store.getters.clients.filter(client => +client.client_city === this.cityFilter);
+                }
             },
             shops() {
                 return this.$store.getters.shops;
-            }
+            },
+            cities() {
+                return [
+                    {id: 0, name: 'Все города'},
+                    {id: -1, name: 'Город не указан'},
+                    ...this.$store.getters.cities
+                ];
+            },
         },
         methods: {
             async deleteUser() {
