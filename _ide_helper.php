@@ -14425,6 +14425,23 @@
         }
          
     }
+            /**
+     * 
+     *
+     */ 
+        class TelegramServiceFacade {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sendMessage($chat_id, $message)
+        {
+                        /** @var \App\Http\Controllers\Services\TelegramService $instance */
+                        return $instance->sendMessage($chat_id, $message);
+        }
+         
+    }
      
 }
 
@@ -17744,6 +17761,7 @@ namespace  {
             class Debugbar extends \Barryvdh\Debugbar\Facade {}
             class ProductService extends \App\Facades\ProductServiceFacade {}
             class CartService extends \App\Facades\CartServiceFacade {}
+            class TelegramService extends \App\Facades\TelegramServiceFacade {}
             class PDF extends \Barryvdh\DomPDF\Facade {}
             class Flare extends \Facade\Ignition\Facades\Flare {}
      

@@ -55,7 +55,8 @@ class Order extends Model
 
     protected $casts = [
         'status' => 'integer',
-        'id' => 'integer'
+        'id' => 'integer',
+        'store_id' => 'integer'
     ];
 
     const ORDER_STATUS = [

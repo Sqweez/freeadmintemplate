@@ -5,10 +5,10 @@ namespace App\Http\Controllers\api;
 use App\Cart;
 use App\CartProduct;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Services\TelegramService;
 use App\Http\Resources\shop\CartResource;
 use App\Order;
 use App\OrderProduct;
+use App\v2\Models\OrderMessage;
 use App\v2\Models\ProductSku;
 use App\ProductBatch;
 use App\Sale;
@@ -19,7 +19,7 @@ use App\Client;
 use App\ClientSale;
 use App\ClientTransaction;
 use Illuminate\Support\Facades\DB;
-
+use TelegramService;
 
 class CartController extends Controller {
     protected $PAYMENT_CONFIRMED = 1;
@@ -168,12 +168,20 @@ class CartController extends Controller {
             CartProduct::where('cart_id', $cart)->delete();
 
             if ($customer_info['is_paid']) {
+                OrderMessage::create([
+                    'order_id' => $order['id'],
+                    'chat_id' => Store::find($order['store_id'])->telegram_chat_id,
+                    'is_delivered' => false
+                ]);
+            }
+
+            /*if ($customer_info['is_paid']) {
                 try {
                     $this->sendTelegramMessage($order);
                 } catch (\Exception $e) {
                     dd($e->getMessage());
                 }
-            }
+            }*/
             DB::commit();
 
             return response()->json([
@@ -190,9 +198,8 @@ class CartController extends Controller {
 
     private function sendTelegramMessage(Order $order, $result = null) {
         $message = $this->getMessage($order, $result);
-        $telegram = new TelegramService();
         $store = Store::where('id', $order['city'])->first();
-        $telegram->sendMessage($store->telegram_chat_id, $message);
+        TelegramService::sendMessage($store->telegram_chat_id, $message);
     }
 
     public function telegramMessage(Order $order, Request $request) {
@@ -311,7 +318,7 @@ class CartController extends Controller {
 
         $message = 'Заказ №' . $order->id . ' выполнен 💪💪💪';
 
-        (new TelegramService())->sendMessage($order->store->telegram_chat_id, urlencode($message));
+        TelegramService::sendMessage($order->store->telegram_chat_id, urlencode($message));
 
         return 'Заказ выполнен!';
     }
@@ -339,7 +346,7 @@ class CartController extends Controller {
 
         $message = 'Заказ №' . $order->id . ' отменен 😠😠😠';
 
-        (new TelegramService())->sendMessage($order->store->telegram_chat_id, urlencode($message));
+        TelegramService::sendMessage($order->store->telegram_chat_id, urlencode($message));
 
         return 'Заказ отменен!';
 

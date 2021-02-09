@@ -179,6 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ProductServiceProvider::class,
         App\Providers\CartServiceProvider::class,
+        App\Providers\TelegramServiceProvider::class,
     ],
 
     /*
@@ -232,8 +233,8 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'ProductService' => App\Facades\ProductServiceFacade::class,
-        'CartService' => App\Facades\CartServiceFacade::class
-
+        'CartService' => App\Facades\CartServiceFacade::class,
+        'TelegramService' => App\Facades\TelegramServiceFacade::class
     ],
 
 ];

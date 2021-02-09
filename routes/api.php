@@ -217,6 +217,11 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('orders', 'api\v2\KaspiController@getOrders');
         });
 
+        Route::prefix('cron')->group(function() {
+            Route::get('order/messages', 'api\v2\CronController@orderMessages');
+            Route::get('order/cancel', 'api\v2\CronController@cancelOrders');
+        });
+
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
     });

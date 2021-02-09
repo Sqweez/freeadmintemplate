@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ClientSale whereSaleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ClientSale whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Sale $sale
  */
 class ClientSale extends Model
 {
