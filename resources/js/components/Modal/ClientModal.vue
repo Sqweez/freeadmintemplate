@@ -73,7 +73,7 @@
 <script>
     import showToast from "../../utils/toast";
     import InputMask from 'inputmask';
-
+    import ACTIONS from '@/store/actions/index';
     export default {
         data: () => ({
             client: {},
@@ -84,6 +84,11 @@
             if (phoneInput) {
                 const inputMask = new InputMask("+7(999)999-99-99");
                 inputMask.mask(phoneInput);
+            }
+        },
+        async created() {
+            if (this.cities.length === 1) {
+                await this.$store.dispatch(ACTIONS.GET_CITIES);
             }
         },
         methods: {

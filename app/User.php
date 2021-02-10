@@ -50,6 +50,8 @@ class User extends Authenticatable
     use SoftDeletes;
     protected $guarded = [];
 
+    const IRON_WEB_STORE = 2;
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);

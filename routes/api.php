@@ -15,19 +15,12 @@ Route::get('/unauthorised', function () {
 
 Route::get('order/{order}/accept', 'api\CartController@accept');
 Route::get('order/{order}/decline', 'api\CartController@decline');
-/*Route::get('json/products', 'api\ProductController@jsonProducts');
-Route::get('excel/products', 'api\ProductController@excelProducts');*/
 Route::get('excel/products', 'api\ProductController@excelProducts');
 Route::get('json/products/parse', 'api\ProductController@jsonParseProduct');
 Route::get('set-tags', 'api\ProductController@setTags');
 
 // HelpController
 Route::get('set-partner-expired-at', 'HelpController@setPartnerExpiredAt');
-
-Route::prefix('cron')->group(function() {
-    // CronController
-    Route::get('partners/disable', 'CronController@disablePartners');
-});
 
 
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
@@ -92,23 +85,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     });
 
 
-
-
-    // helpers
-
-    Route::get('setThumbsAll', 'api\ProductController@setThumbsAll');
-
-    // ProductController
-
     Route::resource('category', 'api\CategoryController');
-    Route::prefix('products')->group(function () {
-        Route::post('batch', 'api\ProductController@createBatch');
-        Route::post('range', 'api\ProductController@createRange');
-        Route::get('main', 'api\ProductController@getMainProducts');
-    });
-    Route::resource('products', 'api\ProductController');
-
-
     Route::resource('attributes', 'api\AttributeController');
     Route::resource('manufacturers', 'api\ManufacturerController');
     Route::get('stores/types', 'api\StoreController@types');
@@ -220,6 +197,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::prefix('cron')->group(function() {
             Route::get('order/messages', 'api\v2\CronController@orderMessages');
             Route::get('order/cancel', 'api\v2\CronController@cancelOrders');
+        });
+
+        Route::prefix('order')->group(function() {
+            Route::get('/', 'api\CartController@getOrders');
         });
 
 

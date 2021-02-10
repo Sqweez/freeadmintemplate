@@ -21,13 +21,13 @@ class CronController extends Controller
                     'is_delivered' => true
                 ]);
             } catch (\Exception $exception) {
-
+                echo $exception->getMessage();
             }
         });
     }
 
     public function cancelOrders() {
-        $orders = Order::whereDate('created_at', '<=', now()->subDays(1))
+        $orders = Order::whereDate('created_at', '<=', now()->subDays(2))
             ->whereDate('created_at', '>=', now()->subDays(7))
             ->where('status', '==', 0)->get();
         $orders->each(function ($order) {

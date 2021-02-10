@@ -121,6 +121,10 @@ const navigationModule = {
                     {
                         title: "Связанные товары",
                         url: '/shop/related'
+                    },
+                    {
+                        title: "Заказы",
+                        url: '/shop/orders'
                     }
                 ]
             },
@@ -218,6 +222,10 @@ const navigationModule = {
                 url: '/reports',
                 icon: 'report',
             },
+            {
+                title: "Заказы с интернет-ммгазина",
+                url: '/shop/orders'
+            }
 
         ],
     },

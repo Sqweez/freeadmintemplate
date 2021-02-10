@@ -6,8 +6,10 @@ use App\Cart;
 use App\CartProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\CartResource;
+use App\Http\Resources\v2\Order\OrderResource;
 use App\Order;
 use App\OrderProduct;
+use App\User;
 use App\v2\Models\OrderMessage;
 use App\v2\Models\ProductSku;
 use App\ProductBatch;
@@ -175,13 +177,6 @@ class CartController extends Controller {
                 ]);
             }
 
-            /*if ($customer_info['is_paid']) {
-                try {
-                    $this->sendTelegramMessage($order);
-                } catch (\Exception $e) {
-                    dd($e->getMessage());
-                }
-            }*/
             DB::commit();
 
             return response()->json([
@@ -293,22 +288,23 @@ class CartController extends Controller {
         $sale = Sale::create([
             'client_id' => $order['client_id'],
             'store_id' => $store_id,
-            'user_id' => 2,
+            'user_id' => User::IRON_WEB_STORE,
             'discount' => $order['discount'],
             'kaspi_red' => 0,
             'balance' => $order['balance'] ?? 0
         ]);
 
 
-        foreach ($products as $product) {
-            $product['sale_id'] = $sale['id'];
-            unset($product['order_id']);
-            unset($product['created_at']);
-            unset($product['updated_at']);
-            unset($product['id']);
-            SaleProduct::create($product->toArray($product));
-        }
-
+        $products->each(function ($product) use ($sale) {
+            SaleProduct::create([
+                'product_batch_id' => $product['product_batch_id'],
+                'product_id' => $product['product_id'],
+                'sale_id' => $sale['id'],
+                'purchase_price' => $product['purchase_price'],
+                'product_price' => $product['product_price'],
+                'discount' => $sale['discount']
+            ]);
+        });
 
         $this->createClientSale($sale);
 
@@ -463,9 +459,6 @@ class CartController extends Controller {
         }
     }
 
-    public static function groupCart() {
-
-    }
 
     private function createClientSale(Sale $sale) {
 
@@ -493,7 +486,7 @@ class CartController extends Controller {
             'client_id' => $client_id,
             'sale_id' => $sale['id'],
             'amount' => $amount * 0.01,
-            'user_id' => 2
+            'user_id' => User::IRON_WEB_STORE
         ]);
 
         if ($sale['balance'] > 0) {
@@ -501,12 +494,23 @@ class CartController extends Controller {
                 'client_id' => $client_id,
                 'sale_id' => $sale['id'],
                 'amount' => $sale['balance'] * -1,
-                'user_id' => 2
+                'user_id' => User::IRON_WEB_STORE
             ]);
         }
-
-
     }
 
-
+    public function getOrders() {
+        $ids =  OrderProduct::with('product')->get()->filter(function ($order) {
+            return $order['product'] === null;
+        })->values()->pluck('id');
+        OrderProduct::whereIn('id', $ids)->delete();
+        return OrderResource::collection(Order::with(
+            [
+                'store:id,name', 'items',
+                'items.product', 'items.product.attributes',
+                'items.product.product', 'items.product.product.attributes',
+                'items.product.product.manufacturer',
+            ]
+        )->get());
+    }
 }

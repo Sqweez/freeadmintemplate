@@ -56,7 +56,10 @@ class Order extends Model
     protected $casts = [
         'status' => 'integer',
         'id' => 'integer',
-        'store_id' => 'integer'
+        'store_id' => 'integer',
+        'client_id' => 'integer',
+        'payment' => 'integer',
+        'delivery' => 'integer'
     ];
 
     const ORDER_STATUS = [
@@ -69,6 +72,27 @@ class Order extends Model
         -1 => [
             'text' => 'Отменен'
         ],
+    ];
+
+    const ORDER_DELIVERY = [
+        0 => [
+            'text' => 'Доставка курьером'
+        ],
+        1 => [
+            'text' => 'Самовывоз'
+        ]
+    ];
+
+    const ORDER_PAYMENT = [
+        0 => [
+            'text' => 'Оплата наличными'
+        ],
+        1 => [
+            'text' => 'Оплата картой'
+        ],
+        2 => [
+            'text' => 'Онлайн-оплата'
+        ]
     ];
 
     public function items() {
