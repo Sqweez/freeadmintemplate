@@ -39,7 +39,7 @@ class OrderResource extends JsonResource
             'address' => $this->address,
             'phone' => $this->phone,
             'city' => $this->city,
-            'city_text' => $this->city_text->name,
+            'city_text' => $this->city_text->name ?? 'Неизвестно',
             'comment' => $this->comment,
             'total_price' => ceil($this->items->reduce(function($a, $c) {
                 return $a + intval($c['product_price']);

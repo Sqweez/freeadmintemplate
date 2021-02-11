@@ -5,6 +5,13 @@
                 Заказы с интернет-магазина
             </v-card-title>
             <v-card-text>
+                <v-select
+                    label="Статусы заказов"
+                    :items="statuses"
+                    v-model="statusFilter"
+                    item-text="text"
+                    item-value="id"
+                />
                 <v-data-table
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
@@ -100,11 +107,11 @@
                         </v-list>
                     </template>
                     <template v-slot:item.actions="{item}">
-                        <v-btn text v-if="item.status === 0" color="red">
+                        <v-btn text v-if="item.status === 0" color="red" @click="orderId = item.id; declineModal = true;">
                             Отменить заказ
                             <v-icon >mdi-cancel</v-icon>
                         </v-btn>
-                        <v-btn text v-if="item.status === 0" color="success">
+                        <v-btn text v-if="item.status === 0" color="success" @click="orderId = item.id; acceptModal = true;">
                             Заказ выполнен
                             <v-icon>mdi-check</v-icon>
                         </v-btn>
@@ -125,6 +132,18 @@
             :on-confirm="deleteOrder"
             @cancel="orderId = null; deleteModal = false;"
         />
+        <ConfirmationModal
+            :state="declineModal"
+            message="Вы действительно хотите отменить выбранный заказ?"
+            :on-confirm="declineOrder"
+            @cancel="orderId = null; declineModal = false;"
+        />
+        <ConfirmationModal
+            :state="acceptModal"
+            message="Вы действительно хотите подтвердить выбранный заказ?"
+            :on-confirm="acceptOrder"
+            @cancel="orderId = null; acceptModal = false;"
+        />
     </div>
 </template>
 
@@ -134,7 +153,28 @@
         components: {ConfirmationModal},
         data: () => ({
             deleteModal: false,
+            declineModal: false,
+            acceptModal: false,
+            statusFilter: -2,
             orderId: null,
+            statuses: [
+                {
+                    id: -2,
+                    text: 'Все'
+                },
+                {
+                    id: 0,
+                    text: 'В обработке'
+                },
+                {
+                    id: -1,
+                    text: 'Отмененные'
+                },
+                {
+                    id: 1,
+                    text: 'Выполненные'
+                },
+            ],
             headers: [
                 {
                     value: 'client_name',
@@ -182,13 +222,27 @@
         methods: {
             async deleteOrder() {
                 await this.$store.dispatch('DELETE_ORDER', this.orderId);
-                this.order = null;
+                this.orderId = null;
                 this.deleteModal = false;
+            },
+            async acceptOrder() {
+                await this.$store.dispatch('ACCEPT_ORDER', this.orderId);
+                this.orderId = null;
+                this.acceptModal = false;
+            },
+            async declineOrder() {
+                await this.$store.dispatch('DECLINE_ORDER', this.orderId);
+                this.orderId = null;
+                this.declineModal = false;
             },
         },
         computed: {
             orders() {
-                return this.$store.getters.ORDERS;
+                if (this.statusFilter === -2) {
+                    return this.$store.getters.ORDERS;
+                } else {
+                    return this.$store.getters.ORDERS.filter(order => order.status === this.statusFilter);
+                }
             }
         },
         async created() {
