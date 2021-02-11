@@ -45,6 +45,15 @@ class ProductService {
         }
     }
 
+    private function createTags(Product $product) {
+        $tags = [];
+        array_push($tags, ['name' => $product->product_name]);
+        array_push($tags, ['name' => $product->manufacturer->manufacturer_name]);
+        array_push($tags, ['name' => $product->category->category_name]);
+        array_push($tags, ['name' => $product->subcategory->subcategory_name]);
+        return $tags;
+    }
+
     public function updateProduct(Product $product, array $_attributes, array $fields) {
         try {
             DB::beginTransaction();
@@ -95,7 +104,8 @@ class ProductService {
     }
 
     private function updateProductRelations(Product $product, array $fields) {
-        $this->syncTags($product, $fields[Product::TAG]);
+        $tags = $this->createTags($product);
+        $this->syncTags($product, array_merge($fields[Product::TAG], $tags));
         $this->syncProductImages($product, $fields[Product::PRODUCT_IMAGES]);
         $this->syncProductThumbs($product, $fields[Product::PRODUCT_THUMBS]);
         $this->syncProductPrices($product, $fields[Product::PRICE]);

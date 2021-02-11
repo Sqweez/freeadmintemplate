@@ -272,82 +272,6 @@ class CartController extends Controller {
         return urlencode($message);
     }
 
-    public function accept(Order $order) {
-        if ($order['status'] == 1) {
-            return ['error' => 'Заказ уже выполнен!'];
-        }
-
-        if ($order['status'] == -1) {
-            return ['error' => 'Заказ уже отменен!'];
-        }
-
-
-        $store_id = $order['store_id'];
-        $products = $order->items;
-
-        $sale = Sale::create([
-            'client_id' => $order['client_id'],
-            'store_id' => $store_id,
-            'user_id' => User::IRON_WEB_STORE,
-            'discount' => $order['discount'],
-            'kaspi_red' => 0,
-            'balance' => $order['balance'] ?? 0
-        ]);
-
-
-        $products->each(function ($product) use ($sale) {
-            SaleProduct::create([
-                'product_batch_id' => $product['product_batch_id'],
-                'product_id' => $product['product_id'],
-                'sale_id' => $sale['id'],
-                'purchase_price' => $product['purchase_price'],
-                'product_price' => $product['product_price'],
-                'discount' => $sale['discount']
-            ]);
-        });
-
-        $this->createClientSale($sale);
-
-        $order->status = 1;
-
-        $order->update();
-
-        $message = 'Заказ №' . $order->id . ' выполнен 💪💪💪';
-
-        TelegramService::sendMessage($order->store->telegram_chat_id, urlencode($message));
-
-        return 'Заказ выполнен!';
-    }
-
-    public function decline(Order $order) {
-        if ($order['status'] == 1) {
-            return ['error' => 'Заказ уже выполнен!'];
-        }
-
-        if ($order['status'] == -1) {
-            return ['error' => 'Заказ уже отменен!'];
-        }
-
-        $order->status = -1;
-
-        $order->update();
-
-        $products = $order->items;
-
-        foreach ($products as $product) {
-            $productBatch = ProductBatch::find($product['product_batch_id']);
-            $productBatch->quantity = $productBatch->quantity + 1;
-            $productBatch->update();
-        }
-
-        $message = 'Заказ №' . $order->id . ' отменен 😠😠😠';
-
-        TelegramService::sendMessage($order->store->telegram_chat_id, urlencode($message));
-
-        return 'Заказ отменен!';
-
-    }
-
 
     public function getTotal(Request $request) {
         $user_token = $request->get('user_token');
@@ -460,7 +384,7 @@ class CartController extends Controller {
     }
 
 
-    private function createClientSale(Sale $sale) {
+    public function createClientSale(Sale $sale) {
 
         $client_id = $sale['client_id'];
 
@@ -499,18 +423,4 @@ class CartController extends Controller {
         }
     }
 
-    public function getOrders() {
-        $ids =  OrderProduct::with('product')->get()->filter(function ($order) {
-            return $order['product'] === null;
-        })->values()->pluck('id');
-        OrderProduct::whereIn('id', $ids)->delete();
-        return OrderResource::collection(Order::with(
-            [
-                'store:id,name', 'items',
-                'items.product', 'items.product.attributes',
-                'items.product.product', 'items.product.product.attributes',
-                'items.product.product.manufacturer',
-            ]
-        )->get());
-    }
 }

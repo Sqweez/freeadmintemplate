@@ -13,8 +13,8 @@ Route::get('/unauthorised', function () {
     return response()->json(['error' => 'unauthorized']);
 })->name('unauthorised');
 
-Route::get('order/{order}/accept', 'api\CartController@accept');
-Route::get('order/{order}/decline', 'api\CartController@decline');
+Route::get('order/{order}/accept', 'api\v2\OrderController@accept');
+Route::get('order/{order}/decline', 'api\v2\OrderController@decline');
 Route::get('excel/products', 'api\ProductController@excelProducts');
 Route::get('json/products/parse', 'api\ProductController@jsonParseProduct');
 Route::get('set-tags', 'api\ProductController@setTags');
@@ -199,8 +199,9 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('order/cancel', 'api\v2\CronController@cancelOrders');
         });
 
-        Route::prefix('order')->group(function() {
-            Route::get('/', 'api\CartController@getOrders');
+        Route::prefix('orders')->group(function() {
+            Route::get('/', 'api\v2\OrderController@getOrders');
+            Route::delete('/{order}', 'api\v2\OrderController@deleteOrder');
         });
 
 

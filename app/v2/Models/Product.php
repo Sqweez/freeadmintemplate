@@ -3,7 +3,9 @@
 namespace App\v2\Models;
 
 use App\AttributeProduct;
+use App\Category;
 use App\CategoryProduct;
+use App\Manufacturer;
 use App\ManufacturerProducts;
 use App\Price;
 use App\ProductBatch;
@@ -11,6 +13,7 @@ use App\ProductImage;
 use App\ProductQuantity;
 use App\ProductTag;
 use App\ProductThumb;
+use App\Subcategory;
 use App\SubcategoryProduct;
 use App\Tag;
 use Illuminate\Database\Eloquent\Collection;
@@ -36,12 +39,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read Collection|AttributeProduct[] $attributes
  * @property-read int|null $attributes_count
- * @property-read Collection|CategoryProduct $category
+ * @property-read Collection|Category $category
  * @property-read int|null $categories_count
  * @property-read Collection|Product[] $children
  * @property-read int|null $children_count
  * @property-read mixed $current_price
- * @property-read Collection|ManufacturerProducts $manufacturer
+ * @property-read Collection|Manufacturer $manufacturer
  * @property-read int|null $manufacturer_count
  * @property-read Product|null $parent
  * @property-read Collection|Price[] $price
@@ -54,7 +57,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $product_thumbs_count
  * @property-read Collection|ProductBatch[] $quantity
  * @property-read int|null $quantity_count
- * @property-read Collection|SubcategoryProduct $subcategory
+ * @property-read Collection|Subcategory $subcategory
  * @property-read int|null $subcategories_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tag_count

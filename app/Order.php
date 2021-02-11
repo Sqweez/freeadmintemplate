@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Order
@@ -53,13 +54,16 @@ class Order extends Model
 {
     protected $guarded = [];
 
+    use SoftDeletes;
+
     protected $casts = [
         'status' => 'integer',
         'id' => 'integer',
         'store_id' => 'integer',
         'client_id' => 'integer',
         'payment' => 'integer',
-        'delivery' => 'integer'
+        'delivery' => 'integer',
+        'city' => 'integer'
     ];
 
     const ORDER_STATUS = [
@@ -101,6 +105,10 @@ class Order extends Model
 
     public function store() {
         return $this->belongsTo('App\Store','store_id');
+    }
+
+    public function city_text() {
+        return $this->belongsTo('App\v2\Models\City', 'city');
     }
 
 }

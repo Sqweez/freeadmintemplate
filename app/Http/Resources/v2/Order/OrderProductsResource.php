@@ -15,7 +15,13 @@ class OrderProductsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'product_name' => $this->product['product_name']
+            'product_name' => $this->product['product_name'],
+            'manufacturer' => $this->product['manufacturer']['manufacturer_name'],
+            'product_price' => $this->product['product_price'],
+            'category' => $this->product['category']['category_name'],
+            'subcategory' => $this->product['subcategory']['subcategory_name'],
+            'attributes' => collect($this->product['product']['attributes'])->merge($this->product['attributes']),
+            'count' => $this->count,
         ];
     }
 }

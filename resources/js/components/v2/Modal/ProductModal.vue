@@ -579,7 +579,6 @@
             },
             async createProduct() {
                 const product = this.getProductObject();
-
                 if (!this.validate(product)) {
                     throw new Error();
                 }

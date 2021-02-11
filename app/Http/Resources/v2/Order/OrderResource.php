@@ -3,6 +3,7 @@
 namespace App\Http\Resources\v2\Order;
 
 use App\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -15,6 +16,13 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
+        $_items = collect($this->items);
+        $items = collect($this->items)->unique('product_id')->map(function ($item) use ($_items) {
+            $item['count'] = $_items->filter(function ($_item) use ($item) {
+                return $_item['product_id'] === $item['product_id'];
+            })->count();
+            return $item;
+        })->values();
         return [
             'id' => $this->id,
             'client_name' => $this->fullname,
@@ -31,11 +39,15 @@ class OrderResource extends JsonResource
             'address' => $this->address,
             'phone' => $this->phone,
             'city' => $this->city,
+            'city_text' => $this->city_text->name,
             'comment' => $this->comment,
-            'total_price' => $this->items->reduce(function($a, $c) {
+            'total_price' => ceil($this->items->reduce(function($a, $c) {
                 return $a + intval($c['product_price']);
-            }, 0),
-            'products' => OrderProductsResource::collection($this->items)
+            }, 0)  - $this->items->reduce(function($a, $c) {
+                    return $a + intval($c['product_price']);
+                }, 0) * ($this->discount / 100)),
+            'products' => collect(OrderProductsResource::collection($items)),
+            'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
         ];
     }
 }
