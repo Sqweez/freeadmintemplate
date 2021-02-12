@@ -169,13 +169,12 @@ class CartController extends Controller {
             $this->createOrderProducts($order, $store_id, $products);
             CartProduct::where('cart_id', $cart)->delete();
 
-            if ($customer_info['is_paid']) {
-                OrderMessage::create([
-                    'order_id' => $order['id'],
-                    'chat_id' => Store::find($order['store_id'])->telegram_chat_id,
-                    'is_delivered' => false
-                ]);
-            }
+            OrderMessage::create([
+                'order_id' => $order['id'],
+                'chat_id' => Store::find($order['store_id'])->telegram_chat_id,
+                'is_delivered' => false
+            ]);
+
 
             DB::commit();
 
@@ -199,7 +198,13 @@ class CartController extends Controller {
 
     public function telegramMessage(Order $order, Request $request) {
         $result = intval($request->get('result'));
-        return $this->sendTelegramMessage($order, $result);
+        $order->update([
+            'is_paid' => !!$result
+        ]);
+        $status = $result === 1 ? 'Оплачен!' : 'Оплата не прошла!';
+        $message = 'Заказ №' . $order->id . ' СТАТУС ИЗМЕНЕН' . "\n";
+        $message .= 'Статус заказа: ' . $status;
+        TelegramService::sendMessage($order->store->telegram_chat_id, urlencode($message));
     }
 
     public function getMessage(Order $order, $result = null) {
@@ -251,10 +256,10 @@ class CartController extends Controller {
         }
 
         if ($order['payment'] == 2) {
-            if (intval($result) === $this->PAYMENT_CONFIRMED) {
+            if ($order['is_paid']) {
                 $payment = 'Онлайн оплата: ОПЛАЧЕНО!';
             } else {
-                $payment = 'Онлайн оплата: ОПЛАТА НЕ ПРОШЛА!';
+                $payment = 'Онлайн оплата: НЕ ОПЛАЧЕНО!';
             }
         }
 
@@ -308,7 +313,8 @@ class CartController extends Controller {
             'status' => 0,
             'client_id' => $client_id,
             'discount' => $discount,
-            'balance' => $customer_info['balance']
+            'balance' => $customer_info['balance'],
+            'is_paid' => 0,
         ];
         return Order::create($order);
     }

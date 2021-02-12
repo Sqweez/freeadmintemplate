@@ -48,6 +48,8 @@ class OrderResource extends JsonResource
                 }, 0) * ($this->discount / 100)),
             'products' => collect(OrderProductsResource::collection($items)),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
+            'is_paid_text' => $this->is_paid ? 'Оплачен' : 'Не оплачен',
+            'is_paid' => $this->is_paid
         ];
     }
 }

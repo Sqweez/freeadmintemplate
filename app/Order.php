@@ -63,7 +63,8 @@ class Order extends Model
         'client_id' => 'integer',
         'payment' => 'integer',
         'delivery' => 'integer',
-        'city' => 'integer'
+        'city' => 'integer',
+        'is_paid' => 'boolean'
     ];
 
     const ORDER_STATUS = [

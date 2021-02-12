@@ -86,6 +86,12 @@
                                     <v-list-item-subtitle>Адрес</v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ item.phone }}</v-list-item-title>
+                                    <v-list-item-subtitle>Телефон</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
                             <v-list-item v-if="item.comment">
                                 <v-list-item-content>
                                     <v-list-item-title>{{ item.comment }}</v-list-item-title>
@@ -102,6 +108,12 @@
                                 <v-list-item-content>
                                     <v-list-item-title>{{ item.balance }}</v-list-item-title>
                                     <v-list-item-subtitle>Списано с баланса</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item v-if="item.payment === 2">
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ item.is_paid_text }}</v-list-item-title>
+                                    <v-list-item-subtitle>Статус оплаты</v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
                         </v-list>
@@ -176,6 +188,11 @@
                 },
             ],
             headers: [
+                {
+                    value: 'id',
+                    text: 'Номер заказа',
+                    sortable: true
+                },
                 {
                     value: 'client_name',
                     text: 'Клиент',
