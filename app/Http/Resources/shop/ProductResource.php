@@ -29,9 +29,9 @@ class ProductResource extends JsonResource
             })->first() : url('/') . Storage::url('products/product_image_default.jpg'),
             'is_hit' => $this->is_hit,
             'is_site_visible' => $this->is_site_visible,
-            'skus' => collect(ProductSkuResource::collection($this->sku))->filter(function ($i) {
+            'skus' => collect(ProductSkuResource::collection($this->sku))/*->filter(function ($i) {
                 return $i['quantity'] > 0;
-            })->toArray(),
+            })*/->toArray(),
             'category_id' => $this->category_id,
             'subcategory_id' => $this->subcategory_id,
             'has_group' => intval($this->grouping_attribute_id) > 0,

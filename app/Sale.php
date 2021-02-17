@@ -118,7 +118,12 @@ class Sale extends Model
     }
 
     public function store() {
-        return $this->belongsTo('App\Store', 'store_id')->withTrashed();
+        return $this->belongsTo('App\Store', 'store_id')
+            ->withDefault([
+                'name' => 'Iron Addicts - Казахстан',
+                'id' => -1,
+            ])
+            ->withTrashed();
     }
 
     public function products() {

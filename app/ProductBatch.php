@@ -52,6 +52,10 @@ class ProductBatch extends Model
         'id' => 'integer'
     ];
 
+    public function store() {
+        return $this->belongsTo('App\Store', 'store_id');
+    }
+
     public function scopeOfStore($query, $store) {
         $query->where('store_id', $store);
     }

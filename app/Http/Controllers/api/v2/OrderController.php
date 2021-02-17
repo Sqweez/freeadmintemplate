@@ -128,7 +128,7 @@ class OrderController extends Controller
 
         $message = 'Заказ №' . $order->id . ' выполнен 💪💪💪';
 
-        TelegramService::sendMessage($order->store->telegram_chat_id, urlencode($message));
+        TelegramService::sendMessage(env('TELEGRAM_KZ_CHAT_ID'), urlencode($message));
 
         return 'Заказ выполнен!';
     }
@@ -156,7 +156,7 @@ class OrderController extends Controller
 
         $message = 'Заказ №' . $order->id . ' отменен 😠😠😠';
 
-        TelegramService::sendMessage($order->store->telegram_chat_id, urlencode($message));
+        TelegramService::sendMessage(env('TELEGRAM_KZ_CHAT_ID'), urlencode($message));
 
         return 'Заказ отменен!';
 

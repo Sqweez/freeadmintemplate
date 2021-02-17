@@ -17,7 +17,7 @@ class CartProductResource extends JsonResource
     public function toArray($request)
     {
 
-        $quantity = $this->product->batches->where('store_id', $request->get('store_id', 1))->sum('quantity') ?? 0;
+        $quantity = $this->product->batches->/*where('store_id', $request->get('store_id', 1))->*/sum('quantity') ?? 0;
         $count = $this->count;
         $change = false;
         if ($quantity < $count) {

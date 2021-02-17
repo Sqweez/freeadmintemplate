@@ -801,7 +801,7 @@
             },
             splitPrice() {
                 return this.finalPrice - this.splitPayment.reduce((a, c) => {
-                    return a + c.amount;
+                    return a + +c.amount;
                 }, 0);
             }
         },

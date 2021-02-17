@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $balance
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OrderProduct[] $items
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Store $store
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\City $city_text
  * @property-read int|null $items_count
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -105,7 +106,9 @@ class Order extends Model
     }
 
     public function store() {
-        return $this->belongsTo('App\Store','store_id');
+        return $this->belongsTo('App\Store','store_id')->withDefault([
+            'name' => 'Iron Addicts | Казахстан'
+        ]);
     }
 
     public function city_text() {

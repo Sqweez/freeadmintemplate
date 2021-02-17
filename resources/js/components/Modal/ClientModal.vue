@@ -74,6 +74,7 @@
     import showToast from "../../utils/toast";
     import InputMask from 'inputmask';
     import ACTIONS from '@/store/actions/index';
+    import {TOAST_TYPE} from "@/config/consts";
     export default {
         data: () => ({
             client: {},
@@ -94,6 +95,11 @@
         methods: {
             async onSubmit() {
                 this.loading = true;
+                if (this.client.client_city === -1 || !this.client.client_city) {
+                    showToast('Выберите город!', TOAST_TYPE.ERROR);
+                    this.loading = false;
+                    return null;
+                }
                 this.client.client_phone = this.modifyPhone(this.client.client_phone);
                 this.client.client_discount = Math.min(Math.max(this.client.client_discount, 0), 100) || 0;
                 if(this.id === null) {

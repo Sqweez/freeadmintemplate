@@ -60,7 +60,7 @@ class CartController extends Controller {
                     'products', 'products.product',
                     'products.product.attributes', 'products.product.product.attributes'])
                 ->with(['products.product.batches' => function ($q) use ($store_id) {
-                    return $q->where('store_id', $store_id)->where('quantity', '>', 0);
+                    return $q/*->where('store_id', $store_id)*/->where('quantity', '>', 0);
                 }])
                 ->first()
         );
@@ -131,7 +131,7 @@ class CartController extends Controller {
                 'products.product.attributes', 'products.product.product.attributes'])
                 ->ofUser($user_token)
                 ->with(['products.product.batches' => function ($q) use ($store_id) {
-                    return $q->where('store_id', $store_id)->where('quantity', '>', 0);
+                    return $q/*->where('store_id', $store_id)*/->where('quantity', '>', 0);
                 }])
                 ->first() ?? null;
         if ($cart && $store_id != $cart['store_id']) {
@@ -171,7 +171,7 @@ class CartController extends Controller {
 
             OrderMessage::create([
                 'order_id' => $order['id'],
-                'chat_id' => Store::find($order['store_id'])->telegram_chat_id,
+                'chat_id' => env('TELEGRAM_KZ_CHAT_ID'),
                 'is_delivered' => false
             ]);
 
@@ -213,7 +213,7 @@ class CartController extends Controller {
         $message .= 'Заказ №' . $order['id'] . "\n";
         $message .= 'ФИО: ' . $order['fullname'] . "\n";
         $message .= 'Номер телефона: ' . $order['phone'] . "\n";
-        $message .= 'Город: ' . $store->city . "\n";
+        $message .= 'Город: ' . $order->city_text->name . "\n";
         $message .= 'Адрес: ' . $order['address'] . "\n";
 
         $discount = $order['discount'];
@@ -226,10 +226,15 @@ class CartController extends Controller {
                 return $c['attribute_value'] . ', ' . $a;
             }, '');
 
-            $count = $cartProducts->filter(function ($i) use ($product) {
+            $_cartProducts = $cartProducts->filter(function ($i) use ($product) {
                 return $i['product_id'] == $product['id'];
-            })->count();
+            });
+            $count = $_cartProducts->count();
+            $batches = ProductBatch::with('store')->whereIn('id', $_cartProducts->pluck('product_batch_id'))->get();
             $message .= ($key + 1) . '.' . $product->product_name . ',' . $attributes . ' ' . $product['product_price'] . 'тг' . ' | ' . $count . 'шт.' . "\n";
+            $message .= 'Склады товаров: ' . $batches->reduce(function ($a, $c) {
+                    return $a . ' ' . $c['store']['name'] . ',';
+                }, '') . "\n";
         }
 
         if (intval($discount) > 0) {
@@ -325,6 +330,10 @@ class CartController extends Controller {
                 $count = intval($product['count']);
                 for ($i = 0; $i < $count; $i++) {
                     $product_batch = ProductBatch::where('product_id', $product['product_id'])->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
+                    // Проверяем есть ли товар в родном городе, если нет смотрим где есть
+                    if (!$product_batch) {
+                        $product_batch = ProductBatch::where('product_id', $product['product_id'])->where('quantity', '>=', 1)->first();
+                    }
                     if ($product_batch) {
                         $product_sale = [
                             'product_batch_id' => $product_batch['id'],
@@ -347,7 +356,7 @@ class CartController extends Controller {
     }
 
     private function getCount($product, $store_id) {
-        return intval(ProductBatch::where('product_id', $product)->where('store_id', $store_id)->sum('quantity'));
+        return intval(ProductBatch::where('product_id', $product)/*->where('store_id', $store_id)*/->sum('quantity'));
     }
 
     private function createCartProduct($product, $cart_id, $count) {
