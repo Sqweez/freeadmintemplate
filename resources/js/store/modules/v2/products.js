@@ -4,7 +4,7 @@ import {
     getProductsQuantity,
     getProduct,
     deleteProduct,
-    editProduct, addProductQuantity, createProductSku, updateProductSku
+    editProduct, addProductQuantity, createProductSku, updateProductSku, getModeratorProducts
 } from "@/api/v2/products";
 import showToast from "@/utils/toast";
 import {TOAST_TYPE} from "@/config/consts";
@@ -18,6 +18,7 @@ const state = {
     quantities: [],
     product_v2: null,
     certificates: [],
+    moderator_products: [],
 };
 
 const getters = {
@@ -35,6 +36,7 @@ const getters = {
     QUANTITIES_v2: state => state.quantities,
     PRODUCT_v2: state => state.product_v2,
     CERTIFICATES: s => s.certificates,
+    MODERATOR_PRODUCTS: s => s.moderator_products,
 };
 
 const mutations = {
@@ -124,6 +126,9 @@ const mutations = {
             }
             return product;
         })
+    },
+    SET_MODERATOR_PRODUCTS(state, payload) {
+        state.moderator_products = payload;
     }
 };
 
@@ -269,6 +274,17 @@ const actions = {
             commit('disableLoading');
         }
 
+    },
+    async GET_MODERATOR_PRODUCTS({commit}, payload) {
+        try {
+            commit('enableLoading');
+            const { data } = await getModeratorProducts();
+            commit('SET_MODERATOR_PRODUCTS', data.data);
+        } catch (e) {
+            console.log(e.response);
+        } finally {
+            commit('disableLoading');
+        }
     }
 };
 

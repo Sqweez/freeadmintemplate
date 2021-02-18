@@ -92,6 +92,19 @@ const navigationModule = {
                 ]
             },
             {
+                title: 'Модератор',
+                url: '#',
+                icon: 'dashboard',
+                hasDropdown: true,
+                isAdmin: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/moderator/products'
+                    },
+                ]
+            },
+            {
                 title: 'Интернет-магазин',
                 url: '#',
                 icon: 'home',

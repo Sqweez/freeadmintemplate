@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductCreateRequest;
 use App\Http\Resources\RelatedProductsResource;
 use App\Http\Resources\v2\Product\ProductsResource;
+use App\Http\Resources\v2\Product\ModeratorProducts;
 use App\Http\Resources\v2\Product\ProductResource;
 use App\v2\Models\Product;
 use App\ProductBatch;
@@ -137,5 +138,12 @@ class ProductController extends Controller
         return new RelatedProductsResource(Category::with([
             'relatedProducts', 'relatedProducts.product', 'relatedProducts.product.manufacturer', 'relatedProducts.product.category'
         ])->whereKey($category)->first());
+    }
+
+    public function moderatorProducts() {
+        return ModeratorProducts::collection(ProductSku::with(ProductSku::PRODUCT_SKU_MODERATOR_LIST)
+            ->orderBy('product_id')
+            ->orderBy('id')
+            ->get());
     }
 }

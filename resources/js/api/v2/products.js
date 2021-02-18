@@ -42,3 +42,6 @@ export async function updateProductSku(id, product) {
     return await axios.patch(`/api/v2/products/${id}/sku`, product);
 }
 
+export async function getModeratorProducts() {
+    return await axios.get(`/api/v2/products/moderator`);
+}

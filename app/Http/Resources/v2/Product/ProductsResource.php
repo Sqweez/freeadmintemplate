@@ -43,21 +43,5 @@ class ProductsResource extends JsonResource
             'grouping_attribute_id' => $this->grouping_attribute_id,
             'product_id' => $this->product_id,
         ];
-        /*return [
-            'id' => intval($this->id),
-            'product_name' => $this->product_name,
-            'category' => $this->category,
-            'attributes' => collect($this->attributes)->map(function ($attribute) {
-                return [
-                    'attribute_value' => $attribute->attribute_value,
-                    'attribute_name' => $attribute->attribute_name->attribute_name,
-                ];
-            }),
-            'manufacturer' => $this->manufacturer,
-            'product_price' => $this->product_price,
-            'product_barcode' => $this->product_barcode,
-            'group_id' => $this->group_id,
-            'quantity' => 0,
-        ];*/
     }
 }

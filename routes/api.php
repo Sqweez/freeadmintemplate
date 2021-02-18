@@ -165,6 +165,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('search', [ProductController::class, 'search']);
             Route::get('{id}/count', [ProductController::class, 'changeCount']);
             Route::get('/', [ProductController::class, 'index']);
+            Route::get('/moderator', [ProductController::class, 'moderatorProducts']);
             Route::get('related', [ProductController::class, 'related']);
             Route::post('related', [ProductController::class, 'relatedCreate']);
             Route::get('{id}', [ProductController::class, 'show']);

@@ -73,6 +73,12 @@ class ProductSku extends Model
         'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name'
     ];
 
+    const PRODUCT_SKU_MODERATOR_LIST = [
+        'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_description',
+        'product.category', 'product.manufacturer', 'product.attributes',
+        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'product.product_images'
+    ];
+
     const PRODUCT_SKU_WITH_CART_LIST = [
         'product:id,product_name,product_price,manufacturer_id,grouping_attribute_id',
         'product.manufacturer', 'product.attributes',
