@@ -99,7 +99,7 @@
             },
             async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
                 const response = await uploadFile(file, 'file', 'news');
-                const photo = `${window.location.protocol}//${window.location.hostname}:8000/storage/${response.data}`;
+                const photo = `${window.location.protocol}//${window.location.hostname}/storage/${response.data}`;
                 Editor.insertEmbed(cursorLocation, "image", photo);
                 resetUploader();
             }
