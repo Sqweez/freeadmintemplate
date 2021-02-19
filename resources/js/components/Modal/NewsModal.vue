@@ -127,6 +127,11 @@
                         this.short_text =  this.currentNews.short_text;
                         this.image =  this.currentNews.image;
                     }
+                } else {
+                    this.text =  '';
+                    this.title = '';
+                    this.short_text = '';
+                    this.image = null;
                 }
             }
         }
