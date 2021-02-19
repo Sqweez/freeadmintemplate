@@ -14,6 +14,13 @@
 /*!
  * The buffer module from node.js, for the browser.
  *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
  * @author   Feross Aboukhadijeh <http://feross.org>
  * @license  MIT
  */
@@ -28,6 +35,12 @@
  * froala_editor v3.1.0 (https://www.froala.com/wysiwyg-editor)
  * License https://froala.com/wysiwyg-editor/terms/
  * Copyright 2014-2020 Froala Labs
+ */
+
+/*!
+ * vue2-editor v2.10.2 
+ * (c) 2019 David Royer
+ * Released under the MIT License.
  */
 
 /*!

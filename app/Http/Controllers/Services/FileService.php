@@ -12,7 +12,7 @@ class FileService {
         $file = $request->file('file');
         $path = $request->get('path');
         $path = $file->store($path, 'public');
-        return $path;
+        return response( $path, 200);
     }
 
     public static function uploadData($file, $path) {

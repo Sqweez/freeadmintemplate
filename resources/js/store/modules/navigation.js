@@ -102,6 +102,10 @@ const navigationModule = {
                         title: 'Товары',
                         url: '/moderator/products'
                     },
+                    {
+                        title: 'Новости',
+                        url: '/moderator/news'
+                    },
                 ]
             },
             {

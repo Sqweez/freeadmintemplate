@@ -26,6 +26,7 @@ import KaspiProducts from "@/views/Kaspi/KaspiProducts";
 import KaspiOrders from "@/views/Kaspi/KaspiOrders";
 import OrdersPage from "@/views/Orders/OrdersPage";
 import ModeratorProducts from "@/views/Moderator/Products";
+import NewsPage from "@/views/News/NewsPage";
 const routes = [
     {
         path: '/',
@@ -240,6 +241,15 @@ const routes = [
     {
         path: '/moderator/products',
         component: ModeratorProducts,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
+        }
+    },
+    {
+        path: '/moderator/news',
+        component: NewsPage,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true

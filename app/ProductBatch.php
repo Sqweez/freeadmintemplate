@@ -39,6 +39,7 @@ use Illuminate\Support\Carbon;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch quantitiesOfStore($store_id)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch positive()
+ * @property-read \App\Store $store
  */
 class ProductBatch extends Model
 {

@@ -205,6 +205,13 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::delete('/{order}', 'api\v2\OrderController@deleteOrder');
         });
 
+        Route::prefix('news')->group(function() {
+            Route::get('/', 'api\v2\NewsController@index');
+            Route::post('/', 'api\v2\NewsController@store');
+            Route::patch('/{news}', 'api\v2\NewsController@update');
+            Route::delete('/{id}', 'api\v2\NewsController@destroy');
+        });
+
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
     });

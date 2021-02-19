@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderMessage whereMessage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderMessage whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $order_id
+ * @property-read \App\Order $order
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderMessage whereOrderId($value)
  */
 class OrderMessage extends Model
 {

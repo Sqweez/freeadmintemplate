@@ -50,6 +50,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserToken($value)
  * @mixin \Eloquent
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property bool $is_paid
+ * @method static \Illuminate\Database\Query\Builder|Order onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsPaid($value)
+ * @method static \Illuminate\Database\Query\Builder|Order withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Order withoutTrashed()
  */
 class Order extends Model
 {
