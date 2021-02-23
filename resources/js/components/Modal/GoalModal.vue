@@ -34,6 +34,21 @@
                         <v-icon>mdi-photo</v-icon>
                     </v-btn>
                     <input type="file" class="d-none" ref="fileInput" @change="uploadPhoto">
+                    <div class="d-flex" v-if="goal.mobile_image">
+                        <div
+                            class="image-container">
+                            <button class="delete-image" @click.prevent="deleteMobileImage">&times;</button>
+                            <img
+                                :src="'../storage/' + goal.mobile_image"
+                                width="150"
+                                alt="Изображение">
+                        </div>
+                    </div>
+                    <v-btn text class="mt-3" @click="$refs.fileInput2.click()">
+                        Загрузить мобильное фото
+                        <v-icon>mdi-photo</v-icon>
+                    </v-btn>
+                    <input type="file" class="d-none" ref="fileInput2" @change="uploadMobilePhoto">
                     <h4 class="mt-4 mb-4 text-center">
                         Разделы цели:
                     </h4>
@@ -110,6 +125,7 @@
                 name: '',
                 image: null,
                 parts: [],
+                mobile_image: null,
             }
         }),
         watch: {
@@ -120,6 +136,7 @@
                             name: '',
                             image: null,
                             parts: [],
+                            mobile_image: null,
                         };
                     }
                     else {
@@ -156,9 +173,18 @@
                 const result = await uploadFile(file, 'file', 'goals');
                 this.goal.image = result.data;
             },
+            async uploadMobilePhoto(e) {
+                const file = e.target.files[0];
+                const result = await uploadFile(file, 'file', 'goals');
+                this.goal.mobile_image = result.data;
+            },
             async deleteImage() {
                 await deleteFile(this.goal.image);
                 this.goal.image = null;
+            },
+            async deleteMobileImage() {
+                await deleteFile(this.goal.mobile_image);
+                this.goal.mobile_image = null;
             },
             addProductSelect(idx, key) {
                 this.goal.parts[key].products.push({

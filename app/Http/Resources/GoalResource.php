@@ -20,7 +20,9 @@ class GoalResource extends JsonResource
             'name' => $this->name,
             'parts' => GoalPartResource::collection($this->parts),
             'image' => $this->image ? url('/') . Storage::url($this->image) : null,
+            'mobile_image' => $this->mobile_image ? url('/') . Storage::url($this->mobile_image) : null,
             'image_origin' => $this->image,
+            'mobile_image_origin' => $this->mobile_image
         ];
     }
 }

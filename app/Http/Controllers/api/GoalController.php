@@ -20,20 +20,6 @@ class GoalController extends Controller
      */
     public function index(Request $request)
     {
-
-       /* $goalProductParts = GoalPartProducts::all();
-        return $goalProductParts->map(function ($products) {
-            $product_id = ProductSku::find($products['product_id'])->product_id;
-            unset($products['product_id']);
-            $products['product_id'] = $product_id;
-            return $products;
-        })->groupBy('goal_part_id')->each(function ($product, $key) {
-            $ids = collect($product)->pluck('product_id');
-            GoalPart::find($key)->update([
-                'products' => $ids
-            ]);
-        });*/
-
         if ($request->has('home')) {
             return Goal::all();
         }
@@ -63,10 +49,12 @@ class GoalController extends Controller
     {
         $name = $request->get('name');
         $image = $request->get('image');
+        $mobile_image = $request->get('mobile_image');
 
         $goal = Goal::create([
             'name' => $name,
             'image' => $image,
+            'mobile_image' => $mobile_image
         ]);
 
         $parts = $request->get('parts') ?? [];
@@ -99,7 +87,7 @@ class GoalController extends Controller
      */
     public function update(Request $request, Goal $goal)
     {
-        $_goal = $request->only(['image', 'name']);
+        $_goal = $request->only(['image', 'name', 'mobile_image']);
         $goal->update($_goal);
         $goal->parts()->delete();
         $parts = $request->get('parts') ?? [];
