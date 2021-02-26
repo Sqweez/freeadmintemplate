@@ -86,52 +86,10 @@ class TestController extends Controller
     }
 
     public function index(Request $request) {
-        $products = ProductSku::whereIn('product_id', [3, 2, 1271, 1320, 1205, 825, 600, 601, 602, 624, 621, 10, 29, 73, 98, 99, 198, 718, 1059, 171, 1002, 449, 724, 1315, 192, 612, 109, 385, 1304, 751])->get()->pluck('id');
-        $sales = Sale::whereDate('created_at', '>=', '2020-12-10')
-            ->whereDate('created_at', '<=', '2021-01-10')
-            ->whereHas('products', function ($q) use ($products) {
-                return $q->whereIn('product_id', $products);
-            })
-            /*->with(['products' => function ($q) use ($products) {
-                return $q->whereIn('product_id', $products);
-            }])*/
-            ->with(['products.product.product:id,product_name', 'user:id,name'])
-            ->get()->filter(function ($sale) {
-                return count($sale['products']) > 0;
-            })->values()->map(function ($sales)  use ($products) {
-                $products = collect($sales['products'])->filter(function ($product) use ($products) {
-                    return $products->contains($product['product_id']);
-                })->values()->map(function ($product) use ($sales){
-                    return [
-                        'product_id' => $product['product']['product_id'],
-                        'product_name' => $product['product']['product']['product_name'],
-                    ];
-                });
-                return [
-                    'products' => $products,
-                    'user_id' => $sales['user_id'],
-                    'user' => $sales['user']['name'],
-                    'id' => $sales['id']
-                ];
-            })
-            ->groupBy('user_id')->map(function ($sale, $key) {
-                $products = collect($sale)->pluck('products')
-                    ->flatten(1)
-                    ->groupBy('product_id')->map(function ($product) {
-                        return [
-                            'count' => count($product),
-                          /*  'product_name' => $product[0]['product_name'],*/
-                            'product_id' => $product[0]['product_id'],
-                        ];
-                    })->values();
-                return [
-                    'products' => $products,
-                    'user' => $sale[0]['user']
-                ];
-            })->values();
+        $saleQuery = Sale::query();
+        $saleQuery = $saleQuery->reportDate(['2021-02-26', '2021-02-26'])->reportSupplier(25);
         return view('test', [
-            'products' => Product::find([3, 2, 1271, 1320, 1205, 825, 600, 601, 602, 624, 621, 10, 29, 73, 98, 99, 198, 718, 1059, 171, 1002, 449, 724, 1315, 192, 612, 109, 385, 1304, 751]),
-            'sales' => $sales,
+            'test' => $saleQuery->get()
         ]);
     }
 

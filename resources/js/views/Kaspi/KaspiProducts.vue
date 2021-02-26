@@ -133,11 +133,6 @@
         <SkuModal
             @cancel="$store.commit('modals/closeProductSkuModal')"
         />
-        <!-- <PriceTagModal
-             :state="priceTagModal"
-             :priceTag="priceTag"
-             @cancel="priceTagModal = false"
-         />-->
     </v-card>
 </template>
 
@@ -176,6 +171,7 @@
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
+            await this.$store.dispatch(ACTIONS.GET_SUPPLIERS);
         },
         data: () => ({
             priceTagModal: false,

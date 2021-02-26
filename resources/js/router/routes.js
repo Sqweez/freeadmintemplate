@@ -27,6 +27,7 @@ import KaspiOrders from "@/views/Kaspi/KaspiOrders";
 import OrdersPage from "@/views/Orders/OrdersPage";
 import ModeratorProducts from "@/views/Moderator/Products";
 import NewsPage from "@/views/News/NewsPage";
+import SupplierReports from "@/views/v3/Reports/SupplierReports";
 const routes = [
     {
         path: '/',
@@ -253,6 +254,16 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true
+            }
+        }
+    },
+    {
+        path: '/supplier/reports',
+        component: SupplierReports,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SUPPLIER: true,
             }
         }
     }

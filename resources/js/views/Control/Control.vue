@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            Категории товаров
+            Параметры товаров
         </v-card-title>
         <v-card-text>
             <div
@@ -32,10 +32,11 @@
 </template>
 
 <script>
-    import CategorySegment from "../../components/Segments/CategorySegment";
-    import ManufacturerSegment from "../../components/Segments/ManufacturerSegment";
-    import TasteSegment from "../../components/Segments/TasteSegment";
-    import AttributeSegment from "../../components/Segments/AttributeSegment";
+    import CategorySegment from "@/components/Segments/CategorySegment";
+    import ManufacturerSegment from "@/components/Segments/ManufacturerSegment";
+    import TasteSegment from "@/components/Segments/TasteSegment";
+    import AttributeSegment from "@/components/Segments/AttributeSegment";
+    import SupplierSegment from "@/components/Segments/SupplierSegment";
     import ACTIONS from "../../store/actions";
     export default {
         data: () => ({
@@ -52,6 +53,10 @@
                 {
                     name: 'Атрибуты',
                     component: 'AttributeSegment'
+                },
+                {
+                    name: 'Поставщики',
+                    component: 'SupplierSegment'
                 }
             ],
             currentSegment: 'CategorySegment'
@@ -63,7 +68,7 @@
             this.loading = false;
         },
         components: {
-            CategorySegment, ManufacturerSegment, TasteSegment, AttributeSegment
+            CategorySegment, ManufacturerSegment, TasteSegment, AttributeSegment, SupplierSegment
         },
         methods: {
             chooseSegment(segment) {

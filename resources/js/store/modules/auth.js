@@ -19,6 +19,7 @@ const authModule = {
         IS_OBSERVER: state => state.user && +state.user.role_id === 3,
         IS_SELLER: state => state.user && +state.user.role_id === 2,
         IS_MODERATOR: state => state.user && +state.user.role_id === 4,
+        IS_SUPPLIER: state => state.user && +state.user.role_id === 5,
         IS_GUEST: state => !!!state.user,
         CAN_SALE: (state, getters) => (getters.IS_ADMIN || getters.IS_SELLER),
         IS_MALOY: (state, getters) => !!(getters.IS_MODERATOR && state.user.login === 'maloy'),
@@ -28,7 +29,8 @@ const authModule = {
                 moderator: getters.IS_MODERATOR,
                 admin: getters.IS_ADMIN,
                 guest: getters.IS_GUEST,
-                seller: getters.IS_SELLER
+                seller: getters.IS_SELLER,
+                supplier: getters.IS_SUPPLIER,
             };
 
             return getKeyByValue(roles, true);

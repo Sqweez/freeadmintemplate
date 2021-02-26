@@ -44,6 +44,9 @@ const reportsModule = {
             if (!getters.IS_ADMIN) {
                 payload.user_id = getters.USER.id;
             }
+            if (getters.IS_SUPPLIER) {
+                payload.is_supplier = 1;
+            }
             const data = await getReports(payload);
             commit('setReports', data);
         },

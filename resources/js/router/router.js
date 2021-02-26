@@ -46,6 +46,8 @@ Router.beforeEach(async (to, from, next) => {
             return;
         }
     }
+
+
     next();
 });
 

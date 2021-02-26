@@ -25,6 +25,7 @@ import modalModule from "@/store/modules/modals";
 import createPersistedState from "vuex-persistedstate";
 import orderModule from "@/store/modules/orders";
 import newsModule from "@/store/modules/news";
+import suppliersModule from "@/store/modules/suppliers";
 Vue.use(Vuex);
 
 const store = new Store({
@@ -56,7 +57,8 @@ const store = new Store({
         modals: modalModule,
         cartModule,
         orderModule,
-        newsModule
+        newsModule,
+        suppliersModule
     },
     plugins: [createPersistedState({
         paths: [

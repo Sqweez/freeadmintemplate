@@ -11,6 +11,7 @@ const userModule = {
         users: state => state.users,
         user: state => id => state.users.find(u => u.id === id),
         user_roles: state => state.user_roles,
+        USERS_SUPPLIERS: state => state.users.filter(user => user.role_id === 5),
     },
     mutations: {
         [MUTATIONS.CREATE_USER](state, payload) {
@@ -54,7 +55,7 @@ const userModule = {
         async [ACTIONS.GET_USER_ROLES] ({commit}) {
             const response = await getUserRoles();
             commit(MUTATIONS.SET_USER_ROLES, response.data);
-        }
+        },
     },
 };
 

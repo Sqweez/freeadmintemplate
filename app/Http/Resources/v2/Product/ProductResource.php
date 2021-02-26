@@ -60,7 +60,9 @@ class ProductResource extends JsonResource
             'product_sku_images' => $this->product_images,
             'product_sku_thumbs' => $this->product_thumbs,
             'kaspi_product_price' => $this->kaspi_product_price,
-            'is_kaspi_visible' => $this->is_kaspi_visible
+            'is_kaspi_visible' => $this->is_kaspi_visible,
+            'supplier' => $this->product->supplier,
+            'supplier_id' => $this->product->supplier_id,
         ];
     }
 }

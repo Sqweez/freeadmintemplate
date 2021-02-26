@@ -140,6 +140,8 @@ class Product extends Model
     const PRODUCT_THUMBS = 'product_thumbs';
     const KASPI_PRODUCT_PRICE = 'kaspi_product_price';
     const IS_KASPI_VISIBLE = 'is_kaspi_visible';
+    const SUPPLIER_ID = 'supplier_id';
+
 
     // filters constants
     const FILTER_CATEGORIES = 'category';
@@ -200,6 +202,10 @@ class Product extends Model
                 'subcategory_name' => 'Неизвестно',
                 'id' => -1
             ]);
+    }
+
+    public function supplier() {
+        return $this->belongsTo('App\v2\Models\Supplier');
     }
 
     public function manufacturer() {

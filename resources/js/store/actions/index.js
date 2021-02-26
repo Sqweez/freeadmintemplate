@@ -57,5 +57,9 @@ export default {
     CREATE_CRITERIA: 'createCriteria',
     EDIT_CRITERIA: 'editCriteria',
     DELETE_CRITERIA: 'deleteCriteria',
-    GET_CITIES: 'getCities'
+    GET_CITIES: 'getCities',
+    CREATE_SUPPLIER: 'createSupplier',
+    GET_SUPPLIERS: 'getSuppliers',
+    EDIT_SUPPLIER: 'editSupplier',
+    DELETE_SUPPLIER: 'deleteSupplier',
 }

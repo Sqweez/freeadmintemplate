@@ -12,6 +12,13 @@ const navigationModule = {
                 icon: 'dashboard',
             }
         ],
+        supplierMenu: [
+            {
+                title: 'Отчеты по продажам',
+                url: '/supplier/reports',
+                icon: 'dashboard'
+            }
+        ],
         adminMenu: [
             {
                 title: 'Главная страница',

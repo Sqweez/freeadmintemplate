@@ -155,6 +155,15 @@
                         Выбирайте если это товар для внутреннего закупа или которым торгуем только оффлайн
                     </p>
                     <v-divider></v-divider>
+                    <h5>Поставщик:</h5>
+                    <v-select
+                        label="Поставщик"
+                        :items="suppliers"
+                        item-text="supplier_name"
+                        item-value="id"
+                        v-model="supplier_id"
+                    />
+                    <v-divider></v-divider>
                     <h5>Теги:</h5>
                     <div class="d-flex">
                         <div>
@@ -402,6 +411,9 @@
             },
             current_product_attributes() {
                 return this.product_attributes.filter(a => a.attribute_id);
+            },
+            suppliers() {
+                return this.$store.getters.SUPPLIERS;
             }
         },
         data: () => ({
@@ -435,6 +447,7 @@
             is_hit: false,
             is_site_visible: true,
             is_kaspi_visible: false,
+            supplier_id: null,
             attributesSelect: [],
             pricesSelect: [],
             groupProduct: false,
@@ -469,6 +482,7 @@
                 this.attributesSelect = [];
                 this.kaspi_product_price = 0;
                 this.is_kaspi_visible = false;
+                this.supplier_id = null;
             },
             assignFields() {
                 this.product_name = this.product.product_name;
@@ -487,6 +501,7 @@
                 this.grouping_attribute_id = this.product.grouping_attribute_id;
                 this.kaspi_product_price = this.product.kaspi_product_price;
                 this.is_kaspi_visible = this.product.is_kaspi_visible;
+                this.supplier_id = this.product.supplier_id;
                 if (this.grouping_attribute_id === null) {
                     this.withoutAnotherSku = true;
                 }
@@ -627,6 +642,7 @@
                     price: this.prices.filter(p => p.store_id && p.price),
                     attributes: this.product_attributes.filter(p => p.attribute_value),
                     grouping_attribute_id: this.grouping_attribute_id,
+                    supplier_id: this.supplier_id
                 };
             },
             validate(product) {

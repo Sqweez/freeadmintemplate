@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\v2\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use function foo\func;
@@ -147,11 +148,29 @@ class Sale extends Model
     }
 
     public function scopeReportDate($q, $dates) {
-        return $q->whereDate('created_at', '>=', $dates[0])->whereDate('created_at', '<=', $dates[1])->orderByDesc('created_at');
+        return $q->whereDate('created_at', '>=', $dates[0])
+            ->whereDate('created_at', '<=', $dates[1])
+            ->orderByDesc('created_at');
     }
 
     public function scopeReport($q) {
         return $q->with(['client', 'user', 'store','products.product', 'products'])
+            ->with(['products.product.product:id,product_name,manufacturer_id'])
+            ->with(['certificate'])
+            ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
+    }
+
+    public function scopeReportSupplier($q, $supplier) {
+        $_supplier = Supplier::where('user_id', $supplier)->first();
+        $supplierProducts = $_supplier->products->pluck('id')->toArray();
+        return $q
+            ->whereHas('products', function ($query) use ($supplierProducts) {
+                return $query->whereHas('product', function ($q) use ($supplierProducts) {
+                    return $q->whereIn('product_id', $supplierProducts);
+                });
+            })
+            ->with(['client', 'user', 'store'])
+            ->with(['products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate'])
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);

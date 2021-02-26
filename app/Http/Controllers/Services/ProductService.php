@@ -201,7 +201,8 @@ class ProductService {
             Product::IS_SITE_VISIBLE,
             Product::GROUPING_ATTRIBUTE_ID,
             Product::KASPI_PRODUCT_PRICE,
-            Product::IS_KASPI_VISIBLE
+            Product::IS_KASPI_VISIBLE,
+            Product::SUPPLIER_ID,
         ]);
 
         $product[Product::CATEGORY_ID] = $request->get(Product::CATEGORY);

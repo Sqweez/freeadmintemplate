@@ -212,6 +212,13 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::delete('/{id}', 'api\v2\NewsController@destroy');
         });
 
+        Route::prefix('suppliers')->group(function() {
+            Route::post('/', 'api\v2\SupplierController@store');
+            Route::get('/', 'api\v2\SupplierController@index');
+            Route::patch('/{id}', 'api\v2\SupplierController@update');
+            Route::delete('/{id}', 'api\v2\SupplierController@destroy');
+        });
+
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
     });
