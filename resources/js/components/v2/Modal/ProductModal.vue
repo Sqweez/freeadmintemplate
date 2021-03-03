@@ -185,6 +185,16 @@
                         </div>
                     </div>
                     <v-divider></v-divider>
+                    <h5>Мета-теги</h5>
+                    <v-text-field
+                        label="Title"
+                        v-model="meta_title"
+                    />
+                    <v-text-field
+                        label="Description"
+                        v-model="meta_description"
+                    />
+                    <v-divider></v-divider>
                     <h5>Цены по городам:</h5>
                     <div class="d-flex">
                         <v-select
@@ -459,6 +469,8 @@
             product_sku_images: [],
             product_sku_thumbs: [],
             uploadingImageFor: 'product',
+            meta_title: '',
+            meta_description: ''
         }),
         methods: {
             removeTag(idx) {
@@ -483,6 +495,8 @@
                 this.kaspi_product_price = 0;
                 this.is_kaspi_visible = false;
                 this.supplier_id = null;
+                this.meta_title = '';
+                this.meta_description = '';
             },
             assignFields() {
                 this.product_name = this.product.product_name;
@@ -527,6 +541,9 @@
 
                 this.attributesSelect = this.product_attributes.length >= 1 ? new Array(this.product_attributes.length).fill(VSelect) : [];
                 this.pricesSelect = new Array(this.prices.length - 1).fill(VSelect);
+
+                this.meta_title = this.product.meta_title;
+                this.meta_description = this.product.meta_description;
 
 
             },
@@ -642,7 +659,9 @@
                     price: this.prices.filter(p => p.store_id && p.price),
                     attributes: this.product_attributes.filter(p => p.attribute_value),
                     grouping_attribute_id: this.grouping_attribute_id,
-                    supplier_id: this.supplier_id
+                    supplier_id: this.supplier_id,
+                    meta_title: this.meta_title,
+                    meta_description: this.meta_description,
                 };
             },
             validate(product) {

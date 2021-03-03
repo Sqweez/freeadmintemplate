@@ -37,6 +37,7 @@ class ProductService {
             return $product;
         } catch (\Exception $e) {
             DB::rollBack();
+            throw $e;
             return response()->json([
                 'message' => $e->getMessage(),
                 'stack' => $e->getTrace(),
@@ -203,6 +204,8 @@ class ProductService {
             Product::KASPI_PRODUCT_PRICE,
             Product::IS_KASPI_VISIBLE,
             Product::SUPPLIER_ID,
+            Product::META_TITLE,
+            Product::META_DESCRIPTION,
         ]);
 
         $product[Product::CATEGORY_ID] = $request->get(Product::CATEGORY);

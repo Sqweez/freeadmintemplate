@@ -160,17 +160,13 @@ class Sale extends Model
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
     }
 
-    public function scopeReportSupplier($q, $supplier) {
-        $_supplier = Supplier::where('user_id', $supplier)->first();
-        $supplierProducts = $_supplier->products->pluck('id')->toArray();
+    public function scopeReportSupplier($q, $supplierProducts) {
         return $q
-            ->whereHas('products', function ($query) use ($supplierProducts) {
-                return $query->whereHas('product', function ($q) use ($supplierProducts) {
-                    return $q->whereIn('product_id', $supplierProducts);
-                });
+            ->whereHas('products.product', function ($query) use ($supplierProducts) {
+                return $query->whereIn('product_id', $supplierProducts);
             })
             ->with(['client', 'user', 'store'])
-            ->with(['products'])
+            ->with(['products', 'products.product'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate'])
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);

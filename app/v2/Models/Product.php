@@ -121,6 +121,8 @@ class Product extends Model
     const PRODUCT_BARCODE = 'product_barcode';
     const IS_HIT = 'is_hit';
     const IS_SITE_VISIBLE = 'is_site_visible';
+    const META_TITLE = 'meta_title';
+    const META_DESCRIPTION = 'meta_description';
 
     // relationship fields
     const SKU = 'sku';
@@ -155,7 +157,7 @@ class Product extends Model
 
     const CACHE_PREFIX = 'PRODUCTS_CACHE';
 
-    protected $guarded = ['id'];
+	protected $guarded = ['id'];
 
     protected $hidden = ['pivot'];
 
@@ -287,6 +289,15 @@ class Product extends Model
         return $query->whereHas('tags', function ($q) use ($tag) {
             return $q->where('name', 'like', $tag);
         });
+    }
+
+
+    public function setMetaTitleAttribute() {
+        $this->meta_title = $this->meta_title ?? '';
+    }
+
+    public function setMetaDescriptionAttribute() {
+        $this->meta_description = $this->meta_description ?? '';
     }
 
 }

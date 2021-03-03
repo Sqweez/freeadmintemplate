@@ -87,7 +87,7 @@ class TestController extends Controller
 
     public function index(Request $request) {
         $saleQuery = Sale::query();
-        $saleQuery = $saleQuery->reportDate(['2021-02-26', '2021-02-26'])->reportSupplier(25);
+        $saleQuery = $saleQuery->reportDate(['2021-01-26', '2021-02-26'])->reportSupplier(25);
         return view('test', [
             'test' => $saleQuery->get()
         ]);

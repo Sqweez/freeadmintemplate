@@ -35,6 +35,8 @@ class ProductResource extends JsonResource
             'category_id' => $this->category_id,
             'subcategory_id' => $this->subcategory_id,
             'has_group' => intval($this->grouping_attribute_id) > 0,
+            'meta_title' => $this->meta_title ?? '',
+            'meta_description' => $this->meta_description ?? '',
         ];
     }
 }
