@@ -49,7 +49,8 @@ class OrderResource extends JsonResource
             'products' => collect(OrderProductsResource::collection($items)),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
             'is_paid_text' => $this->is_paid ? 'Оплачен' : 'Не оплачен',
-            'is_paid' => $this->is_paid
+            'is_paid' => $this->is_paid,
+            'image' => count($this->image) ? $this->image[0]['image'] : null,
         ];
     }
 }

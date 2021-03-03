@@ -203,6 +203,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::prefix('orders')->group(function() {
             Route::get('/', 'api\v2\OrderController@getOrders');
             Route::delete('/{order}', 'api\v2\OrderController@deleteOrder');
+            Route::post('/{order}/image', 'api\v2\OrderController@setImage');
         });
 
         Route::prefix('news')->group(function() {

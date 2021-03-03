@@ -27,6 +27,8 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Goal whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Goal whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $mobile_image
+ * @method static \Illuminate\Database\Eloquent\Builder|Goal whereMobileImage($value)
  */
 class Goal extends Model
 {

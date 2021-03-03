@@ -55,6 +55,7 @@ use function foo\func;
  * @property-read mixed $certificate_margin
  * @property-read \App\v2\Models\Certificate|null $used_certificate
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereSplitPayment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale reportSupplier($supplierProducts)
  */
 class Sale extends Model
 {
@@ -211,6 +212,10 @@ class Sale extends Model
 
     public function getCertificateMarginAttribute() {
         return max(0, $this->used_certificate ? $this->used_certificate->amount - $this->final_price : 0);
+    }
+
+    public function image() {
+        return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
     protected static function boot() {

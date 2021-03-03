@@ -57,6 +57,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsPaid($value)
  * @method static \Illuminate\Database\Query\Builder|Order withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Order withoutTrashed()
+ * @property-read Model|\Eloquent $image
  */
 class Order extends Model
 {
@@ -120,6 +121,10 @@ class Order extends Model
 
     public function city_text() {
         return $this->belongsTo('App\v2\Models\City', 'city');
+    }
+
+    public function image() {
+        return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
 }

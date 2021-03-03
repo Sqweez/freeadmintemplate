@@ -10,74 +10,20 @@ use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
 use App\User;
+use App\v2\Models\Image;
+use Illuminate\Http\Request;
 use TelegramService;
 
 class OrderController extends Controller
 {
 
     public function getOrders() {
-        /*$orders = Order::all();
-        $orders_with_city_text = $orders->filter(function ($order) {
-            return strlen($order['city']) > 1;
-        })->each(function ($order) {
-            $cityId = null;
-            if ($order['city'] === 'Аксу') {
-                $cityId = 11;
-            }
-            if ($order['city'] === 'Павлодар') {
-                $cityId = 9;
-            }
-            if ($order['city'] === 'Караганда') {
-                $cityId = 5;
-            }
-            if ($order['city'] === 'Усть-Каменогорск') {
-                $cityId = 12;
-            }
-            if ($order['city'] === 'Семей') {
-                $cityId = 13;
-            }
-            if ($order['city'] === 'Экибастуз') {
-                $cityId = 10;
-            }
-            if ($order['city'] === 'Риддер') {
-                $cityId = 24;
-            }
-            if ($cityId !== null) {
-                Order::find($order['id'])->update(['city' => $cityId]);
-            } else {
-                Order::find($order['id'])->update(['city' => 25]);
-            }
-        });
-        $orders_with_city_number = $orders->filter(function ($order) {
-            return strlen($order['city']) === 1;
-        })->each(function ($order) {
-            $cityId = null;
-            if (intval($order['city']) === 1) {
-                $cityId = 9;
-            }
-            if (intval($order['city']) === 2) {
-                $cityId = 13;
-            }
-            if (intval($order['city']) === 3) {
-                $cityId = 12;
-            }
-            if (intval($order['city']) === 4) {
-                $cityId = 10;
-            }
-            if (intval($order['city']) === 5) {
-                $cityId = 5;
-            }
-            if (intval($order['city']) === 6) {
-                $cityId = 25;
-            }
-            Order::find($order['id'])->update(['city' => $cityId]);
-        });*/
         return OrderResource::collection(Order::with(
             [
                 'store:id,name', 'items',
                 'items.product', 'items.product.attributes',
                 'items.product.product', 'items.product.product.attributes',
-                'items.product.product.manufacturer',
+                'items.product.product.manufacturer', 'image'
             ]
         )->orderByDesc('created_at')->get());
     }
@@ -160,5 +106,13 @@ class OrderController extends Controller
 
         return 'Заказ отменен!';
 
+    }
+
+    public function setImage(Order $order, Request $request) {
+        $image = $request->get('file');
+        $image_id = Image::create(['image' => $image])->id;
+        $order->image()->sync([$image_id]);
+
+        return new OrderResource(Order::find($order->id));
     }
 }

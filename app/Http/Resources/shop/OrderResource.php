@@ -31,7 +31,8 @@ class OrderResource extends JsonResource
             'id' => $this->id,
             'products' => $productCollection,
             'date' => Carbon::parse($this->created_at)->format('H:i:s d.m.Y'),
-            'status_text' => Order::ORDER_STATUS[$this->status ?? 1]['text']
+            'status_text' => Order::ORDER_STATUS[$this->status ?? 1]['text'],
+            'image' => count($this->image) ? url('/') . Storage::url($this->image[0]['image']) : null
         ];
     }
 

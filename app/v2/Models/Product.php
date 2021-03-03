@@ -108,6 +108,13 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $batches_count
  * @method static Builder|Product whereIsKaspiVisible($value)
  * @method static Builder|Product whereKaspiProductPrice($value)
+ * @property int|null $supplier_id
+ * @property string $meta_title
+ * @property string|null $meta_description
+ * @property-read \App\v2\Models\Supplier|null $supplier
+ * @method static Builder|Product whereMetaDescription($value)
+ * @method static Builder|Product whereMetaTitle($value)
+ * @method static Builder|Product whereSupplierId($value)
  */
 class Product extends Model
 {
@@ -291,13 +298,13 @@ class Product extends Model
         });
     }
 
-
-    public function setMetaTitleAttribute() {
-        $this->meta_title = $this->meta_title ?? '';
+    protected static function boot() {
+        parent::boot();
+        static::creating(function ($query) {
+            $query->meta_title = $query->meta_title ?? '';
+        });
+        static::updating(function ($query) {
+            $query->meta_title = $query->meta_title ?? '';
+        });
     }
-
-    public function setMetaDescriptionAttribute() {
-        $this->meta_description = $this->meta_description ?? '';
-    }
-
 }

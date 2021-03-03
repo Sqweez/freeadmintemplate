@@ -15,3 +15,9 @@ export async function acceptOrder(order) {
 export async function declineOrder(order) {
     return await axios.get(`/api/order/${order}/decline`)
 }
+
+export async function setImage(order, image) {
+    const formData = new FormData();
+    formData.append('file', image);
+    return await axios.post(`/api/v2/orders/${order}/image`, formData);
+}

@@ -12,6 +12,7 @@
                     item-text="text"
                     item-value="id"
                 />
+                <input type="file" ref="fileInput" class="d-none" @change="uploadFile">
                 <v-data-table
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
@@ -116,6 +117,14 @@
                                     <v-list-item-subtitle>Статус оплаты</v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
+                            <v-list-item v-if="item.image">
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        <img :src="'../../storage/' + item.image" width="150">
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>Изображение</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
                         </v-list>
                     </template>
                     <template v-slot:item.actions="{item}">
@@ -130,6 +139,10 @@
                         <v-btn text v-if="item.status !== 0" color="red" @click="orderId = item.id; deleteModal = true;">
                             Удалить заказ из истории
                             <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                        <v-btn text color="success" @click="orderId = item.id; $refs.fileInput.click()">
+                            Загрузить накладную
+                            <v-icon>mdi-image</v-icon>
                         </v-btn>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
@@ -161,6 +174,9 @@
 
 <script>
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import uploadFile from "@/api/upload";
+    import showToast from "@/utils/toast";
+    import {TOAST_TYPE} from "@/config/consts";
     export default {
         components: {ConfirmationModal},
         data: () => ({
@@ -252,6 +268,21 @@
                 this.orderId = null;
                 this.declineModal = false;
             },
+            async uploadFile(e) {
+                try {
+                    const file = e.target.files[0];
+                    const response = await uploadFile(file, 'file', 'orders');
+                    const image = response.data;
+                    await this.$store.dispatch('SET_ORDER_IMAGE', {
+                        order_id: this.orderId,
+                        image: image,
+                    })
+                } catch (e) {
+                    showToast('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию', TOAST_TYPE.ERROR);
+                } finally {
+                    this.$refs.fileInput.value = null;
+                }
+            }
         },
         computed: {
             orders() {

@@ -1,4 +1,4 @@
-import {acceptOrder, declineOrder, deleteOrder, getOrders} from "@/api/orders";
+import {acceptOrder, declineOrder, deleteOrder, getOrders, setImage} from "@/api/orders";
 import showToast from "@/utils/toast";
 
 const orderModule = {
@@ -31,6 +31,14 @@ const orderModule = {
                     order.status_text = 'Отменен'
                 }
                 return order;
+            })
+        },
+        SET_ORDER(state, order) {
+            state.orders = state.orders.map(_order => {
+                if (_order.id === order.id) {
+                    _order = {...order};
+                }
+                return _order;
             })
         }
     },
@@ -77,6 +85,17 @@ const orderModule = {
                 await declineOrder(payload);
                 commit('DECLINE_ORDER', payload);
                 showToast('Заказ успешно отменен!')
+            } catch (e) {
+
+            } finally {
+                commit('disableLoading');
+            }
+        },
+        async SET_ORDER_IMAGE({commit}, payload) {
+            try {
+                commit('enableLoading');
+                const response = await setImage(payload.order_id, payload.image);
+                commit('SET_ORDER', response.data.data);
             } catch (e) {
 
             } finally {
