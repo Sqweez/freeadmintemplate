@@ -16,12 +16,15 @@ class CategoryResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $subcategories = $request->has('site') ? $this->subcategories->where('is_site_visible', true) : $this->subcategories;
+
         return [
             'id' => $this->id,
             'name' => $this->category_name,
-            'subcategories' => $this->subcategories,
+            'subcategories' => $subcategories,
             'category_img' => $this->category_img,
-            'category_slug' => $this->category_slug
+            'category_slug' => $this->category_slug,
         ];
     }
 }

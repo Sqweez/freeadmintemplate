@@ -80,4 +80,8 @@ class Category extends Model
         return $this->hasMany('App\CategoryProduct', 'category_id');
     }
 
+    public function scopeSite($q) {
+        return $q->where('is_site_visible', true);
+    }
+
 }

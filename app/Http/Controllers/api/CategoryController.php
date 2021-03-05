@@ -15,11 +15,14 @@ class CategoryController extends Controller {
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     * @throws \Exception
      */
-    public function index() {
-        return CategoryResource::collection(Category::all());
+    public function index(Request $request) {
+        if ($request->has('site')) {
+            return CategoryResource::collection(Category::where('is_site_visible', true)->with('subcategories')->get());
+        }
+        return CategoryResource::collection(Category::with('subcategories')->get());
     }
 
 

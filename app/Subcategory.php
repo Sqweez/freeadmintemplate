@@ -33,4 +33,8 @@ class Subcategory extends Model
     public function scopeOfSlug($query, $slug) {
         return $query->where('subcategory_slug', $slug);
     }
+
+    public function scopeSite($q) {
+        return $q->where('is_site_visible', true);
+    }
 }
