@@ -50,10 +50,7 @@ class CategoryController extends Controller {
     }
 
     public function indexShop() {
-        return cache()->remember('shop-categories', 24 * 60 * 60 * 30 * 365, function () {
-            return ShopCategoryResource::collection(Category::all());
-        });
-        //return ShopCategoryResource::collection(Category::all());
+        return ShopCategoryResource::collection(Category::where('is_site_visible', true)->with('subcategories')->get());
     }
 
 

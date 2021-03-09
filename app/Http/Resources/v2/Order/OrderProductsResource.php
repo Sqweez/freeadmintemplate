@@ -20,8 +20,12 @@ class OrderProductsResource extends JsonResource
             'product_price' => $this->product['product_price'],
             'category' => $this->product['category']['category_name'],
             'subcategory' => $this->product['subcategory']['subcategory_name'],
+            'product_sku_id' => $this->product['id'],
             'attributes' => collect($this->product['product']['attributes'])->merge($this->product['attributes']),
-            'count' => $this->count,
+            'count' => $this->count ?? 0,
+            'store' => $this->batch->store,
+            'order_item_id' => $this->id,
+            'id' => $this->id,
         ];
     }
 }

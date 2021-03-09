@@ -36,4 +36,8 @@ class OrderProduct extends Model
     public function product() {
         return $this->belongsTo('App\v2\Models\ProductSku', 'product_id');
     }
+
+    public function batch() {
+        return $this->belongsTo('App\ProductBatch', 'product_batch_id');
+    }
 }

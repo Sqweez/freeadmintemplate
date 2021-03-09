@@ -103,7 +103,13 @@ class ProductController extends Controller {
             $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
         }
 
-        //$productQuery->inStock($store_id);
+        $productQuery->whereHas('category', function ($q) {
+            return $q->where('is_site_visible', true);
+        });
+
+        $productQuery->whereHas('subcategory', function ($q) {
+            return $q->where('is_site_visible', true);
+        });
 
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs']);
 

@@ -24,7 +24,7 @@
                             'items-per-page-text': 'Записей на странице',
                         }">
                     <template v-slot:item.total_price="{ item }">
-                        <span>{{ item.total_price | priceFilters }}</span>
+                        <span style="white-space: nowrap">{{ item.total_price | priceFilters }}</span>
                     </template>
                     <template v-slot:item.delivery="{ item }">
                         <v-list>
@@ -144,6 +144,10 @@
                             Загрузить накладную
                             <v-icon>mdi-image</v-icon>
                         </v-btn>
+                        <v-btn text color="primary" @click="orderId = item.id; orderModal = true;">
+                            Редактировать заказ
+                            <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -169,6 +173,7 @@
             :on-confirm="acceptOrder"
             @cancel="orderId = null; acceptModal = false;"
         />
+        <OrderModal :state="orderModal" :id="orderId" @cancel="orderModal = false; orderId = null;"/>
     </div>
 </template>
 
@@ -177,12 +182,14 @@
     import uploadFile from "@/api/upload";
     import showToast from "@/utils/toast";
     import {TOAST_TYPE} from "@/config/consts";
+    import OrderModal from "@/components/v2/Modal/OrderModal";
     export default {
-        components: {ConfirmationModal},
+        components: {OrderModal, ConfirmationModal},
         data: () => ({
             deleteModal: false,
             declineModal: false,
             acceptModal: false,
+            orderModal: false,
             statusFilter: -2,
             orderId: null,
             statuses: [

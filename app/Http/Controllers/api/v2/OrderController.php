@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\api\v2;
 
+use App\Client;
 use App\Http\Controllers\api\CartController;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v2\Order\OrderResource;
 use App\Order;
+use App\OrderProduct;
 use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
@@ -21,11 +23,105 @@ class OrderController extends Controller
         return OrderResource::collection(Order::with(
             [
                 'store:id,name', 'items',
+                'items.batch.store',
                 'items.product', 'items.product.attributes',
                 'items.product.product', 'items.product.product.attributes',
                 'items.product.product.manufacturer', 'image'
             ]
         )->orderByDesc('created_at')->get());
+    }
+
+    public function getOrder($id) {
+        return new OrderResource(Order::with(
+            [
+                'store:id,name', 'items',
+                'items.batch.store',
+                'items.product', 'items.product.attributes',
+                'items.product.product', 'items.product.product.attributes',
+                'items.product.product.manufacturer', 'image'
+            ]
+        )->whereKey($id)->first());
+    }
+
+    public function changeProducts(Order $order, Request $request) {
+        $products = $request->get('products');
+        $old_products = collect($products)->filter(function ($product) {
+           return isset($product['order_item_id']);
+        });
+        $new_products = collect($products)->filter(function ($product) {
+            return !isset($product['order_item_id']);
+        });
+        $order_products = OrderProduct::where('order_id', $order->id)->get()->each(function ($product) use ($old_products) {
+            $exists = $old_products->filter(function ($a) use ($product) {
+                return $a['id'] === $product['id'];
+            })->count() > 0;
+            if (!$exists) {
+                $batch = ProductBatch::find($product['product_batch_id']);
+                $batch->quantity = $batch->quantity + 1;
+                $batch->save();
+                OrderProduct::whereKey($product['id'])->delete();
+            }
+        });
+
+        $new_products->each(function ($product) use ($order) {
+            $batch = ProductBatch::where('quantity', '>', 0)
+                ->where('store_id', $product['store']['id'])
+                ->where('product_id', $product['id'])->first();
+            if ($batch) {
+                $batch->quantity = $batch->quantity - 1;
+                $batch->save();
+                OrderProduct::create([
+                    'order_id' => $order->id,
+                    'product_batch_id' => $batch->id,
+                    'product_id' => $product['id'],
+                    'purchase_price' => $batch->purchase_price,
+                    'product_price' => $product['product_price']
+                ]);
+            }
+        });
+
+        return new OrderResource(Order::with(
+            [
+                'store:id,name', 'items',
+                'items.batch.store',
+                'items.product', 'items.product.attributes',
+                'items.product.product', 'items.product.product.attributes',
+                'items.product.product.manufacturer', 'image'
+            ]
+        )->whereKey($order->id)->first());
+    }
+
+    public function changeClient(Order $order, Request $request) {
+        $client_id = $request->get('client_id');
+        $client = Client::find($client_id);
+        $discountPercent = intval($client->calculateDiscountPercent());
+        $order->update([
+            'client_id' => $client_id,
+            'discount'  => $discountPercent,
+            'fullname' => $client->client_name
+        ]);
+        return new OrderResource(Order::with(
+            [
+                'store:id,name', 'items',
+                'items.batch.store',
+                'items.product', 'items.product.attributes',
+                'items.product.product', 'items.product.product.attributes',
+                'items.product.product.manufacturer', 'image'
+            ]
+        )->whereKey($order->id)->first());
+    }
+
+    public function update(Order $order, Request $request) {
+        $order->update($request->all());
+        return new OrderResource(Order::with(
+            [
+                'store:id,name', 'items',
+                'items.batch.store',
+                'items.product', 'items.product.attributes',
+                'items.product.product', 'items.product.product.attributes',
+                'items.product.product.manufacturer', 'image'
+            ]
+        )->whereKey($order->id)->first());
     }
 
     public function deleteOrder(Order $order) {

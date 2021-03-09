@@ -28,6 +28,7 @@ class OrderResource extends JsonResource
             'client_name' => $this->fullname,
             'is_authorized' => !($this->client_id === -1),
             'store' => $this->store,
+            'email' => $this->email,
             'status' => $this->status,
             'status_text' => Order::ORDER_STATUS[$this->status]['text'],
             'payment' => $this->payment,
@@ -47,6 +48,7 @@ class OrderResource extends JsonResource
                     return $a + intval($c['product_price']);
                 }, 0) * ($this->discount / 100)),
             'products' => collect(OrderProductsResource::collection($items)),
+            '_products' => collect(OrderProductsResource::collection($this->items)),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
             'is_paid_text' => $this->is_paid ? 'Оплачен' : 'Не оплачен',
             'is_paid' => $this->is_paid,

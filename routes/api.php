@@ -203,7 +203,11 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::prefix('orders')->group(function() {
             Route::get('/', 'api\v2\OrderController@getOrders');
             Route::delete('/{order}', 'api\v2\OrderController@deleteOrder');
+            Route::patch('/{order}', 'api\v2\OrderController@update');
             Route::post('/{order}/image', 'api\v2\OrderController@setImage');
+            Route::get('/{id}', 'api\v2\OrderController@getOrder');
+            Route::patch('/client/{order}', 'api\v2\OrderController@changeClient');
+            Route::post('/products/{order}', 'api\v2\OrderController@changeProducts');
         });
 
         Route::prefix('news')->group(function() {
