@@ -386,7 +386,8 @@
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
             await this.$store.dispatch(ACTIONS.GET_CITIES);
             await this.$store.dispatch(ACTIONS.GET_STORES);
-            await this.$store.dispatch('GET_PRODUCTS_v2');
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
         },
         methods: {
             deleteFromProducts(index) {

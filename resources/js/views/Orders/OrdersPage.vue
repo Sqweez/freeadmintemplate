@@ -302,6 +302,8 @@
         },
         async created() {
             await this.$store.dispatch('GET_ORDERS');
+            await this.$store.dispatch('GET_PRODUCTS_v2');
+            await this.$store.dispatch('GET_PRODUCTS_QUANTITIES', 1);
         }
     }
 </script>
