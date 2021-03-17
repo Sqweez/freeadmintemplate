@@ -43,24 +43,38 @@ class TestController extends Controller
 {
 
     public function ungroupped(Request $request) {
-        $clients = Client::with('sales.sale.store.city_name')->with('city:name')->get();
-        return $clients->filter(function ($client) {
-            return count($client['sales']) > 0;
-        })->values()->map(function ($client) {
-            $sale = collect($client['sales'])->map(function ($sale) {
-                return $sale['sale']['store']['city_name']['name'];
-            })->unique();
-            unset($client['sales']);
-            $client['cities'] = $sale;
-            return $client;
-        })->map(function ($client) {
-            return [
-                'Имя' => $client['client_name'],
-                'Телефон' => $client['client_phone'],
-                'Указанный город' => $client['city']['name'],
-                'Города, где были продажи' => collect($client['cities'])->join(', ')
-            ];
-        });
+        $products = json_decode($request->get('products'));
+        $products_id = ProductSku::whereIn('product_id', $products)
+            ->select(['id'])
+            ->get()
+            ->pluck('id');
+
+        $date_start = $request->get('date_start');
+        $date_finish = $request->get('date_finish');
+        $user_id = $request->has('user_id') ? $request->get('user_id') : null;
+        $store_id = $request->has('store_id') ? $request->get('store_id') : null;
+
+        $salesQuery = Sale::query()->whereDate('created_at', '>=', $date_start)
+            ->whereDate('created_at', '<=', $date_finish)
+            ->whereHas('products', function ($q) use ($products_id) {
+                return $q->whereIn('product_id', $products_id);
+            })
+            ->with(['products', 'products.product', 'products.product.product:id,product_name,manufacturer_id,product_price'])
+            ->with(['products.product.product:id,product_name,manufacturer_id'])
+            ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
+
+        if ($user_id) {
+            $salesQuery = $salesQuery->whereUserId($user_id);
+        }
+
+        if ($store_id) {
+            $salesQuery = $salesQuery->whereStoreId($store_id);
+        }
+
+
+        return view('test', [
+            'sales' => $salesQuery->get()
+        ]);
     }
 
     public function ungroupProduct($id) {

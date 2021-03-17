@@ -114,6 +114,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::get('reports', 'api\SaleController@reports');
     Route::get('reports/plan', 'api\SaleController@getPlanReports');
     Route::get('reports/total', 'api\SaleController@getTotal');
+    Route::get('reports/products', 'api\SaleController@getReportProducts');
 
 
     Route::get('cart/group', 'api\CartController@groupCart');

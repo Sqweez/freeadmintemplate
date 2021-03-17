@@ -18,6 +18,7 @@ use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
 use App\v2\Models\Certificate;
+use App\v2\Models\ProductSku;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -110,6 +111,87 @@ class SaleController extends Controller {
             'week' => $this->calculateTotalAmount($weeklySales),
             'month' =>  $this->calculateTotalAmount($monthlySales)
         ];
+    }
+
+    public function getReportProducts(Request $request) {
+        $products = json_decode($request->get('products'));
+        $products_id = ProductSku::whereIn('product_id', $products)
+            ->select(['id'])
+            ->get()
+            ->pluck('id');
+
+
+        $date_start = $request->get('date_start');
+        $date_finish = $request->get('date_finish');
+        $user_id = $request->has('user_id') ? $request->get('user_id') : null;
+        $store_id = $request->has('store_id') ? $request->get('store_id') : null;
+
+        $saleProductQuery = SaleProduct::query()
+            ->whereIn('product_id', $products_id)
+            ->whereHas('sale', function ($q) use ($date_start, $date_finish, $user_id, $store_id) {
+                if ($user_id) {
+                    $q->whereUserId($user_id);
+                }
+                if ($store_id) {
+                    $q->whereStoreId($store_id);
+                }
+
+                $q->whereDate('created_at', '>=', $date_start)
+                    ->whereDate('created_at', '<=', $date_finish);
+            })
+            ->with('sale')
+            ->with([
+                'product',
+                'product.product:id,product_name,product_price,manufacturer_id',
+                'product.product.attributes:attribute_value',
+                'product.product.manufacturer'
+            ])
+            ->get()->map(function ($sale) {
+                $sale['main_product_id'] = $sale['product']['product_id'];
+                return $sale;
+            })->groupBy('main_product_id')
+              ->map(function ($sale, $key) {
+                  return [
+                      'product_id' => $sale[0]['product']['product_id'],
+                      'product_name' => $sale[0]['product']['product']['product_name'],
+                      'attributes' => collect($sale[0]['product']['product']['attributes'])->pluck('attribute_value')->join(', '),
+                      'manufacturer' => $sale[0]['product']['product']['manufacturer']['manufacturer_name'],
+                      'count' => count($sale),
+                      'total_purchase_price' => ceil(collect($sale)->reduce(function ($a, $c) {
+                          return $a + $c['purchase_price'];
+                      }, 0)),
+                      'total_product_price' => ceil(collect($sale)->reduce(function ($a, $c) {
+                          return $a + $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
+                      }, 0)),
+                      'margin' => ceil(collect($sale)->reduce(function ($a, $c) {
+                                  return $a + $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
+                              }, 0))
+                          - ceil(collect($sale)->reduce(function ($a, $c) {
+                                  return $a + $c['purchase_price'];
+                                  }, 0)),
+                  ];
+              })->values();
+        return $saleProductQuery;
+
+        /*$salesQuery = Sale::query()->whereDate('created_at', '>=', $date_start)
+            ->whereDate('created_at', '<=', $date_finish)
+            ->whereHas('products', function ($q) use ($products_id) {
+                return $q->whereIn('product_id', $products_id);
+            })
+            ->with(['products', 'products.product'])
+            ->with(['products.product.product:id,product_name,manufacturer_id,product_price'])
+            ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
+
+        if ($user_id) {
+            $salesQuery = $salesQuery->whereUserId($user_id);
+        }
+
+        if ($store_id) {
+            $salesQuery = $salesQuery->whereStoreId($store_id);
+        }*/
+
+
+        return $salesQuery->get();
     }
 
     private function calculateTotalAmount($sales) {

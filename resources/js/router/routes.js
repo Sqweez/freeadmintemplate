@@ -1,25 +1,25 @@
-import Dashboard from "../views/Dashboard/Dashboard";
-import Users from "../views/Users/Users";
-import Stores from "../views/Stores/Stores";
-import Control from "../views/Control/Control";
-import Clients from "../views/Clients/Clients";
-import Transfers from "../views/Transfers/Transfers";
-import Hits from '../views/Hits/Hits';
-import Login from "../views/Login/Login";
-import Goals from "../views/Goals/Goals";
-import Sportsmen from "../views/Sportsmen/Sportsmen";
-import Plan from "../views/Plan/Plan";
-import MVPProducts from "../views/MVPProducts/MVPProducts";
-import Rating from "../views/Rating/Rating";
-import Revision from "../views/Revision/Revision";
-import Arrivals from "../views/Arrivals/Arrivals";
-import ObserverPage from "../views/ObserverPage/ObserverPage";
-import Promocodes from "../views/Promocodes/Promocodes";
-import PartnersStats from "../views/PartnersStats/PartnersStats";
-import ProductsV2 from '../views/v2/Products/Products';
-import ProductsV3 from '../views/v3/Products/Products';
-import CartV3 from '../views/v3/Cart/Cart';
-import Banner from "../views/Banners/Banner";
+import Dashboard from "@/views/Dashboard/Dashboard";
+import Users from "@/views/Users/Users";
+import Stores from "@/views/Stores/Stores";
+import Control from "@/views/Control/Control";
+import Clients from "@/views/Clients/Clients";
+import Transfers from "@/views/Transfers/Transfers";
+import Hits from '@/views/Hits/Hits';
+import Login from "@/views/Login/Login";
+import Goals from "@/views/Goals/Goals";
+import Sportsmen from "@/views/Sportsmen/Sportsmen";
+import Plan from "@/views/Plan/Plan";
+import MVPProducts from "@/views/MVPProducts/MVPProducts";
+import Rating from "@/views/Rating/Rating";
+import Revision from "@/views/Revision/Revision";
+import Arrivals from "@/views/Arrivals/Arrivals";
+import ObserverPage from "@/views/ObserverPage/ObserverPage";
+import Promocodes from "@/views/Promocodes/Promocodes";
+import PartnersStats from "@/views/PartnersStats/PartnersStats";
+import ProductsV2 from '@/views/v2/Products/Products';
+import ProductsV3 from '@/views/v3/Products/Products';
+import CartV3 from '@/views/v3/Cart/Cart';
+import Banner from "@/views/Banners/Banner";
 import ReportsV3 from '@/views/v3/Reports/Reports';
 import RelatedProducts from '@/views/v3/RelatedProducts/RelatedProducts';
 import KaspiProducts from "@/views/Kaspi/KaspiProducts";
@@ -28,6 +28,7 @@ import OrdersPage from "@/views/Orders/OrdersPage";
 import ModeratorProducts from "@/views/Moderator/Products";
 import NewsPage from "@/views/News/NewsPage";
 import SupplierReports from "@/views/v3/Reports/SupplierReports";
+import ProductReports from "@/views/v3/Reports/ProductReports";
 const routes = [
     {
         path: '/',
@@ -254,6 +255,15 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true
+            }
+        }
+    },
+    {
+        path: '/reports/products',
+        component: ProductReports,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
             }
         }
     },

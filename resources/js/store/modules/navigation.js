@@ -82,6 +82,11 @@ const navigationModule = {
                 icon: 'report',
             },
             {
+                title: 'Отчеты по товарам',
+                url: '/reports/products',
+                icon: 'report',
+            },
+            {
                 title: 'Kaspi',
                 url: '#',
                 icon: 'home',
