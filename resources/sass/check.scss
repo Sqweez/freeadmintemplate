@@ -1,0 +1,181 @@
+@font-face {
+    font-family: EuroStileRegObl;
+    src: url("./../assets/fonts/Eurostile-Regular Oblique.otf");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: EuroStileHeaIta;
+    src: url("./../assets/fonts/Eurostile-HeaIta.otf");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: EuroStileBlaIta;
+    src: url("./../assets/fonts/EuroStileBlaIta.otf");
+    font-display: swap;
+}
+
+.check-wrapper {
+    width: 58mm;
+    background-color: #fff;
+    padding-right: 10mm;
+}
+
+.check-header {
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    img, h1 {
+        display: block;
+    }
+
+    img {
+        width: 65px;
+        filter: grayscale(1);
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        color: #000;
+        font-family: sans-serif;
+        font-weight: bold;
+        font-style: italic;
+        text-transform: uppercase;
+        font-size: 15px;
+        text-align: center;
+        margin: 0;
+    }
+}
+
+.check-divider {
+    margin: 10px 0;
+    width: 100%;
+    transform: skew(-15deg);
+    display: flex;
+    align-items: center;
+
+    .divider-one {
+        flex: 1;
+        height: 2px;
+        background-color: #000;
+        margin-right: 7px;
+    }
+
+    .divider-two {
+        flex: 2;
+        height: 1px;
+        background-color: #000;
+    }
+}
+
+
+.check-body {
+    ol {
+        padding-left: 10px;
+        li {
+            color: #000;
+            font-size: 12px;
+            font-style: italic;
+            text-transform: uppercase;
+
+            .product-footer {
+                display: flex;
+                justify-content: space-between;
+                margin-left: 20px;
+
+                .product-count {
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+            }
+        }
+    }
+
+    .client-info {
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: italic;
+
+        .client-label {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .name, .discount {
+            white-space: normal;
+            margin-left: 5px;
+        }
+    }
+
+}
+
+.check-footer {
+    .total {
+        display: flex;
+        justify-content: space-between;
+        text-transform: uppercase;
+
+        span {
+            font-size: 12px;
+        }
+
+        .footer-label {
+            white-space: nowrap;
+            overflow: hidden;
+
+            .label-red {
+                color: #000;
+            }
+        }
+
+        .span-total {
+            white-space: nowrap;
+            margin-left: 5px;
+        }
+    }
+
+    h4, h5 {
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    h5 {
+        margin-top: 10px;
+        font-size: 12px;
+        font-style: italic;
+    }
+
+    h4 {
+        font-family: EuroStileHeaIta, sans-serif;
+        font-size: 15px;
+        margin-top: 10px;
+        margin-bottom: 40px;
+    }
+}
+
+.empty-space {
+    width: 100%;
+    height: 20mm;
+    background-color: #fff;
+}
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+@media print {
+    html, body {
+        width: 58mm;
+        height: auto;
+    }
+}
