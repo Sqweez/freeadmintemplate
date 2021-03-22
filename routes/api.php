@@ -37,6 +37,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::resource('manufacturers', 'api\ManufacturerController');
         Route::get('filters', 'api\shop\ProductController@filters');
         // Cart Controller
+
         Route::post('cart/order', 'api\CartController@order');
         Route::post('cart/add', 'api\CartController@addCart');
         Route::post('cart/increase', 'api\CartController@increaseCount');
@@ -44,6 +45,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('cart/delete', 'api\CartController@deleteCart');
         Route::match(['get', 'post'], 'cart/total', 'api\CartController@getTotal');
         Route::get('cart', 'api\CartController@getCart');
+        Route::get('cart/count', 'api\CartController@getCartCount');
         // ClientController
         Route::post('clients/login', 'api\ClientController@login');
         Route::post('clients/register', 'api\ClientController@register');

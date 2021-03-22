@@ -299,6 +299,22 @@ class CartController extends Controller {
         ], 200);
     }
 
+    public function getCartCount(Request $request) {
+        $user_token = $request->get('user_token');
+        $order = Cart::with(['products'])->select(['id'])->where('user_token', $user_token)->first();
+        if (!$order) {
+            return 0;
+        }
+
+        $total =  $order->products->reduce(function ($a, $c) {
+            return $a + $c['count'];
+        }, 0);
+
+        return response()->json([
+            $total
+        ], 200);
+    }
+
     /*
      * private methods
      * */

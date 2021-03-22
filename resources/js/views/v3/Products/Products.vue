@@ -306,7 +306,15 @@
                     increment,
                     store_id: this.storeFilter
                 };
-                await this.$store.dispatch('CHANGE_COUNT_v2', params);
+
+                try {
+                    const result = await this.$store.dispatch('CHANGE_COUNT_v2', params);
+                } catch (e) {
+                    if (increment === 1) {
+                        this.productId = id;
+                        this.productQuantityModal = true;
+                    }
+                }
             },
             async deleteProduct() {
                 try {

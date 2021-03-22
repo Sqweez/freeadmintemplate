@@ -265,11 +265,10 @@ const actions = {
         commit('enableLoading');
         try {
             const response = await changeProductCount(payload);
-            console.log(response);
             commit('CHANGE_COUNT_v2', response.data);
         } catch (e) {
-            console.log(e);
             showToast(e.response.data.message, TOAST_TYPE.ERROR);
+            throw e;
         } finally {
             commit('disableLoading');
         }

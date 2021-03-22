@@ -99,12 +99,16 @@ class ProductController extends Controller
     }
 
     public function changeCount($id, Request $request) {
-        $batchQuery = ProductBatch::query()->where('store_id', $request->get('store_id'))->where('product_id', $id);
+        $batchQuery = ProductBatch::query()
+            ->where('store_id', $request->get('store_id'))
+            ->where('product_id', $id);
+
         if (intval($request->get('increment')) === -1) {
             $batchQuery->where('quantity', '>', 0);
         }
 
         $batch = $batchQuery->orderBy('created_at', 'desc')->first();
+
         if (!$batch) {
             return response()->json(['message' => 'По данному товару не было поставок!'], 500);
         }
@@ -113,7 +117,13 @@ class ProductController extends Controller
 
         $batch->save();
 
-        return $batch;
+        return ProductBatch::where('quantity', '>', 0)
+            ->whereStoreId($request->get('store_id'))
+            ->whereProductId($id)
+            ->groupBy('product_id')
+            ->select('product_id')
+            ->selectRaw('sum(quantity) as quantity')
+            ->first();
     }
 
     public function related(Request $request) {
