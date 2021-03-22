@@ -1,5 +1,12 @@
 const navigationModule = {
     state: {
+        partner_sellersMenu: [
+            {
+                title: 'Корзина',
+                icon: 'store',
+                url: '/cart/partner'
+            }
+        ],
         moderatorMenu: [
             {
                 title: 'Главная страница',
@@ -261,6 +268,7 @@ const navigationModule = {
     getters: {
         navigations: (state, getters) => {
             const ROLE = getters.CURRENT_ROLE;
+            console.log(ROLE);
             return state[`${ROLE}Menu`];
         }
     }

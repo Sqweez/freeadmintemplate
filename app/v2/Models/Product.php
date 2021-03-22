@@ -164,6 +164,10 @@ class Product extends Model
 
     const CACHE_PREFIX = 'PRODUCTS_CACHE';
 
+    const PRODUCT_STORES_ID = [
+        1, 2, 3, 4, 5, 6
+    ];
+
 	protected $guarded = ['id'];
 
     protected $hidden = ['pivot'];

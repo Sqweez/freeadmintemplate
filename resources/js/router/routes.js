@@ -19,6 +19,7 @@ import PartnersStats from "@/views/PartnersStats/PartnersStats";
 import ProductsV2 from '@/views/v2/Products/Products';
 import ProductsV3 from '@/views/v3/Products/Products';
 import CartV3 from '@/views/v3/Cart/Cart';
+import CartPartner from '@/views/v3/Cart/CartPartner';
 import Banner from "@/views/Banners/Banner";
 import ReportsV3 from '@/views/v3/Reports/Reports';
 import RelatedProducts from '@/views/v3/RelatedProducts/RelatedProducts';
@@ -216,7 +217,23 @@ const routes = [
     },
     {
         path: '/cart',
-        component: CartV3
+        component: CartV3,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+            }
+        }
+    },
+    {
+        path: '/cart/partner',
+        component: CartPartner,
+        meta: {
+            CAN_ENTER: {
+                IS_PARTNER_SELLERS: true,
+                IS_ADMIN: true,
+            }
+        }
     },
     {
         path: '/reports',

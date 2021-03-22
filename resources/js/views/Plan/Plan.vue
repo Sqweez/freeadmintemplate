@@ -71,7 +71,7 @@
         },
         computed: {
             stores() {
-                return this.$store.getters.stores;
+                return this.$store.getters.shops;
             },
             _plans() {
                 return this.$store.getters.PLANS;

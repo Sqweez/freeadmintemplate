@@ -47,6 +47,11 @@ class Store extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'id' => 'integer',
+        'type_id' => 'integer'
+    ];
+
     public function type() {
         return $this->belongsTo('App\StoreType', 'type_id');
     }

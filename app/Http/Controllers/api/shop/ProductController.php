@@ -114,9 +114,9 @@ class ProductController extends Controller {
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs']);
 
         $productQuery->whereHas('batches', function ($q) {
-            return $q->where('quantity', '>', 0);
+            return $q->where('quantity', '>', 0)->whereIn('store_id', Product::PRODUCT_STORES_ID);
         })->with(['batches' => function ($q) {
-            return $q->where('quantity', '>', 0);
+            return $q->where('quantity', '>', 0)->whereIn('store_id', Product::PRODUCT_STORES_ID);
         }]);
 
         $productQuery->orderBy('product_name');

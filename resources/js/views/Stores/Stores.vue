@@ -5,6 +5,9 @@
         </v-card-title>
         <v-card-text>
             <v-btn color="error" @click="storeModal = true">Добавить склад <v-icon>mdi-plus</v-icon></v-btn>
+            <h3 class="ml-3">
+                Магазины
+            </h3>
             <v-row>
                 <v-col>
                     <v-simple-table>
@@ -18,7 +21,77 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(store, idx) of stores" :key="idx">
+                            <tr v-for="(store, idx) of shops" :key="idx">
+                                <td>{{ store.name }}</td>
+                                <td>{{ store.city }}</td>
+                                <td>{{ store.type.type }}</td>
+                                <td>
+                                    <v-btn icon @click="storeId = store.id; storeModal = true;">
+                                        <v-icon>mdi-pencil</v-icon>
+                                    </v-btn>
+                                    <v-btn icon @click="confirmationModal = true; storeId = store.id;">
+                                        <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </template>
+                    </v-simple-table>
+                </v-col>
+            </v-row>
+            <v-divider />
+            <h3 class="ml-3">
+                Склады
+            </h3>
+            <v-row>
+                <v-col>
+                    <v-simple-table>
+                        <template v-slot:default>
+                            <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Город</th>
+                                <th>Тип</th>
+                                <th>Действие</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(store, idx) of warehouses" :key="idx">
+                                <td>{{ store.name }}</td>
+                                <td>{{ store.city }}</td>
+                                <td>{{ store.type.type }}</td>
+                                <td>
+                                    <v-btn icon @click="storeId = store.id; storeModal = true;">
+                                        <v-icon>mdi-pencil</v-icon>
+                                    </v-btn>
+                                    <v-btn icon @click="confirmationModal = true; storeId = store.id;">
+                                        <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </template>
+                    </v-simple-table>
+                </v-col>
+            </v-row>
+            <v-divider />
+            <h3 class="ml-3">
+                Магазины партнеров
+            </h3>
+            <v-row>
+                <v-col>
+                    <v-simple-table>
+                        <template v-slot:default>
+                            <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Город</th>
+                                <th>Тип</th>
+                                <th>Действие</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(store, idx) of partner_stores" :key="idx">
                                 <td>{{ store.name }}</td>
                                 <td>{{ store.city }}</td>
                                 <td>{{ store.type.type }}</td>
@@ -73,7 +146,7 @@
             this.$store.dispatch(ACTIONS.GET_CITIES);
         },
         computed: {
-            ...mapGetters(['stores'])
+            ...mapGetters(['shops', 'warehouses', 'partner_stores'])
         },
         methods: {
             async deleteStore() {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\shop\v2;
 
+use App\v2\Models\Product;
 use App\v2\Models\ProductSku;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +17,7 @@ class ProductSkuResource extends JsonResource
      */
     public function toArray($request)
     {
-        $quantity = $this->getQuantity($this->batches, intval($request->get('store_id')));
+        $quantity = $this->getQuantity($this->batches->whereIn('store_id', Product::PRODUCT_STORES_ID), intval($request->get('store_id')));
         return [
             'id' => $this->id,
             'attribute' => $this->attributes->pluck('attribute_value')->first() ?? 'Неизвестно',
