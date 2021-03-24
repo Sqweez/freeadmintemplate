@@ -60,7 +60,10 @@ class CartController extends Controller {
                     'products', 'products.product',
                     'products.product.attributes', 'products.product.product.attributes'])
                 ->with(['products.product.batches' => function ($q) use ($store_id) {
-                    return $q/*->where('store_id', $store_id)*/->where('quantity', '>', 0);
+                    if (intval($store_id) === -1) {
+                        return $q->whereIn('store_id', [1, 6])->where('quantity', '>', 0);
+                    }
+                    return $q->where('store_id', $store_id)->where('quantity', '>', 0);
                 }])
                 ->first()
         );
@@ -69,7 +72,7 @@ class CartController extends Controller {
     public function increaseCount(Request $request) {
         $cart = $request->get('cart');
         $product = $request->get('product');
-        $store_id = $request->get('store_id') ?? 1;
+        $store_id = intval($request->get('store_id')) ?? 1;
         $count = $request->get('count');
         if ($this->getCount($product, $store_id) <= $count) {
             return response()->json(['error' => 'Недостаточно товара на складе'], 419);
@@ -345,10 +348,11 @@ class CartController extends Controller {
             foreach ($products as $product) {
                 $count = intval($product['count']);
                 for ($i = 0; $i < $count; $i++) {
-                    $product_batch = ProductBatch::where('product_id', $product['product_id'])->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
-                    // Проверяем есть ли товар в родном городе, если нет смотрим где есть
-                    if (!$product_batch) {
-                        $product_batch = ProductBatch::where('product_id', $product['product_id'])->where('quantity', '>=', 1)->first();
+                    $_store_id = intval($store_id);
+                    if ($_store_id === -1) {
+                        $product_batch = ProductBatch::where('product_id', $product['product_id'])->whereIn('store_id', [1, 6])->where('quantity', '>=', 1)->first();
+                    } else {
+                        $product_batch = ProductBatch::where('product_id', $product['product_id'])->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
                     }
                     if ($product_batch) {
                         $product_sale = [
@@ -372,7 +376,10 @@ class CartController extends Controller {
     }
 
     private function getCount($product, $store_id) {
-        return intval(ProductBatch::where('product_id', $product)/*->where('store_id', $store_id)*/->sum('quantity'));
+        if ($store_id === -1) {
+            return intval(ProductBatch::where('product_id', $product)->whereIn('store_id', [1, 6])->sum('quantity'));
+        }
+        return intval(ProductBatch::where('product_id', $product)->where('store_id', $store_id)->sum('quantity'));
     }
 
     private function createCartProduct($product, $cart_id, $count) {

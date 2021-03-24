@@ -797,7 +797,7 @@
                 if (this.used_certificate) {
                     total -= this.used_certificate.amount;
                 }
-                return Math.max(0, total);
+                return Math.max(0, Math.ceil(total));
             },
             splitPrice() {
                 return this.finalPrice - this.splitPayment.reduce((a, c) => {

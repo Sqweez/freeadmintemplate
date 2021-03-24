@@ -17,8 +17,9 @@ class ProductsResource extends JsonResource
     public function toArray($request)
     {
 
-        $store_id = $request->get('store_id');
-        $batches = $this->batches;
+        $store_id = intval($request->get('store_id'));
+        $batches = $store_id === -1 ? $this->batches->whereIn('store_id', [1, 6]) : $this->batches->where('store_id', $store_id);
+
         $in_selected_city = collect($batches)->filter(function ($batch) use ($store_id) {
             return $batch['store_id'] == $store_id;
         })->count() > 0;

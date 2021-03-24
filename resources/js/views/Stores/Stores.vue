@@ -87,6 +87,7 @@
                                 <th>Название</th>
                                 <th>Город</th>
                                 <th>Тип</th>
+                                <th>Баланс</th>
                                 <th>Действие</th>
                             </tr>
                             </thead>
@@ -95,12 +96,16 @@
                                 <td>{{ store.name }}</td>
                                 <td>{{ store.city }}</td>
                                 <td>{{ store.type.type }}</td>
+                                <td>{{ store.balance | priceFilters }}</td>
                                 <td>
                                     <v-btn icon @click="storeId = store.id; storeModal = true;">
                                         <v-icon>mdi-pencil</v-icon>
                                     </v-btn>
                                     <v-btn icon @click="confirmationModal = true; storeId = store.id;">
                                         <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
+                                    <v-btn icon>
+                                        <v-icon>mdi-cash</v-icon>
                                     </v-btn>
                                 </td>
                             </tr>

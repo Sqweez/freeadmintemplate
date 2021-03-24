@@ -59,4 +59,12 @@ class Store extends Model
     public function city_name() {
         return $this->belongsTo('App\v2\Models\City', 'city_id');
     }
+
+    public function transactions() {
+        return $this->hasMany('App\CompanionTransaction', 'companion_id');
+    }
+
+    public function getBalanceAttribute() {
+        return $this->transactions()->sum('transaction_sum') ?? 0;
+    }
 }

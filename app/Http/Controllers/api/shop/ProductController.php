@@ -15,7 +15,7 @@ class ProductController extends Controller {
 
     public function getProducts(Request $request) {
         $query = $request->except('store_id');
-        $store_id = $request->get('store_id', 1);
+        $store_id = intval($request->get('store_id', 1));
         return $this->getFilteredProducts($query, $store_id);
     }
 
@@ -113,10 +113,18 @@ class ProductController extends Controller {
 
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs']);
 
-        $productQuery->whereHas('batches', function ($q) {
-            return $q->where('quantity', '>', 0)->whereIn('store_id', Product::PRODUCT_STORES_ID);
-        })->with(['batches' => function ($q) {
-            return $q->where('quantity', '>', 0)->whereIn('store_id', Product::PRODUCT_STORES_ID);
+        $productQuery->whereHas('batches', function ($q) use ($store_id) {
+            if ($store_id === -1) {
+                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+            } else {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+            }
+        })->with(['batches' => function ($q) use ($store_id) {
+            if ($store_id === -1) {
+                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+            } else {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+            }
         }]);
 
         $productQuery->orderBy('product_name');

@@ -5,6 +5,7 @@ namespace App\Http\Resources\shop\v2;
 use App\v2\Models\Product;
 use App\v2\Models\ProductSku;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ProductSkuResource extends JsonResource
 {
@@ -17,12 +18,15 @@ class ProductSkuResource extends JsonResource
      */
     public function toArray($request)
     {
-        $quantity = $this->getQuantity($this->batches->whereIn('store_id', Product::PRODUCT_STORES_ID), intval($request->get('store_id')));
+        $store_id = intval($request->get('store_id'));
+        $batches = $store_id === -1 ? $this->batches->whereIn('store_id', [1, 6]) : $this->batches->where('store_id', $store_id);
+        $quantity = $this->getQuantity($batches, intval($request->get('store_id')));
         return [
             'id' => $this->id,
             'attribute' => $this->attributes->pluck('attribute_value')->first() ?? 'Неизвестно',
             'quantity' => $quantity['quantity'],
             'store_id' => $quantity['store_id'],
+            'product_sku_image' => $this->product_images->count() ? url('/') . Storage::url($this->product_images->first()->image) : null,
         ];
     }
 
