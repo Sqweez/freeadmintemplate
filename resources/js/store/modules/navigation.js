@@ -2,10 +2,20 @@ const navigationModule = {
     state: {
         partner_sellersMenu: [
             {
+                title: 'Главная',
+                icon: 'dashboard',
+                url: '/'
+            },
+            {
                 title: 'Корзина',
                 icon: 'store',
                 url: '/cart/partner'
-            }
+            },
+            {
+                title: 'Товары',
+                icon: 'dashboard',
+                url: '/companion/products'
+            },
         ],
         moderatorMenu: [
             {
@@ -109,6 +119,18 @@ const navigationModule = {
                         url: '/kaspi/orders'
                     }
                 ]
+            },
+            {
+                title: 'Партнеры',
+                url: '#',
+                isAdmin: true,
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Закупы',
+                        url: '/companions/transfer'
+                    }
+                ],
             },
             {
                 title: 'Модератор',

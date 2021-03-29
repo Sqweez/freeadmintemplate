@@ -237,7 +237,7 @@
                     :loading="loading"
                     :search="searchQuery"
                     loading-text="Идет загрузка товаров..."
-                    :items="products"
+                    :items="_products"
                     :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
@@ -655,6 +655,13 @@
                 return this.finalPrice - this.splitPayment.reduce((a, c) => {
                     return a + +c.amount;
                 }, 0);
+            },
+            _products() {
+                return this.products.map(p => {
+                    const price = p.prices.find(s => s.store_id == this.user.store_id);
+                    p.product_price = price ? price.price : p.product_price;
+                    return p;
+                })
             }
         },
     }

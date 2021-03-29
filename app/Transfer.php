@@ -36,6 +36,8 @@ class Transfer extends Model
 {
     protected $guarded = [];
 
+    const PARTNER_SELLER_ID = 3;
+
 
     public function parent_store() {
         return $this->belongsTo('App\Store', 'parent_store_id');
@@ -47,5 +49,11 @@ class Transfer extends Model
 
     public function batches() {
         return $this->hasMany('App\TransferBatch', 'transfer_id');
+    }
+
+    public function companionSale() {
+        return $this->hasOne('App\CompanionSale', 'transfer_id')->withDefault([
+            'is_consignment' => false
+        ]);
     }
 }

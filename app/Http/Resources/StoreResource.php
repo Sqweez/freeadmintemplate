@@ -24,6 +24,7 @@ class StoreResource extends JsonResource
             'description' => $this->description ?? "",
             'type_id' => $this->type_id,
             'balance' => $this->balance,
+            'iron_balance' => $this->ironBalance
         ];
     }
 }

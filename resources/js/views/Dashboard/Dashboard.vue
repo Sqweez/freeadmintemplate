@@ -2,16 +2,42 @@
     <div>
         <v-row>
             <v-col sm="3" lg="3" md="3">
-                <Weather />
+                <Weather/>
             </v-col>
             <v-col sm="9" lg="9" md="9" v-if="CAN_SALE">
-                <SalesRating />
+                <SalesRating/>
             </v-col>
-          <!--  <v-col sm="9" lg="9" md="9" v-if="CAN_SALE">
-                <SalesRatingWidget />
-            </v-col>-->
             <v-col sm="12" lg="12" md="12" v-if="CAN_SALE">
-                <PlanWidget />
+                <PlanWidget/>
+            </v-col>
+            <v-col sm="9" lg="9" md="9">
+                <v-card>
+                    <v-card-title>Баланс</v-card-title>
+                    <v-card-text>
+                        <v-list>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ store.balance | priceFilters }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Собственный баланс
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ store.iron_balance | priceFilters }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Баланс IRON-ADDICTS
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </v-card-text>
+                </v-card>
             </v-col>
         </v-row>
     </div>
@@ -24,6 +50,7 @@
     import PlanWidget from "@/components/Widgets/PlanWidget";
     import {mapGetters} from 'vuex';
     import SalesRatingWidget from "@/components/v2/Widgets/SalesRatingWidget";
+    import ACTIONS from "@/store/actions";
 
     export default {
         data: () => ({
@@ -35,9 +62,13 @@
             Weather, SalesRating
         },
         computed: {
-            ...mapGetters(['CAN_SALE', 'IS_MALOY'])
+            ...mapGetters(['CAN_SALE', 'IS_MALOY', 'IS_PARTNER_SELLER', 'USER']),
+            store() {
+                return this.$store.getters.stores.find(s => s.id == this.USER.store_id);
+            }
         },
-        mounted() {
+        async mounted() {
+            await this.$store.dispatch(ACTIONS.GET_STORES)
             if (this.IS_MALOY) {
                 const main = document.querySelector('.mdl-layout__content');
                 main.classList.add('main-maloy')

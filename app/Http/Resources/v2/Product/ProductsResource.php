@@ -42,6 +42,7 @@ class ProductsResource extends JsonResource
             'sku_can_be_created' => !!$this->grouping_attribute_id,
             'grouping_attribute_id' => $this->grouping_attribute_id,
             'product_id' => $this->product_id,
+            'prices' => $this->prices
         ];
     }
 }

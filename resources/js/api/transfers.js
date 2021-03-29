@@ -6,8 +6,12 @@ axios.defaults.headers = {
     'Expires': '0',
 };
 
-export async function getTransfers({mode}) {
-    const response = await axios.get(`/api/transfers?mode=${mode}`);
+export async function getTransfers({mode, partners = false}) {
+    let url = `/api/transfers?mode=${mode}`;
+    if (partners) {
+        url += `&partners=true`
+    }
+    const response = await axios.get(url);
     return response.data.data;
 }
 

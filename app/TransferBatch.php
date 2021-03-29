@@ -26,7 +26,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TransferBatch extends Model
 {
-    protected $guarded = [];
+    protected $guarded = [
+        'id'
+    ];
+
+    protected $casts = [
+        'discount' => 'integer',
+    ];
 
     public $timestamps = false;
 

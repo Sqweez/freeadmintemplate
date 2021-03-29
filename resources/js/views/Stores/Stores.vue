@@ -88,6 +88,7 @@
                                 <th>Город</th>
                                 <th>Тип</th>
                                 <th>Баланс</th>
+                                <th>IRON баланс</th>
                                 <th>Действие</th>
                             </tr>
                             </thead>
@@ -97,6 +98,7 @@
                                 <td>{{ store.city }}</td>
                                 <td>{{ store.type.type }}</td>
                                 <td>{{ store.balance | priceFilters }}</td>
+                                <td>{{ store.iron_balance | priceFilters }}</td>
                                 <td>
                                     <v-btn icon @click="storeId = store.id; storeModal = true;">
                                         <v-icon>mdi-pencil</v-icon>
@@ -104,7 +106,7 @@
                                     <v-btn icon @click="confirmationModal = true; storeId = store.id;">
                                         <v-icon>mdi-delete</v-icon>
                                     </v-btn>
-                                    <v-btn icon>
+                                    <v-btn icon @click="storeId = store.id; companionBalanceModal = true;">
                                         <v-icon>mdi-cash</v-icon>
                                     </v-btn>
                                 </td>
@@ -127,6 +129,11 @@
             :id="storeId"
             v-on:onSubmit="storeModal = false; storeId = null;"
         />
+        <CompanionBalanceModal
+            :state="companionBalanceModal"
+            @cancel="companionBalanceModal = false; storeId = null"
+            @submit="addCompanionBalance"
+        />
     </v-card>
 </template>
 
@@ -135,13 +142,17 @@
     import StoreModal from "../../components/Modal/StoreModal";
     import {mapGetters} from 'vuex';
     import ACTIONS from "../../store/actions";
+    import CompanionBalanceModal from "@/components/Modal/CompanionBalanceModal";
+    import showToast from "@/utils/toast";
     export default {
         data: () => ({
             storeId: null,
             confirmationModal: false,
             storeModal: false,
+            companionBalanceModal: false,
         }),
         components: {
+            CompanionBalanceModal,
             StoreModal,
             ConfirmationModal
         },
@@ -160,6 +171,15 @@
                 alert('Магазин удален');
                 this.storeId = null;
             },
+            async addCompanionBalance(sum) {
+                this.companionBalanceModal = false;
+                await this.$store.dispatch(ACTIONS.ADD_COMPANION_BALANCE, {
+                    store_id: this.storeId,
+                    sum
+                });
+                this.storeId = null;
+                showToast('Баланс партнера пополнен!');
+            }
         }
     }
 </script>

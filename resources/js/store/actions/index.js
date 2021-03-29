@@ -62,4 +62,6 @@ export default {
     GET_SUPPLIERS: 'getSuppliers',
     EDIT_SUPPLIER: 'editSupplier',
     DELETE_SUPPLIER: 'deleteSupplier',
+    ADD_COMPANION_BALANCE: 'addCompanionBalance'
+
 }

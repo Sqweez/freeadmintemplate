@@ -30,6 +30,9 @@ import ModeratorProducts from "@/views/Moderator/Products";
 import NewsPage from "@/views/News/NewsPage";
 import SupplierReports from "@/views/v3/Reports/SupplierReports";
 import ProductReports from "@/views/v3/Reports/ProductReports";
+import CompanionTransferIndex from "@/views/Companions/Transfers/Index";
+import CompanionProducts from "@/views/Companions/Products/Index";
+
 const routes = [
     {
         path: '/',
@@ -210,7 +213,8 @@ const routes = [
         path: '/products',
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_PARTNER_SELLERS: true
             },
         },
         component: ProductsV3
@@ -291,6 +295,26 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_SUPPLIER: true,
+            }
+        }
+    },
+    {
+        path: '/companions/transfer',
+        component: CompanionTransferIndex,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_PARTNER_SELLERS: true,
+            }
+        }
+    },
+    {
+        path: '/companion/products',
+        component: CompanionProducts,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_PARTNER_SELLERS: true
             }
         }
     }

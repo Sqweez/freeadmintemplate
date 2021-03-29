@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Services;
 
 
 use App\Client;
+use App\CompanionSaleProduct;
+use App\CompanionTransaction;
 use App\ProductBatch;
 use App\Sale;
+use App\Transfer;
 
 class SaleService {
 
@@ -86,7 +89,29 @@ class SaleService {
         }, 0);
     }
 
-    public function createPartnerSale() {
+    public function createCompanionTransaction(Sale $sale, $user_id) {
+        if ($sale->store->type_id !== Transfer::PARTNER_SELLER_ID) {
+            return true;
+        }
+        $saleProducts = $sale->products->pluck('product_batch_id');
+        $companionSaleProducts = CompanionSaleProduct::whereIn('product_batch_id', $saleProducts)
+            ->with('sale')
+            ->get();
 
+        $totalConsignmentSum = $companionSaleProducts->filter(function ($sale) {
+            return $sale['sale']['is_consignment'] === true;
+        })->reduce(function ($a, $c) {
+            return $a + $c['product_price'] - ($c['product_price'] * $c['sale']['discount'] / 100);
+        }, 0);
+
+        if ($totalConsignmentSum > 0) {
+            CompanionTransaction::create([
+                'transaction_sum' => $totalConsignmentSum,
+                'companion_id' => $sale->store_id,
+                'user_id' => $user_id,
+                'companion_sale_id' => $sale->id,
+                'type' => CompanionTransaction::COMPANION_IRON_BALANCE_TYPE
+            ]);
+        }
     }
 }

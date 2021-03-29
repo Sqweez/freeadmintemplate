@@ -1,6 +1,14 @@
 import ACTIONS from "../actions";
 import MUTATIONS from "../mutations";
-import {createStore, deleteStore, editStore, getCities, getStores, getStoreTypes} from "@/api/stores";
+import {
+    addCompanionBalance,
+    createStore,
+    deleteStore,
+    editStore,
+    getCities,
+    getStores,
+    getStoreTypes
+} from "@/api/stores";
 
 const storeModule = {
     state: {
@@ -67,6 +75,10 @@ const storeModule = {
         async [ACTIONS.GET_CITIES] ({commit}) {
             const cities = await getCities();
             commit(MUTATIONS.SET_CITIES, cities);
+        },
+        async [ACTIONS.ADD_COMPANION_BALANCE] ({commit}, payload) {
+            const response = await addCompanionBalance(payload);
+            commit(MUTATIONS.EDIT_STORE, response.data.data);
         }
     }
 };

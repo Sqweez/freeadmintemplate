@@ -1,4 +1,4 @@
-import {createTransfer, getTransfers} from "../../api/transfers";
+import {createTransfer, getTransfers} from "@/api/transfers";
 import ACTIONS from "../actions";
 import MUTATIONS from "../mutations";
 
@@ -23,8 +23,7 @@ const transferModule = {
             commit('setTransfers', transfers);
         },
         async [ACTIONS.MAKE_TRANSFER] ({commit}, payload) {
-            const {products} = await createTransfer(payload);
-            commit(MUTATIONS.ON_SALE, products);
+            await createTransfer(payload);
         }
     }
 };

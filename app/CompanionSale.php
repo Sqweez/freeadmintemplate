@@ -12,7 +12,8 @@ class CompanionSale extends Model
 
     protected $casts = [
         'id' => 'integer',
-        'discount' => 'integer'
+        'discount' => 'integer',
+        'is_consignment' => 'boolean'
     ];
 
     public function products() {

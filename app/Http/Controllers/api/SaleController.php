@@ -40,6 +40,7 @@ class SaleController extends Controller {
             $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate']));
             $saleService->createSaleProducts($sale, $store_id, $cart);
             $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id);
+            $saleService->createCompanionTransaction($sale, $request->header('user_id'));
             if ($certificate) {
                 $_certificate = Certificate::find($certificate['id']);
                 $_certificate->sale_id = $sale->id;

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\v2\ProductController;
 use App\Http\Controllers\api\v2\CertificateController;
+use App\Http\Controllers\api\v2\CompanionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthorizationMiddleware;
 
@@ -90,8 +91,14 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::resource('category', 'api\CategoryController');
     Route::resource('attributes', 'api\AttributeController');
     Route::resource('manufacturers', 'api\ManufacturerController');
-    Route::get('stores/types', 'api\StoreController@types');
-    Route::resource('stores', 'api\StoreController');
+
+    Route::prefix('stores')->group(function () {
+        Route::get('types', 'api\StoreController@types');
+        Route::resource('', 'api\StoreController');
+        Route::post('balance/{store}', [CompanionController::class, 'addBalance']);
+    });
+
+
 
 
     // ClientsController

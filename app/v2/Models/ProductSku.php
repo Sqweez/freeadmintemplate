@@ -69,7 +69,7 @@ class ProductSku extends Model
 
     const PRODUCT_SKU_WITH_ADMIN_LIST =  [
         'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id',
-        'product.category', 'product.manufacturer', 'product.attributes',
+        'product.category', 'product.manufacturer', 'product.attributes', 'product.price',
         'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name'
     ];
 

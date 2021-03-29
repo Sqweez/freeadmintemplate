@@ -322,15 +322,17 @@
 
                 const sale = {
                     cart: this.cart.map(c => {
-                        return {id: c.id, count: c.count};
+                        return {id: c.id, count: c.count, discount: 0};
                     }),
                     parent_store_id: this.storeFilter,
                     user_id: this.user.id,
                     child_store_id: this.child_store,
                     photos: JSON.stringify(this.photos),
+                    discount: 0,
                 };
 
                 await this.$store.dispatch(ACTIONS.MAKE_TRANSFER, sale);
+                await this.$store.dispatch('GET_PRODUCTS_QUANTITIES'. this.storeFilter);
 
                 this.overlay = false;
 

@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class CompanionTransaction extends Model
 {
     protected $fillable = [
-        'transaction_sum', 'user_id', 'companion_id', 'companion_sale_id'
+        'transaction_sum', 'user_id', 'companion_id', 'companion_sale_id', 'type'
     ];
+
+
+    const COMPANION_OWN_BALANCE_TYPE = 1;
+    const COMPANION_IRON_BALANCE_TYPE = 2;
 
     protected $casts = [
         'id' => 'integer',
@@ -16,6 +20,7 @@ class CompanionTransaction extends Model
         'user_id' => 'integer',
         'companion_id' => 'integer',
         'companion_sale_id' => 'integer',
+        'type' => 'integer'
     ];
 
     public function user() {

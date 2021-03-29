@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from "@/store";
 
 axios.defaults.headers = {
     'Cache-Control': 'no-cache',
@@ -34,4 +35,8 @@ export async function editStore(payload) {
 export async function getCities() {
     const { data } = await axios.get('/api/v2/cities');
     return data;
+}
+
+export async function addCompanionBalance({store_id, sum}) {
+    return await axios.post(`/api/stores/balance/${store_id}`, {sum});
 }
