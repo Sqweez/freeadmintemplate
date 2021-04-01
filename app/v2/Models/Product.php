@@ -254,6 +254,10 @@ class Product extends Model
         return $this->morphToMany('App\v2\Models\Thumb', 'thumbable', 'thumbable');
     }
 
+    public function favorite() {
+        return $this->hasOne('App\v2\Models\Favorite', 'product_id');
+    }
+
 
     public function scopeMain(Builder $query)
     {

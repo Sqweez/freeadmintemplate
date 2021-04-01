@@ -16,7 +16,8 @@ class ProductController extends Controller {
     public function getProducts(Request $request) {
         $query = $request->except('store_id');
         $store_id = intval($request->get('store_id', 1));
-        return $this->getFilteredProducts($query, $store_id);
+        $user_token = $request->get('user_token');
+        return $this->getFilteredProducts($query, $store_id, $user_token);
     }
 
     public function filters(Request $request) {
@@ -76,7 +77,7 @@ class ProductController extends Controller {
         ];
     }
 
-    private function getProductWithFilter($filters, $store_id) {
+    private function getProductWithFilter($filters, $store_id, $user_token) {
         $productQuery = Product::query()->whereIsSiteVisible(true);
 
         if (count ($filters[Product::FILTER_CATEGORIES]) > 0) {
@@ -112,6 +113,9 @@ class ProductController extends Controller {
         });
 
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs']);
+        $productQuery->with(['favorite' => function ($query) use ($user_token) {
+            return $query->where('user_token', $user_token);
+        }]);
 
         $productQuery->whereHas('batches', function ($q) use ($store_id) {
             if ($store_id === -1) {
@@ -132,9 +136,9 @@ class ProductController extends Controller {
         return $productQuery;
     }
 
-    private function getFilteredProducts($query, $store_id) {
+    private function getFilteredProducts($query, $store_id, $user_token) {
         $filters = $this->getFilterParametrs($query, $store_id);
-        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id)->paginate(36));
+        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id, $user_token)->paginate(36));
     }
 
 

@@ -19,6 +19,7 @@ class ProductsResource extends JsonResource
 
         $store_id = intval($request->get('store_id'));
         $batches = $store_id === -1 ? $this->batches->whereIn('store_id', [1, 6]) : $this->batches->where('store_id', $store_id);
+        $user_token = $request->get('user_token');
 
         $in_selected_city = collect($batches)->filter(function ($batch) use ($store_id) {
             return $batch['store_id'] == $store_id;
@@ -39,6 +40,7 @@ class ProductsResource extends JsonResource
             'product_name_slug' => Str::slug($this->product_name, '-'),
             'in_selected_city' => $in_selected_city,
             'in_other_city' => $in_other_city,
+            'is_favorite' => !!$this->favorite
         ];
     }
 }

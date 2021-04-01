@@ -5,6 +5,7 @@ use App\Http\Controllers\api\v2\CertificateController;
 use App\Http\Controllers\api\v2\CompanionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthorizationMiddleware;
+use App\Http\Controllers\api\v2\FavoriteController;
 
 // Authorization
 
@@ -233,6 +234,9 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::patch('/{id}', 'api\v2\SupplierController@update');
             Route::delete('/{id}', 'api\v2\SupplierController@destroy');
         });
+
+        Route::post('favorite', [FavoriteController::class, 'toggleFavorite']);
+        Route::get('favorite', [FavoriteController::class, 'index']);
 
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
