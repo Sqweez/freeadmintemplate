@@ -96,7 +96,6 @@ class SaleController extends Controller {
 
     public function getPlanReports() {
         $today = Carbon::now();
-        $startOfWeek = $today->startOf('week')->toDateString();
         $startOfMonth = $today->startOf('month')->toDateString();
 
         $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)
@@ -104,8 +103,9 @@ class SaleController extends Controller {
             ->select(['id', 'store_id', 'kaspi_red', 'balance'])
             ->get();
 
+
         $weeklySales = $monthlySales->filter(function ($i){
-            return Carbon::parse($i->created_at)->gte(now()->startOfWeek());
+            return Carbon::parse($i->created_at)->greaterThanOrEqualTo(now()->startOfWeek()->addDay());
         });
 
         return [

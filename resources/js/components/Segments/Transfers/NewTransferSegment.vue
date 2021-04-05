@@ -332,7 +332,7 @@
                 };
 
                 await this.$store.dispatch(ACTIONS.MAKE_TRANSFER, sale);
-                await this.$store.dispatch('GET_PRODUCTS_QUANTITIES'. this.storeFilter);
+                await this.$store.dispatch('GET_PRODUCTS_QUANTITIES', this.storeFilter);
 
                 this.overlay = false;
 

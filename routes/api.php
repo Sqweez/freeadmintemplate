@@ -60,6 +60,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('partner', 'api\AnalyticsController@getPartnerSales');
         // BannerController
         Route::resource('banners','api\shop\BannerController');
+        Route::post('favorite', [FavoriteController::class, 'toggleFavorite']);
+        Route::get('favorite', [FavoriteController::class, 'index']);
     });
 
     // RevisionController
@@ -234,10 +236,6 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::patch('/{id}', 'api\v2\SupplierController@update');
             Route::delete('/{id}', 'api\v2\SupplierController@destroy');
         });
-
-        Route::post('favorite', [FavoriteController::class, 'toggleFavorite']);
-        Route::get('favorite', [FavoriteController::class, 'index']);
-
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
     });

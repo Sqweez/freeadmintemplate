@@ -77,7 +77,7 @@ class ProductController extends Controller {
         ];
     }
 
-    private function getProductWithFilter($filters, $store_id, $user_token) {
+    private function getProductWithFilter($filters, $store_id, $user_token = null) {
         $productQuery = Product::query()->whereIsSiteVisible(true);
 
         if (count ($filters[Product::FILTER_CATEGORIES]) > 0) {
