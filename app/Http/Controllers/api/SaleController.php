@@ -100,7 +100,7 @@ class SaleController extends Controller {
 
         $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)
             ->with(['products:product_price,discount,sale_id'])
-            ->select(['id', 'store_id', 'kaspi_red', 'balance'])
+            ->select(['id', 'store_id', 'kaspi_red', 'balance', 'created_at'])
             ->get();
 
 
