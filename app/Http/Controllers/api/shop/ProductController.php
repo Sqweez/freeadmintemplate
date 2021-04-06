@@ -112,7 +112,7 @@ class ProductController extends Controller {
             return $q->where('is_site_visible', true);
         });
 
-        $productQuery->with(['subcategory', 'attributes', 'product_thumbs']);
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images']);
         $productQuery->with(['favorite' => function ($query) use ($user_token) {
             return $query->where('user_token', $user_token);
         }]);

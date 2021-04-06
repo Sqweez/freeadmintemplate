@@ -105,7 +105,7 @@ class SaleController extends Controller {
 
 
         $weeklySales = $monthlySales->filter(function ($i){
-            return Carbon::parse($i->created_at)->greaterThanOrEqualTo(now()->startOfWeek()->addDay());
+            return Carbon::parse($i->created_at)->greaterThanOrEqualTo(now()->startOfWeek());
         });
 
         return [
