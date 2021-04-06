@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row>
-            <v-col sm="12" lg="12" md="12">
+            <v-col sm="12" lg="12" md="12" v-if="IS_PARTNER_SELLER">
                 <DashboardCompanion />
             </v-col>
             <v-col sm="3" lg="3" md="3" v-if="!IS_PARTNER_SELLER">
