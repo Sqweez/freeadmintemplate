@@ -95,7 +95,7 @@
         transition: 200ms ease;
 
         &:hover {
-            color: #f00;
+            color: #f00!important;
         }
 
         &:after, &:before {
