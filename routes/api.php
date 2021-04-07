@@ -174,6 +174,13 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // Роуты v2
 
     Route::prefix('v2')->group(function () {
+
+        Route::prefix('documents')->group(function () {
+            Route::post('waybill', [\App\Http\Controllers\api\WaybillController::class, 'createWaybill']);
+            Route::post('invoice', [\App\Http\Controllers\api\WaybillController::class, 'createInvoice']);
+            Route::post('invoice-payment', [\App\Http\Controllers\api\WaybillController::class, 'createPaymentInvoice']);
+        });
+
         Route::prefix('products')->group(function () {
             Route::get('search', [ProductController::class, 'search']);
             Route::get('{id}/count', [ProductController::class, 'changeCount']);

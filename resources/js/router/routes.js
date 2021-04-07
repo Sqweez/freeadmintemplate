@@ -32,6 +32,7 @@ import SupplierReports from "@/views/v3/Reports/SupplierReports";
 import ProductReports from "@/views/v3/Reports/ProductReports";
 import CompanionTransferIndex from "@/views/Companions/Transfers/Index";
 import CompanionProducts from "@/views/Companions/Products/Index";
+import CreateDocuments from "@/views/Documents/CreateDocuments";
 
 const routes = [
     {
@@ -315,6 +316,15 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_PARTNER_SELLERS: true
+            }
+        }
+    },
+    {
+        path: '/documents',
+        component: CreateDocuments,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
             }
         }
     }

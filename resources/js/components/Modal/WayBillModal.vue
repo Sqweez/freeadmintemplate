@@ -14,24 +14,8 @@
             </v-card-title>
             <v-card-text>
                 <v-text-field
-                    label="Организация-грузоотправитель"
-                    v-model="wayBill.organization"
-                />
-                <v-text-field
-                    label="Грузополучатель"
-                    v-model="wayBill.consignee"
-                />
-                <v-text-field
-                    label="Поставщик"
-                    v-model="wayBill.supplier"
-                />
-                <v-text-field
-                    label="Плательщик"
-                    v-model="wayBill.payer"
-                />
-                <v-text-field
-                    label="Основание"
-                    v-model="wayBill.base"
+                    label="Организация-получатель"
+                    v-model="organization"
                 />
             </v-card-text>
             <v-card-actions>
@@ -39,7 +23,7 @@
                     Отмена
                 </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn text color="success" @click="$emit('cancel')">
+                <v-btn text color="success" @click="$emit('submit', organization)">
                     Печать накладной <v-icon>mdi-check</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -50,20 +34,14 @@
 <script>
     export default {
         data: () => ({
-            wayBill: {
-                organization: 'ИП "Соловьев" БИН 950420350949',
-                consignee: '',
-                supplier: 'Соловьев Андрей Игоревич, тел. 8705300022',
-                payer: '',
-                base: ''
-            },
+            organization: '',
         }),
         methods: {},
         computed: {},
         props: {
             state: {
                 type: Boolean,
-                default: false,
+                required: true,
             }
         }
     }

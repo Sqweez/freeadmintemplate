@@ -54,6 +54,11 @@ const navigationModule = {
                 icon: 'person'
             },
             {
+                title: 'Документооборот',
+                url: '/documents',
+                icon: 'article'
+            },
+            {
                 title: 'Склад',
                 url: '#',
                 icon: 'home',
@@ -125,6 +130,7 @@ const navigationModule = {
                 url: '#',
                 isAdmin: true,
                 hasDropdown: true,
+                icon: 'supervised_user_circle',
                 children: [
                     {
                         title: 'Закупы',

@@ -14,7 +14,7 @@ use App\Subcategory;
 use App\SubcategoryProduct;
 use Illuminate\Http\Request;
 
-class giTransferController extends Controller
+class TransferController extends Controller
 {
     public function transferProducts() {
         Product::truncate();

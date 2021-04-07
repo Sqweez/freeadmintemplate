@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Arrival;
 use App\Client;
+use App\Document;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ExcelService;
 use App\Http\Resources\ArrivalResource;
@@ -26,6 +27,14 @@ class WaybillController extends Controller
     const ROW_PADDING = 5;
     const DEFAULT_CELL_WIDTH = 9.14;
     const DEFAULT_ROW_HEIGHT = 15;
+    const MONTHS_RU = [
+        'Января', 'Февраля',
+        'Марта', 'Апреля',
+        'Мая', 'Июня',
+        'Июля', 'Августа',
+        'Сентября', 'Октября',
+        'Ноября', 'Декабря',
+    ];
 
     public function transferWaybill(Request $request)
     {
@@ -120,6 +129,204 @@ class WaybillController extends Controller
         ]);
     }
 
+    public function createWaybill(Request $request) {
+        $documentType = Document::DOCUMENT_WAYBILL;
+        $cart = $request->get('cart');
+        $excelService = new ExcelService();
+        $excelTemplate = $excelService->loadFile('waybill_doc_template', 'xls');
+        $excelSheet = $excelTemplate->getActiveSheet();
+        $INITIAL_PRODUCT_ROW = 24;
+        $PRODUCT_COUNT = count($cart);
+        $TOTAL_COST = $this->getTotalCost($cart);
+        $TOTAL_COUNT = $this->getTotalCount($cart);
+        $documentNumber = $this->getDocumentNumber($documentType);
+        $documentDate = now()->format('d.m.Y');
+        $organization = $request->get('organization');
+        $excelSheet->setCellValue('L19', $organization);
+        $excelSheet->setCellValue('AP13', $documentNumber);
+        $excelSheet->setCellValue('AT13', $documentDate);
+        foreach ($cart as $key => $item) {
+            $currentIndex = $key + $INITIAL_PRODUCT_ROW;
+            try {
+                $excelSheet->insertNewRowBefore($currentIndex, 1);
+            } catch (Exception $e) {
+            }
+            try {
+                $excelSheet->mergeCells("A" . $currentIndex . ":B" . $currentIndex);
+                $excelSheet->mergeCells("C" . $currentIndex . ":N" . $currentIndex);
+                $excelSheet->mergeCells("O" . $currentIndex . ":S" . $currentIndex);
+                $excelSheet->mergeCells("T" . $currentIndex . ":V" . $currentIndex);
+                $excelSheet->mergeCells("W" . $currentIndex . ":AA" . $currentIndex);
+                $excelSheet->mergeCells("AB" . $currentIndex . ":AE" . $currentIndex);
+                $excelSheet->mergeCells("AF" . $currentIndex . ":AK" . $currentIndex);
+                $excelSheet->mergeCells("AF" . $currentIndex . ":AK" . $currentIndex);
+                $excelSheet->mergeCells("AL" . $currentIndex . ":AQ" . $currentIndex);
+                $excelSheet->mergeCells("AR" . $currentIndex . ":AW" . $currentIndex);
+            } catch (\Exception $e) {
+            }
+
+            $excelSheet->setCellValue('A' . ($currentIndex), $key + 1);
+            $excelSheet->setCellValue('C' . ($currentIndex), $this->getProductName($item));
+            $excelSheet->setCellValue('T' . ($currentIndex), "шт.");
+            $excelSheet->setCellValue('W' . ($currentIndex), $item['count']);
+            $excelSheet->setCellValue('AB' . ($currentIndex), $item['count']);
+            $excelSheet->setCellValue('AF' . ($currentIndex), number_format(intval($this->getProductCost($item)), 2, ',', ' '));
+            $excelSheet->setCellValue('AL' . ($currentIndex), number_format(intval($this->getProductCost($item) * $item['count']), 2, ',', ' '));
+
+            $excelTemplate->getActiveSheet()->getRowDimension($currentIndex)->setRowHeight(-1);
+            $excelTemplate->getActiveSheet()->getStyle('C' . $currentIndex)->getAlignment()->setWrapText(true);
+        }
+
+        $excelSheet->setCellValue('W' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), $TOTAL_COUNT);
+        $excelSheet->setCellValue('AB' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), $TOTAL_COUNT);
+        $excelSheet->setCellValue('AL' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), $TOTAL_COST);
+        $excelSheet->setCellValue('N' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COUNT));
+        $excelSheet->setCellValue('AE' . (26 + $PRODUCT_COUNT), $this->number2string($TOTAL_COST) . 'тенге');
+
+        $excelSheet->setCellValue('AA' . (32 + $PRODUCT_COUNT), $organization);
+
+        $excelWriter = new Xlsx($excelTemplate);
+        $fileName =  Document::DOCUMENT_TYPES[$documentType] . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $fullPath = 'storage/excel/waybills/' . $fileName;
+        $excelWriter->save($fullPath);
+
+        Document::create([
+            'document' => $fullPath,
+            'document_type' => $documentType,
+            'document_number' => $documentNumber
+        ]);
+        return response()->json([
+            'path' => $fullPath
+        ]);
+    }
+
+    public function createInvoice(Request $request) {
+        $contract = $request->get('contract');
+        $location = $request->get('location');
+        $waybill = $request->get('waybill');
+        $consignee = $request->get('consignee');
+        $recipient = $request->get('recipient');
+        $BINLocation = $request->get('BINLocation');
+        $IIK = $request->get('IIK');
+        $cart = $request->get('cart');
+        $product = $request->get('product');
+        $TOTAL_COST = number_format(intval($this->getTotalCost($cart)), 2, ',', ' ');
+        $TOTAL_COUNT = $this->getTotalCount($cart);
+
+        $documentType = Document::DOCUMENT_INVOICE;
+        $excelService = new ExcelService();
+        $excelTemplate = $excelService->loadFile('invoice_doc_template', 'xlsx');
+        $excelSheet = $excelTemplate->getActiveSheet();
+        $documentNumber = $this->getDocumentNumber($documentType);
+        $documentDate = now()->format('d.m.Y');
+        $documentName = 'Счет-фактура №' . $documentNumber . ' от ' . now()->day . ' ' . self::MONTHS_RU[now()->month - 1] . ' ' . now()->year . ' г.';
+
+        $excelSheet->setCellValue('A1', $documentName);
+        $excelSheet->setCellValue('C5', $documentDate);
+        $excelSheet->setCellValue('A9', 'Договор (контракт) на поставку товаров (работ, услуг): ' . $contract);
+        $excelSheet->setCellValue('A11', 'Пункт назначения поставляемых товаров (работ, услуг): ' . $location);
+        $excelSheet->setCellValue('A15', 'Товарно-транспортная накладная: ' . $waybill);
+        $excelSheet->setCellValue('A18', 'Грузополучатель: ' . $consignee);
+        $excelSheet->setCellValue('A20', 'Получатель: ' . $recipient);
+        $excelSheet->setCellValue('A21', 'БИН и адрес места нахождения получателя: ' . $BINLocation);
+        $excelSheet->setCellValue('A22', ' ИИК Получателя: ' . $IIK);
+        $excelSheet->setCellValue('B27', $product);
+        $excelSheet->setCellValue('D27', $TOTAL_COUNT);
+        $excelSheet->setCellValue('E27', $TOTAL_COST);
+        $excelSheet->setCellValue('F27', $TOTAL_COST);
+        $excelSheet->setCellValue('I27', $TOTAL_COST);
+        $excelSheet->setCellValue('F28', $TOTAL_COST);
+        $excelSheet->setCellValue('I28', $TOTAL_COST);
+
+
+        $excelWriter = new Xlsx($excelTemplate);
+        $fileName =  Document::DOCUMENT_TYPES[$documentType] . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $fullPath = 'storage/excel/invoices/' . $fileName;
+        $excelWriter->save($fullPath);
+
+        Document::create([
+            'document' => $fullPath,
+            'document_type' => $documentType,
+            'document_number' => $documentNumber
+        ]);
+        return response()->json([
+            'path' => $fullPath
+        ]);
+    }
+
+    public function createPaymentInvoice(Request $request) {
+        $customer = $request->get('customer');
+        $cart = $request->get('cart');
+        $documentType = Document::DOCUMENT_INVOICE_PAYMENT;
+        $excelService = new ExcelService();
+        $excelTemplate = $excelService->loadFile('invoice_payment_doc_template', 'xlsx');
+        $excelSheet = $excelTemplate->getActiveSheet();
+        $documentNumber = $this->getDocumentNumber($documentType);
+        $documentName = 'Счет № ' . $documentNumber . 'от ' . now()->format('d.m.Y');
+        $excelSheet->setCellValue('B15', $documentName);
+        $excelSheet->setCellValue('F21', $customer);
+        $INITIAL_PRODUCT_ROW = 25;
+        $PRODUCT_COUNT = count($cart);
+        $TOTAL_COST =number_format(intval($this->getTotalCost($cart)), 2, ',', ' ');
+        $TOTAL_COUNT = $this->getTotalCount($cart);
+
+        foreach ($cart as $key => $item) {
+            $currentIndex = $key + $INITIAL_PRODUCT_ROW;
+            try {
+                if ($key > 0) {
+                    $excelSheet->insertNewRowBefore($currentIndex, 1);
+                    $excelSheet->duplicateStyle($excelSheet->getStyle('B25:C25'), 'B' . ($INITIAL_PRODUCT_ROW + $key) . ':C' . ($INITIAL_PRODUCT_ROW + $key));
+                    $excelSheet->duplicateStyle($excelSheet->getStyle('D25:T25'), 'D' . ($INITIAL_PRODUCT_ROW + $key) . ':T' . ($INITIAL_PRODUCT_ROW + $key));
+                    $excelSheet->duplicateStyle($excelSheet->getStyle('U25:W25'), 'U' . ($INITIAL_PRODUCT_ROW + $key) . ':W' . ($INITIAL_PRODUCT_ROW + $key));
+                    $excelSheet->duplicateStyle($excelSheet->getStyle('Z25:AC25'), 'Z' . ($INITIAL_PRODUCT_ROW + $key) . ':AC' . ($INITIAL_PRODUCT_ROW + $key));
+                    $excelSheet->duplicateStyle($excelSheet->getStyle('AD25:AG25'), 'AD' . ($INITIAL_PRODUCT_ROW + $key) . ':AG' . ($INITIAL_PRODUCT_ROW + $key));
+                }
+            } catch (Exception $e) {
+            }
+            try {
+                $excelSheet->mergeCells("B" . $currentIndex . ":C" . $currentIndex);
+                $excelSheet->mergeCells("D" . $currentIndex . ":T" . $currentIndex);
+                $excelSheet->mergeCells("U" . $currentIndex . ":W" . $currentIndex);
+                $excelSheet->mergeCells("X" . $currentIndex . ":Y" . $currentIndex);
+                $excelSheet->mergeCells("Z" . $currentIndex . ":AC" . $currentIndex);
+                $excelSheet->mergeCells("AD" . $currentIndex . ":AG" . $currentIndex);
+            } catch (\Exception $e) {
+            }
+
+            $excelSheet->setCellValue('B' . ($currentIndex), $key + 1);
+            $excelSheet->setCellValue('D' . ($currentIndex), $this->getProductName($item));
+            $excelSheet->setCellValue('X' . ($currentIndex), "шт.");
+            $excelSheet->setCellValue('U' . ($currentIndex), $item['count']);
+            $excelSheet->setCellValue('Z' . ($currentIndex), number_format(intval($this->getProductCost($item)), 2, ',', ' '));
+            $excelSheet->setCellValue('AD' . ($currentIndex), number_format(intval($this->getProductCost($item) * $item['count']), 2, ',', ' '));
+
+            $excelTemplate->getActiveSheet()->getRowDimension($currentIndex)->setRowHeight(-1);
+            $excelTemplate->getActiveSheet()->getStyle('C' . $currentIndex)->getAlignment()->setWrapText(true);
+        }
+
+        $excelSheet->setCellValue('AG' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), 'Итого: ' . $TOTAL_COST);
+        $excelSheet->setCellValue('B' . (28 + $PRODUCT_COUNT), 'Всего наименований ' . $TOTAL_COUNT . ', на сумму ' . $TOTAL_COST . ' тенге.');
+
+        $excelWriter = new Xlsx($excelTemplate);
+        $fileName =  Document::DOCUMENT_TYPES[$documentType] . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $fullPath = 'storage/excel/invoices/' . $fileName;
+        $excelWriter->save($fullPath);
+
+        Document::create([
+            'document' => $fullPath,
+            'document_type' => $documentType,
+            'document_number' => $documentNumber
+        ]);
+        return response()->json([
+            'path' => $fullPath
+        ]);
+    }
+
+    private function getDocumentNumber($docType) {
+        $document = Document::whereDocumentType($docType)->latest()->first();
+        return $document ? $document->document_number + 1 : 1;
+    }
+
     private function getFileType(Request $request)
     {
         $fileType = "";
@@ -146,7 +353,7 @@ class WaybillController extends Controller
     {
         $_cart = is_object($cart) ? $cart->toArray($cart) : $cart;
         return array_reduce($_cart, function ($a, $c) {
-            return $c['product_price'] * $c['count'] + $a;
+            return ($c['product_price'] - ($c['product_price'] * $c['discount'] / 100)) * $c['count'] + $a;
         }, 0);
     }
 
@@ -158,11 +365,13 @@ class WaybillController extends Controller
         return $item['manufacturer']['manufacturer_name'] . ' ' . $item['product_name'] . ' ' . $attributeValues;
     }
 
+    private function getProductCost($item) {
+        return $item['product_price'] - ($item['product_price'] * $item['discount'] / 100);
+    }
+
 
     public function number2string($number)
     {
-
-        return $number;
         // обозначаем словарь в виде статической переменной функции, чтобы
         // при повторном использовании функции его не определять заново
         static $dic = array(
@@ -293,67 +502,4 @@ class WaybillController extends Controller
             return $c['count'] + $a;
         }, 0);
     }
-
-    public function autofitRowHeight(Row $row, $rowPadding = self::ROW_PADDING)
-    {
-        $ws = $row->getWorksheet();
-        $cellIterator = $row->getCellIterator();
-        $cellIterator->setIterateOnlyExistingCells(true);
-
-        $maxCellLines = 1;
-        /* @var $cell Cell */
-        foreach ($cellIterator as $cell) {
-            $cellLength = strlen($cell->getValue());
-            $cellWidth = $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->getWidth();
-            // If no column width is set, set the default
-            if ($cellWidth === -1) {
-                $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->setWidth(self::DEFAULT_CELL_WIDTH);
-                $cellWidth = $ws->getColumnDimension($cell->getParent()->getCurrentColumn())->getWidth();
-            }
-            // If the cell is in a merge range we need to determine the full width of the range
-            if ($cell->isInMergeRange()) {
-                // We only need to do this for the master (first) cell in the range, the rest need to have a line height of 1
-                if ($cell->isMergeRangeValueCell()) {
-                    $mergeRange = $cell->getMergeRange();
-                    if ($mergeRange) {
-                        $mergeWidth = 0;
-                        $mergeRefs = Coordinate::extractAllCellReferencesInRange($mergeRange);
-                        foreach ($mergeRefs as $cellRef) {
-                            $mergeCell = $ws->getCell($cellRef);
-                            $width = $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->getWidth();
-                            if ($width === -1) {
-                                $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->setWidth(self::DEFAULT_CELL_WIDTH);
-                                $width = $ws->getColumnDimension($mergeCell->getParent()->getCurrentColumn())->getWidth();
-                            }
-                            $mergeWidth += $width;
-                        }
-                        $cellWidth = $mergeWidth;
-                    } else {
-                        $cellWidth = 1;
-                    }
-                } else {
-                    $cellWidth = 1;
-                }
-            }
-
-            // Calculate the number of cell lines with a 10% additional margin
-            $cellLines = ceil(($cellLength * 1.1) / $cellWidth);
-            $maxCellLines = $cellLines > $maxCellLines ? $cellLines : $maxCellLines;
-        }
-
-        $rowDimension = $ws->getRowDimension($row->getRowIndex());
-        $rowHeight = $rowDimension->getRowHeight();
-        // If no row height is set, set the default
-        if ($rowHeight === -1) {
-            $rowDimension->setRowHeight(self::DEFAULT_ROW_HEIGHT);
-            $rowHeight = $rowDimension->getRowHeight();
-        }
-
-        $rowLines = $maxCellLines <= 0 ? 1 : $maxCellLines;
-
-        $rowDimension->setRowHeight((self::DEFAULT_ROW_HEIGHT * $rowLines) + $rowPadding);
-
-        return $ws;
-    }
-
 }
