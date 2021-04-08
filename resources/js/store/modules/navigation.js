@@ -84,6 +84,10 @@ const navigationModule = {
                         url: '/products'
                     },
                     {
+                        title: 'Баланс товаров',
+                        url: '/products/balance'
+                    },
+                    {
                         title: 'Корзина',
                         url: '/cart'
                     },

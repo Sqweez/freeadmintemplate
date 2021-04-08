@@ -183,6 +183,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
         Route::prefix('products')->group(function () {
             Route::get('search', [ProductController::class, 'search']);
+            Route::get('balance', [ProductController::class, 'getProductBalance']);
             Route::get('{id}/count', [ProductController::class, 'changeCount']);
             Route::get('/', [ProductController::class, 'index']);
             Route::get('/moderator', [ProductController::class, 'moderatorProducts']);

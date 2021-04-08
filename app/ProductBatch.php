@@ -38,7 +38,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|ProductBatch withoutTrashed()
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch quantitiesOfStore($store_id)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch positive()
  * @property-read \App\Store $store
  */
 class ProductBatch extends Model
@@ -52,6 +51,10 @@ class ProductBatch extends Model
         'product_id' => 'integer',
         'id' => 'integer'
     ];
+
+    public function product() {
+        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id');
+    }
 
     public function store() {
         return $this->belongsTo('App\Store', 'store_id');

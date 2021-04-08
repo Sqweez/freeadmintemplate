@@ -33,6 +33,7 @@ import ProductReports from "@/views/v3/Reports/ProductReports";
 import CompanionTransferIndex from "@/views/Companions/Transfers/Index";
 import CompanionProducts from "@/views/Companions/Products/Index";
 import CreateDocuments from "@/views/Documents/CreateDocuments";
+import ProductBalance from "@/views/v3/Products/ProductBalance";
 
 const routes = [
     {
@@ -219,6 +220,15 @@ const routes = [
             },
         },
         component: ProductsV3
+    },
+    {
+        path: '/products/balance',
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
+        },
+        component: ProductBalance
     },
     {
         path: '/cart',

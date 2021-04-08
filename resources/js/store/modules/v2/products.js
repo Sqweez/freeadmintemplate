@@ -4,7 +4,7 @@ import {
     getProductsQuantity,
     getProduct,
     deleteProduct,
-    editProduct, addProductQuantity, createProductSku, updateProductSku, getModeratorProducts
+    editProduct, addProductQuantity, createProductSku, updateProductSku, getModeratorProducts, getProductBalance
 } from "@/api/v2/products";
 import showToast from "@/utils/toast";
 import {TOAST_TYPE} from "@/config/consts";
@@ -12,6 +12,7 @@ import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
 import axios from 'axios';
 import {changeProductCount} from "@/api/products";
+import ACTIONS from "@/store/actions";
 
 const state = {
     products_v2: [],
@@ -19,6 +20,7 @@ const state = {
     product_v2: null,
     certificates: [],
     moderator_products: [],
+    product_balance: [],
 };
 
 const getters = {
@@ -37,6 +39,7 @@ const getters = {
     PRODUCT_v2: state => state.product_v2,
     CERTIFICATES: s => s.certificates,
     MODERATOR_PRODUCTS: s => s.moderator_products,
+    PRODUCT_BALANCE: s => s.product_balance,
 };
 
 const mutations = {
@@ -129,6 +132,9 @@ const mutations = {
     },
     SET_MODERATOR_PRODUCTS(state, payload) {
         state.moderator_products = payload;
+    },
+    SET_PRODUCT_BALANCE(state, payload) {
+        state.product_balance = payload;
     }
 };
 
@@ -284,6 +290,11 @@ const actions = {
         } finally {
             commit('disableLoading');
         }
+    },
+    async GET_PRODUCT_BALANCE({commit, dispatch}) {
+        await dispatch(ACTIONS.GET_STORES)
+        const { data } = await getProductBalance();
+        commit('SET_PRODUCT_BALANCE', data);
     }
 };
 

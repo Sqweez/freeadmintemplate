@@ -9,12 +9,14 @@ use App\Http\Resources\RelatedProductsResource;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\Http\Resources\v2\Product\ModeratorProducts;
 use App\Http\Resources\v2\Product\ProductResource;
+use App\Store;
 use App\v2\Models\Product;
 use App\ProductBatch;
 use App\v2\Models\ProductSku;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use ProductService;
+use function React\Promise\reduce;
 
 class ProductController extends Controller
 {
@@ -148,6 +150,35 @@ class ProductController extends Controller
         return new RelatedProductsResource(Category::with([
             'relatedProducts', 'relatedProducts.product', 'relatedProducts.product.manufacturer', 'relatedProducts.product.category'
         ])->whereKey($category)->first());
+    }
+
+    public function getProductBalance() {
+        $batches = ProductBatch::where('quantity', '>', 0)->with('product', 'product.product:id,product_price')->get();
+        $batches = $batches->map(function ($item) {
+            return [
+                'id' => $item['id'],
+                'quantity' => $item['quantity'],
+                'store_id' => $item['store_id'],
+                'purchase_price' => $item['purchase_price'],
+                'product_price' => $item['product']['product']['product_price'] ?? 0
+            ];
+        })->groupBy('store_id');
+        $stores = Store::all();
+        $purchasePrices = $batches->map(function ($items, $key) {
+            return collect($items)->reduce(function ($a, $c) {
+                return $a + $c['purchase_price'] * $c['quantity'];
+            }, 0);
+        });
+        $productPrices = $batches->map(function ($items, $key) {
+            return collect($items)->reduce(function ($a, $c) {
+                return $a + $c['product_price'] * $c['quantity'];
+            }, 0);
+        });
+
+        return [
+            'purchase_prices' => $purchasePrices,
+            'product_prices' => $productPrices
+        ];
     }
 
     public function moderatorProducts() {

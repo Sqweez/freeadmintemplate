@@ -45,3 +45,7 @@ export async function updateProductSku(id, product) {
 export async function getModeratorProducts() {
     return await axios.get(`/api/v2/products/moderator`);
 }
+
+export async function getProductBalance() {
+    return await axios.get('/api/v2/products/balance')
+}
