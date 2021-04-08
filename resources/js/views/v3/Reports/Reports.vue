@@ -19,6 +19,18 @@
                                 <v-list-item-title>{{ totalMargin | priceFilters }}</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-list-item>
+                            <v-list-item-content>
+                                <v-list-item-title class="font-weight-black">Количество продаж:</v-list-item-title>
+                                <v-list-item-title>{{ totalSaleCount }}</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-list-item-content>
+                                <v-list-item-title class="font-weight-black">Средний чек:</v-list-item-title>
+                                <v-list-item-title>{{ averageCheck | priceFilters }}</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
                     </v-list>
                 </v-col>
                 <v-col cols="12" xl="3">
@@ -522,6 +534,12 @@
                     .reduce((a, c) => {
                         return a + c.margin
                     }, 0);
+            },
+            totalSaleCount() {
+                return this._salesReport.length;
+            },
+            averageCheck() {
+                return this.totalSaleCount === 0 ? 0 : this.totalSales / this.totalSaleCount;
             },
             salesReport() {
                 return this.$store.getters.REPORTS || [];
