@@ -48,3 +48,7 @@ export async function getProductsBySearch(search = "") {
 export async function changeProductCount({product_id, store_id, increment}) {
     return await axios.get(`/api/v2/products/${product_id}/count?store_id=${store_id}&increment=${increment}`)
 }
+
+export async function getKaspiProductAnalytics(start, finish) {
+    return await axios.get(`/api/v2/kaspi/analytics?start=${start}&finish=${finish}`)
+}

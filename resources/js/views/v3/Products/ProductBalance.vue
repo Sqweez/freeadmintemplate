@@ -22,6 +22,17 @@
                             </tr>
                             <tr>
                                 <td>
+                                    Поступления:
+                                </td>
+                                <td>
+                                    {{ arrivalPurchasePrice | priceFilters }}
+                                </td>
+                                <td>
+                                    {{ arrivalProductPrice | priceFilters }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <b>Итого:</b>
                                 </td>
                                 <td>{{ totalPurchasePrices | priceFilters }}</td>
@@ -49,15 +60,21 @@
             productPrices() {
                 return this.$store.getters.PRODUCT_BALANCE.product_prices;
             },
+            arrivalPurchasePrice() {
+                return this.$store.getters.PRODUCT_BALANCE.totalArrivalsPurchasePrice;
+            },
+            arrivalProductPrice() {
+                return this.$store.getters.PRODUCT_BALANCE.totalArrivalsProductPrice;
+            },
             totalPurchasePrices() {
                 return Object.values(this.purchasePrices).reduce((a, c) => {
                     return a + c;
-                }, 0);
+                }, 0) + this.arrivalPurchasePrice;
             },
             totalProductPrices() {
                 return Object.values(this.productPrices).reduce((a, c) => {
                     return a + c;
-                }, 0);
+                }, 0) + this.arrivalProductPrice;
             }
         },
         async mounted() {

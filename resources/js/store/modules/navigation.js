@@ -61,7 +61,7 @@ const navigationModule = {
             {
                 title: 'Склад',
                 url: '#',
-                icon: 'home',
+                icon: 'work',
                 hasDropdown: true,
                 children: [
                     {
@@ -84,10 +84,6 @@ const navigationModule = {
                         url: '/products'
                     },
                     {
-                        title: 'Баланс товаров',
-                        url: '/products/balance'
-                    },
-                    {
                         title: 'Корзина',
                         url: '/cart'
                     },
@@ -101,6 +97,22 @@ const navigationModule = {
                         isAdmin: true,
                     },
                 ],
+            },
+            {
+                title: 'Статистика',
+                icon: 'analytics',
+                url: '#',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Баланс товаров',
+                        url: '/products/balance'
+                    },
+                    {
+                        title: 'Клиенты',
+                        url: '/analytics/clients'
+                    }
+                ]
             },
             {
                 title: 'Отчеты по продажам',
@@ -126,6 +138,10 @@ const navigationModule = {
                     {
                         title: 'Заказы',
                         url: '/kaspi/orders'
+                    },
+                    {
+                        title: 'Аналитика',
+                        url: '/kaspi/analytics'
                     }
                 ]
             },

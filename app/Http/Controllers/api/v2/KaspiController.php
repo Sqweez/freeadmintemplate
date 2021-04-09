@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\api\v2;
 
 use App\Http\Controllers\Controller;
+use App\Sale;
+use App\SaleProduct;
 use App\Store;
 use App\v2\Models\ProductSku;
 use Illuminate\Http\Response;
 use GuzzleHttp\Client;
+use Illuminate\Http\Request;
 
 class KaspiController extends Controller {
     public function getProductsXML() {
@@ -92,5 +95,50 @@ class KaspiController extends Controller {
             ]]
         );
         return $response->getBody();
+    }
+
+    public function getAnalytics(Request $request) {
+        $start = $request->get('start');
+        $finish = $request->get('finish');
+        $sales = SaleProduct::whereHas('sale', function ($query) use ($start, $finish) {
+            return $query->wherePaymentType(Sale::KASPI_PAYMENT_TYPE)
+                ->whereDate('created_at', '>=', $start)
+                ->whereDate('created_at', '<=', $finish);
+            }
+        )->get()->groupBy('product_id')->map(function ($items) {
+            return [
+                'count' => count($items),
+                'product_id' => $items[0]['product_id']
+            ];
+        })->values()->sortByDesc('count')->values();
+        $product_ids = $sales->pluck('product_id');
+        $products = ProductSku::whereIn('id', $product_ids)
+            ->with('product', 'product.manufacturer', 'attributes', 'product.attributes', 'product.category')
+            ->get();
+        return $sales->filter(function ($sale) use ($products) {
+            $product = collect($products)->filter(function ($p) use ($sale) {
+                return $p['id'] === $sale['product_id'];
+            })->first();
+            return isset($product) && isset($product['product']);
+        })
+            ->map(function ($sale) use ($products) {
+            $product = collect($products)->filter(function ($p) use ($sale) {
+                return $p['id'] === $sale['product_id'];
+            })->first();
+            $_product = $product['product'];
+            return [
+                'count' => $sale['count'],
+                'product_id' => $sale['product_id'],
+                'product_name' => $_product['product_name'],
+                'category' => $_product['category']['category_name'],
+                'manufacturer' => $_product['manufacturer']['manufacturer_name'],
+                'category_id' => $_product['category_id'],
+                'attributes' => collect($_product['attributes'])->map(function ($a) {
+                    return $a['attribute_value'];
+                })->merge(collect($product['attributes'])->map(function ($a) {
+                    return $a['attribute_value'];
+                }))->join(', ')
+            ];
+        })->values()->all();
     }
 }

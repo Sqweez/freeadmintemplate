@@ -77,6 +77,7 @@ class Sale extends Model
     const CLIENT_CASHBACK_PERCENT = 0.01;
     const PARTNER_CASHBACK_PERCENT = 0.05;
     const KASPI_RED_PERCENT = 0.11;
+    const KASPI_PAYMENT_TYPE = 4;
 
     const PAYMENT_TYPES = [
         0 => [

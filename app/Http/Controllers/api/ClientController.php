@@ -6,6 +6,7 @@ use App\Cart;
 use App\CartProduct;
 use App\Client;
 use App\ClientTransaction;
+use App\Sale;
 use App\Store;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClientResource;
@@ -223,6 +224,49 @@ class ClientController extends Controller {
         ClientTransaction::create(['client_id' => $client->id, 'user_id' => 1, 'amount' => $request->get('sum'), 'sale_id' => -1]);
 
         return new ClientResource($client);
+    }
+
+    public function getClientAnalytics(Request $request) {
+        $start = $request->get('start');
+        $finish = $request->get('finish');
+        $sales = Sale::where('client_id', '!=', -1)
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $finish)
+            ->with('client')
+            ->with('store')
+            ->with('products')
+            ->get();
+        $sales = $sales->map(function ($sale) {
+                $total_cost = collect($sale['products'])->reduce(function ($a, $c) {
+                    return $a + $c['product_price'] - ($c['product_price'] * $c['discount'] / 100);
+                }, 0);
+                return [
+                    'client' => $sale['client']['client_name'],
+                    'store' => $sale['store']['name'],
+                    'client_id' => $sale['client_id'],
+                    'store_id' => $sale['store_id'],
+                    'total_cost' => $total_cost
+                ];
+            })
+            ->groupBy('client_id')
+            ->map(function ($item, $key) {
+                return [
+                    'client' => $item[0]['client'],
+                    'client_id' => $item[0]['client_id'],
+                    'store_id' => $item[0]['store_id'],
+                    'store' => $item[0]['store'],
+                    'total_cost' => collect($item)->reduce(function ($a, $c) {
+                        return $a + $c['total_cost'];
+                    }, 0)
+                ];
+            })
+            ->values();
+        return [
+            'top_clients_all' => $sales->sortByDesc('total_cost')->take(3)->values()->all(),
+            'top_clients_store' => $sales->groupBy('store_id')->map(function ($items) {
+                return collect($items)->sortByDesc('total_cost')->values()->take(3);
+            })
+        ];
     }
 
 }

@@ -31,3 +31,7 @@ export async function addBalance({client_id, sum}) {
     })
     return data;
 }
+
+export async function getClientAnalytics(start, finish) {
+    return await axios.get(`/api/v2/clients/analytics?start=${start}&finish=${finish}`)
+}

@@ -353,7 +353,7 @@ class WaybillController extends Controller
     {
         $_cart = is_object($cart) ? $cart->toArray($cart) : $cart;
         return array_reduce($_cart, function ($a, $c) {
-            return ($c['product_price'] - ($c['product_price'] * $c['discount'] / 100)) * $c['count'] + $a;
+            return ($c['product_price'] - ($c['product_price'] * ($c['discount'] ?? 0) / 100)) * $c['count'] + $a;
         }, 0);
     }
 

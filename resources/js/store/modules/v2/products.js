@@ -13,6 +13,7 @@ import MUTATATIONS from "@/store/mutations";
 import axios from 'axios';
 import {changeProductCount} from "@/api/products";
 import ACTIONS from "@/store/actions";
+import {getArrivals} from "@/api/arrivals";
 
 const state = {
     products_v2: [],
@@ -294,7 +295,14 @@ const actions = {
     async GET_PRODUCT_BALANCE({commit, dispatch}) {
         await dispatch(ACTIONS.GET_STORES)
         const { data } = await getProductBalance();
-        commit('SET_PRODUCT_BALANCE', data);
+        const response = await getArrivals(false);
+        const totalArrivalsPurchasePrice = response.data.reduce((a, c) => {
+            return a + +c.total_cost;
+        }, 0);
+        const totalArrivalsProductPrice = response.data.reduce((a, c) => {
+            return a + +c.total_sale_cost;
+        }, 0);
+        commit('SET_PRODUCT_BALANCE', {...data, totalArrivalsPurchasePrice, totalArrivalsProductPrice});
     }
 };
 

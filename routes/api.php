@@ -6,6 +6,8 @@ use App\Http\Controllers\api\v2\CompanionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthorizationMiddleware;
 use App\Http\Controllers\api\v2\FavoriteController;
+use App\Http\Controllers\api\v2\KaspiController;
+use App\Http\Controllers\api\ClientController;
 
 // Authorization
 
@@ -212,8 +214,9 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::prefix('kaspi')->group(function() {
-            Route::get('products/xml', 'api\v2\KaspiController@getProductsXML');
-            Route::get('orders', 'api\v2\KaspiController@getOrders');
+            Route::get('products/xml', [KaspiController::class, 'getProductsXML']);
+            Route::get('orders', [KaspiController::class, 'getOrders']);
+            Route::get('analytics', [KaspiController::class, 'getAnalytics']);
         });
 
         Route::prefix('cron')->group(function() {
@@ -243,6 +246,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/', 'api\v2\SupplierController@index');
             Route::patch('/{id}', 'api\v2\SupplierController@update');
             Route::delete('/{id}', 'api\v2\SupplierController@destroy');
+        });
+
+        Route::prefix('clients')->group(function() {
+            Route::get('analytics', [ClientController::class, 'getClientAnalytics']);
         });
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);

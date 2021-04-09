@@ -34,6 +34,8 @@ import CompanionTransferIndex from "@/views/Companions/Transfers/Index";
 import CompanionProducts from "@/views/Companions/Products/Index";
 import CreateDocuments from "@/views/Documents/CreateDocuments";
 import ProductBalance from "@/views/v3/Products/ProductBalance";
+import AnalyticsClients from "@/views/Analytics/Clients";
+import KaspiAnalytics from "@/views/Kaspi/KaspiAnalytics";
 
 const routes = [
     {
@@ -335,6 +337,24 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
+            }
+        }
+    },
+    {
+        path: '/analytics/clients',
+        component: AnalyticsClients,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
+        }
+    },
+    {
+        path: '/kaspi/analytics',
+        component: KaspiAnalytics,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
             }
         }
     }
