@@ -12,6 +12,7 @@ use App\Http\Resources\SingleTransferResource;
 use App\Order;
 use App\Store;
 use App\Transfer;
+use App\v2\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -317,6 +318,50 @@ class WaybillController extends Controller
             'document_type' => $documentType,
             'document_number' => $documentNumber
         ]);
+        return response()->json([
+            'path' => $fullPath
+        ]);
+    }
+
+    public function getPurchasePrices() {
+        $products = Product::with(['sku', 'sku.batches', 'attributes'])->select(['id', 'product_name', 'product_price'])->get();
+        $products = $products->map(function ($item) {
+            return [
+                'id' => $item['id'],
+                'name' => $item['product_name'],
+                'attributes' => collect($item['attributes'])->map(function ($i) {
+                    return $i['attribute_value'];
+                })->join(', '),
+                'product_price' => $item['product_price'],
+                'purchase_price' => collect($item['sku'])->map(function ($i) {
+                    return collect($i['batches'])->last();
+                })->filter(function ($i) {
+                    return $i != null;
+                })->last()['purchase_price'] ?? 0
+            ];
+        })->toArray();
+
+        $excelService = new ExcelService();
+        $excelTemplate = $excelService->loadFile('batches_purchase_price_template', 'xlsx');
+        $excelSheet = $excelTemplate->getActiveSheet();
+        $INITIAL_ROW = 2;
+        foreach ($products as $key => $product) {
+            $currentIndex = $key + $INITIAL_ROW;
+            try {
+                $excelSheet->insertNewRowBefore($currentIndex, 1);
+            } catch (Exception $e) {
+            }
+            $excelSheet->setCellValue('A' . $currentIndex, $key + 1);
+            $excelSheet->setCellValue('B' . $currentIndex, $product['name'] . ' ' . $product['attributes']);
+            $excelSheet->setCellValue('C' . $currentIndex, number_format(intval($product['purchase_price']), 2, ',', ' '));
+            $excelSheet->setCellValue('D' . $currentIndex, number_format(intval($product['product_price']), 2, ',', ' '));
+        }
+
+        $excelWriter = new Xlsx($excelTemplate);
+        $fileName =  'ВЫГРУЗКА_ЗАКУПОВ' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $fullPath = 'storage/excel/batches/' . $fileName;
+        $excelWriter->save($fullPath);
+
         return response()->json([
             'path' => $fullPath
         ]);

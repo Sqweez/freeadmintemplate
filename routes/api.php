@@ -8,6 +8,7 @@ use App\Http\Middleware\AuthorizationMiddleware;
 use App\Http\Controllers\api\v2\FavoriteController;
 use App\Http\Controllers\api\v2\KaspiController;
 use App\Http\Controllers\api\ClientController;
+use App\Http\Controllers\api\WaybillController;
 
 // Authorization
 
@@ -178,9 +179,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('v2')->group(function () {
 
         Route::prefix('documents')->group(function () {
-            Route::post('waybill', [\App\Http\Controllers\api\WaybillController::class, 'createWaybill']);
-            Route::post('invoice', [\App\Http\Controllers\api\WaybillController::class, 'createInvoice']);
-            Route::post('invoice-payment', [\App\Http\Controllers\api\WaybillController::class, 'createPaymentInvoice']);
+            Route::post('waybill', [WaybillController::class, 'createWaybill']);
+            Route::post('invoice', [WaybillController::class, 'createInvoice']);
+            Route::post('invoice-payment', [WaybillController::class, 'createPaymentInvoice']);
+            Route::get('batches/purchases', [WaybillController::class, 'getPurchasePrices']);
         });
 
         Route::prefix('products')->group(function () {

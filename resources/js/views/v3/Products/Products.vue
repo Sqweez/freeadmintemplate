@@ -16,6 +16,7 @@
             <div class="mb-5">
                 <v-btn color="error" @click="showProductModal()" v-if="is_admin">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
             </div>
+            <v-btn color="success" v-if="is_admin" @click="exportProductBatches">Выгрузить себестоимости</v-btn>
             <v-row>
                 <v-col>
                     <v-row>
@@ -300,6 +301,14 @@
             }
         },
         methods: {
+            async exportProductBatches() {
+                this.loading = true;
+                const { data } = await axios.get('/api/v2/documents/batches/purchases');
+                const link = document.createElement('a');
+                link.href = data.path;
+                link.click();
+                this.loading = false;
+            },
             async changeCount(id, increment) {
                 const params = {
                     product_id: id,
