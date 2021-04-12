@@ -354,10 +354,10 @@
                     text: 'Производитель',
                     align: ' d-none'
                 },
-                {
+               /* {
                     text: 'Остаток',
                     value: 'quantity'
-                },
+                },*/
                 {
                     text: 'Стоимость',
                     value: 'product_price'
@@ -564,7 +564,23 @@
                 return this.finalPrice - this.splitPayment.reduce((a, c) => {
                     return a + +c.amount;
                 }, 0);
-            }
+            },
+            products() {
+                let products = this.$store.getters.PRODUCTS_v2;
+                if (this.manufacturerId !== -1) {
+                    products = products.filter(product => product.manufacturer.id === this.manufacturerId);
+                }
+                if (this.hideNotInStock) {
+                    products = products.filter(product => product.quantity > 0);
+                }
+                if (this.categoryId !== -1) {
+                    products = products.filter(product => product.category.id === this.categoryId);
+                }
+                return products.map(p => {
+                    p.quantity = 10000;
+                    return p;
+                });
+            },
         },
     }
 </script>
