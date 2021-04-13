@@ -169,26 +169,6 @@ class SaleController extends Controller {
                   ];
               })->values();
         return $saleProductQuery;
-
-        /*$salesQuery = Sale::query()->whereDate('created_at', '>=', $date_start)
-            ->whereDate('created_at', '<=', $date_finish)
-            ->whereHas('products', function ($q) use ($products_id) {
-                return $q->whereIn('product_id', $products_id);
-            })
-            ->with(['products', 'products.product'])
-            ->with(['products.product.product:id,product_name,manufacturer_id,product_price'])
-            ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
-
-        if ($user_id) {
-            $salesQuery = $salesQuery->whereUserId($user_id);
-        }
-
-        if ($store_id) {
-            $salesQuery = $salesQuery->whereStoreId($store_id);
-        }*/
-
-
-        return $salesQuery->get();
     }
 
     private function calculateTotalAmount($sales) {

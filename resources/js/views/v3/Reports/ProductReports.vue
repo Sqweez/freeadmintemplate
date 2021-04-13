@@ -6,6 +6,9 @@
         <v-card-text>
             <v-row>
                 <v-col cols="12" xl="3" justify="center">
+                    <v-btn color="success" v-if="productLoaded" @click="getExcelReports">
+                        Выгрузить в excel
+                    </v-btn>
                     <!--<v-list>
                         <v-list-item>
                             <v-list-item-content>
@@ -440,6 +443,29 @@
                 this.report = response.data;
                 this.loading = false;
                 this.productLoaded = true;
+            },
+            async getExcelReports() {
+                this.loading = true;
+                const products = JSON.stringify(this.cart.map(c => c.id));
+
+                const queryObject = {
+                    date_start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
+                    date_finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1]
+                };
+
+                if (this.currentSeller !== -1) {
+                    queryObject.user_id = this.currentSeller;
+                }
+
+                if (this.currentCity !== -1) {
+                    queryObject.store_id = this.currentCity;
+                }
+
+                const { data } = await axios.get(`/api/v2/documents/report/products?products=${products}&${new URLSearchParams(queryObject)}`);
+                const link = document.createElement('a');
+                link.href = `${window.location.origin}/${data.path}`;
+                link.click();
+                this.loading = false;
             },
             addToList(item) {
                 const findIndex = this.cart.findIndex(p => p.id === item.id);

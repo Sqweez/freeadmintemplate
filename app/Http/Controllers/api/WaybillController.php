@@ -81,7 +81,7 @@ class WaybillController extends Controller
         }
 
         foreach ($cart as $key => $item) {
-            $item = $item->toArray($request);
+            $item = gettype($item) === 'array' ? $item : $item->toArray($request);
             $currentIndex = $key + $INITIAL_PRODUCT_ROW;
             try {
                 $excelSheet->insertNewRowBefore($currentIndex, 1);
@@ -123,6 +123,36 @@ class WaybillController extends Controller
         $fileName =  $fileType . "_" . Carbon::today()->toDateString() . "_" . $parent_city . '-' . $child_city . "_" . Str::random(10) . '.xlsx';
         $fullPath = 'storage/excel/waybills/' . $fileName;
 
+        $excelWriter->save($fullPath);
+
+        return response()->json([
+            'path' => $fullPath
+        ]);
+    }
+
+    public function getProductReport(Request $request) {
+        $products = (new SaleController())->getReportProducts($request)->toArray();
+        $excelService = new ExcelService();
+        $excelTemplate = $excelService->loadFile('product_report_template', 'xlsx');
+        $excelSheet = $excelTemplate->getActiveSheet();
+        $INITIAL_ROW = 2;
+        foreach ($products as $key => $product) {
+            $currentIndex = $key + $INITIAL_ROW;
+            try {
+                $excelSheet->insertNewRowBefore($currentIndex, 1);
+            } catch (Exception $e) {
+            }
+            $excelSheet->setCellValue('A' . $currentIndex, $key + 1);
+            $excelSheet->setCellValue('B' . $currentIndex, $product['product_name'] . ' ' . $product['attributes'] . ', ' . $product['manufacturer']);
+            $excelSheet->setCellValue('C' . $currentIndex, $product['count']);
+            $excelSheet->setCellValue('D' . $currentIndex, number_format(intval($product['total_purchase_price']), 2, ',', ' '));
+            $excelSheet->setCellValue('E' . $currentIndex, number_format(intval($product['total_product_price']), 2, ',', ' '));
+            $excelSheet->setCellValue('F' . $currentIndex, number_format(intval($product['margin']), 2, ',', ' '));
+        }
+
+        $excelWriter = new Xlsx($excelTemplate);
+        $fileName =  'ВЫГРУЗКА_ТОВАРНЫХ_ОТЧЕТОВ' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $fullPath = 'storage/excel/batches/' . $fileName;
         $excelWriter->save($fullPath);
 
         return response()->json([
@@ -334,10 +364,10 @@ class WaybillController extends Controller
                 })->join(', '),
                 'product_price' => $item['product_price'],
                 'purchase_price' => collect($item['sku'])->map(function ($i) {
-                    return collect($i['batches'])->last();
-                })->filter(function ($i) {
-                    return $i != null;
-                })->last()['purchase_price'] ?? 0
+                        return collect($i['batches'])->last();
+                    })->filter(function ($i) {
+                        return $i != null;
+                    })->last()['purchase_price'] ?? 0
             ];
         })->toArray();
 
@@ -397,9 +427,9 @@ class WaybillController extends Controller
     private function getTotalCost($cart)
     {
         $_cart = is_object($cart) ? $cart->toArray($cart) : $cart;
-        return array_reduce($_cart, function ($a, $c) {
+        return ceil(array_reduce($_cart, function ($a, $c) {
             return ($c['product_price'] - ($c['product_price'] * ($c['discount'] ?? 0) / 100)) * $c['count'] + $a;
-        }, 0);
+        }, 0));
     }
 
     private function getProductName($item)
@@ -411,7 +441,7 @@ class WaybillController extends Controller
     }
 
     private function getProductCost($item) {
-        return $item['product_price'] - ($item['product_price'] * $item['discount'] / 100);
+        return ceil($item['product_price'] - ($item['product_price'] * $item['discount'] / 100));
     }
 
 
@@ -419,6 +449,9 @@ class WaybillController extends Controller
     {
         // обозначаем словарь в виде статической переменной функции, чтобы
         // при повторном использовании функции его не определять заново
+
+        $number = ceil($number);
+
         static $dic = array(
 
             // словарь необходимых чисел
@@ -492,51 +525,57 @@ class WaybillController extends Controller
         // единицы, тысячи, миллионы и т.д.
         $parts = array_reverse(str_split($number, 3));
 
-        // бежим по каждой части
-        foreach ($parts as $i => $part) {
+        try {
+            foreach ($parts as $i => $part) {
 
-            // если часть не равна нулю, нам надо преобразовать ее в текст
-            if ($part > 0) {
+                // если часть не равна нулю, нам надо преобразовать ее в текст
+                if ($part > 0) {
 
-                // обозначаем переменную в которую будем писать составные числа для текущей части
-                $digits = array();
+                    // обозначаем переменную в которую будем писать составные числа для текущей части
+                    $digits = array();
 
-                // если число треххзначное, запоминаем количество сотен
-                if ($part > 99) {
-                    $digits[] = floor($part / 100) * 100;
-                }
-
-                // если последние 2 цифры не равны нулю, продолжаем искать составные числа
-                // (данный блок прокомментирую при необходимости)
-                if ($mod1 = $part % 100) {
-                    $mod2 = $part % 10;
-                    $flag = $i == 1 && $mod1 != 11 && $mod1 != 12 && $mod2 < 3 ? -1 : 1;
-                    if ($mod1 < 20 || !$mod2) {
-                        $digits[] = $flag * $mod1;
-                    } else {
-                        $digits[] = floor($mod1 / 10) * 10;
-                        $digits[] = $flag * $mod2;
+                    // если число треххзначное, запоминаем количество сотен
+                    if ($part > 99) {
+                        $digits[] = floor($part / 100) * 100;
                     }
+
+                    // если последние 2 цифры не равны нулю, продолжаем искать составные числа
+                    // (данный блок прокомментирую при необходимости)
+                    if ($mod1 = $part % 100) {
+                        $mod2 = $part % 10;
+                        $flag = $i == 1 && $mod1 != 11 && $mod1 != 12 && $mod2 < 3 ? -1 : 1;
+                        if ($mod1 < 20 || !$mod2) {
+                            $digits[] = $flag * $mod1;
+                        } else {
+                            $digits[] = floor($mod1 / 10) * 10;
+                            $digits[] = $flag * $mod2;
+                        }
+                    }
+
+                    // берем последнее составное число, для плюрализации
+                    $last = abs(end($digits));
+
+                    // преобразуем все составные числа в слова
+                    foreach ($digits as $j => $digit) {
+                        $digits[$j] = $dic[0][$digit];
+                    }
+
+                    // добавляем обозначение порядка или валюту
+                    $digits[] = $dic[1][$i][(($last %= 100) > 4 && $last < 20) ? 2 : $dic[2][min($last % 10, 5)]];
+
+                    // объединяем составные числа в единый текст и добавляем в переменную, которую вернет функция
+                    array_unshift($string, join(' ', $digits));
                 }
-
-                // берем последнее составное число, для плюрализации
-                $last = abs(end($digits));
-
-                // преобразуем все составные числа в слова
-                foreach ($digits as $j => $digit) {
-                    $digits[$j] = $dic[0][$digit];
-                }
-
-                // добавляем обозначение порядка или валюту
-                $digits[] = $dic[1][$i][(($last %= 100) > 4 && $last < 20) ? 2 : $dic[2][min($last % 10, 5)]];
-
-                // объединяем составные числа в единый текст и добавляем в переменную, которую вернет функция
-                array_unshift($string, join(' ', $digits));
             }
+
+            // преобразуем переменную в текст и возвращаем из функции, ура!
+            return join(' ', $string);
+        } catch (\Exception $exception) {
+            return $number;
         }
 
-        // преобразуем переменную в текст и возвращаем из функции, ура!
-        return join(' ', $string);
+        // бежим по каждой части
+
     }
 
 
