@@ -13,11 +13,13 @@ class Document extends Model
     const DOCUMENT_WAYBILL = 1;
     const DOCUMENT_INVOICE = 2;
     const DOCUMENT_INVOICE_PAYMENT = 3;
+    const DOCUMENT_PRODUCT_CHECK = 4;
 
     const DOCUMENT_TYPES = [
         1 => 'Накладная',
         2 => 'Счет-фактура',
-        3 => 'Счет на оплату'
+        3 => 'Счет на оплату',
+        4 => 'Товарный чек'
     ];
 
 }

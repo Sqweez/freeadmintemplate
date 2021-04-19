@@ -184,6 +184,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::post('invoice-payment', [WaybillController::class, 'createPaymentInvoice']);
             Route::get('batches/purchases', [WaybillController::class, 'getPurchasePrices']);
             Route::get('report/products', [WaybillController::class, 'getProductReport']);
+            Route::post('products/check', [WaybillController::class, 'getProductCheck']);
         });
 
         Route::prefix('products')->group(function () {

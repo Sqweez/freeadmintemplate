@@ -17,6 +17,9 @@
                 <v-btn depressed color="error" class="top-button ml-2" @click="invoicePaymentModal = true;">
                     Сформировать счет на оплату
                 </v-btn>
+                <v-btn depressed color="error" class="top-button ml-2" @click="productCheckModal = true;">
+                    Сформировать товарный чек
+                </v-btn>
                 <div class="">
                     <div class="cart__parameters">
                         <div>
@@ -229,6 +232,7 @@
                 </v-data-table>
             </v-card-text>
         </v-card>
+        <ProductCheckModal :state="productCheckModal" @cancel="productCheckModal = false;" @submit="createProductCheck" />
         <WayBillModal :state="waybillModal" @cancel="waybillModal = false" @submit="createWaybill"/>
         <InvoiceModal :state="invoiceModal" @cancel="invoiceModal = false;" @submit="createInvoice"/>
         <InvoicePaymentModal :state="invoicePaymentModal" @cancel="invoicePaymentModal = false" @submit="createInvoicePayment" />
@@ -250,9 +254,11 @@
     import WayBillModal from "@/components/Modal/WayBillModal";
     import InvoiceModal from "@/components/Modal/InvoiceModal";
     import InvoicePaymentModal from "@/components/Modal/InvoicePaymentModal";
+    import ProductCheckModal from "@/components/Modal/ProductCheckModal";
 
     export default {
         components: {
+            ProductCheckModal,
             InvoicePaymentModal,
             InvoiceModal,
             WayBillModal,
@@ -316,6 +322,7 @@
             invoiceModal: false,
             invoicePaymentModal: false,
             certificateModal: false,
+            productCheckModal: false,
             loading: true,
             cart: [],
             certificate: null,
@@ -449,6 +456,27 @@
             },
             checkAvailability(item = {}) {
                 return !((this.getQuantity(item.quantity) - this.getCartCount(item.id)) === 0);
+            },
+            async createProductCheck(organization) {
+                this.productCheckModal = false;
+                try {
+                    this.overlay = true;
+                    const { data } = await axios.post(`/api/v2/documents/products/check`, {
+                        customer: organization,
+                        cart: this.cart.map(c => {
+                            c.formatted_product_price = new Intl.NumberFormat('ru-RU').format(Math.ceil(c.product_price));
+                            c.discount = Math.max(c.discount, this.discountPercent);
+                            return c;
+                        }),
+                    });
+                    const link = document.createElement('a');
+                    link.href = `${window.location.origin}/${data.path}`;
+                    link.click();
+                } catch (e) {
+                    showToast('При создании накладной произошла ошибка!', TOAST_TYPE.ERROR);
+                } finally {
+                    this.overlay = false;
+                }
             },
             async createWaybill(organization) {
                 this.waybillModal = false;

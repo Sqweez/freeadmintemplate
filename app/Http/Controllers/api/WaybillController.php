@@ -298,7 +298,7 @@ class WaybillController extends Controller
         $excelSheet->setCellValue('F21', $customer);
         $INITIAL_PRODUCT_ROW = 25;
         $PRODUCT_COUNT = count($cart);
-        $TOTAL_COST =number_format(intval($this->getTotalCost($cart)), 2, ',', ' ');
+        $TOTAL_COST = number_format(intval($this->getTotalCost($cart)), 2, ',', ' ');
         $TOTAL_COUNT = $this->getTotalCount($cart);
 
         foreach ($cart as $key => $item) {
@@ -353,8 +353,56 @@ class WaybillController extends Controller
         ]);
     }
 
+    public function getProductCheck(Request $request) {
+        $cart = $request->get('cart');
+        $customer = $request->get('customer');
+        $documentType = Document::DOCUMENT_PRODUCT_CHECK;
+        $excelService = new ExcelService();
+        $excelTemplate = $excelService->loadFile('tovarniy_check_template', 'xls');
+        $excelSheet = $excelTemplate->getActiveSheet();
+        $documentNumber = $this->getDocumentNumber($documentType);
+        $documentDate = now()->format('d.m.Y');
+        $INITIAL_PRODUCT_ROW = 6;
+        $excelSheet->setCellValue('A1', $customer);
+        $excelSheet->setCellValue('A4', 'Товарный чек №' . $documentNumber . ' от ' . $documentDate . ' г.');
+        foreach ($cart as $key => $item) {
+            $currentIndex = $key + $INITIAL_PRODUCT_ROW;
+            if ($key > 0) {
+                $excelSheet->insertNewRowBefore($currentIndex, 1);
+                $excelSheet->duplicateStyle($excelSheet->getStyle('B6:G6'), 'B' . ($INITIAL_PRODUCT_ROW + $key) . ':G' . ($INITIAL_PRODUCT_ROW + $key));
+                $excelSheet->duplicateStyle($excelSheet->getStyle('J6:L6'), 'J' . ($INITIAL_PRODUCT_ROW + $key) . ':L' . ($INITIAL_PRODUCT_ROW + $key));
+                $excelSheet->duplicateStyle($excelSheet->getStyle('M6:N6'), 'M' . ($INITIAL_PRODUCT_ROW + $key) . ':N' . ($INITIAL_PRODUCT_ROW + $key));
+            }
+            $excelSheet->setCellValue('A' . $currentIndex, $key + 1);
+            $excelSheet->setCellValue('B' . ($currentIndex), $this->getProductName($item));
+            $excelSheet->setCellValue('H' . ($currentIndex), 1);
+            $excelSheet->setCellValue('I' . ($currentIndex), $item['count']);
+            $excelSheet->setCellValue('J' . ($currentIndex), number_format(intval($this->getProductCost($item)), 2, ',', ' '));
+            $excelSheet->setCellValue('M' . ($currentIndex),  number_format(intval($this->getProductCost($item) * $item['count']), 2, ',', ' '));
+        }
+
+        $TOTAL_COST = number_format(intval($this->getTotalCost($cart)), 2, ',', ' ');
+        $TOTAL_COST_STRING = $this->number2string($this->getTotalCost($cart));
+        $excelSheet->setCellValue('M' . ($INITIAL_PRODUCT_ROW + count($cart)), $TOTAL_COST);
+        $excelSheet->setCellValue('E' . (9 + count($cart)), $TOTAL_COST_STRING);
+
+        $excelWriter = new Xlsx($excelTemplate);
+        $fileName =  Document::DOCUMENT_TYPES[$documentType] . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $fullPath = 'storage/excel/invoices/' . $fileName;
+        $excelWriter->save($fullPath);
+
+        Document::create([
+            'document' => $fullPath,
+            'document_type' => $documentType,
+            'document_number' => $documentNumber
+        ]);
+        return response()->json([
+            'path' => $fullPath
+        ]);
+    }
+
     public function getPurchasePrices() {
-        $products = Product::with(['sku', 'sku.batches', 'attributes'])->select(['id', 'product_name', 'product_price'])->get();
+        $products = Product::with(['sku', 'sku.batches', 'attributes', 'manufacturer'])->select(['id', 'product_name', 'product_price', 'manufacturer_id'])->get();
         $products = $products->map(function ($item) {
             return [
                 'id' => $item['id'],
@@ -363,6 +411,7 @@ class WaybillController extends Controller
                     return $i['attribute_value'];
                 })->join(', '),
                 'product_price' => $item['product_price'],
+                'manufacturer' => $item['manufacturer']['manufacturer_name'],
                 'purchase_price' => collect($item['sku'])->map(function ($i) {
                         return collect($i['batches'])->last();
                     })->filter(function ($i) {
@@ -382,7 +431,7 @@ class WaybillController extends Controller
             } catch (Exception $e) {
             }
             $excelSheet->setCellValue('A' . $currentIndex, $key + 1);
-            $excelSheet->setCellValue('B' . $currentIndex, $product['name'] . ' ' . $product['attributes']);
+            $excelSheet->setCellValue('B' . $currentIndex, $product['name'] . ' ' . $product['attributes'] . ' ' . $product['manufacturer']);
             $excelSheet->setCellValue('C' . $currentIndex, number_format(intval($product['purchase_price']), 2, ',', ' '));
             $excelSheet->setCellValue('D' . $currentIndex, number_format(intval($product['product_price']), 2, ',', ' '));
         }

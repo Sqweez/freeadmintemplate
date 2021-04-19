@@ -144,30 +144,30 @@ class SaleController extends Controller {
                 'product.product.manufacturer'
             ])
             ->get()->map(function ($sale) {
-                $sale['main_product_id'] = $sale['product']['product_id'];
+                $sale['main_product_id'] = $sale['product']['id'];
                 return $sale;
             })->groupBy('main_product_id')
-              ->map(function ($sale, $key) {
-                  return [
-                      'product_id' => $sale[0]['product']['product_id'],
-                      'product_name' => $sale[0]['product']['product']['product_name'],
-                      'attributes' => collect($sale[0]['product']['attributes'])->pluck('attribute_value')->merge(collect($sale[0]['product']['product']['attributes'])->pluck('attribute_value'))->join(', '),
-                      'manufacturer' => $sale[0]['product']['product']['manufacturer']['manufacturer_name'],
-                      'count' => count($sale),
-                      'total_purchase_price' => ceil(collect($sale)->reduce(function ($a, $c) {
-                          return $a + $c['purchase_price'];
-                      }, 0)),
-                      'total_product_price' => ceil(collect($sale)->reduce(function ($a, $c) {
-                          return $a + $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
-                      }, 0)),
-                      'margin' => ceil(collect($sale)->reduce(function ($a, $c) {
-                                  return $a + $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
-                              }, 0))
-                          - ceil(collect($sale)->reduce(function ($a, $c) {
-                                  return $a + $c['purchase_price'];
-                                  }, 0)),
-                  ];
-              })->values();
+            ->map(function ($sale, $key) {
+                return [
+                    'product_id' => $sale[0]['product']['id'],
+                    'product_name' => $sale[0]['product']['product']['product_name'],
+                    'attributes' => collect($sale[0]['product']['attributes'])->pluck('attribute_value')->merge(collect($sale[0]['product']['product']['attributes'])->pluck('attribute_value'))->join(', '),
+                    'manufacturer' => $sale[0]['product']['product']['manufacturer']['manufacturer_name'],
+                    'count' => count($sale),
+                    'total_purchase_price' => ceil(collect($sale)->reduce(function ($a, $c) {
+                        return $a + $c['purchase_price'];
+                    }, 0)),
+                    'total_product_price' => ceil(collect($sale)->reduce(function ($a, $c) {
+                        return $a + $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
+                    }, 0)),
+                    'margin' => ceil(collect($sale)->reduce(function ($a, $c) {
+                            return $a + $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
+                        }, 0))
+                        - ceil(collect($sale)->reduce(function ($a, $c) {
+                            return $a + $c['purchase_price'];
+                        }, 0)),
+                ];
+            })->values()->sortBy('product_name');
         return $saleProductQuery;
     }
 
