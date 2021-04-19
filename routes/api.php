@@ -179,6 +179,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('v2')->group(function () {
 
         Route::prefix('documents')->group(function () {
+            Route::get('index', [WaybillController::class, 'getDocuments']);
             Route::post('waybill', [WaybillController::class, 'createWaybill']);
             Route::post('invoice', [WaybillController::class, 'createInvoice']);
             Route::post('invoice-payment', [WaybillController::class, 'createPaymentInvoice']);

@@ -55,8 +55,21 @@ const navigationModule = {
             },
             {
                 title: 'Документооборот',
-                url: '/documents',
-                icon: 'article'
+                url: '#',
+                icon: 'article',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Создать документ',
+                        url: '/documents',
+                        isAdmin: true
+                    },
+                    {
+                        title: 'Список документов',
+                        url: '/documents/list',
+                        isAdmin: true
+                    }
+                ]
             },
             {
                 title: 'Склад',

@@ -36,6 +36,7 @@ import CreateDocuments from "@/views/Documents/CreateDocuments";
 import ProductBalance from "@/views/v3/Products/ProductBalance";
 import AnalyticsClients from "@/views/Analytics/Clients";
 import KaspiAnalytics from "@/views/Kaspi/KaspiAnalytics";
+import DocumentsList from "@/views/Documents/DocumentsList";
 
 const routes = [
     {
@@ -337,6 +338,15 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
+            }
+        }
+    },
+    {
+        path: '/documents/list',
+        component: DocumentsList,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
             }
         }
     },

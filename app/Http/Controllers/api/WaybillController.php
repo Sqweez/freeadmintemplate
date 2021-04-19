@@ -37,6 +37,13 @@ class WaybillController extends Controller
         'Ноября', 'Декабря',
     ];
 
+    public function getDocuments() {
+        return Document::all()->map(function ($doc) {
+            $doc['type'] = Document::DOCUMENT_TYPES[$doc['document_type']];
+            return $doc;
+        });
+    }
+
     public function transferWaybill(Request $request)
     {
         $transfer_id = $request->get('transfer') ?? -1;
