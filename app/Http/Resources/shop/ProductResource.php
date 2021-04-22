@@ -3,6 +3,8 @@
 namespace App\Http\Resources\shop;
 
 use App\Http\Resources\shop\v2\ProductSkuResource;
+use App\v2\Models\Product;
+use App\v2\Models\RelatedProduct;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,14 +31,15 @@ class ProductResource extends JsonResource
             })->first() : url('/') . Storage::url('products/product_image_default.jpg'),
             'is_hit' => $this->is_hit,
             'is_site_visible' => $this->is_site_visible,
-            'skus' => collect(ProductSkuResource::collection($this->sku))/*->filter(function ($i) {
-                return $i['quantity'] > 0;
-            })*/->toArray(),
+            'skus' => collect(ProductSkuResource::collection($this->sku))->toArray(),
             'category_id' => $this->category_id,
             'subcategory_id' => $this->subcategory_id,
             'has_group' => intval($this->grouping_attribute_id) > 0,
             'meta_title' => $this->meta_title ?? '',
             'meta_description' => $this->meta_description ?? '',
+            'related_products' => ProductsResource::collection(Product::whereIn('id',
+                RelatedProduct::whereCategoryId($this->category_id)->get()->pluck('product_id')
+            )->get())
         ];
     }
 }
