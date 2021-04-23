@@ -95,6 +95,8 @@
     import ACTIONS from "../../store/actions";
     import ConfirmationModal from "../../components/Modal/ConfirmationModal";
     import PromocodeModal from "../../components/Modal/PromocodeModal";
+    import showToast from "@/utils/toast";
+    import {TOAST_TYPE} from "@/config/consts";
 
     export default {
         components: {PromocodeModal, ConfirmationModal},
@@ -149,28 +151,33 @@
                 this.deleteModal = false;
             },
             async onSubmit(promocode) {
-                if (this.editMode) {
-                    const _promocode = {
-                        id: promocode.id,
-                        client_id: promocode.client_id,
-                        discount: promocode.discount,
-                        promocode: promocode.promocode,
-                        is_active: true,
-                    }
+                try {
+                    if (this.editMode) {
+                        const _promocode = {
+                            id: promocode.id,
+                            client_id: promocode.client_id,
+                            discount: promocode.discount,
+                            promocode: promocode.promocode,
+                            is_active: true,
+                        }
 
-                    await this.$store.dispatch('editPromocode', _promocode);
-                } else {
-                    const _promocode = {
-                        client_id: promocode.client_id,
-                        discount: promocode.discount,
-                        promocode: promocode.promocode,
-                        is_active: true,
+                        await this.$store.dispatch('editPromocode', _promocode);
+                    } else {
+                        const _promocode = {
+                            client_id: promocode.client_id,
+                            discount: promocode.discount,
+                            promocode: promocode.promocode,
+                            is_active: true,
+                        }
+                        await this.$store.dispatch('addPromocode', _promocode);
                     }
-                    await this.$store.dispatch('addPromocode', _promocode);
+                } catch (e) {
+                    showToast('Произошла ошибка!', TOAST_TYPE.ERROR);
+                } finally {
+                    this.promocode = {};
+                    this.promocodeModal = false;
+                    this.editMode = false;
                 }
-                this.promocode = {};
-                this.promocodeModal = false;
-                this.editMode = false;
             }
         },
         computed: {

@@ -33,7 +33,7 @@ export default {
                 const response = await axios.get('/api/promocode')
                 await commit('setPromocodes', response.data.data);
             } catch (e) {
-                console.error(e);
+                throw e;
             }
         },
         async addPromocode({commit}, payload) {
@@ -42,7 +42,7 @@ export default {
                 await commit('addPromocode', response.data.data);
                 showToast('Промокод создан!')
             } catch (e) {
-                console.error(e);
+                throw e;
             }
         },
         async editPromocode({commit}, payload) {
@@ -51,7 +51,7 @@ export default {
                 await commit('editPromocode', response.data.data);
                 showToast('Промокод отредактирован!')
             } catch (e) {
-                console.error(e);
+                throw e;
             }
         },
         async deletePromocode({commit}, payload) {
@@ -60,7 +60,7 @@ export default {
                 await commit('deletePromocode', payload);
                 showToast('Промокод удален!')
             } catch (e) {
-                console.error(e);
+                throw e;
             }
         },
     }

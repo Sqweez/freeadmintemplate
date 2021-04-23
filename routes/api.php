@@ -9,6 +9,7 @@ use App\Http\Controllers\api\v2\FavoriteController;
 use App\Http\Controllers\api\v2\KaspiController;
 use App\Http\Controllers\api\ClientController;
 use App\Http\Controllers\api\WaybillController;
+use App\Http\Controllers\api\PromocodeController;
 
 // Authorization
 
@@ -62,9 +63,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('telegram/{order}', 'api\CartController@telegramMessage');
         Route::get('partner', 'api\AnalyticsController@getPartnerSales');
         // BannerController
-        Route::resource('banners','api\shop\BannerController');
+        Route::resource('banners', 'api\shop\BannerController');
         Route::post('favorite', [FavoriteController::class, 'toggleFavorite']);
         Route::get('favorite', [FavoriteController::class, 'index']);
+        Route::get('promocode/search/{promocode}', [PromocodeController::class, 'searchPromocode']);
     });
 
     // RevisionController
@@ -83,11 +85,11 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::get('setSlugs', 'api\CategoryController@slugs');
 
     Route::group(['namespace' => 'Services', 'prefix' => 'v1'], function () {
-        Route::group(['prefix' => 'file'], function() {
+        Route::group(['prefix' => 'file'], function () {
             Route::post('upload', 'FileService@upload');
             Route::post('delete', 'FileService@delete');
         });
-        Route::group(['prefix' => 'image'], function() {
+        Route::group(['prefix' => 'image'], function () {
             Route::match(['get', 'post'], 'thumb', 'ImageService@generateThumb');
         });
 
@@ -103,8 +105,6 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::resource('', 'api\StoreController');
         Route::post('balance/{store}', [CompanionController::class, 'addBalance']);
     });
-
-
 
 
     // ClientsController
@@ -213,23 +213,23 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::delete('/{id}', [CertificateController::class, 'delete']);
         });
 
-        Route::prefix('images')->group(function() {
+        Route::prefix('images')->group(function () {
             Route::get('category', 'api\ImageController@category');
             Route::get('products', 'api\ImageController@products');
         });
 
-        Route::prefix('kaspi')->group(function() {
+        Route::prefix('kaspi')->group(function () {
             Route::get('products/xml', [KaspiController::class, 'getProductsXML']);
             Route::get('orders', [KaspiController::class, 'getOrders']);
             Route::get('analytics', [KaspiController::class, 'getAnalytics']);
         });
 
-        Route::prefix('cron')->group(function() {
+        Route::prefix('cron')->group(function () {
             Route::get('order/messages', 'api\v2\CronController@orderMessages');
             Route::get('order/cancel', 'api\v2\CronController@cancelOrders');
         });
 
-        Route::prefix('orders')->group(function() {
+        Route::prefix('orders')->group(function () {
             Route::get('/', 'api\v2\OrderController@getOrders');
             Route::delete('/{order}', 'api\v2\OrderController@deleteOrder');
             Route::patch('/{order}', 'api\v2\OrderController@update');
@@ -239,21 +239,21 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::post('/products/{order}', 'api\v2\OrderController@changeProducts');
         });
 
-        Route::prefix('news')->group(function() {
+        Route::prefix('news')->group(function () {
             Route::get('/', 'api\v2\NewsController@index');
             Route::post('/', 'api\v2\NewsController@store');
             Route::patch('/{news}', 'api\v2\NewsController@update');
             Route::delete('/{id}', 'api\v2\NewsController@destroy');
         });
 
-        Route::prefix('suppliers')->group(function() {
+        Route::prefix('suppliers')->group(function () {
             Route::post('/', 'api\v2\SupplierController@store');
             Route::get('/', 'api\v2\SupplierController@index');
             Route::patch('/{id}', 'api\v2\SupplierController@update');
             Route::delete('/{id}', 'api\v2\SupplierController@destroy');
         });
 
-        Route::prefix('clients')->group(function() {
+        Route::prefix('clients')->group(function () {
             Route::get('analytics', [ClientController::class, 'getClientAnalytics']);
         });
 
