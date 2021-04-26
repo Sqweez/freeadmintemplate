@@ -68,6 +68,10 @@ const navigationModule = {
                         title: 'Список документов',
                         url: '/documents/list',
                         isAdmin: true
+                    },
+                    {
+                        title: 'Прайс-лист',
+                        url: '/documents/price/list'
                     }
                 ]
             },

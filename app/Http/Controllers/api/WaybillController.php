@@ -167,6 +167,51 @@ class WaybillController extends Controller
         ]);
     }
 
+    public function getPriceList(Request $request) {
+        $cart = $request->get('cart');
+        $excelService = new ExcelService();
+        $excelTemplate = $excelService->loadFile('price_list_template', 'xlsx');
+        $excelSheet = $excelTemplate->getActiveSheet();
+        $INITIAL_PRODUCT_ROW = 8;
+        foreach ($cart as $key => $item) {
+            $currentIndex = $key + $INITIAL_PRODUCT_ROW;
+            if ($key > 0) {
+                try {
+                    $excelSheet->insertNewRowBefore($currentIndex, 1);
+                } catch (\Exception $exception) {}
+            }
+
+
+            try {
+                $excelSheet->setCellValue('A' . $currentIndex, $key + 1);
+                $excelSheet->setCellValue('B' . $currentIndex, $this->getProductName($item));
+                $excelSheet->setCellValue('C' . $currentIndex, $item['product_price']);
+                $excelSheet->setCellValue('D' . $currentIndex, $this->calculateDiscount($item['product_price'], 0.18));
+                $excelSheet->setCellValue('E' . $currentIndex, $this->calculateDiscount($item['product_price'], 0.20));
+                $excelSheet->setCellValue('F' . $currentIndex, $this->calculateDiscount($item['product_price'], 0.22));
+                $excelSheet->getStyle('G' . $currentIndex)
+                    ->getFill()
+                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                    ->getStartColor()
+                    ->setARGB('92D050');
+                $excelSheet->setCellValue('H' . $currentIndex, $item['quantity']);
+            } catch (\Exception $exception) {}
+        }
+
+        $excelWriter = new Xlsx($excelTemplate);
+        $fileName =  'ПРАЙС_ЛИСТ' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $fullPath = 'storage/excel/waybills/' . $fileName;
+        $excelWriter->save($fullPath);
+
+        return response()->json([
+            'path' => $fullPath
+        ]);
+    }
+
+    private function calculateDiscount($price, $discount) {
+        return $price - ($price * $discount);
+    }
+
     public function createWaybill(Request $request) {
         $documentType = Document::DOCUMENT_WAYBILL;
         $cart = $request->get('cart');

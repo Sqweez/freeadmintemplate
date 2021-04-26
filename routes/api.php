@@ -61,6 +61,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('rating/vote', 'api\RatingController@vote');
         Route::get('revision', 'api\RevisionController@index');
         Route::get('telegram/{order}', 'api\CartController@telegramMessage');
+        Route::get('order/update/{order}', 'api\CartController@updateOrder');
         Route::get('partner', 'api\AnalyticsController@getPartnerSales');
         // BannerController
         Route::resource('banners', 'api\shop\BannerController');
@@ -186,6 +187,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('batches/purchases', [WaybillController::class, 'getPurchasePrices']);
             Route::get('report/products', [WaybillController::class, 'getProductReport']);
             Route::post('products/check', [WaybillController::class, 'getProductCheck']);
+            Route::post('price/list', [WaybillController::class, 'getPriceList']);
         });
 
         Route::prefix('products')->group(function () {

@@ -195,6 +195,12 @@ class CartController extends Controller {
 
     }
 
+    public function updateOrder(Order $order, Request $request) {
+        $order->update([
+            'is_paid' => !!$request->get('result')
+        ]);
+    }
+
     private function sendTelegramMessage(Order $order, $result = null) {
         $message = $this->getMessage($order, $result);
         $store = Store::where('id', $order['city'])->first();

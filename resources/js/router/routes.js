@@ -37,6 +37,7 @@ import ProductBalance from "@/views/v3/Products/ProductBalance";
 import AnalyticsClients from "@/views/Analytics/Clients";
 import KaspiAnalytics from "@/views/Kaspi/KaspiAnalytics";
 import DocumentsList from "@/views/Documents/DocumentsList";
+import PriceList from "@/views/PriceList/PriceList";
 
 const routes = [
     {
@@ -344,6 +345,15 @@ const routes = [
     {
         path: '/documents/list',
         component: DocumentsList,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
+        }
+    },
+    {
+        path: '/documents/price/list',
+        component: PriceList,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true
