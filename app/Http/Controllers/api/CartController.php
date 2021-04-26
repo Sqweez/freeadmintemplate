@@ -155,6 +155,7 @@ class CartController extends Controller {
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
         $customer_info = $request->get('customer_info');
+        $other_discount = $request->has('discount') ? intval($request->get('discount')) : 0;
 
         $client_id = -1;
         $discount = 0;
@@ -164,6 +165,7 @@ class CartController extends Controller {
             $discount = Client::find($client_id)['client_discount'];
         };
 
+        $discount = max($discount, $other_discount);
 
         try {
             DB::beginTransaction();

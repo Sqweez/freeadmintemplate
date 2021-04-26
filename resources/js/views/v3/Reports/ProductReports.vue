@@ -200,6 +200,31 @@
                 single-line
                 hide-details
             ></v-text-field>
+            <v-row class="d-flex align-center">
+                <v-col cols="12" xl="4">
+                    <v-autocomplete
+                        :items="categories"
+                        item-text="name"
+                        v-model="categoryId"
+                        item-value="id"
+                        label="Категория"
+                    />
+                </v-col>
+                <v-col cols="12" xl="4">
+                    <v-autocomplete
+                        :items="manufacturers"
+                        item-text="manufacturer_name"
+                        v-model="manufacturerId"
+                        item-value="id"
+                        label="Бренд"
+                    />
+                </v-col>
+                <v-col cols="12" xl="4">
+                    <v-btn color="success" @click="chooseAllProduct">
+                        Выбрать все товары <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                </v-col>
+            </v-row>
             <v-data-table
                 class="background-iron-grey fz-18"
                 no-results-text="Нет результатов"
@@ -414,12 +439,21 @@
                     align: ' d-none'
                 }
             ],
+            categoryId: -1,
+            manufacturerId: -1,
         }),
         async mounted() {
             await this.$store.dispatch('GET_PRODUCTS_v2');
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.init();
         },
         methods: {
+            async chooseAllProduct() {
+                this.products.forEach(item => {
+                    this.addToList(item);
+                })
+            },
             async loadReports() {
                 this.loading = true;
                 this.productLoaded = false;
@@ -441,6 +475,11 @@
                 const response = await axios.get(`/api/reports/products?products=${products}&${new URLSearchParams(queryObject)}`);
 
                 this.report = response.data;
+                const reports = [];
+                Object.values(this.report).forEach(item => {
+                    reports.push(item)
+                });
+                this.report = reports;
                 this.loading = false;
                 this.productLoaded = true;
             },
@@ -532,7 +571,14 @@
                 return this.$store.getters.CURRENT_ROLE === 'admin';
             },
             products() {
-                return this.$store.getters.PRODUCTS_v2;
+                let products = this.$store.getters.PRODUCTS_v2;
+                if (this.manufacturerId !== -1) {
+                    products = products.filter(product => product.manufacturer.id === this.manufacturerId);
+                }
+                if (this.categoryId !== -1) {
+                    products = products.filter(product => product.category.id === this.categoryId);
+                }
+                return products;
             },
             is_seller() {
                 return this.$store.getters.CURRENT_ROLE === 'seller';
@@ -547,6 +593,8 @@
                 return [{id: -1, type: 'Все'}, ...this.$store.getters.store_types];
             },
             totalSales() {
+                console.log(typeof this.report);
+                console.log(this.report);
                 return this.report.reduce((a, c) => {
                     return a + c.total_product_price;
                 }, 0)
@@ -555,7 +603,22 @@
                 return this.report.reduce((a, c) => {
                     return a + c.margin;
                 }, 0)
-            }
+            },
+            manufacturers() {
+                return [
+                    {
+                        id: -1,
+                        manufacturer_name: 'Все'
+                    }, ...this.$store.getters.manufacturers];
+            },
+            categories() {
+                return [
+                    {
+                        id: -1,
+                        name: 'Все'
+                    }, ...this.$store.getters.categories
+                ];
+            },
             /*totalSales() {
                 return this.salesReport
                     .reduce((a, c) => {
