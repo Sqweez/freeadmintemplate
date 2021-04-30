@@ -94,12 +94,14 @@
                     <template>
                         <thead class="background-iron-darkgrey fz-18">
                         <tr>
+                            <th class="text-center">Общая сумма</th>
                             <th class="text-center">Общее количество</th>
                             <th class="text-center">Склад</th>
                         </tr>
                         </thead>
                         <tbody class="background-iron-grey fz-18">
                         <tr>
+                            <td class="text-center">{{ totalCost | priceFilters }}</td>
                             <td class="text-center">{{ cartCount }} шт.</td>
                             <td class="text-center" style="max-width: 300px; min-width: 300px;">
                                 <v-select
@@ -413,6 +415,11 @@
                 this.child_store = stores[0].id;
                 return stores;
             },
+            totalCost() {
+                return this.cart.reduce((a, c) => {
+                    return a + (+c.count * +c.purchase_price);
+                }, 0);
+            }
         },
         watch: {
             moneyRate(value) {

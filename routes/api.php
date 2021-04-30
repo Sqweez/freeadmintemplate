@@ -62,6 +62,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('revision', 'api\RevisionController@index');
         Route::get('telegram/{order}', 'api\CartController@telegramMessage');
         Route::get('order/update/{order}', 'api\CartController@updateOrder');
+        Route::get('order/amount/{order}', 'api\CartController@getOrderAmount');
         Route::get('partner', 'api\AnalyticsController@getPartnerSales');
         // BannerController
         Route::resource('banners', 'api\shop\BannerController');

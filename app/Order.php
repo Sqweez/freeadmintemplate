@@ -109,6 +109,10 @@ class Order extends Model
         ]
     ];
 
+    const ORDER_PAYMENT_CASH = 0;
+    const ORDER_PAYMENT_CARD = 1;
+    const ORDER_PAYMENT_ONLINE = 2;
+
     public function items() {
         return $this->hasMany('App\OrderProduct', 'order_id');
     }

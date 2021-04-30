@@ -201,6 +201,13 @@ class CartController extends Controller {
         ]);
     }
 
+    public function getOrderAmount(Order $order) {
+        $discount = $order['discount'];
+        return ceil($order->items->reduce(function ($a, $c) use ($discount){
+                    return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
+                }, 0) - intval($order['balance']));
+    }
+
     private function sendTelegramMessage(Order $order, $result = null) {
         $message = $this->getMessage($order, $result);
         $store = Store::where('id', $order['city'])->first();
