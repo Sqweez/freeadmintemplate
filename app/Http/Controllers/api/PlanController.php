@@ -35,7 +35,8 @@ class PlanController extends Controller
             Plan::create([
                 'store_id' => $plan['store_id'],
                 'week_plan' => $plan['week_plan'],
-                'month_plan' => $plan['month_plan']
+                'month_plan' => $plan['month_plan'],
+                'prize' => $plan['prize']
             ]);
         }
 

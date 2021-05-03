@@ -11,6 +11,7 @@
                         <th>Магазин</th>
                         <th>План на неделю</th>
                         <th>План на месяц</th>
+                        <th>Премия</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -27,6 +28,12 @@
                                 v-model="store.month_plan"
                                 label="План месяц"
                                 type="number"></v-text-field>
+                        </td>
+                        <td>
+                            <v-text-field
+                                v-model="store.prize"
+                                label="Премия"
+                                type="number" />
                         </td>
                     </tr>
                     </tbody>
@@ -62,6 +69,7 @@
                             week_plan: 0,
                             month_plan: 0,
                             name: s.name,
+                            prize: 0,
                         }
                     }
                     plan.name = s.name;

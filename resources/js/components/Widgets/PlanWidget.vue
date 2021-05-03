@@ -15,63 +15,182 @@
                 <span class="display-1">План продаж</span>
             </v-card-title>
             <v-card-text class="pl-0 pr-0">
-                <v-simple-table v-slot:default>
-                    <thead>
-                    <tr>
-                        <th>Магазин</th>
-                        <th>План на неделю</th>
-                        <th>Выполнение на неделю, тенге</th>
-                        <th>Выполнение на неделю, %</th>
-                        <th>План на месяц</th>
-                        <th>Выполнение на месяц, тенге</th>
-                        <th>Выполнение на месяц, %</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.store_id" class="plan__data">
-                        <td>{{ store.name }}</td>
-                        <td>
-                            {{ store.week_plan | priceFilters }}
-                        </td>
-                        <td>
-                            {{ store.week_fact | priceFilters}}
-                        </td>
-                        <td>
-                            {{ store.week_percent }}%
-                        </td>
-                        <td>
-                            {{ store.month_plan | priceFilters}}
-                        </td>
-                        <td>
-                            {{ store.month_fact | priceFilters}}
-                        </td>
-                        <td>
-                            {{ store.month_percent }}%
-                        </td>
-                    </tr>
-                    <tr class="total" v-if="is_admin">
-                        <td><b>Итого:</b></td>
-                        <td>
-                            {{ totalWeekPlan | priceFilters }}
-                        </td>
-                        <td>
-                            {{ totalWeekPlanSum | priceFilters }}
-                        </td>
-                        <td>
-                            {{ totalWeekPlanPercent }} %
-                        </td>
-                        <td>
-                            {{ totalMonthPlan | priceFilters }}
-                        </td>
-                        <td>
-                            {{ totalMonthPlanSum | priceFilters }}
-                        </td>
-                        <td>
-                            {{ totalMonthPlanPercent }} %
-                        </td>
-                    </tr>
-                    </tbody>
-                </v-simple-table>
+                <v-row>
+                    <v-col v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.store_id">
+                        <v-list >
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title class="font-weight-bold">
+                                        {{ store.name }}
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ store.month_plan | priceFilters}}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        План на месяц
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ store.month_fact | priceFilters}} ({{ store.month_percent }}%)
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Выполнение, месяц
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ store.week_plan | priceFilters }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        План, неделя
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ store.week_fact | priceFilters}} ({{ store.week_percent }}%)
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Выполнение, неделя
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ getDayPlan(store) | priceFilters}}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        План, день
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ store.day_fact | priceFilters}} ({{ store.day_percent }}%)
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Выполнение, день
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        <v-progress-linear
+                                            color="light-green darken-2"
+                                            height="20"
+                                            :value="store.month_percent"
+                                            striped
+                                        >
+                                            <template v-slot:default="{ value }">
+                                                {{ store.prize | priceFilters}}
+                                            </template>
+                                        </v-progress-linear>
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Премия
+                                        <v-icon :color="store.month_percent >= 100 ? 'success' : 'error'">
+                                            {{ store.month_percent >= 100 ? 'mdi-check' : 'mdi-close' }}
+                                        </v-icon>
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </v-col>
+                </v-row>
+
+               <!-- <v-row>
+                    <v-col>
+                        <h5 class="pl-4">На месяц:</h5>
+                        <v-simple-table v-slot:default>
+                            <thead>
+                            <tr>
+                                <th>Магазин</th>
+                                <th>План</th>
+                                <th>Выполнение, тенге</th>
+                                <th>Выполнение, %</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.store_id" class="plan__data">
+                                    <td>{{ store.name }}</td>
+                                    <td>
+                                        {{ store.month_plan | priceFilters}}
+                                    </td>
+                                    <td>
+                                        {{ store.month_fact | priceFilters}}
+                                    </td>
+                                    <td>
+                                        {{ store.month_percent }}%
+                                    </td>
+                                </tr>
+                                <tr class="total" v-if="is_admin">
+                                    <td><b>Итого:</b></td>
+                                    <td>
+                                        {{ totalMonthPlan | priceFilters }}
+                                    </td>
+                                    <td>
+                                        {{ totalMonthPlanSum | priceFilters }}
+                                    </td>
+                                    <td>
+                                        {{ totalMonthPlanPercent }} %
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </v-simple-table>
+                    </v-col>
+                    <v-col lg="12">
+                        <h5 class="pl-4">На неделю:</h5>
+                        <v-simple-table v-slot:default>
+                            <thead>
+                            <tr>
+                                <th>Магазин</th>
+                                <th>План</th>
+                                <th>Выполнение, тенге</th>
+                                <th>Выполнение, %</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.store_id" class="plan__data">
+                                <td>{{ store.name }}</td>
+                                <td>
+                                    {{ store.week_plan | priceFilters }}
+                                </td>
+                                <td>
+                                    {{ store.week_fact | priceFilters}}
+                                </td>
+                                <td>
+                                    {{ store.week_percent }}%
+                                </td>
+                            </tr>
+                            <tr class="total" v-if="is_admin">
+                                <td><b>Итого:</b></td>
+                                <td>
+                                    {{ totalWeekPlan | priceFilters }}
+                                </td>
+                                <td>
+                                    {{ totalWeekPlanSum | priceFilters }}
+                                </td>
+                                <td>
+                                    {{ totalWeekPlanPercent }} %
+                                </td>
+                            </tr>
+                            </tbody>
+                        </v-simple-table>
+                    </v-col>
+                </v-row>-->
             </v-card-text>
         </v-responsive>
     </v-card>
@@ -147,14 +266,28 @@
                     name: s.name,
                     week_fact: this.planReports.week[s.id] ? this.planReports.week[s.id].amount : 0,
                     month_fact: this.planReports.month[s.id] ? this.planReports.month[s.id].amount : 0,
+                    day_fact: this.planReports.today[s.id] ? this.planReports.today[s.id].amount : 0,
+                    prize: _plan.prize,
                 };
 
-                plan.week_percent = plan.week_plan !== 0 ? Math.floor(100 * plan.week_fact / plan.week_plan) : 100;
-                plan.month_percent = plan.month_plan !== 0 ? Math.floor(100 * plan.month_fact / plan.month_plan) : 100;
+                console.log(plan);
+
+                plan.week_percent = plan.week_plan !== 0 ? Math.floor(100 * plan.week_fact / plan.week_plan) : 0;
+                plan.month_percent = plan.month_plan !== 0 ? Math.floor(100 * plan.month_fact / plan.month_plan) : 0;
+                plan.day_percent = plan.day_fact !== 0 ? Math.floor(100 * plan.day_fact / this.getDayPlan(plan)) : 0;
 
                 return plan;
             })
             this.loading = false;
+        },
+        methods: {
+            getDayPlan(store) {
+                const dt = new Date();
+                const month = dt.getMonth() + 1;
+                const year = dt.getFullYear();
+                const daysInMonth = new Date(year, month, 0).getDate();
+                return Math.ceil(store.month_plan / daysInMonth);
+            }
         }
     }
 </script>

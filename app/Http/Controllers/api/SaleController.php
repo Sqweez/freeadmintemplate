@@ -108,9 +108,14 @@ class SaleController extends Controller {
             return Carbon::parse($i->created_at)->greaterThanOrEqualTo(now()->startOfWeek());
         });
 
+        $todaySales = $monthlySales->filter(function ($i) {
+            return Carbon::parse($i->created_at)->greaterThanOrEqualTo(now()->startOfDay());
+        });
+
         return [
             'week' => $this->calculateTotalAmount($weeklySales),
-            'month' =>  $this->calculateTotalAmount($monthlySales)
+            'month' =>  $this->calculateTotalAmount($monthlySales),
+            'today' => $this->calculateTotalAmount($todaySales)
         ];
     }
 
