@@ -175,6 +175,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_SELLER: true,
+                IS_STOREKEEPER: true,
             },
         }
     },
@@ -220,7 +221,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_PARTNER_SELLERS: true
+                IS_PARTNER_SELLERS: true,
+                IS_STOREKEEPER: true
             },
         },
         component: ProductsV3

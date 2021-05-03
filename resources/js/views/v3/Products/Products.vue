@@ -242,7 +242,7 @@
                 return this.$store.getters.USER;
             },
             is_admin() {
-                return this.$store.getters.IS_ADMIN;
+                return this.$store.getters.IS_ADMIN || this.$store.getters.IS_STOREKEEPER;
             },
             headers() {
                 const headers = [

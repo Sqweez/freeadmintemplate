@@ -36,6 +36,23 @@ const navigationModule = {
                 icon: 'dashboard'
             }
         ],
+        storekeeperMenu: [
+            {
+                title: 'Перемещения',
+                url: '/transfer',
+                icon: 'work',
+            },
+            {
+                title: 'Поступления',
+                url: '/arrivals',
+                icon: 'work',
+            },
+            {
+                title: 'Товары',
+                url: '/products',
+                icon: 'dashboard'
+            },
+        ],
         adminMenu: [
             {
                 title: 'Главная страница',
