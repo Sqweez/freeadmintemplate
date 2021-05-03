@@ -109,6 +109,77 @@
                             </v-list-item>
                         </v-list>
                     </v-col>
+                    <v-col v-if="IS_ADMIN">
+                        <v-list >
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title class="font-weight-bold">
+                                       Итого
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ totalMonthPlan | priceFilters}}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        План на месяц
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ totalMonthPlanSum | priceFilters}} ({{ totalMonthPlanPercent }}%)
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Выполнение, месяц
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ totalWeekPlan | priceFilters }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        План, неделя
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ totalWeekPlanSum | priceFilters}} ({{ totalWeekPlanPercent }}%)
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Выполнение, неделя
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ totalDayPlan | priceFilters}}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        План, день
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ totalDaySum | priceFilters}} ({{ totalDayPercent }}%)
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        Выполнение, день
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </v-col>
                 </v-row>
 
                <!-- <v-row>
@@ -244,6 +315,21 @@
             totalMonthPlanPercent() {
                 return Math.floor(100 * this.totalMonthPlanSum / this.totalMonthPlan);
             },
+            totalDayPlan() {
+                const dt = new Date();
+                const month = dt.getMonth() + 1;
+                const year = dt.getFullYear();
+                const daysInMonth = new Date(year, month, 0).getDate();
+                return Math.ceil(this.totalMonthPlan / daysInMonth);
+            },
+            totalDaySum() {
+                return this.plans.reduce(function (a, c) {
+                    return c.day_fact + a;
+                }, 0);
+            },
+            totalDayPercent() {
+                return Math.floor(100 * this.totalDaySum / this.totalDayPlan);
+            },
             ...mapGetters([
                 'IS_ADMIN',
                 'USER',
@@ -287,7 +373,7 @@
                 const year = dt.getFullYear();
                 const daysInMonth = new Date(year, month, 0).getDate();
                 return Math.ceil(store.month_plan / daysInMonth);
-            }
+            },
         }
     }
 </script>
