@@ -133,6 +133,18 @@ const navigationModule = {
                 ],
             },
             {
+                title: 'Продавцы',
+                url: '#',
+                hasDropdown: true,
+                icon: 'persons',
+                children: [
+                    {
+                        title: 'Задания',
+                        url: '/tasks/index',
+                    }
+                ],
+            },
+            {
                 title: 'Статистика',
                 icon: 'analytics',
                 url: '#',

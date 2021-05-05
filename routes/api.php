@@ -10,6 +10,7 @@ use App\Http\Controllers\api\v2\KaspiController;
 use App\Http\Controllers\api\ClientController;
 use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\api\PromocodeController;
+use App\Http\Controllers\api\v2\TaskController;
 
 // Authorization
 
@@ -261,5 +262,14 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
+
+        Route::prefix('tasks')->group(function () {
+            Route::get('/', [TaskController::class, 'index']);
+            Route::get('/current', [TaskController::class, 'getCurrentTasks']);
+            Route::post('/', [TaskController::class, 'store']);
+            Route::patch('/{id}', [TaskController::class, 'update']);
+            Route::patch('/status/{id}', [TaskController::class, 'editTaskStatus']);
+            Route::delete('/{id}', [TaskController::class, 'destroy']);
+        });
     });
 });

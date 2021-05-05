@@ -38,6 +38,7 @@ import AnalyticsClients from "@/views/Analytics/Clients";
 import KaspiAnalytics from "@/views/Kaspi/KaspiAnalytics";
 import DocumentsList from "@/views/Documents/DocumentsList";
 import PriceList from "@/views/PriceList/PriceList";
+import TasksIndex from "@/views/Sellers/Tasks/TasksIndex";
 
 const routes = [
     {
@@ -374,6 +375,15 @@ const routes = [
     {
         path: '/kaspi/analytics',
         component: KaspiAnalytics,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
+        }
+    },
+    {
+        path: '/tasks/index',
+        component: TasksIndex,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true
