@@ -39,6 +39,7 @@ import KaspiAnalytics from "@/views/Kaspi/KaspiAnalytics";
 import DocumentsList from "@/views/Documents/DocumentsList";
 import PriceList from "@/views/PriceList/PriceList";
 import TasksIndex from "@/views/Sellers/Tasks/TasksIndex";
+import EducationIndex from "@/views/Sellers/Education/EducationIndex";
 
 const routes = [
     {
@@ -389,6 +390,10 @@ const routes = [
                 IS_ADMIN: true
             }
         }
+    },
+    {
+        path: '/education/index',
+        component: EducationIndex,
     }
 ];
 

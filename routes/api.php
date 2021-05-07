@@ -11,6 +11,7 @@ use App\Http\Controllers\api\ClientController;
 use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\api\PromocodeController;
 use App\Http\Controllers\api\v2\TaskController;
+use App\Http\Controllers\api\v2\EducationController;
 
 // Authorization
 
@@ -270,6 +271,13 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::patch('/{id}', [TaskController::class, 'update']);
             Route::patch('/status/{id}', [TaskController::class, 'editTaskStatus']);
             Route::delete('/{id}', [TaskController::class, 'destroy']);
+        });
+
+        Route::prefix('educations')->group(function() {
+            Route::get('/', [EducationController::class, 'index']);
+            Route::post('/', [EducationController::class, 'store']);
+            Route::patch('/{id}', [EducationController::class, 'update']);
+            Route::delete('/{id}', [EducationController::class, 'destroy']);
         });
     });
 });

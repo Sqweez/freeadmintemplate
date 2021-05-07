@@ -141,6 +141,10 @@ const navigationModule = {
                     {
                         title: 'Задания',
                         url: '/tasks/index',
+                    },
+                    {
+                        title: 'Обучение',
+                        url: '/education/index'
                     }
                 ],
             },
@@ -353,10 +357,15 @@ const navigationModule = {
                 icon: 'report',
             },
             {
-                title: "Заказы с интернет-ммгазина",
-                url: '/shop/orders'
+                title: 'Интернет-магазин',
+                url: '/shop/orders',
+                icon: 'store'
+            },
+            {
+                title: 'Обучение',
+                url: '/education/index',
+                icon: 'grading'
             }
-
         ],
     },
     getters: {
