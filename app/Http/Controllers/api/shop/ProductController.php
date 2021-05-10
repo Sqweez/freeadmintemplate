@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\shop;
 
+use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\shop\ProductsResource;
@@ -143,7 +144,50 @@ class ProductController extends Controller {
 
 
     public function getProduct(Product $product) {
-        return new ProductResource(Product::with(['sku', 'sku.attributes', 'sku.batches', 'product_images', 'attributes'])->whereKey($product->id)->first());
+        return new ProductResource(
+            Product::with(['sku', 'sku.attributes', 'sku.batches', 'product_images', 'attributes'])
+                ->whereKey($product->id)
+                ->first()
+        );
+    }
+
+    public function getHitProducts(Request $request) {
+        $store_id = $request->get('store_id');
+        $user_token = $request->get('user_token');
+        $categories = Category::select(['id', 'category_name'])->get();
+
+        $productQuery = Product::query()->whereIsSiteVisible(true);
+
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images']);
+        $productQuery->with(['favorite' => function ($query) use ($user_token) {
+            return $query->where('user_token', $user_token);
+        }]);
+
+        $productQuery->whereHas('batches', function ($q) use ($store_id) {
+            if ($store_id === -1) {
+                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+            } else {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+            }
+        })->with(['batches' => function ($q) use ($store_id) {
+            if ($store_id === -1) {
+                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+            } else {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+            }
+        }]);
+
+        $products = $productQuery->limit(10)->get();
+
+        return $categories->map(function ($category) use ($products) {
+            $_products = $products->filter(function ($p) use ($category) {
+                return $category['id'] === $p['category_id'];
+            });
+            $category['products'] = ProductsResource::collection($_products);
+            return $category;
+        })->filter(function ($category) {
+            return count($category['products']) > 0;
+        })->values();
     }
 
 }

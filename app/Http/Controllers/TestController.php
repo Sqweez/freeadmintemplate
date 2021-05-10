@@ -100,10 +100,44 @@ class TestController extends Controller
     }
 
     public function index(Request $request) {
-        $saleQuery = Sale::query();
-        $saleQuery = $saleQuery->reportDate(['2021-01-26', '2021-02-26'])->reportSupplier(25);
+        $store_id = $request->get('store_id');
+        $user_token = $request->get('user_token');
+        $categories = Category::all();
+
+        $productQuery = Product::query()->whereIsSiteVisible(true);
+
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images']);
+        $productQuery->with(['favorite' => function ($query) use ($user_token) {
+            return $query->where('user_token', $user_token);
+        }]);
+
+        $productQuery->whereHas('batches', function ($q) use ($store_id) {
+            if ($store_id === -1) {
+                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+            } else {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+            }
+        })->with(['batches' => function ($q) use ($store_id) {
+            if ($store_id === -1) {
+                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+            } else {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+            }
+        }]);
+
+        $products = $productQuery->limit(10)->get();
+
+        $categories = $categories->map(function ($category) use ($products) {
+            $_products = $products->filter(function ($p) use ($category) {
+                return $category['id'] === $p['category_id'];
+            });
+            $category['products'] = \App\Http\Resources\shop\ProductsResource::collection($_products)->toArray(\request());
+            return $category;
+        })->filter(function ($category) {
+            return count($category['products']) > 0;
+        })->values();
         return view('test', [
-            'test' => $saleQuery->get()
+            'test' => $categories->toArray()
         ]);
     }
 

@@ -70,6 +70,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::resource('banners', 'api\shop\BannerController');
         Route::post('favorite', [FavoriteController::class, 'toggleFavorite']);
         Route::get('favorite', [FavoriteController::class, 'index']);
+        Route::get('hits', [\App\Http\Controllers\api\shop\ProductController::class, 'getHitProducts']);
         Route::get('promocode/search/{promocode}', [PromocodeController::class, 'searchPromocode']);
     });
 
