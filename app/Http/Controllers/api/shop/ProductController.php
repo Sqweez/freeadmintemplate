@@ -152,11 +152,11 @@ class ProductController extends Controller {
     }
 
     public function getHitProducts(Request $request) {
-        $store_id = $request->get('store_id');
+        $store_id = intval($request->get('store_id')) || -1;
         $user_token = $request->get('user_token');
         $categories = Category::select(['id', 'category_name'])->get();
 
-        $productQuery = Product::query()->whereIsSiteVisible(true);
+        $productQuery = Product::query()->whereIsSiteVisible(true)->whereIsHit(true);
 
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images']);
         $productQuery->with(['favorite' => function ($query) use ($user_token) {
@@ -177,7 +177,7 @@ class ProductController extends Controller {
             }
         }]);
 
-        $products = $productQuery->limit(10)->get();
+        $products = $productQuery->get();
 
         return $categories->map(function ($category) use ($products) {
             $_products = $products->filter(function ($p) use ($category) {
@@ -187,7 +187,7 @@ class ProductController extends Controller {
             return $category;
         })->filter(function ($category) {
             return count($category['products']) > 0;
-        })->values();
+        })->values()->sortBy('id')->values();
     }
 
 }

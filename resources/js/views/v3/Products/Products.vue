@@ -32,13 +32,19 @@
                                 hide-details
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12" xl="6" v-if="is_admin">
+                        <v-col cols="12" xl="4" v-if="is_admin">
                             <v-select
                                 :items="stores"
                                 item-text="name"
                                 v-model="storeFilter"
                                 item-value="id"
                                 label="Склад"
+                            />
+                        </v-col>
+                        <v-col cols="12" xl="2">
+                            <v-checkbox
+                                label="Скрывать отсутствующие"
+                                v-model="hideNotInStock"
                             />
                         </v-col>
                     </v-row>
@@ -220,14 +226,19 @@
                     name: 'Товары с фото',
                     id: 2,
                 },
-            ]
+            ],
+            hideNotInStock: false
         }),
         computed: {
             quantities() {
                 return this.$store.getters.QUANTITIES_v2;
             },
             products() {
-                return this.$store.getters.PRODUCTS_v2;
+                let products = this.$store.getters.PRODUCTS_v2;
+                if (this.hideNotInStock) {
+                    products = products.filter(product => product.quantity > 0);
+                }
+                return products;
             },
             stores() {
                 return this.$store.getters.stores;

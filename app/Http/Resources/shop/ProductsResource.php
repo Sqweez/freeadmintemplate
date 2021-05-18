@@ -40,7 +40,8 @@ class ProductsResource extends JsonResource
             'product_name_slug' => Str::slug($this->product_name, '-'),
             'in_selected_city' => $in_selected_city,
             'in_other_city' => $in_other_city,
-            'is_favorite' => !!$this->favorite
+            'is_favorite' => !!$this->favorite,
+            'category_id' => intval($this->category_id)
         ];
     }
 }
