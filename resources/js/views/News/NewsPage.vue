@@ -64,6 +64,7 @@
         components: {ConfirmationModal, NewsModal},
         async created() {
             await this.$store.dispatch('GET_NEWS');
+            await this.$store.dispatch('GET_PRODUCTS_v2');
         },
         data: () => ({
             newsModal: false,

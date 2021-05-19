@@ -39,4 +39,8 @@ class News extends Model
         return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
+    public function products() {
+        return $this->hasManyThrough('App\v2\Models\Product', 'App\NewsProduct', 'news_id', 'id');
+    }
+
 }

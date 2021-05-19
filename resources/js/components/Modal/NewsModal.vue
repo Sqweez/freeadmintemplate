@@ -35,6 +35,92 @@
                     label="Короткое описание"
                     v-model="short_text"
                 />
+                <h5>Связанные товары:</h5>
+                <v-simple-table v-slot:default>
+                    <template>
+                        <thead class="fz-18">
+                        <tr>
+                            <th>#</th>
+                            <th>Товар</th>
+                            <th>Цена</th>
+                            <th>Удалить</th>
+                        </tr>
+                        </thead>
+                        <tbody class="background-iron-grey">
+                        <tr v-for="(item, index) of cart">
+                            <td>{{ index + 1 }}</td>
+                            <td>
+                                <v-list class="product__list" flat>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.product_name }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </td>
+                            <td>
+                                {{ item.product_price | priceFilters }}
+                            </td>
+                            <td>
+                                <v-btn icon color="error" @click="deleteList(index)">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
+                <v-text-field
+                    class="mt-2"
+                    v-on:input="searchInput"
+                    v-model="searchValue"
+                    solo
+                    clearable
+                    label="Поиск товара"
+                    single-line
+                    hide-details
+                ></v-text-field>
+                <v-data-table
+                    class="background-iron-grey fz-18"
+                    no-results-text="Нет результатов"
+                    no-data-text="Нет данных"
+                    :headers="headers"
+                    :search="searchQuery"
+                    loading-text="Идет загрузка товаров..."
+                    :items="products"
+                    :footer-props="{
+                            'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
+                            'items-per-page-text': 'Записей на странице',
+                        }"
+                >
+                    <template v-slot:item.product_name="{item}">
+                        <v-list flat>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ item.product_name }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }}
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </template>
+                    <template v-slot:item.actions="{item}">
+                        <v-btn depressed icon color="success" @click="addToList(item)">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </template>
+                    <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
+                        {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
+                    </template>
+                </v-data-table>
             </v-card-text>
             <v-card-actions>
                 <v-btn text @click="$emit('cancel')">
@@ -55,8 +141,9 @@
     import uploadFile from "@/api/upload";
     import showToast from "@/utils/toast";
     import {TOAST_TYPE} from "@/config/consts";
-    Quill.register('modules/imageResize', ImageResize);
+    import product_search from "@/mixins/product_search";
 
+    Quill.register('modules/imageResize', ImageResize);
 
     export default {
         data: () => ({
@@ -68,7 +155,34 @@
                 modules: {
                     imageResize: {},
                 }
-            }
+            },
+            headers: [
+                {
+                    text: 'Наименование',
+                    value: 'product_name',
+                    sortable: false,
+                    align: ' fz-18'
+                },
+                {
+                    value: 'manufacturer.manufacturer_name',
+                    text: 'Производитель',
+                    align: ' d-none'
+                },
+                {
+                    text: 'Стоимость',
+                    value: 'product_price'
+                },
+                {
+                    text: 'Добавить',
+                    value: 'actions'
+                },
+                {
+                    text: 'Штрих-код',
+                    value: 'product_barcode',
+                    align: ' d-none'
+                }
+            ],
+            cart: [],
         }),
         methods: {
             async onSubmit() {
@@ -77,6 +191,7 @@
                     title: this.title,
                     short_text: this.short_text,
                     image: this.image,
+                    products: this.cart.map(c => c.product_id)
                 };
                 if (Object.keys(this.currentNews).length) {
                     news.id = this.currentNews.id;
@@ -102,12 +217,26 @@
                 const photo = `${window.location.protocol}//${window.location.hostname}/storage/${response.data}`;
                 Editor.insertEmbed(cursorLocation, "image", photo);
                 resetUploader();
-            }
+            },
+            addToList(item) {
+                const findIndex = this.cart.findIndex(p => p.product_id === item.product_id);
+                if (findIndex === -1) {
+                    this.cart.push(item);
+                }
+            },
+            deleteList(key) {
+                this.cart.splice(key, 1);
+            },
         },
+        mixins: [product_search],
         components: {
             VueEditor
         },
-        computed: {},
+        computed: {
+            products() {
+                return this.$store.getters.MAIN_PRODUCTS_v2;
+            }
+        },
         props: {
             state: {
                 type: Boolean,
@@ -126,6 +255,11 @@
                         this.title =  this.currentNews.title;
                         this.short_text =  this.currentNews.short_text;
                         this.image =  this.currentNews.image;
+                        this.cart = this.currentNews.products
+                            .map(a => a.id)
+                            .map(a => {
+                                return this.products.find(p => p.product_id === a);
+                            })
                     }
                 } else {
                     this.text =  '';

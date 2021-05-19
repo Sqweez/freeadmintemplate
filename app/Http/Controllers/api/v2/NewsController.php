@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v2;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\v2\NewsResource;
+use App\NewsProduct;
 use App\v2\Models\Image;
 use App\v2\Models\News;
 use Illuminate\Http\Request;
@@ -11,11 +12,17 @@ use Illuminate\Http\Request;
 class NewsController extends Controller
 {
     public function index(Request $request) {
-        $news = News::with('news_image')->get();
         if ($request->has('shop')) {
+            $news = News::with(
+                [
+                    'news_image', 'products', 'products.subcategory',
+                    'products.attributes', 'products.product_thumbs',
+                    'products.product_images', 'products.batches'
+                ]
+            )->get();
             return NewsResource::collection($news);
         }
-        return $news;
+        return News::with(['news_image', 'products'])->get();
     }
 
     public function store(Request $request) {
@@ -23,7 +30,18 @@ class NewsController extends Controller
         $news = News::create($req);
         $image = Image::create(['image' => $request->get('image')])->id;
         $news->news_image()->sync([$image]);
-        return News::with('news_image')->whereKey($news->id)->get()->first();
+        $products = $request->get('products');
+        foreach ($products as $product) {
+            NewsProduct::create([
+                'product_id' => $product,
+                'news_id' => $news->id
+            ]);
+        }
+        return News::with('news_image')
+            ->with('products')
+            ->whereKey($news->id)
+            ->get()
+            ->first();
 
     }
 
@@ -34,6 +52,7 @@ class NewsController extends Controller
     public function destroy($id) {
         $news = News::find($id);
         $news->news_image()->delete();
+        NewsProduct::where('news_id', $id)->delete();
         $news->delete();
     }
 
@@ -42,6 +61,14 @@ class NewsController extends Controller
         $news->update($req);
         $image = Image::whereImage($request->get('image'))->firstOrCreate(['image' => $request->get('image')])->id;
         $news->news_image()->sync([$image]);
+        NewsProduct::where('news_id', $news->id)->delete();
+        $products = $request->get('products');
+        foreach ($products as $product) {
+            NewsProduct::create([
+                'product_id' => $product,
+                'news_id' => $news->id
+            ]);
+        }
         return News::with('news_image')->whereKey($news->id)->get()->first();
     }
 }
