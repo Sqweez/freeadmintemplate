@@ -259,8 +259,8 @@
                         this.title =  this.currentNews.title;
                         this.short_text =  this.currentNews.short_text;
                         this.image =  this.currentNews.image;
-                        this.cart = this.currentNews.products
-                            .map(a => a.id)
+                        this.cart = this.currentNews.product_news
+                            .map(a => a.product_id)
                             .map(a => {
                                 return this.products.find(p => p.product_id === a);
                             })
