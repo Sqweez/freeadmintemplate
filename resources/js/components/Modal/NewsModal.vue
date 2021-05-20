@@ -127,7 +127,7 @@
                     Отмена
                 </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn text color="success" @click="onSubmit">
+                <v-btn text color="success" @click="onSubmit" :disabled="loading">
                     Сохранить <v-icon>mdi-check</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -154,7 +154,8 @@
             editorSettings: {
                 modules: {
                     imageResize: {},
-                }
+                },
+                preserveWhiteSpace: true
             },
             headers: [
                 {
@@ -182,12 +183,14 @@
                     align: ' d-none'
                 }
             ],
+            loading: false,
             cart: [],
         }),
         methods: {
             async onSubmit() {
+                this.loading = true;
                 const news = {
-                    text: this.text,
+                    text: this.text.replaceAll('&nbsp;', ' '),
                     title: this.title,
                     short_text: this.short_text,
                     image: this.image,
@@ -199,6 +202,7 @@
                 } else {
                     await this.$store.dispatch('ADD_NEWS', news);
                 }
+                this.loading = false;
                 this.$emit('cancel');
             },
             async uploadPhoto(e) {

@@ -8,6 +8,9 @@
                 <v-btn color="error" class="my-5" @click="newsModal = true;">
                     Добавить новость +
                 </v-btn>
+                <v-btn color="success" target="_blank" href="https://iron-addicts.kz/api/cache/update-all">
+                    Сбросить кэш сайта
+                </v-btn>
                 <v-data-table
                     :loading="news.length === 0"
                     loading-text="Идет загрузка новостей"
@@ -60,6 +63,8 @@
 <script>
     import NewsModal from "@/components/Modal/NewsModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import axios from 'axios';
+    import showToast from "@/utils/toast";
     export default {
         components: {ConfirmationModal, NewsModal},
         async created() {
@@ -105,6 +110,12 @@
                 await this.$store.dispatch('DELETE_NEWS', this.newsId);
                 this.confirmationModal = false;
                 this.newsId = null;
+            },
+            async updateSiteCache() {
+                await this.$store.commit('enableLoading');
+                await axios.get('https://iron-addicts.kz/api/cache/update-all')
+                await this.$store.commit('disableLoading');
+                showToast('Кэш сброшен')
             }
         },
         computed: {
