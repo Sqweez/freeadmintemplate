@@ -1,5 +1,5 @@
 <template>
-    <v-dialog persistent max-width="1200" v-model="state">
+    <v-dialog persistent max-width="1300" v-model="state">
         <v-card>
             <v-card-title class="headline d-flex justify-space-between">
                 <span class="white--text">Редактор новостей</span>

@@ -15,14 +15,12 @@ class NewsController extends Controller
         if ($request->has('shop')) {
             $news = News::with(
                 [
-                    'news_image', 'products', 'products.subcategory',
-                    'products.attributes', 'products.product_thumbs',
-                    'products.product_images', 'products.batches'
+                    'news_image', 'productNews'
                 ]
             )->get();
             return NewsResource::collection($news);
         }
-        return News::with(['news_image', 'products'])->get();
+        return News::with(['news_image', 'productNews'])->get();
     }
 
     public function store(Request $request) {

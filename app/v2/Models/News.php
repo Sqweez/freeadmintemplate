@@ -39,8 +39,21 @@ class News extends Model
         return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
-    public function products() {
-        return $this->hasManyThrough('App\v2\Models\Product', 'App\NewsProduct', 'news_id', 'id');
+    public function productNews() {
+        return $this->hasMany('App\NewsProduct', 'news_id');
+    }
+
+   /* public function products() {
+        return $this->hasManyThrough(
+            'App\v2\Models\Product',
+            'App\NewsProduct',
+            'product_id',
+            'news_id', 'id', 'id');
+    }*/
+
+    public function getProductsAttribute() {
+        $product_ids = $this->productNews()->get()->pluck('product_id');
+        return Product::find($product_ids);
     }
 
 }
