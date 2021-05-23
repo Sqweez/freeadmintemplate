@@ -48,6 +48,17 @@
                             />
                         </v-col>
                     </v-row>
+                    <v-row>
+                        <v-col cols="12" xl="4">
+                            <v-autocomplete
+                                label="Производитель"
+                                :items="manufacturers"
+                                v-model="manufacturerId"
+                                item-value="id"
+                                item-text="manufacturer_name"
+                            />
+                        </v-col>
+                    </v-row>
                     <v-data-table
                         :search="searchQuery"
                         no-results-text="Нет результатов"
@@ -227,9 +238,19 @@
                     id: 2,
                 },
             ],
-            hideNotInStock: false
+            hideNotInStock: false,
+            manufacturerId: -1,
         }),
         computed: {
+            manufacturers() {
+                return [
+                    {
+                        id: -1,
+                        manufacturer_name: 'Все'
+                    },
+                    ...this.$store.getters.manufacturers
+                ];
+            },
             quantities() {
                 return this.$store.getters.QUANTITIES_v2;
             },
@@ -238,6 +259,11 @@
                 if (this.hideNotInStock) {
                     products = products.filter(product => product.quantity > 0);
                 }
+
+                if (this.manufacturerId !== -1) {
+                    products = products.filter(p => p.manufacturer.id === this.manufacturerId);
+                }
+
                 return products;
             },
             stores() {

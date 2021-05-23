@@ -30,6 +30,10 @@ class Manufacturer extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'id' => 'integer'
+    ];
+
     public function products() {
         return $this->hasManyThrough(Product::class, ManufacturerProducts::class);
     }
