@@ -58,6 +58,24 @@
                                 item-text="manufacturer_name"
                             />
                         </v-col>
+                        <v-col cols="12" xl="4">
+                            <v-autocomplete
+                                label="Категория"
+                                :items="categories"
+                                v-model="categoryId"
+                                item-value="id"
+                                item-text="name"
+                            />
+                        </v-col>
+                        <v-col cols="12" xl="4">
+                            <v-autocomplete
+                                label="Подкатегория"
+                                :items="subcategories"
+                                v-model="subcategoryId"
+                                item-value="id"
+                                item-text="subcategory_name"
+                            />
+                        </v-col>
                     </v-row>
                     <v-data-table
                         :search="searchQuery"
@@ -240,6 +258,8 @@
             ],
             hideNotInStock: false,
             manufacturerId: -1,
+            categoryId: -1,
+            subcategoryId: -1,
         }),
         computed: {
             manufacturers() {
@@ -264,13 +284,32 @@
                     products = products.filter(p => p.manufacturer.id === this.manufacturerId);
                 }
 
+                if (this.categoryId !== -1) {
+                    products = products.filter(p => p.category.id === this.categoryId);
+                }
+
+                if (this.subcategoryId !== -1) {
+                    products = products.filter(p => p.subcategory_id === this.subcategoryId);
+                }
                 return products;
             },
             stores() {
                 return this.$store.getters.stores;
             },
             categories() {
-                return this.$store.getters.categories;
+                return [{
+                    id: -1,
+                    name: 'Все'
+                }, ...this.$store.getters.categories];
+            },
+            subcategories() {
+                return[
+                    {
+                        id: -1,
+                        subcategory_name: 'Все'
+                    },...this.categories
+                    .find(c => c.id === this.categoryId)
+                    .subcategories || []];
             },
             totalProducts() {
                 return this.$store.getters.totalProducts;

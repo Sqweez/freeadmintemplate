@@ -179,7 +179,10 @@ class Product extends Model
         'is_site_visible' => 'boolean',
         'group_id' => 'integer',
         'kaspi_product_price' => 'integer',
-        'is_kaspi_visible' => 'boolean'
+        'is_kaspi_visible' => 'boolean',
+        'category_id' => 'integer',
+        'subcategory_id' => 'integer',
+        'manufacturer_id' => 'integer'
     ];
 
     public $timestamps = true;
