@@ -1,4 +1,4 @@
-import {createTransfer, getTransfers} from "@/api/transfers";
+import {createTransfer, editTransferStore, getTransfers} from "@/api/transfers";
 import ACTIONS from "../actions";
 import MUTATIONS from "../mutations";
 
@@ -15,6 +15,14 @@ const transferModule = {
         },
         addTransfer(state, payload) {
             state.transfers.push(payload)
+        },
+        editTransfer(state, transfer) {
+            state.transfers = state.transfers.map(t => {
+                if (t.id === transfer.id) {
+                    t = transfer;
+                }
+                return t;
+            })
         }
     },
     actions: {
@@ -24,6 +32,17 @@ const transferModule = {
         },
         async [ACTIONS.MAKE_TRANSFER] ({commit}, payload) {
             await createTransfer(payload);
+        },
+        async editTransfer({commit}, payload) {
+            try {
+                commit('enableLoading');
+                const { data } = await editTransferStore(payload);
+                commit('editTransfer', data.data);
+            } catch (e) {
+                throw e;
+            } finally {
+                commit('disableLoading');
+            }
         }
     }
 };

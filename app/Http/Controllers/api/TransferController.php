@@ -45,6 +45,11 @@ class TransferController extends Controller {
         return TransferResource::collection($transfersQuery->get());
     }
 
+    public function update(Transfer $transfer, Request $request) {
+        $transfer->update($request->all());
+        return new TransferResource($transfer);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

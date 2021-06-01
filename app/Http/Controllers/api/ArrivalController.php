@@ -110,4 +110,9 @@ class ArrivalController extends Controller
         ArrivalProducts::destroy($arrival->products->pluck('id'));
         $arrival->delete();
     }
+
+    public function update(Arrival $arrival, Request $request) {
+        $arrival->update($request->all());
+        return new ArrivalResource($arrival);
+    }
 }

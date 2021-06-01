@@ -12,7 +12,7 @@
                         no-results-text="Нет результатов"
                         no-data-text="Нет данных"
                         :headers="headers"
-                        :items="arrivals"
+                        :items="_arrivals"
                         :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
@@ -30,19 +30,44 @@
                     <template v-slot:item.position_count="{item}">
                         {{ item.position_count }} шт.
                     </template>
+                    <template v-slot:item.store="{item}">
+                        <span v-if="!editMode">
+                            {{ item.store }}
+                        </span>
+                        <v-select
+                            :items="stores"
+                            item-value="id"
+                            item-text="name"
+                            v-model="storeId"
+                            v-else/>
+                    </template>
                     <template v-slot:item.actions="{item}">
-                        <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;">
-                            <v-icon>mdi-pencil</v-icon>
-                        </v-btn>
-                        <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = false;">
-                            <v-icon>mdi-information-outline</v-icon>
-                        </v-btn>
-                        <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;">
-                            <v-icon>mdi-cancel</v-icon>
-                        </v-btn>
-                        <v-btn icon color="success" @click="printWaybill(item.id)">
-                            <v-icon>mdi-file-excel</v-icon>
-                        </v-btn>
+                        <v-flex v-if="!editMode">
+                            <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;">
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = false;">
+                                <v-icon>mdi-information-outline</v-icon>
+                            </v-btn>
+                            <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;">
+                                <v-icon>mdi-cancel</v-icon>
+                            </v-btn>
+                            <v-btn icon color="success" @click="printWaybill(item.id)">
+                                <v-icon>mdi-file-excel</v-icon>
+                            </v-btn>
+                            <v-btn icon color="primary" @click="editMode = true; arrivalId = item.id; storeId = item.store_id">
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                        </v-flex>
+                        <v-flex v-else>
+                            <v-btn icon color="danger" @click="arrivalId = null; editMode = false; storeId = null;">
+                                <v-icon>mdi-cancel</v-icon>
+                            </v-btn>
+                            <v-btn icon color="success" @click="editArrival">
+                                <v-icon>mdi-check</v-icon>
+                            </v-btn>
+                        </v-flex>
+
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -68,10 +93,13 @@
 </template>
 
 <script>
-    import {deleteArrival, getArrival, getArrivals} from "@/api/arrivals";
+    import {deleteArrival, editArrival, getArrival, getArrivals} from "@/api/arrivals";
     import ArrivalInfoModal from "@/components/Modal/ArrivalInfoModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import axios from "axios";
+    import showToast from "@/utils/toast";
+    import {TOAST_TYPE} from "@/config/consts";
+    import ACTIONS from "@/store/actions";
 
     export default {
         components: {ConfirmationModal, ArrivalInfoModal},
@@ -83,6 +111,9 @@
             current_arrival: {},
             arrivalModal: false,
             confirmationModal: false,
+            editMode: false,
+            storeId: null,
+            arrivalId: null,
             headers: [
                 {
                     text: 'Количество позиций',
@@ -161,6 +192,27 @@
                 link.href = data.path;
                 link.click();
                 this.loading = false;
+            },
+            async editArrival() {
+                try {
+                    const { data } = await editArrival({
+                        id: this.arrivalId,
+                        store_id: this.storeId,
+                    });
+                    console.log(data);
+                    this.arrivals = this.arrivals.map(s => {
+                        if (s.id === data.data.id) {
+                            s = data.data;
+                        }
+                        return s;
+                    })
+                    this.editMode = false;
+                    this.arrivalId = null;
+                    this.storeId = null;
+                    showToast('Поступление отредактировано!')
+                } catch (e) {
+                    showToast('Произошла ошибка', TOAST_TYPE.ERROR)
+                }
             }
         },
         computed: {
@@ -173,10 +225,22 @@
                 return this.arrivals.reduce((a, c) => {
                     return a + +c.total_sale_cost;
                 }, 0);
+            },
+            _arrivals() {
+                return this.arrivals.filter(s => {
+                    if (this.arrivalId !== null) {
+                        return s.id === this.arrivalId;
+                    }
+                    return s;
+                })
+            },
+            stores() {
+                return this.$store.getters.stores;
             }
         },
         async mounted() {
             await this.getArrivals();
+            await this.$store.dispatch(ACTIONS.GET_STORES);
         }
     }
 </script>

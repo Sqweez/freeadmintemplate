@@ -22,6 +22,19 @@
                             'items-per-page-text': 'Записей на странице',
                         }"
         >
+            <template v-slot:item.child_store="{item}">
+                <span v-if="!editMode">
+                    {{ item.child_store }}
+                </span>
+                <v-select
+                    :items="stores"
+                    item-text="name"
+                    item-value="id"
+                    v-else
+                    label="Получатель"
+                    v-model="storeId"
+                />
+            </template>
             <template v-slot:item.total_cost="{item}">
                 {{ item.total_cost | priceFilters }}
             </template>
@@ -35,18 +48,31 @@
                 {{ item.position_count }} шт.
             </template>
             <template v-slot:item.actions="{item}">
-                <v-btn icon color="primary" @click="transferId = item.id; infoModal = true">
-                    <v-icon>mdi-information-outline</v-icon>
-                </v-btn>
-                <v-btn icon color="error" @click="transferId = item.id; cancelModal = true">
-                    <v-icon>mdi-cancel</v-icon>
-                </v-btn>
-                <v-btn icon color="success" @click="printWaybill(item.id)">
-                    <v-icon>mdi-file-excel</v-icon>
-                </v-btn>
-                <v-btn icon color="primary" @click="showPhotoModal(item.photos)">
-                    <v-icon>mdi-camera</v-icon>
-                </v-btn>
+                <v-flex v-if="!editMode">
+                    <v-btn icon color="primary" @click="transferId = item.id; infoModal = true">
+                        <v-icon>mdi-information-outline</v-icon>
+                    </v-btn>
+                    <v-btn icon color="error" @click="transferId = item.id; cancelModal = true">
+                        <v-icon>mdi-cancel</v-icon>
+                    </v-btn>
+                    <v-btn icon color="success" @click="printWaybill(item.id)">
+                        <v-icon>mdi-file-excel</v-icon>
+                    </v-btn>
+                    <v-btn icon color="primary" @click="showPhotoModal(item.photos)">
+                        <v-icon>mdi-camera</v-icon>
+                    </v-btn>
+                    <v-btn icon color="primary" @click="toggleEditTransfer(item)">
+                        <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                </v-flex>
+                <v-flex v-else>
+                    <v-btn icon color="danger" @click="transferId = null; editMode = false;">
+                        <v-icon>mdi-cancel</v-icon>
+                    </v-btn>
+                    <v-btn icon color="success" @click="editTransfer">
+                        <v-icon>mdi-check</v-icon>
+                    </v-btn>
+                </v-flex>
             </template>
             <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                 {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -81,19 +107,23 @@
     import axios from "axios";
     import showToast from "../../../utils/toast";
     import {TOAST_TYPE} from "@/config/consts";
+    import ACTIONS from "@/store/actions";
     export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'current'});
+            await this.$store.dispatch(ACTIONS.GET_STORES);
             this.loading = false;
         },
         components: {ConfirmationModal, TransferModal, TransferPhotoModal},
         data: () => ({
+            editMode: false,
             loading: true,
             cancelModal: false,
             infoModal: false,
             transferId: null,
             photoModal: false,
             currentPhotos: [],
+            storeId: null,
             headers: [
                 {
                     text: 'Количество позиций',
@@ -172,6 +202,24 @@
                 }
                 this.currentPhotos = photos;
                 this.photoModal = true;
+            },
+            toggleEditTransfer(item) {
+                this.transferId = item.id;
+                this.storeId = item.child_store_id;
+                this.editMode = !this.editMode;
+            },
+            async editTransfer() {
+                try {
+                    await this.$store.dispatch('editTransfer', {
+                        id: this.transferId,
+                        child_store_id: this.storeId
+                    });
+                    this.editMode = false;
+                    this.transferId = null;
+                    showToast('Перемещение отредактировано!')
+                } catch (e) {
+                    showToast('Произошла ошибка', TOAST_TYPE.ERROR)
+                }
             }
         },
         computed: {
@@ -180,6 +228,11 @@
                     if (this.isSeller) {
                         return +s.child_store_id === +this.user.store_id || +s.parent_store_id === +this.user.store_id;
                     }
+
+                    if (this.transferId !== null) {
+                        return s.id === this.transferId;
+                    }
+
                     return s;
                 });
             },
@@ -188,6 +241,9 @@
             },
             user() {
                 return this.$store.getters.USER;
+            },
+            stores() {
+                return this.$store.getters.stores;
             }
         }
     }

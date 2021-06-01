@@ -32,3 +32,9 @@ export async function acceptTransfer(payload, id) {
 export async function declineTransfer(id) {
     return await axios.post(`/api/transfers/${id}/cancel`)
 }
+
+export async function editTransferStore({id, child_store_id}) {
+    return await axios.patch(`/api/transfers/${id}`, {
+        child_store_id
+    })
+}

@@ -37,3 +37,9 @@ export async function deleteArrival(id) {
 export async function changeArrival(id, payload) {
     await axios.post(`/api/arrivals/change/${id}`, payload);
 }
+
+export async function editArrival({id, store_id}) {
+    return await axios.patch(`/api/arrivals/${id}`, {
+        store_id
+    })
+}
