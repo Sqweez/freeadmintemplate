@@ -17,6 +17,7 @@ use App\Product;
 use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
+use App\Store;
 use App\v2\Models\Certificate;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
@@ -252,6 +253,121 @@ class SaleController extends Controller {
             ->whereKey($id)
             ->first()
         );
+    }
+
+    public function getMotivationReport(Request $request) {
+        $hoffman = [39];
+        $siberian = [2];
+        $euroBrands = [
+            181, 177, 182
+        ];
+        $motivations = [
+            [
+                'name' => 'Dr.Hoffman',
+                'motivation' => $this->getBrandsMotivation([39])
+            ],
+            [
+                'name' => 'Siberian Nutrogunz',
+                'motivation' => $this->getBrandsMotivation([2])
+            ],
+            [
+                'name' => 'Европ. бренды',
+                'motivation' => $this->getBrandsMotivation([181, 177, 182])
+            ]
+        ];
+        $stores = Store::where('type_id', '=', 1)
+            ->select(['id', 'name'])
+            ->get();
+        return $stores->map(function ($store) use ($motivations){
+            return [
+                'id' => $store['id'],
+                'name' => $store['name'],
+                'motivations' => collect($motivations)->map(function ($motivation) use ($store) {
+                    $currentMotivation = collect($motivation['motivation'])->filter(function ($item) use ($store) {
+                        return $store['id'] === $item['store_id'];
+                    })->first() ?? ['sum' => 0, 'percent' => 0];
+                    return [
+                        'name' => $motivation['name'],
+                        'plan' => 600000,
+                        'sum' => $currentMotivation['sum'],
+                        'percent' => round($currentMotivation['percent'], 2)
+                    ];
+                })
+            ];
+        });
+    }
+
+    private function getBrandsMotivation($brands) {
+        $products_id = Product::whereIn('manufacturer_id', $brands)->select(['id'])->get();
+        $products_id = ProductSku::whereIn('product_id', $products_id)->select(['id'])->get()->pluck('id');
+        $date_start = now()->startOfMonth();
+        $date_finish = now()->endOfMonth();
+        return SaleProduct::query()
+            ->whereIn('product_id', $products_id)
+            ->whereHas('sale', function ($q) use ($date_start, $date_finish) {
+                $q->whereDate('created_at', '>=', $date_start)
+                    ->whereDate('created_at', '<=', $date_finish);
+            })
+            ->with('sale')->get()->map(function ($sale) {
+                $sale['store_id'] = $sale['sale']['store_id'];
+                $sale['discount'] = $sale['sale']['discount'];
+                return $sale;
+            })->groupBy('store_id')->map(function ($sale, $key) {
+                $totalSum = ceil(collect($sale)->reduce(function ($a, $c) use ($key) {
+                    return $a + $c['product_price'] - $c['product_price'] * ($c['discount'] / 100);
+                }, 0));
+                $percent = $totalSum == 0 ? 0 : (100 * $totalSum / 600000);
+                return [
+                    'sum' => $totalSum,
+                    'percent' => $percent,
+                    'store_id' => $key
+                ];
+            })->values()->all();
+    }
+
+    /*private function getBrandsMotivation($brands, $name) {
+        $products_id = Product::whereIn('manufacturer_id', $brands)->select(['id'])->get();
+        $products_id = ProductSku::whereIn('product_id', $products_id)->select(['id'])->get()->pluck('id');
+        $date_start = now()->startOfMonth();
+        $date_finish = now()->endOfMonth();
+        $motivations =  SaleProduct::query()
+            ->whereIn('product_id', $products_id)
+            ->whereHas('sale', function ($q) use ($date_start, $date_finish) {
+                $q->whereDate('created_at', '>=', $date_start)
+                    ->whereDate('created_at', '<=', $date_finish);
+            })
+            ->with('sale')->get()->map(function ($sale) {
+                $sale['store_id'] = $sale['sale']['store_id'];
+                $sale['discount'] = $sale['sale']['discount'];
+                return $sale;
+            })->groupBy('store_id')->map(function ($sale, $key) use ($name) {
+                $totalSum = ceil(collect($sale)->reduce(function ($a, $c) use ($name, $key) {
+                    return $a + $c['product_price'] - $c['product_price'] * ($c['discount'] / 100);
+                }, 0));
+                $percent = $totalSum == 0 ? 0 : (100 * $totalSum / 600000);
+                return [
+                    'sum' => $totalSum,
+                    'percent' => $percent,
+                    'name' => $name,
+                    'store_id' => $key
+                ];
+            })->values()->all();
+        return $motivations;
+    }*/
+
+    private function getBrandsMotivationByStore($motivations) {
+        $stores = Store::where('type_id', '=', 1)->select(['id', 'name'])->get();
+        return $stores->map(function ($store) use ($motivations) {
+            return [
+                'id' => $store['id'],
+                'name' => $store['name'],
+                'motivations' => collect($motivations)->map(function ($motivation) use ($store) {
+                    return collect($motivation)->filter(function ($item) use ($store) {
+                        return $item['store_id'] === $store['id'];
+                    })->first() ?? [];
+                })
+            ];
+        });
     }
 
 }

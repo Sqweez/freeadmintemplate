@@ -16,6 +16,9 @@
             <v-col sm="12" lg="12" md="12" v-if="CAN_SALE">
                 <PlanWidget/>
             </v-col>
+            <v-col sm="12" lg="12" md="12" v-if="CAN_SALE">
+                <BrandsWidget/>
+            </v-col>
             <!--<v-col sm="9" lg="9" md="9">
                 <v-card>
                     <v-card-title>Баланс</v-card-title>
@@ -59,12 +62,14 @@
     import ACTIONS from "@/store/actions";
     import DashboardCompanion from "@/components/Widgets/DashboardCompanion";
     import TasksWidget from "@/components/Widgets/TasksWidget";
+    import BrandsWidget from "@/components/Widgets/BrandsWidget";
 
     export default {
         data: () => ({
             items: ['Сегодня', 'Текущая неделя', 'Текущий месяц', 'Последние 3 месяца'],
         }),
         components: {
+            BrandsWidget,
             TasksWidget,
             DashboardCompanion,
             SalesRatingWidget,

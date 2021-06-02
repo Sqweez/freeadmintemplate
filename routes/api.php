@@ -128,13 +128,14 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     //SaleController
     Route::post('sales/{sale}/cancel', 'api\SaleController@cancelSale');
     Route::post('sales', 'api\SaleController@store');
+    Route::get('sales/brands/motivation', 'api\SaleController@getMotivationReport');
 
     //ReportController
     Route::patch('reports/{report}', 'api\SaleController@update');
     Route::get('reports', 'api\SaleController@reports');
     Route::get('reports/plan', 'api\SaleController@getPlanReports');
     Route::get('reports/total', 'api\SaleController@getTotal');
-    Route::get('reports/products', 'api\SaleController@getReportProducts');
+    Route::post('reports/products', 'api\SaleController@getReportProducts');
 
 
     Route::get('cart/group', 'api\CartController@groupCart');

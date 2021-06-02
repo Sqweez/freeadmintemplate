@@ -1,4 +1,4 @@
-import {cancelSale, getPlanReports, getReports, getStoreReports, updateSale} from '@/api/sale'
+import {cancelSale, getBrandsMotivation, getPlanReports, getReports, getStoreReports, updateSale} from '@/api/sale'
 import ACTIONS from '../actions/index';
 import moment from 'moment';
 
@@ -7,11 +7,13 @@ const reportsModule = {
         storesReports: [],
         reports: [],
         planReports: [],
+        brandsMotivation: [],
     },
     getters: {
         STORES_REPORTS: state => state.storesReports,
         REPORTS: state => state.reports,
         PLAN_REPORTS: state => state.planReports,
+        BRANDS_MOTIVATION: s => s.brandsMotivation
     },
     mutations: {
         setStoresReport(state, payload) {
@@ -33,6 +35,9 @@ const reportsModule = {
         },
         setPlanReports(state, payload) {
             state.planReports = payload;
+        },
+        setBrandsMotivation(state, payload) {
+            state.brandsMotivation = payload;
         }
     },
     actions: {
@@ -66,6 +71,10 @@ const reportsModule = {
         async updateSale({commit}, payload) {
             const data = await updateSale(payload);
             commit('changeSale', data);
+        },
+        async getBrandsMotivation({commit}) {
+            const data = await getBrandsMotivation();
+            commit('setBrandsMotivation', data);
         }
     }
 };

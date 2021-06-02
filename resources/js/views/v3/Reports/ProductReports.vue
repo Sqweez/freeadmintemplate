@@ -187,8 +187,11 @@
                     </tbody>
                 </template>
             </v-simple-table>
-            <v-btn block color="primary" class="my-2" @click="loadReports" :disabled="!cart.length">
+            <v-btn block color="primary" class="my-2" @click="loadReports(false)" :disabled="!cart.length">
                 Загрузить отчет
+            </v-btn>
+            <v-btn block color="primary" class="my-2" @click="loadReports(true)">
+                Загрузить отчет по всем товарам
             </v-btn>
             <v-text-field
                 class="mt-2"
@@ -454,11 +457,10 @@
                     this.addToList(item);
                 })
             },
-            async loadReports() {
+            async loadReports(all = false) {
                 this.loading = true;
                 this.productLoaded = false;
-                const products = JSON.stringify(this.cart.map(c => c.id));
-
+                const products = all === false ? JSON.stringify(this.cart.map(c => c.id)) : JSON.stringify(this.products.map(c => c.id));
                 const queryObject = {
                     date_start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
                     date_finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1]
@@ -472,7 +474,9 @@
                     queryObject.store_id = this.currentCity;
                 }
 
-                const response = await axios.get(`/api/reports/products?products=${products}&${new URLSearchParams(queryObject)}`);
+                const response = await axios.post(`/api/reports/products?${new URLSearchParams(queryObject)}`, {
+                    products
+                });
 
                 this.report = response.data;
                 const reports = [];

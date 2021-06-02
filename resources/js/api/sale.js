@@ -40,3 +40,8 @@ export async function updateSale(payload) {
     return data.data;
 }
 
+export async function getBrandsMotivation() {
+    const { data } = await axios.get('/api/sales/brands/motivation');
+    return data;
+}
+
