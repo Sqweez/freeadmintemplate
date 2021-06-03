@@ -159,6 +159,7 @@ class SaleController extends Controller {
                     'product_name' => $sale[0]['product']['product']['product_name'],
                     'attributes' => collect($sale[0]['product']['attributes'])->pluck('attribute_value')->merge(collect($sale[0]['product']['product']['attributes'])->pluck('attribute_value'))->join(', '),
                     'manufacturer' => $sale[0]['product']['product']['manufacturer']['manufacturer_name'],
+                    'manufacturer_id' => $sale[0]['product']['product']['manufacturer']['id'],
                     'count' => count($sale),
                     'total_purchase_price' => ceil(collect($sale)->reduce(function ($a, $c) {
                         return $a + $c['purchase_price'];

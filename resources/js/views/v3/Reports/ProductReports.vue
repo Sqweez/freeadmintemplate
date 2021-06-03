@@ -283,6 +283,15 @@
                         </v-list-item>
                     </v-list>
                 </v-col>
+                <v-col cols="12" xl="3" justify="center">
+                    <v-autocomplete
+                        :items="currentManufacturers"
+                        item-text="manufacturer_name"
+                        v-model="currentManufacturerId"
+                        item-value="id"
+                        label="Бренд"
+                    />
+                </v-col>
             </v-row>
             <v-data-table
                 no-results-text="Нет результатов"
@@ -290,7 +299,7 @@
                 :headers="headers"
                 :loading="loading"
                 loading-text="Отчеты обновляются"
-                :items="report"
+                :items="_reports"
                 :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
@@ -444,6 +453,7 @@
             ],
             categoryId: -1,
             manufacturerId: -1,
+            currentManufacturerId: -1,
         }),
         async mounted() {
             await this.$store.dispatch('GET_PRODUCTS_v2');
@@ -623,6 +633,28 @@
                     }, ...this.$store.getters.categories
                 ];
             },
+            _reports() {
+                return this.report.filter(r => {
+                    return this.currentManufacturerId !== -1 ? r.manufacturer_id === this.currentManufacturerId : true;
+                })
+            },
+            currentManufacturers() {
+                const manufacturers = this.$store.getters.manufacturers;
+                const currentIds = this.report
+                    .map(r => r.manufacturer_id)
+                    .filter((value, index, self) => {
+                        return self.indexOf(value) === index;
+                    });
+                return [
+                    {
+                        id: -1,
+                        manufacturer_name: 'Все'
+                    },
+                    ...manufacturers.filter(m => {
+                        return currentIds.indexOf(m.id) !== -1;
+                    })
+                ]
+            }
             /*totalSales() {
                 return this.salesReport
                     .reduce((a, c) => {

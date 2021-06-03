@@ -96,9 +96,10 @@
                 }, 0);
             },
             stores() {
-                return this.$store.getters.shops.filter(s => {
-                    return s;
-                }) || [];
+                return [
+                    ...this.$store.getters.shops,
+                    ...this.$store.getters.warehouses
+                ];
             }
         },
         methods: {
