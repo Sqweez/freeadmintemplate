@@ -128,7 +128,7 @@ class SaleController extends Controller {
         $user_id = $request->has('user_id') ? $request->get('user_id') : null;
         $store_id = $request->has('store_id') ? $request->get('store_id') : null;
 
-        $saleProductQuery = SaleProduct::query()
+        return SaleProduct::query()
             ->whereIn('product_id', $products_id)
             ->whereHas('sale', function ($q) use ($date_start, $date_finish, $user_id, $store_id) {
                 if ($user_id) {
@@ -154,6 +154,19 @@ class SaleController extends Controller {
                 return $sale;
             })->groupBy('main_product_id')
             ->map(function ($sale, $key) {
+                $totalPurchasePrice = ceil(collect($sale)->reduce(function ($a, $c) {
+                    return $a + $c['purchase_price'];
+                }, 0));
+                $totalProductPrice = ceil(collect($sale)->reduce(function ($a, $c) {
+                    $currentPrice = $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
+                    if ($c['sale']['kaspi_red']) {
+                        $currentPrice -= $currentPrice * Sale::KASPI_RED_PERCENT;
+                    }
+                    if ($c['sale']['balance'] > 0) {
+                        $currentPrice  -= $c['balance'];
+                    }
+                    return $a + $currentPrice;
+                }, 0));
                 return [
                     'product_id' => $sale[0]['product']['id'],
                     'product_name' => $sale[0]['product']['product']['product_name'],
@@ -161,21 +174,11 @@ class SaleController extends Controller {
                     'manufacturer' => $sale[0]['product']['product']['manufacturer']['manufacturer_name'],
                     'manufacturer_id' => $sale[0]['product']['product']['manufacturer']['id'],
                     'count' => count($sale),
-                    'total_purchase_price' => ceil(collect($sale)->reduce(function ($a, $c) {
-                        return $a + $c['purchase_price'];
-                    }, 0)),
-                    'total_product_price' => ceil(collect($sale)->reduce(function ($a, $c) {
-                        return $a + $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
-                    }, 0)),
-                    'margin' => ceil(collect($sale)->reduce(function ($a, $c) {
-                            return $a + $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
-                        }, 0))
-                        - ceil(collect($sale)->reduce(function ($a, $c) {
-                            return $a + $c['purchase_price'];
-                        }, 0)),
+                    'total_purchase_price' => $totalPurchasePrice,
+                    'total_product_price' => $totalProductPrice,
+                    'margin' => $totalProductPrice - $totalPurchasePrice,
                 ];
             })->values()->sortBy('product_name');
-        return $saleProductQuery;
     }
 
     private function calculateTotalAmount($sales) {
@@ -285,8 +288,8 @@ class SaleController extends Controller {
                 'name' => $store['name'],
                 'motivations' => collect($motivations)->map(function ($motivation) use ($store) {
                     $currentMotivation = collect($motivation['motivation'])->filter(function ($item) use ($store) {
-                        return $store['id'] === $item['store_id'];
-                    })->first() ?? ['sum' => 0, 'percent' => 0];
+                            return $store['id'] === $item['store_id'];
+                        })->first() ?? ['sum' => 0, 'percent' => 0];
                     return [
                         'name' => $motivation['name'],
                         'plan' => 600000,
@@ -364,8 +367,8 @@ class SaleController extends Controller {
                 'name' => $store['name'],
                 'motivations' => collect($motivations)->map(function ($motivation) use ($store) {
                     return collect($motivation)->filter(function ($item) use ($store) {
-                        return $item['store_id'] === $store['id'];
-                    })->first() ?? [];
+                            return $item['store_id'] === $store['id'];
+                        })->first() ?? [];
                 })
             ];
         });

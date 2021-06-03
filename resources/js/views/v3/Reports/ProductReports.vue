@@ -607,14 +607,12 @@
                 return [{id: -1, type: 'Все'}, ...this.$store.getters.store_types];
             },
             totalSales() {
-                console.log(typeof this.report);
-                console.log(this.report);
-                return this.report.reduce((a, c) => {
+                return this._reports.reduce((a, c) => {
                     return a + c.total_product_price;
                 }, 0)
             },
             totalMargin() {
-                return this.report.reduce((a, c) => {
+                return this._reports.reduce((a, c) => {
                     return a + c.margin;
                 }, 0)
             },
