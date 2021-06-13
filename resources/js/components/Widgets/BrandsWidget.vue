@@ -16,7 +16,7 @@
             </v-card-title>
             <v-card-text>
                 <v-row>
-                    <v-col v-for="(store) of BRANDS_MOTIVATION" v-if="(IS_ADMIN || IS_OBSERVER) || USER.id == store.id" cols="12" md="6" lg="auto">
+                    <v-col v-for="(store) of BRANDS_MOTIVATION" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.id" cols="12" md="6" lg="auto">
                         <v-list>
                             <v-list-item>
                                 <v-list-item-content>

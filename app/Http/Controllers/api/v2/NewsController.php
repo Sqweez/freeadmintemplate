@@ -17,7 +17,7 @@ class NewsController extends Controller
                 [
                     'news_image', 'productNews'
                 ]
-            )->get();
+            )->get()->sortByDesc('created_at');
             return NewsResource::collection($news);
         }
         return News::with(['news_image', 'productNews'])->get();

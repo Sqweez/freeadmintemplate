@@ -191,9 +191,9 @@ class Sale extends Model
     }
 
     public function getFinalPriceAttribute() {
-        $price = intval($this->products->reduce(function ($a, $c) {
+        $price = ($this->products->reduce(function ($a, $c) {
             return $a + $c->final_price;
-        }, 0));;
+        }, 0));
         if ($this->kaspi_red) {
             $price -= $price * self::KASPI_RED_PERCENT;
         }

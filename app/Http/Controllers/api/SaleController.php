@@ -154,7 +154,7 @@ class SaleController extends Controller {
                 return $sale;
             })->groupBy('main_product_id')
             ->map(function ($sale, $key) {
-                $totalPurchasePrice = ceil(collect($sale)->reduce(function ($a, $c) {
+                $totalPurchasePrice = (collect($sale)->reduce(function ($a, $c) {
                     return $a + $c['purchase_price'];
                 }, 0));
                 $totalProductPrice = ceil(collect($sale)->reduce(function ($a, $c) {
@@ -176,7 +176,7 @@ class SaleController extends Controller {
                     'count' => count($sale),
                     'total_purchase_price' => $totalPurchasePrice,
                     'total_product_price' => $totalProductPrice,
-                    'margin' => $totalProductPrice - $totalPurchasePrice,
+                    'margin' => $totalProductPrice > 0 ? $totalProductPrice - $totalPurchasePrice : 0,
                 ];
             })->values()->sortBy('product_name');
     }
@@ -260,11 +260,6 @@ class SaleController extends Controller {
     }
 
     public function getMotivationReport(Request $request) {
-        $hoffman = [39];
-        $siberian = [2];
-        $euroBrands = [
-            181, 177, 182
-        ];
         $motivations = [
             [
                 'name' => 'Dr.Hoffman',
