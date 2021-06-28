@@ -43,10 +43,10 @@ export default {
         }
     },
     actions: {
-        async GET_TASKS({commit, dispatch, getters}) {
+        async GET_TASKS({commit, dispatch, getters}, payload) {
             try {
                 commit('enableLoading');
-                const { data } = await getTasks();
+                const { data } = await getTasks(payload);
                 commit('SET_TASKS', data.data);
             }
             catch (e) {

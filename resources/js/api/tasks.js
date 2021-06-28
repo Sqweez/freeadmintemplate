@@ -4,8 +4,8 @@ export async function getTasks() {
     return await axios.get('/api/v2/tasks');
 }
 
-export async function getCurrentTasks() {
-    return await axios.get(`/api/v2/tasks/current`);
+export async function getCurrentTasks(store_id) {
+    return await axios.get(`/api/v2/tasks/current?store_id=${store_id}`);
 }
 
 export async function createTask(task) {
