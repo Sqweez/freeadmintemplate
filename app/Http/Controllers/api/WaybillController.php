@@ -173,11 +173,12 @@ class WaybillController extends Controller
         $excelTemplate = $excelService->loadFile('price_list_template', 'xlsx');
         $excelSheet = $excelTemplate->getActiveSheet();
         $INITIAL_PRODUCT_ROW = 8;
+        $excelSheet->insertNewRowBefore(9, count($cart));
         foreach ($cart as $key => $item) {
             $currentIndex = $key + $INITIAL_PRODUCT_ROW;
             if ($key > 0) {
                 try {
-                    $excelSheet->insertNewRowBefore($currentIndex, 1);
+                    //$excelSheet->insertNewRowBefore($currentIndex, 1);
                 } catch (\Exception $exception) {}
             }
 

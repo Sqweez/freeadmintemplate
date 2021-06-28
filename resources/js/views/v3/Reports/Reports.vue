@@ -508,7 +508,7 @@
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.users];
             },
             payment_types() {
-                return [{id: -1, name: 'Все'}, ...this.$store.getters.payment_types];
+                return [{id: -1, name: 'Все'}, ...this.$store.getters.payment_types, {id: -2, name: 'Оплачено сертификатом'}];
             },
             _payment_types() {
                 return this.$store.getters.payment_types;
@@ -522,10 +522,22 @@
             totalSales() {
                 return this._salesReport
                     .reduce((a, c) => {
+                        if (this.currentType === -2) {
+                            return a + c.certificate.amount;
+                        }
+
+                        const certificateAmount = c.certificate ? c.certificate.amount : 0;
+
                         if (c.split_payment === null || this.currentType === -1) {
-                            return a + c.final_price
-                        } else {
-                            return a + +c.split_payment.find(s => s.payment_type == this.currentType).amount;
+                            let finalPrice =  a + c.final_price;
+                            if (this.currentType !== -1) {
+                                finalPrice -= certificateAmount;
+                            }
+                            return finalPrice;
+                        }
+
+                        else {
+                            return a + +c.split_payment.find(s => s.payment_type == this.currentType).amount - certificateAmount;
                         }
                     }, 0);
             },
@@ -563,7 +575,13 @@
                     .filter(s => {
                         if (this.currentType == -1) {
                             return s;
-                        } else {
+                        }
+
+                        if (this.currentType === -2) {
+                            return s.certificate;
+                        }
+
+                        else {
                             if (this.currentType == 5 && s.payment_type === 5) {
                                 return true;
                             }

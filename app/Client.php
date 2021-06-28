@@ -146,9 +146,9 @@ class Client extends Model
 
     public function calculateDiscountPercent() {
         $total = $this->sales->sum('amount');
-        $discountByAmount = collect(self::TOTAL_DISCOUNT)->search(function ($item) use ($total) {
+        $discountByAmount = collect(self::TOTAL_DISCOUNT)->filter(function ($item) use ($total) {
             return $total >= $item['amount'];
-        })['discount'] ?? 0;
+        })->first()['discount'] ?? 0;
         return min(max($this->client_discount, $discountByAmount), 100);
     }
 }

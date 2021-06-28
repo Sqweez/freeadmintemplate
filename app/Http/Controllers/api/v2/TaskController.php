@@ -21,7 +21,7 @@ class TaskController extends Controller
         $store_id = $request->header('store_id');
         return TaskResource::collection(
             Task::with(['author:name,id', 'store:id,name', 'attachments'])
-                ->whereStoreId($store_id)
+                ->whereStoreId(intval($store_id))
                 ->whereDate('date_start', '>=', now())
                 ->whereDate('date_finish', '<=', now())
                 ->get()
@@ -34,7 +34,7 @@ class TaskController extends Controller
         $task = $request->except(['store_ids', 'attachments']);
         $tasks = [];
         foreach ($stores as $store) {
-            $_task = Task::create(array_merge($task, ['store_id' => $store, 'author_id' => $request->header('user_id')]));
+            $_task = Task::create(array_merge($task, ['store_id' => $store, 'author_id' => $request->header('user_id', 1)]));
             foreach ($attachments as $attachment) {
                 $_attachment = TaskAttachment::create([
                     'url' => $attachment['url'],
