@@ -95,10 +95,13 @@
         computed: {
             tasks() {
                 return this.$store.getters.CURRENT_TASKS;
+            },
+            user() {
+                return this.$store.getters.USER;
             }
         },
         async created() {
-            await this.$store.dispatch('GET_CURRENT_TASKS');
+            await this.$store.dispatch('GET_CURRENT_TASKS', this.user.store_id);
         }
     }
 </script>

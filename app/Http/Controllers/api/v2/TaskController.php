@@ -18,7 +18,7 @@ class TaskController extends Controller
     }
 
     public function getCurrentTasks(Request $request) {
-        $store_id = $request->header('store_id');
+        $store_id = $request->get('store_id');
         return TaskResource::collection(
             Task::with(['author:name,id', 'store:id,name', 'attachments'])
                 ->whereStoreId(intval($store_id))
