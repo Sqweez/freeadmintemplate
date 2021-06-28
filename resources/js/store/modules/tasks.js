@@ -43,10 +43,10 @@ export default {
         }
     },
     actions: {
-        async GET_TASKS({commit, dispatch, getters}, payload) {
+        async GET_TASKS({commit, dispatch, getters}) {
             try {
                 commit('enableLoading');
-                const { data } = await getTasks(payload);
+                const { data } = await getTasks();
                 commit('SET_TASKS', data.data);
             }
             catch (e) {
@@ -55,10 +55,10 @@ export default {
                 commit('disableLoading');
             }
         },
-        async GET_CURRENT_TASKS({commit}) {
+        async GET_CURRENT_TASKS({commit}, payload) {
             try {
                 commit('enableLoading');
-                const { data } = await getCurrentTasks();
+                const { data } = await getCurrentTasks(payload);
                 commit('SET_CURRENT_TASKS', data.data);
             }
             catch (e) {
