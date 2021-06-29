@@ -22,8 +22,8 @@ class TaskController extends Controller
         return TaskResource::collection(
             Task::with(['author:name,id', 'store:id,name', 'attachments'])
                 ->whereStoreId(intval($store_id))
-                ->whereDate('date_start', '>=', now())
-                ->whereDate('date_finish', '<=', now())
+                ->whereDate('date_start', '>=', now()->toDateString())
+                ->whereDate('date_finish', '>=', now()->toDateString())
                 ->get()
         );
     }

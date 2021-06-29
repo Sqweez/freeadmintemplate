@@ -161,6 +161,10 @@ const navigationModule = {
                     {
                         title: 'Клиенты',
                         url: '/analytics/clients'
+                    },
+                    {
+                        title: 'Бренды',
+                        url: '/analytics/brands'
                     }
                 ]
             },

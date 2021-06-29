@@ -577,7 +577,6 @@
             async changeCustomDate() {
                 this.$refs.startMenu.save(this.start);
                 this.$refs.finishMenu.save(this.finish);
-
             }
         },
         computed: {

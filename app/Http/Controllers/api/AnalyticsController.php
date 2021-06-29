@@ -7,6 +7,7 @@ use App\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\PartnerResource;
 use App\Product;
+use App\Sale;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -150,5 +151,61 @@ class AnalyticsController extends Controller
         $client['clients'] = $this->getUniqueClientsCount($client->partner_sales);
 
         return new PartnerResource($client);
+    }
+
+    public function getBrandSales(Request $request) {
+        $store_id = $request->get('store_id');
+        $date_start = $request->get('date_start');
+        $date_finish = $request->get('date_finish');
+
+        $saleQuery = Sale::query();
+
+        if ($store_id != -1) {
+            $saleQuery = $saleQuery->whereStoreId($store_id);
+        }
+
+        $sales = $saleQuery
+            ->whereDate('created_at', '>=', $date_start)
+            ->whereDate('created_at', '<=', $date_finish)
+            ->with(['products', 'products.product', 'products.product.product:product_name,manufacturer_id,id', 'products.product.product.manufacturer'])
+            ->get()
+            ->pluck('products')
+            ->map(function ($item) {
+                return collect($item)->map(function ($sale) {
+                    $sale['manufacturer'] = $sale['product']['product']['manufacturer']['manufacturer_name'] ?? 'Неизвестно';
+                    unset($sale['product']);
+                    return $sale;
+                })->filter(function ($sale) {
+                    return $sale['manufacturer'] !== 'Неизвестно';
+                })->values();
+            })->filter(function ($item) {
+                return count($item) > 0;
+            })->values()->all();
+
+        $salesMerged = [];
+        foreach ($sales as $sale) {
+            foreach ($sale as $item) {
+                $salesMerged[] = $item;
+            }
+        }
+
+        return collect($salesMerged)
+            ->groupBy('manufacturer')
+            ->map(function ($item, $key) {
+                return [
+                    'manufacturer' => $key,
+                    'total' => collect($item)->reduce(function ($a, $c) {
+                        return $a + $c['product_price'] - ($c['product_price'] * $c['discount'] / 100);
+                    }, 0)
+                ];
+            })
+            ->values()
+            ->filter(function ($item) {
+                return $item['total'] > 0;
+            })
+            ->values()
+            ->sortByDesc('total')
+            ->values()
+            ->all();
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\api\PromocodeController;
 use App\Http\Controllers\api\v2\TaskController;
 use App\Http\Controllers\api\v2\EducationController;
+use App\Http\Controllers\api\AnalyticsController;
 
 // Authorization
 
@@ -282,5 +283,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::patch('/{id}', [EducationController::class, 'update']);
             Route::delete('/{id}', [EducationController::class, 'destroy']);
         });
+
+        Route::get('brands/analytics', [AnalyticsController::class, 'getBrandSales']);
     });
 });

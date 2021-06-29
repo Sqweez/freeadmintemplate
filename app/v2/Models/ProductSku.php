@@ -130,7 +130,7 @@ class ProductSku extends Model
     }
 
     public function getProductNameAttribute() {
-        return $this->product->product_name;
+        return $this->product->product_name ?? 'Неизвестно';
     }
 
     public function getProductDescriptionAttribute() {
@@ -146,7 +146,7 @@ class ProductSku extends Model
     }
 
     public function getManufacturerAttribute() {
-        return $this->product->manufacturer;
+        return $this->product->manufacturer ?? 'Неизвестно';
     }
 
     public function getIsHitAttribute() {

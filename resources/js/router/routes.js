@@ -40,6 +40,7 @@ import DocumentsList from "@/views/Documents/DocumentsList";
 import PriceList from "@/views/PriceList/PriceList";
 import TasksIndex from "@/views/Sellers/Tasks/TasksIndex";
 import EducationIndex from "@/views/Sellers/Education/EducationIndex";
+import Brands from "@/views/Analytics/Brands";
 
 const routes = [
     {
@@ -367,6 +368,15 @@ const routes = [
     {
         path: '/analytics/clients',
         component: AnalyticsClients,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
+        }
+    },
+    {
+        path: '/analytics/brands',
+        component: Brands,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true
