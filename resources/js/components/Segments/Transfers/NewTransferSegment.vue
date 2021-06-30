@@ -109,6 +109,15 @@
                 </div>
             </v-card-text>
         </v-card>
+        <v-select
+            label="Поступления"
+            :item-text="function(item) {
+              return !item.name ? `${item.date} | ${item.total_sale_cost} тнг | ${item.product_count} шт` : item.name;
+            }"
+            item-value="id"
+            :items="arrivals"
+            v-model="currentArrival"
+        />
         <v-card class="background-iron-darkgrey">
             <v-card-title>
                 Товары
@@ -242,6 +251,7 @@
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
+    import {getArrivals} from "@/api/arrivals";
 
     export default {
         components: {
@@ -255,6 +265,7 @@
         },
         data: () => ({
             cart: [],
+            currentArrival: -1,
             search: '',
             confirmationModal: false,
             wayBillModal: false,
@@ -296,10 +307,11 @@
                     value: 'product_barcode',
                     align: ' d-none'
                 }
-            ]
+            ],
         }),
         async mounted() {
-            this.loading = this.products.length === 0;
+            this.loading = true;
+            await this.$store.dispatch('GET_ARRIVALS', true);
             await this.$store.dispatch('GET_PRODUCTS_v2');
             await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
@@ -360,6 +372,39 @@
                 const stores = this.stores.filter(s => s.id !== this.storeFilter);
                 this.child_store = stores[0].id;
                 return stores;
+            },
+            arrivals() {
+                return [
+                    {
+                        id: -1,
+                        name: 'Все'
+                    },
+                    ...this.$store.getters.ARRIVALS
+                ];
+            },
+            products() {
+                let products = this.$store.getters.PRODUCTS_v2;
+
+                if (this.currentArrival !== -1) {
+                    const arrivalProducts = this.arrivals.find(a => a.id === this.currentArrival)
+                        .products
+                        .map(p => p.id);
+                    products = products.filter(p => {
+                        return arrivalProducts.find(a => a == p.id);
+                    })
+                }
+
+                if (this.manufacturerId !== -1) {
+                    products = products.filter(product => product.manufacturer.id === this.manufacturerId);
+                }
+                if (this.hideNotInStock) {
+                    products = products.filter(product => product.quantity > 0);
+                }
+                if (this.categoryId !== -1) {
+                    products = products.filter(product => product.category.id === this.categoryId);
+                }
+
+                return products;
             },
         }
     }

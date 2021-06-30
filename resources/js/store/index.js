@@ -28,6 +28,7 @@ import newsModule from "@/store/modules/news";
 import suppliersModule from "@/store/modules/suppliers";
 import tasksModule from "@/store/modules/tasks";
 import educationModule from "@/store/modules/education";
+import arrivalModule from "@/store/modules/arrivals";
 
 Vue.use(Vuex);
 
@@ -63,7 +64,8 @@ const store = new Store({
         newsModule,
         suppliersModule,
         tasksModule,
-        educationModule
+        educationModule,
+        arrivalModule
     },
     plugins: [createPersistedState({
         paths: [
