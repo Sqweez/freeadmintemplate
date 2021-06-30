@@ -143,6 +143,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     // TransferController
     Route::post('transfers/{transfer}/accept', 'api\TransferController@acceptTransfer');
+    Route::post('transfers/{transfer}/confirm', 'api\TransferController@confirmTransfer');
     Route::post('transfers/{transfer}/cancel', 'api\TransferController@declineTransfer');
 
     Route::resource('goals', 'api\GoalController');

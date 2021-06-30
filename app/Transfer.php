@@ -36,6 +36,10 @@ class Transfer extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'is_accepted' => 'boolean',
+    ];
+
     const PARTNER_SELLER_ID = 3;
 
 

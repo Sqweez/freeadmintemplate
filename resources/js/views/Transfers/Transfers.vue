@@ -19,7 +19,7 @@
                     v-for="(segment, index) of segments"
                     :key="index"
                     :text="currentSegment !== segment.component"
-                    style="width: 200px"
+                    style="width: 240px"
                     class="mr-3"
                     @click="chooseSegment(segment)"
                     color="primary">
@@ -37,25 +37,12 @@
     import TransferHistory from "@/components/Segments/Transfers/TransferHistory";
     import NewTransferSegment from "@/components/Segments/Transfers/NewTransferSegment";
     import CurrentTransfers from "@/components/Segments/Transfers/CurrentTransfers";
+    import OnAcceptionTransfers from "@/components/Segments/Transfers/OnAcceptionTransfers";
 
     export default {
-        components: {TransferHistory, NewTransferSegment, CurrentTransfers},
+        components: {TransferHistory, NewTransferSegment, CurrentTransfers, OnAcceptionTransfers},
         data: () => ({
             loading: false,
-            segments: [
-                {
-                    name: 'Текущие перемещения',
-                    component: 'CurrentTransfers'
-                },
-                {
-                    name: 'Новое перемещение',
-                    component: 'NewTransferSegment'
-                },
-                {
-                    name: 'История перемещений',
-                    component: 'TransferHistory'
-                },
-            ],
             currentSegment: 'CurrentTransfers'
         }),
         methods: {
@@ -63,7 +50,36 @@
                 this.currentSegment = segment.component;
             }
         },
-        computed: {}
+        computed: {
+            segments() {
+                let segments = [
+                    {
+                        name: 'Текущие перемещения',
+                        component: 'CurrentTransfers'
+                    },
+                    {
+                        name: 'Новое перемещение',
+                        component: 'NewTransferSegment'
+                    },
+                    {
+                        name: 'История перемещений',
+                        component: 'TransferHistory'
+                    },
+                ];
+
+                if (this.IS_ADMIN) {
+                    segments.push({
+                        name: 'Требуют подтверждения',
+                        component: 'OnAcceptionTransfers'
+                    })
+                }
+
+                return segments;
+            },
+            IS_ADMIN() {
+                return this.$store.getters.IS_ADMIN;
+            }
+        }
     }
 </script>
 

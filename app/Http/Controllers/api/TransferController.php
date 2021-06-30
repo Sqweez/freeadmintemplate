@@ -28,7 +28,21 @@ class TransferController extends Controller {
      */
     public function index(Request $request) {
         $mode = $request->get('mode');
-        $transfersQuery = Transfer::query()->where('is_confirmed', !($mode === 'current'))
+        $transfersQuery = Transfer::query();
+        if ($mode === 'current') {
+            $transfersQuery = $transfersQuery
+                ->where('is_confirmed', false)
+                ->where('is_accepted', true);
+        }
+        if ($mode === 'history') {
+            $transfersQuery = $transfersQuery
+                ->where('is_confirmed', true)
+                ->where('is_accepted', true);
+        }
+        if ($mode === 'not_accepted') {
+            $transfersQuery = $transfersQuery->where('is_accepted', false);
+        }
+        $transfersQuery = $transfersQuery
             ->whereHas('batches.product')
             ->whereHas('batches.product.product')
             ->with(['parent_store', 'child_store', 'companionSale'])
@@ -159,6 +173,30 @@ class TransferController extends Controller {
         $this->makeTransfer($transfer, $products);
         $this->returnGoods($transfer);
         $transfer->update(['is_confirmed' => true]);
+    }
+
+    public function confirmTransfer(Request $request, Transfer $transfer) {
+        $transfer->update(['is_accepted' => true]);
+        $products = $request->all();
+        $batches = $transfer->batches;
+        $groupedBatches = $this->groupBatches($batches);
+        foreach ($groupedBatches as $key => $batch) {
+            $product_id = $batch['product_id'];
+            $needle = collect($products)->filter(function ($i) use ($product_id) {
+                return $i['product_id'] === $product_id;
+            })->first() ?? [];
+            $countDifference = count($needle) === 0 ? $batch['count'] : $batch['count'] - $needle['count'];
+            if ($countDifference > 0) {
+                $batches->filter(function ($i) use ($product_id) {
+                    return $i['product_id'] === $product_id;
+                })
+                ->take($countDifference)->each(function ($batch) {
+                    $productBatch = ProductBatch::find($batch['batch_id']);
+                    $productBatch->update(['quantity' => $productBatch->quantity + 1]);
+                    TransferBatch::find($batch['id'])->delete();
+                });
+            }
+        }
     }
 
     public function declineTransfer(Request $request, Transfer $transfer) {

@@ -29,6 +29,10 @@ export async function acceptTransfer(payload, id) {
     return await axios.post(`/api/transfers/${id}/accept`, payload);
 }
 
+export async function acceptTransferFromSeller(payload, id) {
+    return await axios.post(`/api/transfers/${id}/confirm`, payload);
+}
+
 export async function declineTransfer(id) {
     return await axios.post(`/api/transfers/${id}/cancel`)
 }
