@@ -196,7 +196,8 @@ const routes = [
         path: '/promocode',
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_SELLER: true
             },
         },
         component: Promocodes

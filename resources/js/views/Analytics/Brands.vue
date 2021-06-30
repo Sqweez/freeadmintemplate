@@ -122,7 +122,7 @@
                 <v-btn block color="primary" class="my-2" @click="loadReports()">
                     Загрузить отчет
                 </v-btn>
-                <v-simple-table>
+                <v-simple-table v-if="brandReport.length > 0">
                     <template v-slot:default>
                         <thead>
                         <tr>
@@ -136,6 +136,13 @@
                             <td>{{ key + 1 }}</td>
                             <td>{{ item.manufacturer }}</td>
                             <td>{{ item.total | priceFilters }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                #
+                            </td>
+                            <td><b>Итого:</b></td>
+                            <td>{{ totalAmount | priceFilters }}</td>
                         </tr>
                         </tbody>
                     </template>
@@ -225,6 +232,11 @@
             shops() {
                 return [{id: -1, name: 'Все'}, ...this.$store.getters.shops];
             },
+            totalAmount() {
+                return this.brandReport.reduce((a, c) => {
+                    return a + c.total;
+                }, 0)
+            }
         },
         async created() {
             this.$store.commit('enableLoading');

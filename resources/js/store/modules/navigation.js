@@ -369,6 +369,11 @@ const navigationModule = {
                 title: 'Обучение',
                 url: '/education/index',
                 icon: 'grading'
+            },
+            {
+                title: 'Промокоды',
+                url: '/promocode',
+                icon: 'receipt'
             }
         ],
     },
