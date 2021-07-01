@@ -41,6 +41,7 @@ import PriceList from "@/views/PriceList/PriceList";
 import TasksIndex from "@/views/Sellers/Tasks/TasksIndex";
 import EducationIndex from "@/views/Sellers/Education/EducationIndex";
 import Brands from "@/views/Analytics/Brands";
+import ProductsOutOfStock from "@/views/v3/Products/ProductsOutOfStock";
 
 const routes = [
     {
@@ -405,6 +406,15 @@ const routes = [
     {
         path: '/education/index',
         component: EducationIndex,
+    },
+    {
+        path: '/products/stock/out',
+        component: ProductsOutOfStock,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true
+            }
+        }
     }
 ];
 

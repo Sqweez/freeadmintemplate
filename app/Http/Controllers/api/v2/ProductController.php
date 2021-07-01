@@ -13,6 +13,7 @@ use App\Store;
 use App\v2\Models\Product;
 use App\ProductBatch;
 use App\v2\Models\ProductSku;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use ProductService;
@@ -186,5 +187,31 @@ class ProductController extends Controller
             ->orderBy('product_id')
             ->orderBy('id')
             ->get());
+    }
+
+    public function outOfStockProducts(Request $request) {
+        $store_id = $request->get('store_id');
+        $date = now()->subDays(60);
+        return ProductBatch::whereStoreId($store_id)
+            ->get()
+            ->groupBy('product_id')
+            ->map(function ($batch, $key) use ($date) {
+                /*$_batch = $batch;
+                $batch['has_batches'] = collect($_batch)->filter(function ($item) use ($date) {
+                    return Carbon::parse($item['created_at'])->gte($date);
+                })->count();
+                $batch['quantity'] = collect($_batch)->values();*/
+                return [
+                    'has_batches' => collect($batch)->filter(function ($item) use ($date) {
+                        return Carbon::parse($item['created_at'])->gte($date);
+                    })->count() > 0,
+                    'product_id' => $key,
+                    'quantity' => collect($batch)->values()->reduce(function ($a, $c) {
+                        return $a + $c['quantity'];
+                    }, 0)
+                ];
+            })->values()->filter(function ($item) {
+                return $item['has_batches'] && $item['quantity'] <= 3;
+            })->values();
     }
 }

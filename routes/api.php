@@ -215,6 +215,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             //Добавление ассортимента товара
             Route::post('{product}/sku', [ProductController::class, 'createProductSku']);
             Route::patch('{sku}/sku', [ProductController::class, 'updateProductSku']);
+            Route::get('stock/out', [ProductController::class, 'outOfStockProducts']);
         });
 
         Route::prefix('certificates')->group(function () {

@@ -130,6 +130,11 @@ const navigationModule = {
                         url: '/arrivals',
                         isAdmin: true,
                     },
+                    {
+                        title: 'Заканчивающиеся товары',
+                        url: '/products/stock/out',
+                        isAdmin: true
+                    }
                 ],
             },
             {
