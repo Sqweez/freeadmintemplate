@@ -21,7 +21,9 @@ class ProductService {
         return (ProductSku::with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)
             ->orderBy('product_id')
             ->orderBy('id')
-            ->get());
+            ->get()
+            ->sortBy('product_name')
+        );
     }
 
     public function get($id) {

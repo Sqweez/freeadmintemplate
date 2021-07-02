@@ -139,7 +139,10 @@ class ProductController extends Controller {
 
     private function getFilteredProducts($query, $store_id, $user_token) {
         $filters = $this->getFilterParametrs($query, $store_id);
-        return ProductsResource::collection($this->getProductWithFilter($filters, $store_id, $user_token)->paginate(36));
+        return ProductsResource::collection(
+            $this->getProductWithFilter($filters, $store_id, $user_token)
+                ->paginate(36)
+        );
     }
 
 

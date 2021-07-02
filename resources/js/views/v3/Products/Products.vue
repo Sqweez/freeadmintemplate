@@ -325,7 +325,7 @@
                     {
                         value: 'product_name',
                         text: 'Наименование',
-                        sortable: false,
+                        sortable: true,
                     },
                     {
                         value: 'quantity',
