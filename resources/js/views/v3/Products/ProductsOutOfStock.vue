@@ -132,6 +132,12 @@
             stores() {
                 return this.$store.getters.stores;
             },
+            _products() {
+                let products = this.$store.getters.PRODUCTS_v2;
+                return products.filter(p => {
+                    return this.quantities.find(q => q.product_id === p.id);
+                });
+            },
             products() {
                 let products = this.$store.getters.PRODUCTS_v2;
                 return products.filter(p => {
@@ -148,7 +154,7 @@
                 })
             },
             manufacturers() {
-                const manufacturersId = this.products.map(p => p.manufacturer.id);
+                const manufacturersId = this._products.map(p => p.manufacturer.id);
                 return [
                     {
                         id: -1,
