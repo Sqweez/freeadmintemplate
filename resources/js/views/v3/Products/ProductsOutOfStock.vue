@@ -139,7 +139,13 @@
                 }).map(p => {
                     p.quantity = this.quantities.find(q => q.product_id === p.id).quantity;
                     return p;
-                });
+                }).filter(p => {
+                    if (this.manufacturerId === -1) {
+                        return p;
+                    } else {
+                        return p.manufacturer.id == this.manufacturerId;
+                    }
+                })
             },
             manufacturers() {
                 const manufacturersId = this.products.map(p => p.manufacturer.id);
