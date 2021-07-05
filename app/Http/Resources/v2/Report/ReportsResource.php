@@ -55,7 +55,8 @@ class ReportsResource extends JsonResource
                     $split['payment_type'] = intval($split['payment_type']);
                     return $split;
                 })
-                : null
+                : null,
+            'comment' => $this->comment
         ];
     }
 }

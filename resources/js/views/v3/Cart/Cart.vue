@@ -113,6 +113,12 @@
                                 outlined
                             />
                         </div>
+                        <v-textarea
+                            rows="3"
+                            auto-grow
+                            v-model="comment"
+                            label="Комментарий"
+                        />
                     </div>
                     <div class="split__payment" v-if="isSplitPayment">
                         <div v-for="(type, index) of payment_types_without_split" :key="`split_type-${type.id}`">
@@ -532,6 +538,7 @@
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            comment: '',
             waybillModal: false,
             certificateModal: false,
             loading: true,
@@ -703,7 +710,8 @@
                     payment_type: this.payment_type,
                     certificate: this.certificate,
                     used_certificate: this.used_certificate,
-                    split_payment: split_payment
+                    split_payment: split_payment,
+                    comment: this.comment
                 };
                 try {
                     this.overlay = true;
@@ -720,6 +728,7 @@
                     this.partner_id = false;
                     this.certificate = null;
                     this.used_certificate = null;
+                    this.comment = '';
                 } catch (e) {
                     showToast('Произошла ошибка', TOAST_TYPE.ERROR);
                 } finally {

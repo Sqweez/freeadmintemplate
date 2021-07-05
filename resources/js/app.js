@@ -14,7 +14,6 @@ import './filters/filters';
 import loadingPlugin from "./utils/loadingPlugin";
 axios.defaults.withCredentials = true;
 
-// Import and use Vue Froala lib.
 import VueFroala from 'vue-froala-wysiwyg'
 
 import { VueEditor } from "vue2-editor";
