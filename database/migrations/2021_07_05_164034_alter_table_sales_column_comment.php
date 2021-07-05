@@ -14,7 +14,7 @@ class AlterTableSalesColumnComment extends Migration
     public function up()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->text('comment')->default('');
+            $table->text('comment')->default('')->nullable();
         });
     }
 

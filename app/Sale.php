@@ -223,6 +223,7 @@ class Sale extends Model
         parent::boot();
         static::creating(function ($query) {
             $query->client_id = $query->client_id ?? -1;
+            $query->comment = strlen($query->comment) === 0 ? null : $query->comment;
         });
         static::updating(function ($query) {
             $query->client_id = $query->client_id ?? -1;
