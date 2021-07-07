@@ -25,6 +25,18 @@
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
+                                    <span>Каспи магазин</span>
+                                    <span>
+                                        {{ getAmount(-1) | priceFilters}}
+                                    </span>
+                                </div>
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN">
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                <div class="d-flex justify-space-between">
                                     <span>Итого</span>
                                     <span>
                                         {{ totalSum | priceFilters }}

@@ -13,6 +13,7 @@ use App\Http\Controllers\api\PromocodeController;
 use App\Http\Controllers\api\v2\TaskController;
 use App\Http\Controllers\api\v2\EducationController;
 use App\Http\Controllers\api\AnalyticsController;
+use App\Http\Controllers\api\v2\PreorderController;
 
 // Authorization
 
@@ -287,5 +288,12 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::get('brands/analytics', [AnalyticsController::class, 'getBrandSales']);
+
+        Route::prefix('preorder')->group(function() {
+            Route::get('/', [PreorderController::class, 'index']);
+            Route::get('/report', [PreorderController::class, 'getPreOrderReport']);
+            Route::post('/', [PreorderController::class, 'store']);
+            Route::patch('/cancel/{preorder}', [PreorderController::class, 'cancelPreOrder']);
+        });
     });
 });

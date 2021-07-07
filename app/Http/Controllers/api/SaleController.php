@@ -19,6 +19,7 @@ use App\Sale;
 use App\SaleProduct;
 use App\Store;
 use App\v2\Models\Certificate;
+use App\v2\Models\Preorder;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,6 +39,7 @@ class SaleController extends Controller {
             $partner_id = $request->get('partner_id');
             $certificate = $request->get('certificate', null);
             $used_certificate = $request->get('used_certificate', null);
+            $preorder = $request->get('preorder', null);
             $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate']));
             $saleService->createSaleProducts($sale, $store_id, $cart);
             $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id);
@@ -53,6 +55,14 @@ class SaleController extends Controller {
                 $_certificate->active = false;
                 $_certificate->save();
             }
+
+            if ($preorder) {
+                $_preorder = Preorder::find($preorder['id']);
+                $_preorder->status = 1;
+                $_preorder->sale_id = $sale->id;
+                $_preorder->save();
+            }
+
             \DB::commit();
             return [
                 'product_quantities' => ProductBatch::whereIn('product_id', collect($cart)->pluck('id'))
@@ -182,7 +192,13 @@ class SaleController extends Controller {
     }
 
     private function calculateTotalAmount($sales) {
-        return collect($sales)->groupBy('store_id')
+        $kaspiSales = collect($sales)->filter(function ($i) {
+            return $i['payment_type'] === 4;
+        })->values();
+        $otherSales = collect($sales)->filter(function ($i) {
+                return $i['payment_type'] !== 4;
+        })->values();
+        $otherSales = collect($otherSales)->groupBy('store_id')
             ->map(function ($sale, $store_id) {
                 return [
                     'store_id' => $store_id,
@@ -197,6 +213,29 @@ class SaleController extends Controller {
                         return $a + ceil($price - $c['balance']);
                     }, 0))
                 ];
+            });
+
+        $kaspiSales = collect([
+            -1 => [
+                'store_id' => -1,
+                'amount' => (collect($kaspiSales)->reduce(function ($a, $c){
+                    $price = intval(collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
+                        $price = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
+                        return $_a + $price;
+                    }, 0));
+                    if ($c['kaspi_red']) {
+                        $price -= $price * Sale::KASPI_RED_PERCENT;
+                    }
+                    return $a + ceil($price - $c['balance']);
+                }, 0))
+            ]
+        ]);
+
+        return $kaspiSales
+            ->mergeRecursive($otherSales)
+            ->groupBy('store_id')
+            ->map(function ($item) {
+                return collect($item)->first();
             });
     }
 

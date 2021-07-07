@@ -134,6 +134,10 @@ const navigationModule = {
                         title: 'Заканчивающиеся товары',
                         url: '/products/stock/out',
                         isAdmin: true
+                    },
+                    {
+                        title: 'Предзаказы',
+                        url: '/preorders/index'
                     }
                 ],
             },

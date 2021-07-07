@@ -42,6 +42,7 @@ import TasksIndex from "@/views/Sellers/Tasks/TasksIndex";
 import EducationIndex from "@/views/Sellers/Education/EducationIndex";
 import Brands from "@/views/Analytics/Brands";
 import ProductsOutOfStock from "@/views/v3/Products/ProductsOutOfStock";
+import PreordersIndex from "@/views/v3/Preorders/PreordersIndex";
 
 const routes = [
     {
@@ -415,6 +416,10 @@ const routes = [
                 IS_ADMIN: true
             }
         }
+    },
+    {
+        path: '/preorders/index',
+        component: PreordersIndex
     }
 ];
 

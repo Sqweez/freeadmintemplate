@@ -110,6 +110,13 @@ class Sale extends Model
         ])->withTrashed();
     }
 
+    public function preorder() {
+        return $this->hasOne('App\v2\Models\Preorder')->withDefault([
+            'id' => -1,
+            'amount' => 0
+        ]);
+    }
+
     public function certificate() {
         return $this->hasOne('App\v2\Models\Certificate', 'sale_id')->withDefault([
             'amount' => 0
@@ -158,7 +165,7 @@ class Sale extends Model
     public function scopeReport($q) {
         return $q->with(['client', 'user', 'store','products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
-            ->with(['certificate'])
+            ->with(['certificate', 'preorder'])
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
     }
 

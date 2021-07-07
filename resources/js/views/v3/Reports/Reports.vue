@@ -220,6 +220,12 @@
                                 <v-list-item-subtitle>Магазин</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-list-item v-if="item.sale_type">
+                            <v-list-item-content>
+                                <v-list-item-title>{{ item.sale_type }}</v-list-item-title>
+                                <v-list-item-subtitle>Тип продажи</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
                     </v-list>
                 </template>
                 <template v-slot:item.economy="{item}">
@@ -320,7 +326,7 @@
                     </div>
                 </template>
                 <template v-slot:item.action="{item}">
-                    <v-list v-if="report.id !== item.id">
+                    <v-list v-if="report.id !== item.id && !item.sale_type">
                         <v-list-item v-if="is_admin">
                             <v-btn small depressed color="error" text @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">Отмена</v-btn>
                         </v-list-item>
@@ -465,6 +471,10 @@
                     start: this.currentDate[0],
                     finish: this.currentDate[1],
                 });
+                await this.$store.dispatch('GET_PREORDERS_REPORT', {
+                    start: this.currentDate[0],
+                    finish: this.currentDate[1],
+                })
                 await this.$store.dispatch(ACTIONS.GET_STORES);
                 await this.$store.dispatch(ACTIONS.GET_USERS);
                 this.overlay = this.loading = false;
@@ -476,7 +486,6 @@
                 window.open(`/check/${id}`, '_blank');
             },
             async loadReport() {
-
                 if (this.currentDate === DATE_FILTERS.CUSTOM_FILTER) {
                     if (!(this.start || this.finish)) {
                         return;
@@ -489,6 +498,7 @@
                     finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1]
                 };
                 await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
+                await this.$store.dispatch('GET_PREORDERS', dateObject);
                 this.overlay = false;
                 this.loading = false;
 
@@ -560,7 +570,7 @@
                 return this.totalSaleCount === 0 ? 0 : this.totalSales / this.totalSaleCount;
             },
             salesReport() {
-                return this.$store.getters.REPORTS || [];
+                return [...this.$store.getters.REPORTS, ...this.$store.getters.PREORDERS] || [];
             },
             _salesReport() {
                 return this.salesReport

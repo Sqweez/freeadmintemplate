@@ -307,6 +307,7 @@
                             <th class="text-center">Общая сумма</th>
                             <th class="text-center">Процент скидки</th>
                             <th class="text-center">Скидка</th>
+                            <th class="text-center" v-if="preorder">Предоплата</th>
                             <th class="green--text darken-1 text-center">Итого к оплате</th>
                         </tr>
                         </thead>
@@ -316,6 +317,7 @@
                             <td class="text-center">{{ subtotal | priceFilters}}</td>
                             <td class="text-center">{{ discount }}%</td>
                             <td class="text-center">{{ discountTotal | priceFilters}}</td>
+                            <td class="text-center" v-if="preorder">{{ preorder.amount | priceFilters}}</td>
                             <td class="text-center green--text darken-1">{{ finalPrice | priceFilters }}</td>
                         </tr>
                         </tbody>
@@ -386,8 +388,11 @@
                 <v-btn depressed icon primary @click="refreshProducts">
                     <v-icon>mdi-refresh</v-icon>
                 </v-btn>
-                <v-btn depressed color="success" class="float-right" @click="certificateModal = true;">
+                <v-btn depressed color="success" class="float-right ml-2" @click="certificateModal = true;">
                     Добавить сертификат +
+                </v-btn>
+                <v-btn depressed color="success" class="float-right" @click="preorderModal = true;">
+                    По предоплате
                 </v-btn>
                 <v-data-table
                     class="background-iron-grey fz-18"
@@ -458,6 +463,11 @@
             @cancel="certificateModal = false"
             @submit="createCertificate"
             :state="certificateModal"/>
+        <PreordersListModal
+            :state="preorderModal"
+            @cancel="preorderModal = false;"
+            @preorder="onPreorderChosen"
+        />
     </div>
 </template>
 
@@ -475,8 +485,10 @@
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
     import CertificateModal from "@/components/Modal/CertificateModal";
+    import PreordersListModal from "@/components/Modal/PreordersListModal";
     export default {
         components: {
+            PreordersListModal,
             CertificateModal,
             CheckModal,
             ConfirmationModal,
@@ -491,6 +503,7 @@
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch('GET_CERTIFICATES');
+            await this.$store.dispatch('GET_PREORDERS');
             this.loading = false;
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
@@ -538,6 +551,8 @@
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            preorderModal: false,
+            preorder: null,
             comment: '',
             waybillModal: false,
             certificateModal: false,
@@ -605,6 +620,28 @@
                 ACTIONS.GET_CLIENTS,
                 ACTIONS.GET_STORES,
             ]),
+            onPreorderChosen(preorder) {
+                this.preorderModal = false;
+                const preorderProducts = preorder.products.map(p => p.product_id);
+                const products = this.products.filter(p => {
+                    return preorderProducts.findIndex(pr => pr === p.id) !== -1;
+                });
+                if (products.length !== preorderProducts.length) {
+                    showToast('На складе не хватает выбранных товаров', TOAST_TYPE.ERROR);
+                    return;
+                }
+                products.forEach(item => {
+                    this.addToCart(item);
+                });
+
+
+                if (preorder.client_id !== -1) {
+                    this.client = this.clients.find(c => c.id === preorder.client_id);
+                }
+
+                this.preorder = {...preorder};
+
+            },
             async createCertificate(certificate) {
                 this.certificateModal = false;
                 try {
@@ -711,7 +748,8 @@
                     certificate: this.certificate,
                     used_certificate: this.used_certificate,
                     split_payment: split_payment,
-                    comment: this.comment
+                    comment: this.comment,
+                    preorder: this.preorder
                 };
                 try {
                     this.overlay = true;
@@ -729,6 +767,7 @@
                     this.certificate = null;
                     this.used_certificate = null;
                     this.comment = '';
+                    this.preorder = null;
                 } catch (e) {
                     showToast('Произошла ошибка', TOAST_TYPE.ERROR);
                 } finally {
@@ -806,12 +845,20 @@
                 if (this.used_certificate) {
                     total -= this.used_certificate.amount;
                 }
+
+                if (this.preorder) {
+                    total -= this.preorder.amount;
+                }
+
                 return Math.max(0, Math.ceil(total));
             },
             splitPrice() {
                 return this.finalPrice - this.splitPayment.reduce((a, c) => {
                     return a + +c.amount;
                 }, 0);
+            },
+            clients() {
+                return this.$store.getters.clients;
             }
         },
     }
