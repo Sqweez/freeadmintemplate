@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export async function createPreOrder(payload) {
-    return await axios.post(`/api/v2/preorder/`, payload);
+    return await axios.post(`/api/v2/preorder`, payload);
 }
 
 export async function getPreOrders() {
