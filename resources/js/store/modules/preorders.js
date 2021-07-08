@@ -26,10 +26,14 @@ const preordersModule = {
         }
     },
     actions: {
-        async GET_PREORDERS({commit, dispatch}) {
+        async GET_PREORDERS({commit, dispatch, getters}) {
             try {
+                let user_id = null;
+                if (getters.USER.role_id === 2) {
+                    user_id = getters.USER.id;
+                }
                 commit('enableLoading');
-                const { data } = await getPreOrders();
+                const { data } = await getPreOrders(user_id);
                 commit('SET_PREORDERS', data.data);
             } catch (e) {
                 throw e;
@@ -37,10 +41,14 @@ const preordersModule = {
                 commit('disableLoading');
             }
         },
-        async GET_PREORDERS_REPORT({commit, dispatch}, payload) {
+        async GET_PREORDERS_REPORT({commit, dispatch, getters}, payload) {
             try {
                 commit('enableLoading');
-                const { data } = await getPreOrdersReports(payload);
+                let user_id = null;
+                if (getters.USER.role_id === 2) {
+                    user_id = getters.USER.id;
+                }
+                const { data } = await getPreOrdersReports(payload, user_id);
                 commit('SET_PREORDERS', data.data);
             } catch (e) {
                 throw e;

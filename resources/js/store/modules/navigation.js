@@ -361,7 +361,10 @@ const navigationModule = {
                         title: 'Перемещения',
                         url: '/transfer',
                     },
-
+                    {
+                        title: 'Предзаказы',
+                        url: '/preorders/index'
+                    }
                 ],
             },
             {

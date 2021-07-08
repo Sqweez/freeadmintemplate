@@ -12,7 +12,12 @@ use Illuminate\Http\Request;
 class PreorderController extends Controller
 {
     public function index(Request $request) {
-        return PreodersListResource::collection(Preorder::with(['client', 'user', 'store','products.product', 'products'])
+        $user_id = $request->get('user_id', null);
+        $preorderQuery = Preorder::query();
+        if ($user_id !== null) {
+            $preorderQuery = $preorderQuery->whereUserId($user_id);
+        }
+        return PreodersListResource::collection($preorderQuery->with(['client', 'user', 'store','products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes'])
             ->get()
@@ -42,8 +47,13 @@ class PreorderController extends Controller
     public function getPreOrderReport(Request $request) {
         $start = $request->get('start');
         $finish = $request->get('finish');
+        $user_id = $request->get('user_id', null);
+        $preorderQuery = Preorder::query();
+        if ($user_id !== null) {
+            $preorderQuery = $preorderQuery->whereUserId($user_id);
+        }
         return PreorderReportResource::collection(
-            Preorder::with(['client', 'user', 'store','products.product', 'products'])
+            $preorderQuery->with(['client', 'user', 'store','products.product', 'products'])
                 ->whereDate('created_at', '>=', $start)
                 ->whereDate('created_at', '<=', $finish)
                 ->where('status', '!=', -1)
