@@ -385,15 +385,19 @@
                         />
                     </v-col>
                 </v-row>
-                <v-btn depressed icon primary @click="refreshProducts">
-                    <v-icon>mdi-refresh</v-icon>
-                </v-btn>
-                <v-btn depressed color="success" class="float-right ml-2" @click="certificateModal = true;">
-                    Добавить сертификат +
-                </v-btn>
-                <v-btn depressed color="success" class="float-right" @click="preorderModal = true;">
-                    По предоплате
-                </v-btn>
+                <v-row>
+                    <v-btn depressed icon primary @click="refreshProducts">
+                        <v-icon>mdi-refresh</v-icon>
+                    </v-btn>
+                </v-row>
+                <v-row>
+                    <v-btn depressed color="success" class="float-right ml-2 mt-2" @click="certificateModal = true;">
+                        Добавить сертификат +
+                    </v-btn>
+                    <v-btn depressed color="success" class="float-right ml-2 mt-2" @click="preorderModal = true;">
+                        По предоплате
+                    </v-btn>
+                </v-row>
                 <v-data-table
                     class="background-iron-grey fz-18"
                     no-results-text="Нет результатов"
@@ -422,6 +426,9 @@
                                 </v-list-item-content>
                             </v-list-item>
                         </v-list>
+                    </template>
+                    <template v-slot:item.attributes="{ item }">
+                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}
                     </template>
                     <template v-slot:item.actions="{item}">
                         <v-btn depressed icon @click="addToCart(item)" color="success">
