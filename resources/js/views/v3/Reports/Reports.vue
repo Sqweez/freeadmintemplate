@@ -498,7 +498,7 @@
                     finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1]
                 };
                 await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
-                await this.$store.dispatch('GET_PREORDERS', dateObject);
+                await this.$store.dispatch('GET_PREORDERS_REPORT', dateObject);
                 this.overlay = false;
                 this.loading = false;
 
