@@ -24,7 +24,7 @@ class KaspiController extends Controller {
         $products = ProductSku::whereHas('product', function ($q) {
             return $q->where('is_kaspi_visible', true);
         })->with(['attributes'])->with(['product', 'product.attributes'])->with('product.manufacturer')->with(['batches' => function ($q) {
-            return $q->where('store_id', 1)->where('quantity', '>', 0);
+            return $q/*->where('store_id', 1)*/->where('quantity', '>', 0);
         }])->get()->sortBy('product_id');
         $stores = Store::whereTypeId(1)->get();
         return $products->map(function ($product) use ($stores) {

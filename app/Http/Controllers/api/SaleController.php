@@ -196,7 +196,7 @@ class SaleController extends Controller {
             return $i['payment_type'] === 4;
         })->values();
         $otherSales = collect($sales)->filter(function ($i) {
-                return $i['payment_type'] !== 4;
+            return $i['payment_type'] !== 4;
         })->values();
         $otherSales = collect($otherSales)->groupBy('store_id')
             ->map(function ($sale, $store_id) {
@@ -216,8 +216,8 @@ class SaleController extends Controller {
             });
 
         $kaspiSales = collect([
-            -1 => [
-                'store_id' => -1,
+            5555 => [
+                'store_id' => 5555,
                 'amount' => (collect($kaspiSales)->reduce(function ($a, $c){
                     $price = intval(collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
                         $price = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));

@@ -13,6 +13,7 @@ class TaskController extends Controller
     public function index() {
         return TaskResource::collection(
             Task::with(['author:name,id', 'store:id,name', 'attachments'])
+                ->orderByDesc('created_at')
                 ->get()
         );
     }
