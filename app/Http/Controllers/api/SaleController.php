@@ -195,48 +195,57 @@ class SaleController extends Controller {
         $kaspiSales = collect($sales)->filter(function ($i) {
             return $i['payment_type'] === 4;
         })->values();
+
+        $internetSales = collect($sales)->filter(function ($i) {
+            return $i['user_id'] === 2;
+        });
+
         $otherSales = collect($sales)->filter(function ($i) {
             return $i['payment_type'] !== 4;
         })->values();
+
         $otherSales = collect($otherSales)->groupBy('store_id')
             ->map(function ($sale, $store_id) {
                 return [
                     'store_id' => $store_id,
-                    'amount' => (collect($sale)->reduce(function ($a, $c){
-                        $price = intval(collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
-                            $price = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
-                            return $_a + $price;
-                        }, 0));
-                        if ($c['kaspi_red']) {
-                            $price -= $price * Sale::KASPI_RED_PERCENT;
-                        }
-                        return $a + ceil($price - $c['balance']);
-                    }, 0))
+                    'amount' => $this->getTotalAmount($sale)
                 ];
             });
 
         $kaspiSales = collect([
             5555 => [
                 'store_id' => 5555,
-                'amount' => (collect($kaspiSales)->reduce(function ($a, $c){
-                    $price = intval(collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
-                        $price = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
-                        return $_a + $price;
-                    }, 0));
-                    if ($c['kaspi_red']) {
-                        $price -= $price * Sale::KASPI_RED_PERCENT;
-                    }
-                    return $a + ceil($price - $c['balance']);
-                }, 0))
+                'amount' => $this->getTotalAmount($kaspiSales)
+            ]
+        ]);
+
+        $internetSales = collect([
+            -1 => [
+                'store_id' => -1,
+                'amount' => $this->getTotalAmount($internetSales)
             ]
         ]);
 
         return $kaspiSales
             ->mergeRecursive($otherSales)
+            ->mergeRecursive($internetSales)
             ->groupBy('store_id')
             ->map(function ($item) {
                 return collect($item)->first();
             });
+    }
+
+    private function getTotalAmount($sales) {
+        return (collect($sales)->reduce(function ($a, $c){
+            $price = intval(collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
+                $price = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
+                return $_a + $price;
+            }, 0));
+            if ($c['kaspi_red']) {
+                $price -= $price * Sale::KASPI_RED_PERCENT;
+            }
+            return $a + ceil($price - $c['balance']);
+        }, 0));
     }
 
 

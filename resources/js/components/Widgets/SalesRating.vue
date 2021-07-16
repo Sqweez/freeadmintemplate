@@ -37,7 +37,7 @@
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
-                                    <span>Казахстан</span>
+                                    <span>Интернет-магазин</span>
                                     <span>
                                         {{ getAmount(-1) | priceFilters}}
                                     </span>
