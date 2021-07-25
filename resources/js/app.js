@@ -15,12 +15,14 @@ import loadingPlugin from "./utils/loadingPlugin";
 axios.defaults.withCredentials = true;
 
 import VueFroala from 'vue-froala-wysiwyg'
-
 import { VueEditor } from "vue2-editor";
+import vuePlugins from "@/utils/vuePlugins";
 
 Vue.use(VueFroala);
 Vue.use(VueEditor);
 Vue.use(loadingPlugin);
+Vue.use(vuePlugins);
+
 
 Vue.config.productionTip = false;
 

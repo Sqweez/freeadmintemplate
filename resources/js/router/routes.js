@@ -43,6 +43,9 @@ import EducationIndex from "@/views/Sellers/Education/EducationIndex";
 import Brands from "@/views/Analytics/Brands";
 import ProductsOutOfStock from "@/views/v3/Products/ProductsOutOfStock";
 import PreordersIndex from "@/views/v3/Preorders/PreordersIndex";
+import ShiftSettings from "@/views/Shifts/ShiftSettings";
+import ShiftPenalty from "@/views/Shifts/ShiftPenalty";
+import ShiftsList from "@/views/Shifts/ShiftsList";
 
 const routes = [
     {
@@ -420,6 +423,18 @@ const routes = [
     {
         path: '/preorders/index',
         component: PreordersIndex
+    },
+    {
+        path: '/shifts/settings',
+        component: ShiftSettings
+    },
+    {
+        path: '/shifts/penalty',
+        component: ShiftPenalty
+    },
+    {
+        path: '/shifts/index',
+        component: ShiftsList
     }
 ];
 

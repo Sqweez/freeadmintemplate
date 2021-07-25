@@ -98,7 +98,7 @@
     import SellerModal from "../../components/Modal/SellerModal";
     import ACTIONS from "../../store/actions";
     import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import CriteriaModal from "../../components/Modal/CriteriaModal";
     export default {
         components: {CriteriaModal, ConfirmationModal, SellerModal},

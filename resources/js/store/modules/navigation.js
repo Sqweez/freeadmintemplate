@@ -142,6 +142,26 @@ const navigationModule = {
                 ],
             },
             {
+                title: 'Экономика',
+                url: '#',
+                hasDropdown: true,
+                icon: 'account_balance_wallet',
+                children: [
+                    {
+                        title: 'Список смен',
+                        url: '/shifts/index'
+                    },
+                    {
+                        title: 'Настройки смен',
+                        url: '/shifts/settings'
+                    },
+                    {
+                        title: 'Штрафы/Вознаграждения',
+                        url: '/shifts/penalty'
+                    }
+                ]
+            },
+            {
                 title: 'Продавцы',
                 url: '#',
                 hasDropdown: true,

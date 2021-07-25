@@ -4,6 +4,26 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Document
+ *
+ * @property int $id
+ * @property string $document
+ * @property int $document_type
+ * @property int $document_number
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Document newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Document newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Document query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Document whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Document whereDocument($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Document whereDocumentNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Document whereDocumentType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Document whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Document whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Document extends Model
 {
     protected $guarded = [

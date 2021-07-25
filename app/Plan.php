@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Plan whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Plan whereWeekPlan($value)
  * @mixin \Eloquent
+ * @property int $prize
+ * @method static \Illuminate\Database\Eloquent\Builder|Plan wherePrize($value)
  */
 class Plan extends Model
 {

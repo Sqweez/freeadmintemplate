@@ -115,6 +115,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereMetaDescription($value)
  * @method static Builder|Product whereMetaTitle($value)
  * @method static Builder|Product whereSupplierId($value)
+ * @property-read \App\v2\Models\Favorite|null $favorite
  */
 class Product extends Model
 {

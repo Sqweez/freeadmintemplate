@@ -241,7 +241,7 @@
 </template>
 
 <script>
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
     import {mapActions} from 'vuex';

@@ -25,6 +25,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|News whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|News whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read mixed $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\NewsProduct[] $productNews
+ * @property-read int|null $product_news_count
  */
 class News extends Model
 {

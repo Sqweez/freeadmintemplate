@@ -266,7 +266,7 @@
 <script>
     import axios from 'axios';
     import ACTIONS from "@/store/actions";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";

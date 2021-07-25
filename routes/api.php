@@ -14,6 +14,7 @@ use App\Http\Controllers\api\v2\TaskController;
 use App\Http\Controllers\api\v2\EducationController;
 use App\Http\Controllers\api\AnalyticsController;
 use App\Http\Controllers\api\v2\PreorderController;
+use App\Http\Controllers\api\v2\ShiftController;
 
 // Authorization
 
@@ -294,6 +295,19 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/report', [PreorderController::class, 'getPreOrderReport']);
             Route::post('/', [PreorderController::class, 'store']);
             Route::patch('/cancel/{preorder}', [PreorderController::class, 'cancelPreOrder']);
+        });
+
+        Route::prefix('shift')->group(function () {
+            Route::patch('/{shift}', [ShiftController::class, 'editShift']);
+            Route::post('/', [ShiftController::class, 'createShift']);
+            Route::post('/create', [ShiftController::class, 'createShiftAdmin']);
+            Route::get('/tax', [ShiftController::class, 'getShiftTaxes']);
+            Route::post('/tax', [ShiftController::class, 'updateShiftTaxes']);
+            Route::post('/penalty', [ShiftController::class, 'createPenalty']);
+            Route::get('/penalty', [ShiftController::class, 'getPenalties']);
+            Route::delete('/penalty/{id}', [ShiftController::class, 'deletePenalty']);
+            Route::get('/payroll', [ShiftController::class, 'getPayroll']);
+            Route::get('/', [ShiftController::class, 'getShifts']);
         });
     });
 });

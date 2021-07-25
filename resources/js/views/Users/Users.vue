@@ -57,7 +57,7 @@
     import ConfirmationModal from "../../components/Modal/ConfirmationModal";
     import UserModal from "../../components/Modal/UserModal";
     import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     export default {
         components: {
             ConfirmationModal,

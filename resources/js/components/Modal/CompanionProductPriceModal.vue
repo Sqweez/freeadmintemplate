@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
 
     export default {
         data: () => ({

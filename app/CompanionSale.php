@@ -4,6 +4,35 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\CompanionSale
+ *
+ * @property int $id
+ * @property int $store_id
+ * @property int $companion_id
+ * @property int $user_id
+ * @property int $discount
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property bool $is_consignment
+ * @property int $transfer_id
+ * @property-read \App\Store $companion
+ * @property-read \App\Store $store
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereCompanionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereDiscount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereIsConsignment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereStoreId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereTransferId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanionSale whereUserId($value)
+ * @mixin \Eloquent
+ */
 class CompanionSale extends Model
 {
     protected $guarded = [

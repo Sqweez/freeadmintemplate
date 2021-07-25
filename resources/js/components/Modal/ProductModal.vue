@@ -205,7 +205,7 @@
 
 <script>
     import {VSelect} from 'vuetify/lib'
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import ACTIONS from "../../store/actions";
     import ManufacturerModal from "./ManufacturerModal";
     import uploadFile, {deleteFile} from "../../api/upload";

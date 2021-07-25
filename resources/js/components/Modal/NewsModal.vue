@@ -139,7 +139,7 @@
     import { VueEditor, Quill } from "vue2-editor";
     import ImageResize from 'quill-image-resize-vue';
     import uploadFile from "@/api/upload";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
     import product_search from "@/mixins/product_search";
 

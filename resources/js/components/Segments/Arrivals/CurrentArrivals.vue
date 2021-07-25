@@ -97,7 +97,7 @@
     import ArrivalInfoModal from "@/components/Modal/ArrivalInfoModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import axios from "axios";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
 

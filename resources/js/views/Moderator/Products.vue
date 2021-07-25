@@ -173,7 +173,7 @@
     import ProductModal from "@/components/v2/Modal/ProductModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import ProductQuantityModal from "@/components/Modal/ProductQuantityModal";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import ACTIONS from "@/store/actions";
     import axios from 'axios';
     import PriceTagModal from "@/components/Modal/PriceTagModal";

@@ -100,7 +100,7 @@
     import UserModal from "../../components/Modal/UserModal";
     import ACTIONS from "../../store/actions";
     import ClientModal from "../../components/Modal/ClientModal";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import BalanceModal from "../../components/Modal/BalanceModal";
     export default {
         components: {

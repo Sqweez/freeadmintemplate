@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderProduct wherePurchasePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderProduct whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\ProductBatch $batch
  */
 class OrderProduct extends Model
 {

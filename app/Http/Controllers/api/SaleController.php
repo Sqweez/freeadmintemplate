@@ -110,6 +110,8 @@ class SaleController extends Controller {
         $startOfMonth = $today->startOf('month')->toDateString();
 
         $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)
+            ->where('user_id', '!=', 2)
+            ->where('payment_type', '!=', 4)
             ->with(['products:product_price,discount,sale_id'])
             ->select(['id', 'store_id', 'kaspi_red', 'balance', 'created_at'])
             ->get();
@@ -198,11 +200,10 @@ class SaleController extends Controller {
 
         $internetSales = collect($sales)->filter(function ($i) {
             return $i['user_id'] === 2;
-        });
-
-        $otherSales = collect($sales)->filter(function ($i) {
-            return $i['payment_type'] !== 4;
         })->values();
+
+        $kaspiAndWebSales = $kaspiSales->mergeRecursive($internetSales);
+        $otherSales = collect($sales)->diff($kaspiAndWebSales)->all();
 
         $otherSales = collect($otherSales)->groupBy('store_id')
             ->map(function ($sale, $store_id) {
@@ -244,7 +245,7 @@ class SaleController extends Controller {
             if ($c['kaspi_red']) {
                 $price -= $price * Sale::KASPI_RED_PERCENT;
             }
-            return $a + ceil($price - $c['balance']);
+            return ceil($a + $price - $c['balance']);
         }, 0));
     }
 
@@ -353,7 +354,8 @@ class SaleController extends Controller {
             ->whereIn('product_id', $products_id)
             ->whereHas('sale', function ($q) use ($date_start, $date_finish) {
                 $q->whereDate('created_at', '>=', $date_start)
-                    ->whereDate('created_at', '<=', $date_finish);
+                    ->whereDate('created_at', '<=', $date_finish)
+                    ->physicalSales();
             })
             ->with('sale')->get()->map(function ($sale) {
                 $sale['store_id'] = $sale['sale']['store_id'];

@@ -356,8 +356,6 @@
                     prize: _plan.prize,
                 };
 
-                console.log(plan);
-
                 plan.week_percent = plan.week_plan !== 0 ? Math.floor(100 * plan.week_fact / plan.week_plan) : 0;
                 plan.month_percent = plan.month_plan !== 0 ? Math.floor(100 * plan.month_fact / plan.month_plan) : 0;
                 plan.day_percent = plan.day_fact !== 0 ? Math.floor(100 * plan.day_fact / this.getDayPlan(plan)) : 0;

@@ -32,6 +32,9 @@ use function foo\func;
  * @property-read int|null $category_product_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\RelatedProduct[] $relatedProducts
  * @property-read int|null $related_products_count
+ * @property int $is_site_visible
+ * @method static \Illuminate\Database\Eloquent\Builder|Category site()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereIsSiteVisible($value)
  */
 class Category extends Model
 {

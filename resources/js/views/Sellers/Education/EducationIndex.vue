@@ -57,7 +57,7 @@
 <script>
     import EducationModal from "@/components/Modal/EducationModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     export default {
         components: {ConfirmationModal, EducationModal},
         async created() {

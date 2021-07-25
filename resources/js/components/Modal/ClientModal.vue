@@ -71,7 +71,7 @@
 </template>
 
 <script>
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import InputMask from 'inputmask';
     import ACTIONS from '@/store/actions/index';
     import {TOAST_TYPE} from "@/config/consts";

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from "vue-router";
 import routes from "./routes";
 import store from "../store";
-import showToast from "../utils/toast";
+import showToast from "../utils/toastService";
 import {TOAST_TYPE} from "@/config/consts";
 
 Vue.use(VueRouter);
@@ -32,7 +32,7 @@ Router.beforeEach(async (to, from, next) => {
         );
     })();
 
-    
+
 
     if (IS_GUEST && !GUEST_PAGES) {
         next(BASE_ROUTE);

@@ -241,7 +241,7 @@
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import WayBillModal from "@/components/Modal/WayBillModal";
     import ACTIONS from "@/store/actions";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import {PRODUCT_MODAL_EVENTS, TOAST_TYPE} from "@/config/consts";
     import axios from "axios";
     import {createArrival} from "@/api/arrivals";

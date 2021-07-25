@@ -12,6 +12,7 @@ const userModule = {
         user: state => id => state.users.find(u => u.id === id),
         user_roles: state => state.user_roles,
         USERS_SUPPLIERS: state => state.users.filter(user => user.role_id === 5),
+        USERS_SELLERS: s => s.users.filter(user => user.role_id === 2)
     },
     mutations: {
         [MUTATIONS.CREATE_USER](state, payload) {

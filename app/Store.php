@@ -39,6 +39,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $city_id
  * @method static \Illuminate\Database\Eloquent\Builder|Store whereCityId($value)
  * @property-read \App\v2\Models\City $city_name
+ * @property-read mixed $balance
+ * @property-read mixed $iron_balance
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\CompanionTransaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Store shops()
  */
 class Store extends Model
 {
@@ -74,5 +79,9 @@ class Store extends Model
         return $this->transactions()
                 ->where('type', CompanionTransaction::COMPANION_IRON_BALANCE_TYPE)
                 ->sum('transaction_sum') ?? 0;
+    }
+
+    public function scopeShops($q) {
+        return $q->whereTypeId(1);
     }
 }

@@ -31,6 +31,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Transfer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transfer whereUserId($value)
  * @mixin \Eloquent
+ * @property bool $is_accepted
+ * @property-read \App\CompanionSale $companionSale
+ * @method static \Illuminate\Database\Eloquent\Builder|Transfer whereIsAccepted($value)
  */
 class Transfer extends Model
 {

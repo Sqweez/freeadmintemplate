@@ -1,8 +1,8 @@
-import {auth, login} from "@/api/auth";
+import {auth, login} from '@/api/auth';
 import axios from 'axios';
-import showToast from "@/utils/toast";
-import {getKeyByValue} from "@/utils/objects";
-import {TOAST_TYPE} from "@/config/consts";
+import showToast from '@/utils/toastService';
+import {getKeyByValue} from '@/utils/objects';
+import {TOAST_TYPE} from '@/config/consts';
 
 const authModule = {
     state: {
@@ -62,7 +62,7 @@ const authModule = {
             try {
                 const response = await login(payload);
                 localStorage.setItem('token', response.data.user.token);
-                window.location = "/";
+                window.location = '/';
             }
             catch (e) {
                 showToast(e.response.data.message, TOAST_TYPE.ERROR);
@@ -73,21 +73,21 @@ const authModule = {
         async AUTH({commit, dispatch}) {
             const token = localStorage.getItem('token') || null;
             if (!token) {
-                commit("SET_CHECKED", true);
-                commit("SET_TOKEN", null);
+                commit('SET_CHECKED', true);
+                commit('SET_TOKEN', null);
                 return;
             }
             try {
                 const response = await auth({token});
                 await dispatch('SET_AUTH_DATA', response);
             } catch (e) {
-                commit("SET_TOKEN", null);
+                commit('SET_TOKEN', null);
                 showToast('Данные авторизации устарели', 'warning');
             } finally {
-                commit("SET_CHECKED", true);
+                commit('SET_CHECKED', true);
             }
         },
-        async SET_AUTH_DATA({commit}, response) {
+        async SET_AUTH_DATA({commit, dispatch}, response) {
             if (response.data.status === 'success') {
                 const token = response.data.user.token;
                 const user = response.data.user;
@@ -96,11 +96,12 @@ const authModule = {
                 axios.defaults.headers.Authorization = token;
                 axios.defaults.headers.store_id = user.store_id;
                 axios.defaults.headers.user_id = user.id;
+                dispatch('OPEN_SHIFT', user);
             }
         },
         async LOGOUT({commit}) {
             commit('SET_TOKEN', null);
-            commit("SET_USER", null);
+            commit('SET_USER', null);
             axios.defaults.headers.Authorization = null;
         }
     }

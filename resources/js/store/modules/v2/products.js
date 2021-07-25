@@ -6,7 +6,7 @@ import {
     deleteProduct,
     editProduct, addProductQuantity, createProductSku, updateProductSku, getModeratorProducts, getProductBalance
 } from "@/api/v2/products";
-import showToast from "@/utils/toast";
+import showToast from "@/utils/toastService";
 import {TOAST_TYPE} from "@/config/consts";
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
@@ -152,7 +152,7 @@ const actions = {
     },
     async GET_PRODUCTS_QUANTITIES({commit, dispatch, getters}, store_id) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await getProductsQuantity(store_id);
             commit('SET_PRODUCT_QUANTITIES_v2', {
                 quantities: data,
@@ -161,12 +161,12 @@ const actions = {
         } catch (e) {
             console.log(e.response);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async GET_MAIN_STORE_QUANTITIES({commit, dispatch}) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await getProductsQuantity(1);
             const response = await getProductsQuantity(6);
             const quantities = data.map(q => {
@@ -181,56 +181,56 @@ const actions = {
         } catch (e) {
             console.log(e.response);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async GET_PRODUCT_v2({commit, dispatch, getters}, product_id) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await getProduct(product_id);
             commit('SET_PRODUCT_v2', data.data);
         } catch (e) {
 
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async CREATE_PRODUCT_v2({commit, dispatch, getters}, product) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await createProduct(product);
             commit('CREATE_PRODUCT_v2', data.data);
         } catch (e) {
             console.log(e.response);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async DELETE_PRODUCT_v2({commit}, id) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             await deleteProduct(id);
             commit('DELETE_PRODUCT_v2', id);
         } catch (e) {
             console.log(e.response);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async EDIT_PRODUCT_v2({commit}, payload) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await editProduct(payload);
             commit('EDIT_PRODUCT_v2', data.data);
         } catch (e) {
             console.log(e);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async ADD_PRODUCT_QUANTITY_v2({commit}, {id, batch, store_id}) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await addProductQuantity(id, batch);
             if (batch.store_id === store_id) {
                 commit('ADD_PRODUCT_QUANTITY_v2', {id, quantity: data});
@@ -238,12 +238,12 @@ const actions = {
         } catch (e) {
             console.log(e);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async CREATE_PRODUCT_SKU({commit}, {id, product, sku_id}) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await createProductSku(id, product);
             commit('CREATE_PRODUCT_SKU', {
                 id: sku_id,
@@ -253,12 +253,12 @@ const actions = {
         } catch (e) {
             showToast('Не удалось создать ассортимент', TOAST_TYPE.ERROR);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async UPDATE_PRODUCT_SKU({commit}, {id, product}) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await updateProductSku(id, product);
             commit('UPDATE_PRODUCT_SKU', {
                 id,
@@ -268,12 +268,12 @@ const actions = {
         } catch (e) {
             showToast('Не удалось отредактировать ассортимент', TOAST_TYPE.ERROR);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async MAKE_SALE_v2 ({commit}, payload) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const {product_quantities, client, sale_id} = await makeSale(payload);
             commit(MUTATATIONS.EDIT_CLIENT, client);
             commit('ON_PRODUCTS_SALE_v2', product_quantities);
@@ -281,7 +281,7 @@ const actions = {
         } catch (e) {
             throw Error();
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async GET_CERTIFICATES({commit}) {
@@ -289,7 +289,7 @@ const actions = {
         commit('SET_CERTIFICATES', data);
     },
     async CHANGE_COUNT_v2({commit}, payload) {
-        commit('enableLoading');
+        this.$loading.enable();
         try {
             const response = await changeProductCount(payload);
             commit('CHANGE_COUNT_v2', response.data);
@@ -297,19 +297,19 @@ const actions = {
             showToast(e.response.data.message, TOAST_TYPE.ERROR);
             throw e;
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
 
     },
     async GET_MODERATOR_PRODUCTS({commit}, payload) {
         try {
-            commit('enableLoading');
+            this.$loading.enable();
             const { data } = await getModeratorProducts();
             commit('SET_MODERATOR_PRODUCTS', data.data);
         } catch (e) {
             console.log(e.response);
         } finally {
-            commit('disableLoading');
+            this.$loading.disable();
         }
     },
     async GET_PRODUCT_BALANCE({commit, dispatch}) {

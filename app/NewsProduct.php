@@ -4,6 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\NewsProduct
+ *
+ * @property int $id
+ * @property int $news_id
+ * @property int $product_id
+ * @property-read \App\v2\Models\News $news
+ * @property-read \App\v2\Models\Product $product
+ * @method static \Illuminate\Database\Eloquent\Builder|NewsProduct newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|NewsProduct newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|NewsProduct query()
+ * @method static \Illuminate\Database\Eloquent\Builder|NewsProduct whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewsProduct whereNewsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewsProduct whereProductId($value)
+ * @mixin \Eloquent
+ */
 class NewsProduct extends Model
 {
     protected $table = 'news_products';

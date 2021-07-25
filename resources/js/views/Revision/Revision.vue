@@ -65,7 +65,7 @@
     import axios from 'axios';
     import ACTIONS from "../../store/actions";
     import RevisionModal from "../../components/Modal/RevisionModal";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import {TOAST_TYPE} from "../../config/consts";
     import RevisionInfoModal from "../../components/Modal/RevisionInfoModal";
 

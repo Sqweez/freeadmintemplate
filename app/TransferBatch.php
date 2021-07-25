@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|TransferBatch whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransferBatch whereTransferId($value)
  * @mixin \Eloquent
+ * @property int $discount
+ * @method static \Illuminate\Database\Eloquent\Builder|TransferBatch whereDiscount($value)
  */
 class TransferBatch extends Model
 {

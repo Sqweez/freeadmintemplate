@@ -74,7 +74,7 @@
 
 <script>
     import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import ConfirmationModal from "../Modal/ConfirmationModal";
 
     export default {

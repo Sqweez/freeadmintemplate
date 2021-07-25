@@ -84,7 +84,7 @@
     import TransferModal from "@/components/Modal/TransferModal";
     import {declineTransfer} from "@/api/transfers";
     import axios from "axios";
-    import showToast from "../../../utils/toast";
+    import showToast from "../../../utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
     export default {
         async mounted() {

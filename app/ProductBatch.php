@@ -39,6 +39,8 @@ use Illuminate\Support\Carbon;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch quantitiesOfStore($store_id)
  * @property-read \App\Store $store
+ * @property-read \App\v2\Models\ProductSku $product
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch positive()
  */
 class ProductBatch extends Model
 {

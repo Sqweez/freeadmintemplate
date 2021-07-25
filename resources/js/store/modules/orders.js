@@ -1,5 +1,5 @@
 import {acceptOrder, declineOrder, deleteOrder, getOrders, setImage} from "@/api/orders";
-import showToast from "@/utils/toast";
+import showToast from "@/utils/toastService";
 
 const orderModule = {
     state: {

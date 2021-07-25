@@ -95,7 +95,7 @@
     import ACTIONS from "../../store/actions";
     import ConfirmationModal from "../../components/Modal/ConfirmationModal";
     import PromocodeModal from "../../components/Modal/PromocodeModal";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
 
     export default {

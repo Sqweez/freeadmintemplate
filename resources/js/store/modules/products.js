@@ -10,7 +10,7 @@ import {
     getMainProducts, getProductsBySearch, changeProductCount
 } from "@/api/products";
 import {makeSale} from "@/api/sale";
-import showToast from "../../utils/toast";
+import showToast from "../../utils/toastService";
 import {TOAST_TYPE} from "@/config/consts";
 
 const productsModule = {

@@ -108,7 +108,7 @@
 </template>
 
 <script>
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import {createBatch, changeArrival} from "../../api/arrivals";
 
     export default {

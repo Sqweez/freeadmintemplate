@@ -58,6 +58,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Order withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Order withoutTrashed()
  * @property-read Model|\Eloquent $image
+ * @property-read int|null $image_count
  */
 class Order extends Model
 {

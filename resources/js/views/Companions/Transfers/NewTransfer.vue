@@ -241,7 +241,7 @@
 <script>
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import WayBillModal from "@/components/Modal/WayBillModal";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import ACTIONS from "@/store/actions";
     import axios from 'axios';
     import uploadFile, {deleteFile} from "@/api/upload";

@@ -1,4 +1,4 @@
-import showToast from "@/utils/toast";
+import showToast from "@/utils/toastService";
 import {TOAST_TYPE} from "@/config/consts";
 
 const cartModule = {

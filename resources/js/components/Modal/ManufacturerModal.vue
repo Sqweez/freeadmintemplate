@@ -48,7 +48,7 @@
 
 <script>
     import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import uploadFile from "../../api/upload";
 
     export default {

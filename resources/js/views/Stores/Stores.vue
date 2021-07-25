@@ -143,7 +143,7 @@
     import {mapGetters} from 'vuex';
     import ACTIONS from "../../store/actions";
     import CompanionBalanceModal from "@/components/Modal/CompanionBalanceModal";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     export default {
         data: () => ({
             storeId: null,

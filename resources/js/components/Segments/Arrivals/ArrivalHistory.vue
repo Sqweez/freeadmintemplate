@@ -65,7 +65,7 @@
     import ArrivalInfoModal from "../../Modal/ArrivalInfoModal";
     import axios from "axios";
     import ConfirmationModal from "../../Modal/ConfirmationModal";
-    import showToast from "../../../utils/toast";
+    import showToast from "../../../utils/toastService";
 
     export default {
         components: {ConfirmationModal, ArrivalInfoModal},

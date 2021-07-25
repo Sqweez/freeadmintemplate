@@ -91,7 +91,7 @@
 
 <script>
     import {acceptTransfer, getTransferInfo} from "../../api/transfers";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
 
     export default {
         props: {

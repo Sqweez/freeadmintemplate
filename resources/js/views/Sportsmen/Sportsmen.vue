@@ -56,7 +56,7 @@
     import SportsmenModal from "../../components/Modal/SportsmenModal";
     import ConfirmationModal from "../../components/Modal/ConfirmationModal";
     import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
 
     export default {
         data: () => ({

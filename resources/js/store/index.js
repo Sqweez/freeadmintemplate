@@ -30,6 +30,8 @@ import tasksModule from "@/store/modules/tasks";
 import educationModule from "@/store/modules/education";
 import arrivalModule from "@/store/modules/arrivals";
 import preordersModule from "@/store/modules/preorders";
+import shiftModule from "@/store/modules/shifts";
+import vuexPlugins from "@/store/plugins/vuexPlugins";
 
 Vue.use(Vuex);
 
@@ -67,14 +69,18 @@ const store = new Store({
         tasksModule,
         educationModule,
         arrivalModule,
-        preordersModule
+        preordersModule,
+        shiftModule
     },
-    plugins: [createPersistedState({
-        paths: [
-            'reportsModule.storesReports',
-            'reportsModule.planReports'
-        ]
-    })],
+    plugins: [
+        createPersistedState({
+            paths: [
+                'reportsModule.storesReports',
+                'reportsModule.planReports'
+            ]
+        }),
+        vuexPlugins
+    ],
 });
 
 export default store;

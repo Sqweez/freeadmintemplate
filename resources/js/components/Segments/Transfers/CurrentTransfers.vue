@@ -105,7 +105,7 @@
     import TransferModal from "../../Modal/TransferModal";
     import {declineTransfer} from "@/api/transfers";
     import axios from "axios";
-    import showToast from "../../../utils/toast";
+    import showToast from "../../../utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
     export default {

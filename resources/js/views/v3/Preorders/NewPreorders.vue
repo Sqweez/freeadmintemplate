@@ -248,7 +248,7 @@
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
     import ClientCart from "@/components/Modal/ClientCart";
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
 
     export default {

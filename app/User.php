@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Hash;
  * @property-read \App\UserRole $role
  * @property-read \App\Store $store
  * @method static \Illuminate\Database\Eloquent\Builder|User login($login)
+ * @method static \Illuminate\Database\Eloquent\Builder|User sellers()
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Query\Builder|User onlyTrashed()
@@ -71,6 +72,10 @@ class User extends Authenticatable
 
     public function scopeToken($q, $token) {
         $q->where('token', $token);
+    }
+
+    public function scopeSellers($q) {
+        return $q->whereRoleId(2);
     }
 
 }

@@ -25,6 +25,9 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereSubcategorySlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $is_site_visible
+ * @method static \Illuminate\Database\Eloquent\Builder|Subcategory site()
+ * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereIsSiteVisible($value)
  */
 class Subcategory extends Model
 {

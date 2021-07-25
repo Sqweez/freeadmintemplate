@@ -64,7 +64,7 @@
     import NewsModal from "@/components/Modal/NewsModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import axios from 'axios';
-    import showToast from "@/utils/toast";
+    import showToast from "@/utils/toastService";
     export default {
         components: {ConfirmationModal, NewsModal},
         async created() {

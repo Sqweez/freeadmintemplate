@@ -56,6 +56,12 @@ use function foo\func;
  * @property-read \App\v2\Models\Certificate|null $used_certificate
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereSplitPayment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale reportSupplier($supplierProducts)
+ * @property string $comment
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\Image[] $image
+ * @property-read int|null $image_count
+ * @property-read \App\v2\Models\Preorder $preorder
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale physicalSales()
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereComment($value)
  */
 class Sale extends Model
 {
@@ -180,6 +186,11 @@ class Sale extends Model
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate'])
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
+    }
+
+    public function scopePhysicalSales($query) {
+        return $query->where('user_id', '!=', 2)
+            ->where('payment_type', '!=', 4);
     }
 
     public function getPurchasePriceAttribute() {

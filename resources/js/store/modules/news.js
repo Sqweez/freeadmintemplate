@@ -1,5 +1,5 @@
 import {createNews, deleteNews, editNews, getNews} from "@/api/news";
-import showToast from "@/utils/toast";
+import showToast from "@/utils/toastService";
 
 const newsModule = {
     state: {

@@ -5,7 +5,9 @@ const axiosClient = axios.create();
 axiosClient.interceptors.request.use((config) => {
     config.baseURL = '/api/';
     config.headers = {
-        Authorization: store.getters.TOKEN
+        Authorization: store.getters.TOKEN,
+        user_id: store.getters.USER.id,
+        store_id: store.getters.USER.store_id,
     };
     return config;
 });

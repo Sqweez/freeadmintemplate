@@ -80,7 +80,7 @@
     import axios from 'axios';
     import BannerModal from "../../components/Modal/BannerModal";
     import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     export default {
         components: {ConfirmationModal, BannerModal},
         data: () => ({

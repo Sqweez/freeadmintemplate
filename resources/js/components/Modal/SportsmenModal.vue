@@ -56,7 +56,7 @@
 <script>
     import uploadFile, {deleteFile} from "../../api/upload";
     import ACTIONS from "../../store/mutations";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
 
     export default {
         data: () => ({

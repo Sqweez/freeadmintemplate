@@ -152,7 +152,7 @@
 
 <script>
     import {VTextField} from 'vuetify/lib';
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import ACTIONS from '../../store/actions'
     import ConfirmationModal from "../Modal/ConfirmationModal";
     import uploadFile from "../../api/upload";

@@ -92,7 +92,7 @@
 
 <script>
     import {acceptTransfer, getTransferInfo} from "../../api/transfers";
-    import showToast from "../../utils/toast";
+    import showToast from "../../utils/toastService";
     import {cancelSale} from "../../api/sale";
     import ACTIONS from "../../store/actions";
     import {TOAST_TYPE} from "@/config/consts";
