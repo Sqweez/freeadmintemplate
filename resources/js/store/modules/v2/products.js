@@ -171,11 +171,16 @@ const actions = {
             const response = await getProductsQuantity(6);
             const quantities = data.map(q => {
                const _q = response.data.find(d => q.product_id === q.product_id);
-               q.quantity += +_q.quantity;
+               if (_q) {
+                   q.quantity += +_q.quantity;
+               }
                return q;
             });
+            const storeQuantities = response.data.filter((item) => {
+                return quantities.findIndex(q => q.product_id === item.product_id) === -1;
+            })
             commit('SET_PRODUCT_QUANTITIES_v2', {
-                quantities: quantities,
+                quantities: {...quantities, ...storeQuantities},
                 store_id: 1
             })
         } catch (e) {
