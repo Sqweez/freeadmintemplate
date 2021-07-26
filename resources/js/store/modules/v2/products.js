@@ -180,7 +180,7 @@ const actions = {
                 return quantities.findIndex(q => q.product_id === item.product_id) === -1;
             })
             commit('SET_PRODUCT_QUANTITIES_v2', {
-                quantities: {...quantities, ...storeQuantities},
+                quantities: [...quantities, ...storeQuantities],
                 store_id: 1
             })
         } catch (e) {
