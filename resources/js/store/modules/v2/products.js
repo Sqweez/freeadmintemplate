@@ -170,7 +170,7 @@ const actions = {
             const { data } = await getProductsQuantity(1);
             const response = await getProductsQuantity(6);
             const quantities = data.map(q => {
-               const _q = response.data.find(d => q.product_id === q.product_id);
+               const _q = response.data.find(d => d.product_id === q.product_id);
                if (_q) {
                    q.quantity += +_q.quantity;
                }
