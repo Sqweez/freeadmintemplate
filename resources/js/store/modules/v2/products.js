@@ -171,7 +171,7 @@ const actions = {
             const response = await getProductsQuantity(6);
             const quantities = data.map(q => {
                const _q = response.data.find(d => q.product_id === q.product_id);
-               q.quantity += _q.quantity;
+               q.quantity += +_q.quantity;
                return q;
             });
             commit('SET_PRODUCT_QUANTITIES_v2', {

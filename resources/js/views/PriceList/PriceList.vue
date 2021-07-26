@@ -293,6 +293,10 @@
                     value: 'product_price'
                 },
                 {
+                    text: 'Количество',
+                    value: 'quantity'
+                },
+                {
                     text: 'Добавить',
                     value: 'actions'
                 },
@@ -441,22 +445,6 @@
                     }, ...this.$store.getters.categories
                 ];
             },
-            /*totalSales() {
-                return this.salesReport
-                    .reduce((a, c) => {
-                        if (c.split_payment === null || this.currentType === -1) {
-                            return a + c.final_price
-                        } else {
-                            return a + +c.split_payment.find(s => s.payment_type == this.currentType).amount;
-                        }
-                    }, 0);
-            },
-            totalMargin() {
-                return this.salesReport
-                    .reduce((a, c) => {
-                        return a + c.margin
-                    }, 0);
-            },*/
         }
     }
 </script>
