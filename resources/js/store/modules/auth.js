@@ -1,8 +1,9 @@
 import {auth, login} from '@/api/auth';
 import axios from 'axios';
-import showToast from '@/utils/toastService';
 import {getKeyByValue} from '@/utils/objects';
-import {TOAST_TYPE} from '@/config/consts';
+import ToastService from "@/utils/toastService";
+
+const toast = new ToastService();
 
 const authModule = {
     state: {
@@ -65,7 +66,7 @@ const authModule = {
                 window.location = '/';
             }
             catch (e) {
-                showToast(e.response.data.message, TOAST_TYPE.ERROR);
+                toast.error(e.response.data.message);
             } finally {
                 commit('disableLoading');
             }
@@ -82,7 +83,7 @@ const authModule = {
                 await dispatch('SET_AUTH_DATA', response);
             } catch (e) {
                 commit('SET_TOKEN', null);
-                showToast('Данные авторизации устарели', 'warning');
+                toast.error('Данные авторизации устарели');
             } finally {
                 commit('SET_CHECKED', true);
             }
