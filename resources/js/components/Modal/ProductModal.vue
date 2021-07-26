@@ -205,13 +205,10 @@
 
 <script>
     import {VSelect} from 'vuetify/lib'
-    import showToast from "../../utils/toastService";
     import ACTIONS from "../../store/actions";
     import ManufacturerModal from "./ManufacturerModal";
     import uploadFile, {deleteFile} from "../../api/upload";
     import { VueEditor } from "vue2-editor";
-    import {TOAST_TYPE} from "../../config/consts";
-
 
     export default {
         components: {ManufacturerModal, VSelect, VueEditor},
@@ -382,18 +379,18 @@
                 )
                 const product = {...this.product};
                 await this.$store.dispatch(ACTIONS.CREATE_PRODUCT, product);
-                showToast('Товар успешно добавлен')
+                this.$toast.success('Товар успешно добавлен')
             },
             async editProduct() {
                 const product = {...this.product};
                 await this.$store.dispatch(ACTIONS.EDIT_PRODUCT, product);
-                showToast('Товар успешно отредактирован')
+                this.$toast.success('Товар успешно отредактирован')
             },
             async addRange() {
                 this.product.id = this.product.group_id;
                 this.product.groupProduct = this.groupProduct;
                 await this.$store.dispatch(ACTIONS.ADD_PRODUCT_RANGE, this.product);
-                showToast('Ассортимент добавлен ')
+                this.$toast.success('Ассортимент добавлен ')
             },
             onSubmit() {
                 this.loading = true;
@@ -408,7 +405,7 @@
                     }
                     this.$emit('cancel');
                 } else {
-                    showToast('Внесены несколько одинаковых магазинов!', TOAST_TYPE.ERROR);
+                    this.$toast.error('Внесены несколько одинаковых магазинов!');
                 }
                 this.loading = false;
             },

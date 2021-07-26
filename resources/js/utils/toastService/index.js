@@ -5,7 +5,6 @@ export default class ToastService extends BaseToast{
     constructor() {
         super();
     }
-
     success(text) {
         this.show(text, toastTypes.SUCCESS);
     }

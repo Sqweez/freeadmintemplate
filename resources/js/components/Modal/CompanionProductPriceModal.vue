@@ -30,8 +30,6 @@
 </template>
 
 <script>
-    import showToast from "@/utils/toastService";
-
     export default {
         data: () => ({
             price: 0,
@@ -61,7 +59,7 @@
                     id: this._product.product_id,
                 });
 
-                showToast('Цена успешно обновлена');
+                this.$toast.success('Цена успешно обновлена');
                 this.$emit('cancel');
             }
         },

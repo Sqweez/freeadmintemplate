@@ -83,7 +83,7 @@
         methods: {
             onSubmit() {
                 if (!(this.batch.quantity && this.batch.store_id && this.batch.purchase_price)) {
-                    showToast('Заполните все поля', TOAST_TYPE.WARNING);
+                    this.$toast.error('Заполните все поля');
                     return;
                 }
                 this.$emit('submit', this.batch);

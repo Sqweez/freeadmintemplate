@@ -67,7 +67,6 @@
 </template>
 
 <script>
-    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
     import uploadFile, {deleteFile} from "@/api/upload";
 
@@ -106,20 +105,20 @@
                         task,
                         id: this.task.id,
                     });
-                    showToast('Задание успешно отредактировано!');
+                    this.$toast.success('Задание успешно отредактировано!');
                     this.$emit('cancel');
                 } catch (e) {
-                    showToast('При редактировании задания произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При редактировании задания произошла ошибка!');
                 }
             },
             async createTask() {
                 if (!this.validateTask()) { return; }
                 try {
                     await this.$store.dispatch('CREATE_TASK', {...this.task, attachments: this.attachments});
-                    showToast('Задание успешно создано!');
+                    this.$toast.success('Задание успешно создано!');
                     this.$emit('cancel');
                 } catch (e) {
-                    showToast('При создании задания произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании задания произошла ошибка!');
                 }
             },
             async onUpload(e) {
@@ -132,7 +131,7 @@
                     })
                     this.$refs.fileInput.value = '';
                 } catch (e) {
-                    showToast('При загрузке файла произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При загрузке файла произошла ошибка!');
                 }
             },
             async deleteAttachment(key) {
@@ -141,15 +140,15 @@
             },
             validateTask() {
                 if (!this.task.title.length) {
-                    showToast('Заполните наименование задания!', TOAST_TYPE.ERROR);
+                    this.$toast.error('Заполните наименование задания!');
                     return false;
                 }
                 if (!this.task.date_start || !this.task.date_finish) {
-                    showToast('Заполните даты!', TOAST_TYPE.ERROR);
+                    this.$toast.error('Заполните даты!');
                     return false;
                 }
                 if (!this.task.store_ids.length) {
-                    showToast('Выберите необходимые магазины', TOAST_TYPE.ERROR);
+                    this.$toast.error('Выберите необходимые магазины');
                     return false;
                 }
                 return true;

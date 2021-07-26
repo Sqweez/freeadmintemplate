@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import uploadFile from "../../api/upload";
+    import uploadFile from "@/api/upload";
 
     export default {
         data: () => ({

@@ -182,10 +182,10 @@
                         canceled: canceled,
                         id: this.id,
                     });
-                    showToast('Продажа отменена');
+                    this.$toast.success('Продажа отменена');
                     this.$emit('confirm');
                 } catch (e) {
-                    showToast('При отмене произошла ошибка, перезагрузите страницу!', TOAST_TYPE.ERROR)
+                    this.$toast.error('При отмене произошла ошибка, перезагрузите страницу!')
                 } finally {
                     this.loading = false;
                 }

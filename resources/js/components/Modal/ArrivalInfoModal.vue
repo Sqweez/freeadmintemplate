@@ -108,8 +108,7 @@
 </template>
 
 <script>
-    import showToast from "../../utils/toastService";
-    import {createBatch, changeArrival} from "../../api/arrivals";
+    import {createBatch, changeArrival} from "@/api/arrivals";
 
     export default {
         props: {
@@ -182,7 +181,7 @@
                 })
 
                 this.loading = false;
-                showToast('Поступление успешно создано!');
+                this.$toast.success('Поступление успешно создано!');
                 this.$emit('submit')
             },
             decreaseCount(idx) {
@@ -219,7 +218,7 @@
                 )
 
                 this.loading = false;
-                showToast('Поступление успешно отредактировано!');
+                this.$toast.success('Поступление успешно отредактировано!');
                 this.$emit('edit')
             }
         },

@@ -60,8 +60,7 @@
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
+    import ACTIONS from "@/store/actions";
 
     export default {
         watch: {
@@ -97,12 +96,12 @@
         methods: {
             async createStore() {
                 await this.$store.dispatch(ACTIONS.CREATE_STORE, this.store);
-                showToast('Склад создан')
+                this.$toast.success('Склад создан')
             },
             async editStore() {
                 delete this.store.type;
                 await this.$store.dispatch(ACTIONS.EDIT_STORE, this.store);
-                showToast('Склад отредактирован')
+                this.$toast.success('Склад отредактирован')
 
             },
             async submit() {

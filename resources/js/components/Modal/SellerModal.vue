@@ -55,8 +55,8 @@
 </template>
 
 <script>
-    import uploadFile, {deleteFile} from "../../api/upload";
-    import ACTIONS from "../../store/actions";
+    import uploadFile, {deleteFile} from "@/api/upload";
+    import ACTIONS from "@/store/actions";
 
     export default {
         data: () => ({

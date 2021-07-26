@@ -91,7 +91,6 @@
 
 <script>
     import {acceptTransferFromSeller, getTransferInfo} from "@/api/transfers";
-    import showToast from "../../utils/toastService";
 
     export default {
         props: {
@@ -159,7 +158,7 @@
                     });
                 const response = await acceptTransferFromSeller(accepted, this.id);
                 this.loading = false;
-                showToast('Перемещение подтверждено!');
+                this.$toast.success('Перемещение подтверждено!');
                 this.$emit('confirmed');
             },
             decreaseCount(idx) {

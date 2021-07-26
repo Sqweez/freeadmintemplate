@@ -149,11 +149,11 @@
             async onSubmit() {
                 if (this.id == -1) {
                     await this.$store.dispatch(ACTIONS.CREATE_GOAL, this.goal);
-                    showToast('Цель успешно создана!');
+                    this.$toast.success('Цель успешно создана!');
                 }
                 else {
                     await this.$store.dispatch(ACTIONS.EDIT_GOAL, this.goal);
-                    showToast('Цель успешно отредактирована!');
+                    this.$toast.success('Цель успешно отредактирована!');
                 }
                 this.$emit('cancel');
             },

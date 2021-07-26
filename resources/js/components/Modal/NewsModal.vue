@@ -139,7 +139,6 @@
     import { VueEditor, Quill } from "vue2-editor";
     import ImageResize from 'quill-image-resize-vue';
     import uploadFile from "@/api/upload";
-    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
     import product_search from "@/mixins/product_search";
 
@@ -211,7 +210,7 @@
                     const response = await uploadFile(file, 'file', 'news');
                     this.image = response.data;
                 } catch (e) {
-                    showToast('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию', TOAST_TYPE.ERROR);
+                    this.$toast.error('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию');
                 } finally {
                     this.$refs.fileInput.value = null;
                 }

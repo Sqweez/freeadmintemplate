@@ -90,8 +90,7 @@
 </template>
 
 <script>
-    import {acceptTransfer, getTransferInfo} from "../../api/transfers";
-    import showToast from "../../utils/toastService";
+    import {acceptTransfer, getTransferInfo} from "@/api/transfers";
 
     export default {
         props: {
@@ -159,7 +158,7 @@
                                     });
                 const response = await acceptTransfer(accepted, this.id);
                 this.loading = false;
-                showToast('Перемещение подтверждено!');
+                this.$toast.success('Перемещение подтверждено!');
                 this.$emit('confirmed');
             },
             decreaseCount(idx) {

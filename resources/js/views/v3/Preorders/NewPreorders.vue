@@ -248,7 +248,6 @@
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
     import ClientCart from "@/components/Modal/ClientCart";
-    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
 
     export default {
@@ -324,13 +323,13 @@
 
                 try {
                     await this.$store.dispatch('CREATE_PREORDER', preorder);
-                    showToast('Предзаказ создан');
+                    this.$toast.success('Предзаказ создан');
                     this.cart = [];
                     this.client = null;
                     this.payment_type = 0;
                     this.comment = '';
                 } catch (e) {
-                    showToast('Произошла ошибка', TOAST_TYPE.ERROR);
+                    this.$toast.success('Произошла ошибка');
                     console.log(e);
                 }
             }

@@ -129,8 +129,7 @@
 
 <script>
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import showToast from "@/utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
+
     export default {
         components: {
             ConfirmationModal
@@ -158,9 +157,9 @@
                     await this.$store.dispatch('CANCEL_PREORDER', this.preorderId);
                     this.cancelModal = false;
                     this.preorderId = null;
-                    showToast('Предзаказ отменен');
+                    this.$toast.success('Предзаказ отменен');
                 } catch (e) {
-                    showToast('Произошла ошибка', TOAST_TYPE.ERROR)
+                    this.$toast.error('Произошла ошибка')
                 }
             }
         },

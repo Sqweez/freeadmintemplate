@@ -76,21 +76,21 @@
                         education,
                         id: this.education.id,
                     });
-                    showToast('Обучение успешно отредактировано!');
+                    this.$toast.success('Обучение успешно отредактировано!');
                     this.$emit('cancel');
                 } catch (e) {
                     console.error(e);
-                    showToast('При редактировании обучения произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При редактировании обучения произошла ошибка!');
                 }
             },
             async createEducation() {
                 if (!this.validate()) { return; }
                 try {
                     await this.$store.dispatch('CREATE_EDUCATION', {...this.education, attachments: this.attachments});
-                    showToast('Обучение успешно создано!');
+                    this.$toast.success('Обучение успешно создано!');
                     this.$emit('cancel');
                 } catch (e) {
-                    showToast('При создании обучения произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании обучения произошла ошибка!');
                 }
             },
             async onUpload(e) {
@@ -103,7 +103,7 @@
                     })
                     this.$refs.fileInput.value = '';
                 } catch (e) {
-                    showToast('При загрузке файла произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При загрузке файла произошла ошибка!');
                 }
             },
             async deleteAttachment(key) {
@@ -112,7 +112,7 @@
             },
             validate() {
                 if (!this.education.title.length) {
-                    showToast('Заполните наименование обучения!', TOAST_TYPE.ERROR);
+                    this.$toast.error('Заполните наименование обучения!');
                     return false;
                 }
                 return true;

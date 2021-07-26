@@ -54,9 +54,8 @@
 </template>
 
 <script>
-    import uploadFile, {deleteFile} from "../../api/upload";
-    import ACTIONS from "../../store/mutations";
-    import showToast from "../../utils/toastService";
+    import uploadFile, {deleteFile} from "@/api/upload";
+    import ACTIONS from "@/store/mutations";
 
     export default {
         data: () => ({
@@ -70,10 +69,10 @@
             async onSubmit() {
                 if (this.id == -1) {
                     await this.$store.dispatch(ACTIONS.CREATE_SPORTSMAN, this.sportsmen);
-                    showToast('Спортсмен успешно создан!');
+                    this.$toast.success('Спортсмен успешно создан!');
                 } else {
                     await this.$store.dispatch(ACTIONS.EDIT_SPORTSMEN, this.sportsmen);
-                    showToast('Спортсмен успешно отредактирован!');
+                    this.$toast.success('Спортсмен успешно отредактирован!');
                 }
                 this.$emit('cancel');
             },

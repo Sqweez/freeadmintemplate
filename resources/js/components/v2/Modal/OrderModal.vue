@@ -266,7 +266,6 @@
 <script>
     import axios from 'axios';
     import ACTIONS from "@/store/actions";
-    import showToast from "@/utils/toastService";
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
@@ -423,7 +422,7 @@
                 this.editDiscount = false;
 
                 this.loading = false;
-                showToast('Заказ отредактирован');
+                this.$toast.success('Заказ отредактирован');
             },
             addToOrder(item) {
                 if (item.quantity - this.getOrderCount(item) === 0) {

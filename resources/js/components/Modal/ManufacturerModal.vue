@@ -47,9 +47,8 @@
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
-    import uploadFile from "../../api/upload";
+    import uploadFile from "@/api/upload";
+    import ACTIONS from "@/store/actions";
 
     export default {
         props: {
@@ -86,10 +85,10 @@
             async addManufacturer() {
                 if (!this.editMode) {
                     await this.$store.dispatch(ACTIONS.CREATE_MANUFACTURER, this.manufacturer);
-                    showToast('Производитель добавлен');
+                    this.$toast.success('Производитель добавлен');
                 } else {
                     await this.$store.dispatch(ACTIONS.EDIT_MANUFACTURER, this.manufacturer);
-                    showToast('Производитель изменен');
+                    this.$toast.success('Производитель изменен');
                 }
 
                 this.$emit('cancel');

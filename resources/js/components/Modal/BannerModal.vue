@@ -98,7 +98,7 @@
                 this.$store.commit('enableLoading');
                 const banner = Object.keys(this._banner).length ? await this.editBanner() : await this.createBanner();
                 this.$store.commit('disableLoading');
-                showToast('Успешно!');
+                this.$toast.success('Успешно!');
                 this.$emit('confirm', banner.data);
             },
             async editBanner() {

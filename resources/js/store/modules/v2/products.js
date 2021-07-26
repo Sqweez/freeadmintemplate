@@ -6,14 +6,15 @@ import {
     deleteProduct,
     editProduct, addProductQuantity, createProductSku, updateProductSku, getModeratorProducts, getProductBalance
 } from "@/api/v2/products";
-import showToast from "@/utils/toastService";
-import {TOAST_TYPE} from "@/config/consts";
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
 import axios from 'axios';
 import {changeProductCount} from "@/api/products";
 import ACTIONS from "@/store/actions";
 import {getArrivals} from "@/api/arrivals";
+import ToastService from "@/utils/toastService";
+
+let toast = new ToastService();
 
 const state = {
     products_v2: [],
@@ -254,9 +255,9 @@ const actions = {
                 id: sku_id,
                 product: data.data
             });
-            showToast('Ассортимент добавлен', TOAST_TYPE.SUCCESS);
+            toast.show('Ассортимент добавлен');
         } catch (e) {
-            showToast('Не удалось создать ассортимент', TOAST_TYPE.ERROR);
+            toast.error('Не удалось создать ассортимент');
         } finally {
             this.$loading.disable();
         }
@@ -269,9 +270,9 @@ const actions = {
                 id,
                 product: data.data
             });
-            showToast('Ассортимент отредактирован', TOAST_TYPE.SUCCESS);
+            toast.success('Ассортимент отредактирован');
         } catch (e) {
-            showToast('Не удалось отредактировать ассортимент', TOAST_TYPE.ERROR);
+            toast.error('Не удалось отредактировать ассортимент');
         } finally {
             this.$loading.disable();
         }
@@ -299,7 +300,7 @@ const actions = {
             const response = await changeProductCount(payload);
             commit('CHANGE_COUNT_v2', response.data);
         } catch (e) {
-            showToast(e.response.data.message, TOAST_TYPE.ERROR);
+            toast.error(e.response.data.message);
             throw e;
         } finally {
             this.$loading.disable();

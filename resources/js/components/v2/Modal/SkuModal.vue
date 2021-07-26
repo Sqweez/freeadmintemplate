@@ -99,7 +99,6 @@
 
 <script>
     import uploadFile, {deleteFile} from "@/api/upload";
-    import showToast from "@/utils/toastService";
     import {TOAST_TYPE} from "@/config/consts";
     import {generateThumb} from "@/api/image";
 
@@ -158,11 +157,11 @@
             },
             validate(product) {
                 if (!product.product_barcode.length) {
-                    showToast('Заполните поле штрихкод', TOAST_TYPE.WARNING);
+                    this.$toast.error('Заполните поле штрихкод');
                     return false;
                 }
                 if (!product.attributes[0].attribute_value.length) {
-                    showToast('Заполните значение атрибута!', TOAST_TYPE.WARNING);
+                    this.$toast.error('Заполните значение атрибута!');
                     return false;
                 }
                 return true;

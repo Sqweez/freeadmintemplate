@@ -63,8 +63,7 @@
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
+    import ACTIONS from "@/store/actions";
 
     export default {
         watch: {
@@ -113,7 +112,7 @@
 
                 await this.$store.dispatch(ACTIONS.CREATE_USER, user);
 
-                showToast('пользователь создан')
+                this.$toast.success('пользователь создан')
             },
             async editUser() {
                 const user = {
@@ -130,7 +129,7 @@
 
                 await this.$store.dispatch(ACTIONS.EDIT_USER, user);
 
-                showToast('пользователь отредактирован')
+                this.$toast.success('пользователь отредактирован')
 
             },
             async submit() {

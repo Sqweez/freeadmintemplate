@@ -71,7 +71,6 @@
 </template>
 
 <script>
-    import showToast from "../../utils/toastService";
     import InputMask from 'inputmask';
     import ACTIONS from '@/store/actions/index';
     import {TOAST_TYPE} from "@/config/consts";
@@ -96,7 +95,7 @@
             async onSubmit() {
                 this.loading = true;
                 if (this.client.client_city === -1 || !this.client.client_city) {
-                    showToast('Выберите город!', TOAST_TYPE.ERROR);
+                    this.$toast.error('Выберите город!');
                     this.loading = false;
                     return null;
                 }
@@ -112,12 +111,12 @@
             },
             async createClient() {
                 await this.$store.dispatch(ACTIONS.CREATE_CLIENT, this.client);
-                showToast('Клиент успешно добавлен');
+                this.$toast.success('Клиент успешно добавлен');
                 return this.client;
             },
             async editClient() {
                 await this.$store.dispatch(ACTIONS.EDIT_CLIENT, this.client);
-                showToast('Клиент успешно отредактирован');
+                this.$toast.success('Клиент успешно отредактирован');
                 this.$emit('cancel')
             },
             modifyPhone(phone) {

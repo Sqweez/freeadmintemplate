@@ -666,7 +666,7 @@
             },
             validate(product) {
                 const showErrorToast = (field_name) => {
-                    showToast(`Заполните поле ${field_name}!`, TOAST_TYPE.ERROR);
+                    this.$toast.error(`Заполните поле ${field_name}!`);
                 };
                 if (!product.product_name) {
                     showErrorToast('Наименование');
@@ -705,7 +705,7 @@
 
 
                 if (product.grouping_attribute_id === null && !this.withoutAnotherSku) {
-                    showToast('Необходимо выбрать группирующий атрибут или поставить галочку "без ассортимента"', TOAST_TYPE.ERROR);
+                    this.$toast.error('Необходимо выбрать группирующий атрибут или поставить галочку "без ассортимента"');
                     return false;
                 }
                 return true;
@@ -727,7 +727,7 @@
                     }
                     await this.$emit('cancel', this.action);
                 } catch (e) {
-                    showToast('При добавлении товара произошла ошибка',  TOAST_TYPE.ERROR);
+                    this.$toast.error('При добавлении товара произошла ошибка');
                 }
             },
             async uploadPhoto(e) {
@@ -742,7 +742,7 @@
                     }
                     await this.createImageThumb(response.data)
                 } catch (e) {
-                    showToast('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию', TOAST_TYPE.ERROR);
+                    this.$toast.error('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию');
                 } finally {
                     this.$refs.fileInput.value = null;
                 }
