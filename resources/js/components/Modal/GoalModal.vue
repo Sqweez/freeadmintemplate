@@ -114,7 +114,6 @@
     import uploadFile, {deleteFile} from "../../api/upload";
     import { VueEditor } from "vue2-editor";
     import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
 
     export default {
         components: {

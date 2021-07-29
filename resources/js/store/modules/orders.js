@@ -1,5 +1,4 @@
 import {acceptOrder, declineOrder, deleteOrder, getOrders, setImage} from "@/api/orders";
-import showToast from "@/utils/toastService";
 
 const orderModule = {
     state: {
@@ -60,7 +59,7 @@ const orderModule = {
                 commit('enableLoading');
                 await deleteOrder(payload);
                 commit('DELETE_ORDER', payload);
-                showToast('Заказ успешно удален!')
+                this.$toast.success('Заказ успешно удален!')
             } catch (e) {
 
             } finally {
@@ -72,7 +71,7 @@ const orderModule = {
                 commit('enableLoading');
                 await acceptOrder(payload);
                 commit('ACCEPT_ORDER', payload);
-                showToast('Заказ успешно подтвержден!')
+                this.$toast.success('Заказ успешно подтвержден!')
             } catch (e) {
 
             } finally {
@@ -84,7 +83,7 @@ const orderModule = {
                 commit('enableLoading');
                 await declineOrder(payload);
                 commit('DECLINE_ORDER', payload);
-                showToast('Заказ успешно отменен!')
+                this.$toast.success('Заказ успешно отменен!')
             } catch (e) {
 
             } finally {

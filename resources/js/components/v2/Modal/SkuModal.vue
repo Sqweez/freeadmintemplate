@@ -99,7 +99,6 @@
 
 <script>
     import uploadFile, {deleteFile} from "@/api/upload";
-    import {TOAST_TYPE} from "@/config/consts";
     import {generateThumb} from "@/api/image";
 
     export default {
@@ -197,7 +196,7 @@
                     this.product_sku_images.push({image: response.data});
                     await this.createImageThumb(response.data)
                 } catch (e) {
-                    showToast('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию', TOAST_TYPE.ERROR);
+                    this.$toast.error('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию');
                 } finally {
                     this.$refs.fileInput.value = null;
                 }

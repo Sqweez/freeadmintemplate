@@ -61,11 +61,10 @@
 </template>
 
 <script>
-    import {cancelArrival, getArrivals} from "../../../api/arrivals";
-    import ArrivalInfoModal from "../../Modal/ArrivalInfoModal";
+    import {cancelArrival, getArrivals} from "@/api/arrivals";
+    import ArrivalInfoModal from "@/components/Modal/ArrivalInfoModal";
     import axios from "axios";
-    import ConfirmationModal from "../../Modal/ConfirmationModal";
-    import showToast from "../../../utils/toastService";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
 
     export default {
         components: {ConfirmationModal, ArrivalInfoModal},
@@ -128,7 +127,7 @@
                 this.arrivals = this.arrivals.filter(s => s.id !== this.current_arrival.id);
                 this.current_arrival = {};
                 this.loading = false;
-                showToast('Поставка отменена!');
+                this.$toast.success('Поставка отменена!');
             }
         },
         computed: {},

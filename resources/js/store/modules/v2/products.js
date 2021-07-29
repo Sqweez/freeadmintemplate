@@ -12,9 +12,6 @@ import axios from 'axios';
 import {changeProductCount} from "@/api/products";
 import ACTIONS from "@/store/actions";
 import {getArrivals} from "@/api/arrivals";
-import ToastService from "@/utils/toastService";
-
-let toast = new ToastService();
 
 const state = {
     products_v2: [],
@@ -255,9 +252,9 @@ const actions = {
                 id: sku_id,
                 product: data.data
             });
-            toast.show('Ассортимент добавлен');
+            this.$toast.success('Ассортимент добавлен');
         } catch (e) {
-            toast.error('Не удалось создать ассортимент');
+            this.$toast.error('Не удалось создать ассортимент');
         } finally {
             this.$loading.disable();
         }
@@ -270,9 +267,9 @@ const actions = {
                 id,
                 product: data.data
             });
-            toast.success('Ассортимент отредактирован');
+            this.$toast.success('Ассортимент отредактирован');
         } catch (e) {
-            toast.error('Не удалось отредактировать ассортимент');
+            this.$toast.error('Не удалось отредактировать ассортимент');
         } finally {
             this.$loading.disable();
         }
@@ -300,7 +297,7 @@ const actions = {
             const response = await changeProductCount(payload);
             commit('CHANGE_COUNT_v2', response.data);
         } catch (e) {
-            toast.error(e.response.data.message);
+            this.$toast.error(e.response.data.message);
             throw e;
         } finally {
             this.$loading.disable();

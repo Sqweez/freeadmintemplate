@@ -73,9 +73,7 @@
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
-    import ConfirmationModal from "../Modal/ConfirmationModal";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
 
     export default {
         components: {
@@ -101,18 +99,18 @@
                 console.log(this.attribute);
                 await this.$store.dispatch(ACTIONS.CREATE_ATTRIBUTE, this.attribute);
                 this.cancelCreation();
-                showToast('Атрибут успешно добавлен')
+                this.$toast.success('Атрибут успешно добавлен')
             },
             async editAttribute() {
                 await this.$store.dispatch(ACTIONS.EDIT_ATTRIBUTE, this.attribute);
                 this.cancelEditing();
-                showToast('Атрибут успешно отредактирован')
+                this.$toast.success('Атрибут успешно отредактирован')
             },
             async deleteAttribute() {
                 await this.$store.dispatch(ACTIONS.DELETE_ATTRIBUTE, this.attributeId);
                 this.attributeId = null;
                 this.deleteModal = false;
-                showToast('Атрибут удален')
+                this.$toast.success('Атрибут удален')
             }
         },
         computed: {

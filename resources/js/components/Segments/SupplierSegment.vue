@@ -94,11 +94,8 @@
 </template>
 
 <script>
-    import {VTextField} from 'vuetify/lib';
-    import showToast from "../../utils/toastService";
-    import ACTIONS from '../../store/actions'
-    import ConfirmationModal from "../Modal/ConfirmationModal";
-    import uploadFile from "../../api/upload";
+    import ACTIONS from '@/store/actions'
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
 
     export default {
         components: {ConfirmationModal},
@@ -156,7 +153,7 @@
                     id: this.newSupplier.id,
                 });
                 this.cancelEditing();
-                showToast('Поставщик успешно отредактирован')
+                this.$toast.success('Поставщик успешно отредактирован')
             },
             async createSupplier() {
                 const supplier = {
@@ -167,13 +164,13 @@
                 await this.$store.dispatch(ACTIONS.CREATE_SUPPLIER, supplier);
 
                 this.cancelCreation();
-                showToast('Поставщик успешно создан')
+                this.$toast.success('Поставщик успешно создан')
             },
             async deleteSupplier() {
                 await this.$store.dispatch(ACTIONS.DELETE_SUPPLIER, this.supplierId);
                 this.supplier = null;
                 this.deleteModal = false;
-                showToast('Поставщик успешно удален')
+                this.$toast.success('Поставщик успешно удален')
             },
         }
     }

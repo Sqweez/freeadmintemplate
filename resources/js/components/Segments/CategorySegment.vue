@@ -151,11 +151,9 @@
 </template>
 
 <script>
-    import {VTextField} from 'vuetify/lib';
-    import showToast from "../../utils/toastService";
-    import ACTIONS from '../../store/actions'
-    import ConfirmationModal from "../Modal/ConfirmationModal";
-    import uploadFile from "../../api/upload";
+    import ACTIONS from '@/store/actions'
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import uploadFile from "@/api/upload";
 
     export default {
         components: {ConfirmationModal},
@@ -198,7 +196,7 @@
                 this.newCategory.subcategories = [...this.newCategory.subcategories, ...this.subcategories];
                 await this.$store.dispatch(ACTIONS.EDIT_CATEGORY, this.newCategory);
                 this.cancelEditing();
-                showToast('Категория успешно отредактирована')
+                this.$toast.success('Категория успешно отредактирована')
             },
             addSubcategoryField() {
                 this.subcategoryFields.push(VTextField);
@@ -213,13 +211,13 @@
                 this.newCategory.subcategories = this.newCategory.subcategories.filter(s => s.length !== 0);
                 await this.$store.dispatch(ACTIONS.CREATE_CATEGORY, this.newCategory);
                 this.cancelCreation();
-                showToast('Категория успешно создана')
+                this.$toast.success('Категория успешно создана')
             },
             async deleteCategory() {
                 await this.$store.dispatch(ACTIONS.DELETE_CATEGORY, this.categoryId);
                 this.categoryId = null;
                 this.deleteModal = false;
-                showToast('Категория успешно удалена')
+                this.$toast.success('Категория успешно удалена')
             },
             editPhoto() {
                 try {

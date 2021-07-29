@@ -1,5 +1,4 @@
 import axios from 'axios';
-import showToast from "../../utils/toastService";
 
 export default {
     state: {
@@ -40,7 +39,7 @@ export default {
             try {
                 const response = await axios.post(`/api/promocode`, payload);
                 await commit('addPromocode', response.data.data);
-                showToast('Промокод создан!')
+                this.$toast.success('Промокод создан!')
             } catch (e) {
                 throw e;
             }
@@ -49,7 +48,7 @@ export default {
             try {
                 const response = await axios.patch(`/api/promocode/${payload.id}`, payload);
                 await commit('editPromocode', response.data.data);
-                showToast('Промокод отредактирован!')
+                this.$toast.success('Промокод отредактирован!')
             } catch (e) {
                 throw e;
             }
@@ -58,7 +57,7 @@ export default {
             try {
                 await axios.delete(`/api/promocode/${payload}`);
                 await commit('deletePromocode', payload);
-                showToast('Промокод удален!')
+                this.$toast.success('Промокод удален!')
             } catch (e) {
                 throw e;
             }

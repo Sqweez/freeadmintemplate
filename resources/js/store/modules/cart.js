@@ -1,6 +1,3 @@
-import showToast from "@/utils/toastService";
-import {TOAST_TYPE} from "@/config/consts";
-
 const cartModule = {
     state: {
         cart: [],
@@ -103,7 +100,7 @@ const cartModule = {
         },
         ADD_TO_CART({commit, getters}, item) {
             if (item.count - item.quantity === 0) {
-                showToast('Недостаточно товара', TOAST_TYPE.WARNING);
+                this.$toast.error('Недостаточно товара');
                 return;
             }
             const index = getters.CART.findIndex(c => c.id === item.id);

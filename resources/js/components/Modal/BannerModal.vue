@@ -78,7 +78,6 @@
 <script>
     import uploadFile from "../../api/upload";
     import axios from 'axios';
-    import showToast from "../../utils/toastService";
 
     export default {
         data: () => ({

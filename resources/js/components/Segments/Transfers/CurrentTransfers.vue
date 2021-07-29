@@ -100,14 +100,13 @@
 </template>
 
 <script>
-    import ConfirmationModal from "../../Modal/ConfirmationModal";
-    import TransferPhotoModal from "../../Modal/TransferPhotoModal";
-    import TransferModal from "../../Modal/TransferModal";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import TransferPhotoModal from "@/components/Modal/TransferPhotoModal";
+    import TransferModal from "@/components/Modal/TransferModal";
     import {declineTransfer} from "@/api/transfers";
     import axios from "axios";
-    import showToast from "../../../utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
+
     export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'current'});
@@ -197,7 +196,7 @@
             },
             showPhotoModal(photos) {
                 if (!photos || !photos.length) {
-                    showToast('Нет фотографий', TOAST_TYPE.ERROR);
+                    this.$toast.error('Нет фотографий');
                     return false;
                 }
                 this.currentPhotos = photos;
@@ -216,9 +215,9 @@
                     });
                     this.editMode = false;
                     this.transferId = null;
-                    showToast('Перемещение отредактировано!')
+                    this.$toast.success('Перемещение отредактировано!')
                 } catch (e) {
-                    showToast('Произошла ошибка', TOAST_TYPE.ERROR)
+                    this.$toast.error('Произошла ошибка')
                 }
             }
         },

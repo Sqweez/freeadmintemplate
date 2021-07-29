@@ -1,9 +1,6 @@
 import {auth, login} from '@/api/auth';
 import axios from 'axios';
 import {getKeyByValue} from '@/utils/objects';
-import ToastService from "@/utils/toastService";
-
-const toast = new ToastService();
 
 const authModule = {
     state: {
@@ -59,16 +56,16 @@ const authModule = {
     },
     actions: {
         async LOGIN ({commit, dispatch}, payload) {
-            commit('enableLoading');
+            this.$loading.enable();
             try {
                 const response = await login(payload);
                 localStorage.setItem('token', response.data.user.token);
                 window.location = '/';
             }
             catch (e) {
-                toast.error(e.response.data.message);
+                this.$toast.error(e.response.data.message);
             } finally {
-                commit('disableLoading');
+                this.$loading.disable();
             }
         },
         async AUTH({commit, dispatch}) {
@@ -83,7 +80,7 @@ const authModule = {
                 await dispatch('SET_AUTH_DATA', response);
             } catch (e) {
                 commit('SET_TOKEN', null);
-                toast.error('Данные авторизации устарели');
+                this.$toast.error('Данные авторизации устарели');
             } finally {
                 commit('SET_CHECKED', true);
             }

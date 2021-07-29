@@ -62,8 +62,6 @@
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
     import ConfirmationModal from "../Modal/ConfirmationModal";
     import ManufacturerModal from "../Modal/ManufacturerModal";
 
@@ -91,18 +89,18 @@
             async createManufacturer() {
                 await this.$store.dispatch(ACTIONS.CREATE_MANUFACTURER, this.manufacturer);
                 this.cancelCreation();
-                showToast('Производитель успешно добавлен')
+                this.$toast.success('Производитель успешно добавлен')
             },
             async editManufacturer() {
                 await this.$store.dispatch(ACTIONS.EDIT_MANUFACTURER, this.manufacturer);
                 this.cancelEditing();
-                showToast('Производитель успешно отредактирован')
+                this.$toast.success('Производитель успешно отредактирован')
             },
             async deleteManufacturer() {
                 await this.$store.dispatch(ACTIONS.DELETE_MANUFACTURER, this.manufacturerId);
                 this.manufacturerId = null;
                 this.deleteModal = false;
-                showToast('Производитель удален')
+                this.$toast.success('Производитель удален')
             }
         },
         computed: {

@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import routes from "./routes";
 import store from "@/store";
 import ToastService from "@/utils/toastService";
-import {TOAST_TYPE} from "@/config/consts";
 
 const $toast = new ToastService();
 

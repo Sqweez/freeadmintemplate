@@ -10,8 +10,6 @@ import {
     getMainProducts, getProductsBySearch, changeProductCount
 } from "@/api/products";
 import {makeSale} from "@/api/sale";
-import showToast from "../../utils/toastService";
-import {TOAST_TYPE} from "@/config/consts";
 
 const productsModule = {
     state: {
@@ -176,7 +174,7 @@ const productsModule = {
                 const {data} = await changeProductCount(payload);
                 commit('changeCount', data);
             } catch (e) {
-                showToast(e.response.data.message, TOAST_TYPE.ERROR);
+                this.$toast.error(e.response.data.message);
             } finally {
                 commit('disableLoading');
             }

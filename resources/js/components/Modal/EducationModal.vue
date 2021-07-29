@@ -43,8 +43,6 @@
 </template>
 
 <script>
-    import showToast from "@/utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
     import uploadFile, {deleteFile} from "@/api/upload";
 
     export default {

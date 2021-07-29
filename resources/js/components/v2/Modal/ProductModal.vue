@@ -320,8 +320,6 @@
 
 <script>
     import {VSelect} from 'vuetify/lib'
-    import showToast from "@/utils/toastService";
-    import ACTIONS from "@/store/actions";
     import ManufacturerModal from "@/components/Modal/ManufacturerModal";
     import uploadFile, {deleteFile} from "@/api/upload";
     import { VueEditor } from "vue2-editor";
@@ -581,7 +579,7 @@
             },
             addAttributesSelect() {
                 if (this.allAttributesSelected) {
-                    showToast('Выбраны все доступные атрибуты', TOAST_TYPE.WARNING);
+                    this.$toast.error('Выбраны все доступные атрибуты');
                     return;
                 }
                 this.product_attributes.push({
@@ -592,7 +590,7 @@
             },
             addPricesSelect() {
                 if (this.allPricesSelected) {
-                    showToast('Выбраны все доступные магазины', TOAST_TYPE.WARNING);
+                    this.$toast.error('Выбраны все доступные магазины');
                     return;
                 }
                 this.prices.push({
@@ -616,7 +614,7 @@
                 }
 
                 await this.$store.dispatch('CREATE_PRODUCT_v2', product);
-                showToast('Товар успешно добавлен');
+                this.$toast.success('Товар успешно добавлен');
             },
             async editProduct() {
                 const product = this.getProductObject();
@@ -627,7 +625,7 @@
                     product,
                     id: this.product.product_id,
                 });
-                showToast('Товар успешно обновлен!');
+                this.$toast.success('Товар успешно обновлен!');
 
             },
             async addRange() {
@@ -636,7 +634,7 @@
                     throw new Error();
                 }
                 await this.$store.dispatch('CREATE_PRODUCT_v2', product);
-                showToast('Товар успешно добавлен');
+                this.$toast.success('Товар успешно добавлен');
             },
             getProductObject() {
                 return {

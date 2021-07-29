@@ -246,15 +246,12 @@
 <script>
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import WayBillModal from "@/components/Modal/WayBillModal";
-    import showToast from "@/utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
     import axios from 'axios';
     import uploadFile, {deleteFile} from "@/api/upload";
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
-    import {getArrivals} from "@/api/arrivals";
 
     export default {
         components: {
@@ -357,7 +354,7 @@
 
                 this.confirmationModal = true;
 
-                showToast('Перемещение создано успешно!');
+                this.$toast.success('Перемещение создано успешно!');
                 //this.cart = [];
             },
             async getWayBill() {

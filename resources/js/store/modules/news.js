@@ -1,5 +1,4 @@
 import {createNews, deleteNews, editNews, getNews} from "@/api/news";
-import showToast from "@/utils/toastService";
 
 const newsModule = {
     state: {
@@ -44,17 +43,17 @@ const newsModule = {
         async ADD_NEWS({commit}, payload) {
             const response = await createNews(payload);
             commit('ADD_NEWS', response.data);
-            showToast('Новость добавлена!')
+            this.$toast.success('Новость добавлена!')
         },
         async EDIT_NEWS({commit}, payload) {
             const response = await editNews(payload);
             commit('EDIT_NEWS', response.data);
-            showToast('Новость отредактирована!')
+            this.$toast.success('Новость отредактирована!')
         },
         async DELETE_NEWS({commit}, payload) {
             await deleteNews(payload);
             commit('DELETE_NEWS', payload);
-            showToast('Новость удалена!')
+            this.$toast.success('Новость удалена!')
         }
     }
 };

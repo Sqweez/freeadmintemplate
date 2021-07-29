@@ -48,10 +48,6 @@
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
-
     export default {
         props: {
             state: {

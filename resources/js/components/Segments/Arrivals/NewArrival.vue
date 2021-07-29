@@ -241,8 +241,7 @@
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import WayBillModal from "@/components/Modal/WayBillModal";
     import ACTIONS from "@/store/actions";
-    import showToast from "@/utils/toastService";
-    import {PRODUCT_MODAL_EVENTS, TOAST_TYPE} from "@/config/consts";
+    import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
     import axios from "axios";
     import {createArrival} from "@/api/arrivals";
     import product_search from "@/mixins/product_search";
@@ -393,9 +392,9 @@
 
                 this.overlay = false;
 
-                const data = await createArrival(arrival);
+                await createArrival(arrival);
                 this.overlay = false;
-                showToast('Поставка создана успешно!');
+                this.$toast.success('Поставка создана успешно!');
                 this.cart = [];
             },
             getCartCount(id) {
