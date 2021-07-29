@@ -54,10 +54,10 @@
 </template>
 
 <script>
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import UserModal from "../../components/Modal/UserModal";
-    import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import UserModal from "@/components/Modal/UserModal";
+    import ACTIONS from "@/store/actions";
+
     export default {
         components: {
             ConfirmationModal,
@@ -81,7 +81,7 @@
         methods: {
             async deleteUser() {
                 await this.$store.dispatch(ACTIONS.DELETE_USER, this.userId);
-                showToast('Пользователь удален');
+                this.$toast.success('Пользователь удален');
                 this.userId = null;
                 this.confirmationModal = false;
             },

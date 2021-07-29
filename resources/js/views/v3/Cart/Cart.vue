@@ -651,13 +651,13 @@
             async createCertificate(certificate) {
                 this.certificateModal = false;
                 try {
-                    this.$loading();
+                    this.$loading.enable();
                     const { data } = await axios.post(`/api/v2/certificates`, certificate);
                     this.certificate = data;
                 } catch (e) {
                     this.$toast.error('При создании сертификата произошла ошибка');
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             getFiltered(e) {
@@ -669,14 +669,14 @@
             },
             async deleteCertificate() {
                 try {
-                    this.$loading();
+                    this.$loading.enable();
                     await axios.delete(`/api/v2/certificates/${this.certificate.id}`);
                     this.certificate = null;
                 }
                 catch (e) {
                     this.$toast.error('Произошла ошибка!');
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             cancelClient() {
@@ -687,7 +687,7 @@
                 this.promocodeSet = false;
             },
             async searchPromocode() {
-                this.$loading();
+                this.$loading.enable();
                 try {
                     const response = await axios.get(`/api/promocode/search/${this.promocode}`);
                     this.partner_id = response.data.data.partner.id;
@@ -697,7 +697,7 @@
                 } catch (e) {
                     this.$toast.error('Промокод не найден')
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             async refreshProducts() {

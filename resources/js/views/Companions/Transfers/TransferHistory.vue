@@ -76,8 +76,7 @@
     import TransferModal from "@/components/Modal/TransferModal";
     import axios from 'axios';
     import TransferPhotoModal from "@/components/Modal/TransferPhotoModal";
-    import showToast from "../../../utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
+
     export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'history', partners: true});
@@ -159,7 +158,7 @@
             },
             showPhotoModal(photos) {
                 if (!photos || !photos.length) {
-                    showToast('Нет фотографий', TOAST_TYPE.ERROR);
+                    this.$toast.error('Нет фотографий');
                     return false;
                 }
                 this.currentPhotos = photos;

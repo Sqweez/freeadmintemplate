@@ -57,7 +57,7 @@
 <script>
     import EducationModal from "@/components/Modal/EducationModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import showToast from "@/utils/toastService";
+
     export default {
         components: {ConfirmationModal, EducationModal},
         async created() {
@@ -71,7 +71,7 @@
         methods: {
             async deleteEducation() {
                 await this.$store.dispatch('DELETE_EDUCATION', this.currentEducation.id);
-                showToast('Обучение успешно удалено!');
+                this.$toast.success('Обучение успешно удалено!');
                 this.currentEducation = {};
                 this.deleteModal = false;
             },

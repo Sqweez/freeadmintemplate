@@ -303,17 +303,15 @@
 </template>
 
 <script>
-    import ClientCart from "../../components/Modal/ClientCart";
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import WayBillModal from "../../components/Modal/WayBillModal";
-    import showToast from "../../utils/toastService";
-    import {TOAST_TYPE} from "../../config/consts";
-    import ACTIONS from "../../store/actions";
+    import ClientCart from "@/components/Modal/ClientCart";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import WayBillModal from "@/components/Modal/WayBillModal";
+    import ACTIONS from "@/store/actions";
     import {mapActions} from 'vuex';
-    import CheckModal from "../../components/Modal/CheckModal";
+    import CheckModal from "@/components/Modal/CheckModal";
     import axios from "axios";
-    import product from "../../mixins/product";
-    import product_search from "../../mixins/product_search";
+    import product from "@/mixins/product";
+    import product_search from "@/mixins/product_search";
 
     export default {
         components: {
@@ -340,9 +338,6 @@
             balance() {
                 this.balance = Math.min(this.client.client_balance, Math.max(0, this.balance));
             },
-           /* discountPercent(value) {
-                this.discountPercent = Math.max(0, Math.min(100, value));
-            }*/
         },
         mixins: [product, product_search],
         data: () => ({
@@ -409,17 +404,17 @@
                 ACTIONS.GET_STORES,
             ]),
             async searchPromocode() {
-                this.$loading();
+                this.$loading.enable();
                 try {
                     const response = await axios.get(`/api/promocode/search/${this.promocode}`);
                     this.partner_id = response.data.data.partner.id;
                     this.discountPercent = Math.max(this.discountPercent, response.data.data.discount);
-                    showToast('Партнер установлен');
+                    this.$toast.success('Партнер установлен');
                     this.promocodeSet = true;
                 } catch (e) {
-                    showToast('Промокод не найден', TOAST_TYPE.ERROR)
+                    this.$toast.error('Промокод не найден')
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
 
             },
@@ -428,14 +423,14 @@
                 const store_id = this.is_admin ? null : this.user.store_id;
                 await this.$store.dispatch(ACTIONS.GET_PRODUCT, store_id);
                 this.loading = false;
-                showToast('Список товаров обновлен!')
+                this.$toast.success('Список товаров обновлен!')
             },
             setBalance(e) {
                 this.balance = Math.min(+e.target.value, this.client.client_balance);
             },
             addToCart(item) {
                 if (!this.checkAvailability(item)) {
-                    showToast('Недостаточно товара', TOAST_TYPE.WARNING);
+                    this.$toast.error('Недостаточно товара');
                     return;
                 }
                 const index = this.cart.map(c => c.id).indexOf(item.id);
@@ -485,7 +480,7 @@
 
                 this.overlay = false;
 
-                showToast('Продажа совершена успешно!');
+                this.$toast.success('Продажа совершена успешно!');
                 this.confirmationModal = true;
 
                 this.cart = [];

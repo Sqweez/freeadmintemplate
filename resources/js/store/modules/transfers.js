@@ -35,13 +35,13 @@ const transferModule = {
         },
         async editTransfer({commit}, payload) {
             try {
-                commit('enableLoading');
+                this.$loading.enable();
                 const { data } = await editTransferStore(payload);
                 commit('editTransfer', data.data);
             } catch (e) {
                 throw e;
             } finally {
-                commit('disableLoading');
+                this.$loading.disable();
             }
         }
     }

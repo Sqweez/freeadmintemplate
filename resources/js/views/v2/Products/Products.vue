@@ -180,17 +180,15 @@
 </template>
 
 <script>
-    import ProductRangeModal from "../../../components/Modal/ProductRangeModal";
-    import ProductModal from "../../../components/Modal/ProductModal";
-    import ConfirmationModal from "../../../components/Modal/ConfirmationModal";
-    import ProductQuantityModal from "../../../components/Modal/ProductQuantityModal";
-    import showToast from "../../../utils/toastService";
-    import ACTIONS from "../../../store/actions";
+    import ProductRangeModal from "@/components/Modal/ProductRangeModal";
+    import ProductModal from "@/components/Modal/ProductModal";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import ProductQuantityModal from "@/components/Modal/ProductQuantityModal";
+    import ACTIONS from "@/store/actions";
     import axios from 'axios';
-    import PriceTagModal from "../../../components/Modal/PriceTagModal";
-    import product from "../../../mixins/product";
-    import _ from 'lodash';
-    import product_search from "../../../mixins/product_search";
+    import PriceTagModal from "@/components/Modal/PriceTagModal";
+    import product from "@/mixins/product";
+    import product_search from "@/mixins/product_search";
 
     export default {
         components: {
@@ -288,13 +286,6 @@
                         return !(p.product_description === null || product.product_description === "");
                     })
                 }
-
-               /* if (this.searchQuery.length >= 3) {
-                    products = products.filter(product => {
-
-                    });
-                }*/
-
                 return products;
 
             },
@@ -374,7 +365,7 @@
                 );
                 this.productId = -1;
                 this.deleteModal = false;
-                showToast('Товар успешно удален');
+                this.$toast.success('Товар успешно удален');
             },
             getQuantity(quantity = []) {
                 if (typeof quantity === 'number') {
@@ -392,7 +383,7 @@
             },
             async groupProduct() {
                 await axios.get('/api/shop/products-group');
-                showToast('Товары успешно сгруппированы!')
+                this.$toast.success('Товары успешно сгруппированы!')
             },
             async changeCount(id, increment) {
                 const params = {

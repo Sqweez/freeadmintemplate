@@ -394,7 +394,7 @@
             },
             async changeClient(client_id) {
                 this.loading = true;
-                this.$store.commit('ENABLE_LOADING');
+                this.$loading.enable();
                 const response = await axios.patch(`/api/v2/orders/client/${this.order.id}`, {
                     client_id: client_id,
                 });
@@ -402,12 +402,12 @@
                 this.order = response.data.data;
                 this.orderDiscount = this.order.discount;
                 this.editClient = false;
-
                 this.loading = false;
+                this.$loading.disable();
             },
             async changeDeliveryInfo() {
                 this.loading = true;
-                this.$store.commit('ENABLE_LOADING');
+                this.$loading.enable();
                 const response = await axios.patch(`/api/v2/orders/${this.order.id}`, {
                     discount: this.orderDiscount,
                     delivery: this.order.delivery,
@@ -422,6 +422,7 @@
                 this.editDiscount = false;
 
                 this.loading = false;
+                this.$loading.disable();
                 this.$toast.success('Заказ отредактирован');
             },
             addToOrder(item) {

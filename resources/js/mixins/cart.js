@@ -1,6 +1,3 @@
-import showToast from "@/utils/toastService";
-import {TOAST_TYPE} from "@/config/consts";
-
 export default {
     data: () => ({
         storeFilter: null,
@@ -22,7 +19,7 @@ export default {
 
 
             if (item.quantity - currentCount === 0) {
-                showToast('Недостаточно товара', TOAST_TYPE.WARNING);
+                this.$toast.error('Недостаточно товара');
                 return;
             }
 
@@ -33,7 +30,7 @@ export default {
         },
         addToCart(item, merge = false) {
             if (item.quantity - this.getCartCount(item.id) === 0) {
-                showToast('Недостаточно товара', TOAST_TYPE.WARNING);
+                this.$toast.error('Недостаточно товара');
                 return;
             }
 

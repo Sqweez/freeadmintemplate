@@ -126,10 +126,10 @@
             async state(value) {
                 if (value) {
                     this.currentFilter = 'daily';
-                    this.$loading();
+                    this.$loading.enable();
                     const response = await axios(`/api/analytics/partners/${this.partner.id}`);
                     this.stats = response.data;
-                    this.$loading();
+                    this.$loading.disable();
                 } else {
                     this.stats = [];
                 }

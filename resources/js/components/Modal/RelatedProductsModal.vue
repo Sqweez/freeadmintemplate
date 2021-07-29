@@ -162,11 +162,11 @@
                     products: products
                 };
 
-                this.$loading();
+                this.$loading.enable();
 
                 const { data } = await axiosClient.post('v2/products/related', category);
-                console.log(data);
-                this.$loading();
+
+                this.$loading.disable();
                 this.$emit('close', data.data);
             }
         },

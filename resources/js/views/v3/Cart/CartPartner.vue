@@ -304,8 +304,6 @@
     import ClientCart from "@/components/Modal/ClientCart";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import WayBillModal from "@/components/Modal/WayBillModal";
-    import showToast from "@/utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
     import {mapActions} from 'vuex';
     import CheckModal from "@/components/Modal/CheckModal";
@@ -314,6 +312,7 @@
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
     import CertificateModal from "@/components/Modal/CertificateModal";
+
     export default {
         components: {
             CertificateModal,
@@ -453,13 +452,13 @@
             async createCertificate(certificate) {
                 this.certificateModal = false;
                 try {
-                    this.$loading();
+                    this.$loading.enable();
                     const { data } = await axios.post(`/api/v2/certificates`, certificate);
                     this.certificate = data;
                 } catch (e) {
-                    showToast('При создании сертификата произошла ошибка', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании сертификата произошла ошибка');
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             getFiltered(e) {
@@ -471,14 +470,13 @@
             },
             async deleteCertificate() {
                 try {
-                    this.$loading();
+                    this.$loading.enable();
                     await axios.delete(`/api/v2/certificates/${this.certificate.id}`);
                     this.certificate = null;
-                }
-                catch (e) {
-                    showToast('Произошла ошибка!', TOAST_TYPE.ERROR);
+                } catch (e) {
+                    this.$toast.error('Произошла ошибка!');
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             cancelClient() {
@@ -489,17 +487,17 @@
                 this.promocodeSet = false;
             },
             async searchPromocode() {
-                this.$loading();
+                this.$loading.disable();
                 try {
                     const response = await axios.get(`/api/promocode/search/${this.promocode}`);
                     this.partner_id = response.data.data.partner.id;
                     this.discountPercent = Math.max(this.discountPercent, response.data.data.discount);
-                    showToast('Партнер установлен');
+                    this.$toast.success('Партнер установлен');
                     this.promocodeSet = true;
                 } catch (e) {
-                    showToast('Промокод не найден', TOAST_TYPE.ERROR)
+                    this.$toast.error('Промокод не найден')
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             async refreshProducts() {
@@ -508,7 +506,7 @@
                 const store_id = this.is_admin ? null : this.user.store_id;
                 await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
                 await this.$store.dispatch(ACTIONS.GET_CLIENTS);
-                showToast('Список товаров обновлен!');
+                this.$toast.success('Список товаров обновлен!');
                 await this.getProductQuantities(this.storeFilter);
                 this.loading = false;
             },
@@ -529,7 +527,7 @@
             async onSale() {
                 const split_payment = this.isSplitPayment ? this.splitPayment.filter(p => p.amount > 0) : null;
                 if (split_payment !== null && !split_payment.length) {
-                    showToast('Раздельная оплата не заполнена', TOAST_TYPE.ERROR);
+                    this.$toast.error('Раздельная оплата не заполнена');
                     return;
                 }
                 if (split_payment !== null) {
@@ -537,7 +535,7 @@
                         return a + c.amount;
                     }, 0)
                     if (total !== this.finalPrice) {
-                        showToast('Суммарная раздельная оплата не совпадает с итоговой суммой', TOAST_TYPE.ERROR);
+                        this.$toast.error('Суммарная раздельная оплата не совпадает с итоговой суммой');
                         return;
                     }
                 }
@@ -560,7 +558,7 @@
                 try {
                     this.overlay = true;
                     this.sale_id = await this.$store.dispatch('MAKE_SALE_v2', sale);
-                    showToast('Продажа совершена успешно!');
+                    this.$toast.success('Продажа совершена успешно!');
                     this.confirmationModal = true;
                     this.cart = [];
                     this.client = null;
@@ -573,7 +571,7 @@
                     this.certificate = null;
                     this.used_certificate = null;
                 } catch (e) {
-                    showToast('Произошла ошибка', TOAST_TYPE.ERROR);
+                    this.$toast.error('Произошла ошибка');
                 } finally {
                     this.overlay = false;
                 }
@@ -595,7 +593,7 @@
                     link.href = `${window.location.origin}/${data.path}`;
                     link.click();
                 } catch (e) {
-                    showToast('При создании накладной произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании накладной произошла ошибка!');
                 } finally {
                     this.overlay = false;
                 }

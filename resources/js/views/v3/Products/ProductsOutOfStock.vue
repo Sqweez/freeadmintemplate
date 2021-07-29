@@ -120,12 +120,12 @@
         mixins: [product, product_search],
         methods: {
             async getOutOfStock() {
-                this.$store.commit('enableLoading');
+                this.$loading.enable();
                 this.quantitiesLoaded = false;
                 const { data } = await axios.get(`/api/v2/products/stock/out?store_id=${this.storeId}`);
                 this.quantities = data;
                 this.quantitiesLoaded = true;
-                this.$store.commit('disableLoading');
+                this.$loading.disable();
             }
         },
         computed: {
@@ -167,11 +167,11 @@
             },
         },
         async mounted() {
-            this.$store.commit('enableLoading');
+            this.$loading.enable();
             await this.$store.dispatch(ACTIONS.GET_STORES)
             await this.$store.dispatch('GET_PRODUCTS_v2');
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
-            this.$store.commit('disableLoading');
+            this.$loading.disable();
         }
     }
 </script>

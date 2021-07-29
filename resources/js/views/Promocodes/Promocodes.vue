@@ -92,11 +92,9 @@
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
+    import ACTIONS from "@/store/actions";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import PromocodeModal from "../../components/Modal/PromocodeModal";
-    import showToast from "@/utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
 
     export default {
         components: {PromocodeModal, ConfirmationModal},
@@ -133,20 +131,20 @@
         }),
         methods: {
             async togglePromocodeActivity() {
-                await this.$loading();
+                this.$loading.enable();
                 const promocode = this.promocodes.find(p => p.id === this.promocode_id);
                 await this.$store.dispatch('editPromocode', {
                     id: promocode.id,
                     is_active: !promocode.is_active
                 })
-                await this.$loading();
+                this.$loading.disable();
                 this.promocode_id = null;
                 this.hideModal = false;
             },
             async deletePromocode() {
-                await this.$loading();
+                this.$loading.enable();
                 await this.$store.dispatch('deletePromocode', this.promocode_id);
-                await this.$loading();
+                this.$loading.disable();
                 this.promocode_id = null;
                 this.deleteModal = false;
             },
@@ -172,7 +170,7 @@
                         await this.$store.dispatch('addPromocode', _promocode);
                     }
                 } catch (e) {
-                    showToast('Произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('Произошла ошибка!');
                 } finally {
                     this.promocode = {};
                     this.promocodeModal = false;
@@ -189,10 +187,10 @@
             }
         },
         async created() {
-            await this.$loading();
+            this.$loading.enable();
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
             await this.$store.dispatch('getPromocodes');
-            await this.$loading();
+            this.$loading.disable();
         }
     }
 </script>

@@ -161,21 +161,21 @@
             kaspiAnalytics: [],
         }),
         async created() {
-            await this.$loading();
+            this.$loading.enable();
             this.start = moment().startOf('month').format('yyyy-MM-DD');
             this.finish = moment().endOf('month').format('yyyy-MM-DD');
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             const { data } = await getKaspiProductAnalytics(this.start, this.finish);
             this.kaspiAnalytics = data;
-            await this.$loading();
+            this.$loading.disable();
         },
         methods: {
             async getData() {
-                await this.$loading();
+                this.$loading.enable();
                 this.kaspiAnalytics = [];
                 const { data } = await getKaspiProductAnalytics(this.start, this.finish);
                 this.kaspiAnalytics = data;
-                await this.$loading();
+                this.$loading.disable();
             },
             async changeCustomDate() {
                 this.$refs.startMenu.save(this.start);

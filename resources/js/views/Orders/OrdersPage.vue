@@ -180,9 +180,8 @@
 <script>
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import uploadFile from "@/api/upload";
-    import showToast from "@/utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
     import OrderModal from "@/components/v2/Modal/OrderModal";
+
     export default {
         components: {OrderModal, ConfirmationModal},
         data: () => ({
@@ -285,7 +284,7 @@
                         image: image,
                     })
                 } catch (e) {
-                    showToast('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию', TOAST_TYPE.ERROR);
+                    this.$toast.error('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию');
                 } finally {
                     this.$refs.fileInput.value = null;
                 }

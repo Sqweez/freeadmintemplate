@@ -86,9 +86,9 @@
             }
         },
         async created() {
-            this.$loading();
+            this.$loading.enable();
             await this.$store.dispatch('getPartnersStats');
-            this.$loading();
+            this.$loading.disable();
         }
     }
 </script>

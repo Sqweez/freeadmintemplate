@@ -48,7 +48,6 @@
 
 <script>
     import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
 
     export default {
         data: () => ({
@@ -58,7 +57,7 @@
             async savePlans() {
                 await this.$store.dispatch(ACTIONS.SAVE_PLANS, this.plans);
                 await this.init();
-                await showToast('План успешно изменен!')
+                this.$toast.success('План успешно изменен!')
             },
             async init() {
                 this.plans = this.stores.map(s => {

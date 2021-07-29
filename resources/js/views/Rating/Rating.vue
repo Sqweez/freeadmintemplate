@@ -95,11 +95,11 @@
 </template>
 
 <script>
-    import SellerModal from "../../components/Modal/SellerModal";
-    import ACTIONS from "../../store/actions";
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import showToast from "../../utils/toastService";
-    import CriteriaModal from "../../components/Modal/CriteriaModal";
+    import SellerModal from "@/components/Modal/SellerModal";
+    import ACTIONS from "@/store/actions";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import CriteriaModal from "@/components/Modal/CriteriaModal";
+
     export default {
         components: {CriteriaModal, ConfirmationModal, SellerModal},
         data: () => ({
@@ -115,13 +115,13 @@
                 await this.$store.dispatch(ACTIONS.DELETE_SELLER, this.sellerId);
                 this.sellerId = null;
                 this.deleteModal = false;
-                showToast('Продавец удален!');
+                this.$toast.success('Продавец удален!');
             },
             async deleteCriteria() {
                 await this.$store.dispatch(ACTIONS.DELETE_CRITERIA, this.criteriaId);
                 this.criteriaId = null;
                 this.deleteCriteriaModal = false;
-                showToast('Критерий удален!');
+                this.$toast.success('Критерий удален!');
             }
         },
         computed: {

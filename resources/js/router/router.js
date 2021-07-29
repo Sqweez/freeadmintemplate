@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from "vue-router";
 import routes from "./routes";
-import store from "../store";
-import showToast from "../utils/toastService";
+import store from "@/store";
+import ToastService from "@/utils/toastService";
 import {TOAST_TYPE} from "@/config/consts";
+
+const $toast = new ToastService();
 
 Vue.use(VueRouter);
 
@@ -44,7 +46,7 @@ Router.beforeEach(async (to, from, next) => {
         const CAN_ENTER = !!CAN_ENTER_ROLES[CURRENT_ROLE];
         if (!CAN_ENTER) {
             next(BASE_ROUTE);
-            showToast('Доступ запрещен!', TOAST_TYPE.ERROR)
+            $toast.error('Доступ запрещен!')
             return;
         }
     }

@@ -138,12 +138,12 @@
 </template>
 
 <script>
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import StoreModal from "../../components/Modal/StoreModal";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import StoreModal from "@/components/Modal/StoreModal";
     import {mapGetters} from 'vuex';
-    import ACTIONS from "../../store/actions";
+    import ACTIONS from "@/store/actions";
     import CompanionBalanceModal from "@/components/Modal/CompanionBalanceModal";
-    import showToast from "@/utils/toastService";
+
     export default {
         data: () => ({
             storeId: null,
@@ -178,7 +178,7 @@
                     sum
                 });
                 this.storeId = null;
-                showToast('Баланс партнера пополнен!');
+                this.$toast.store_id('Баланс партнера пополнен!');
             }
         }
     }

@@ -64,7 +64,7 @@
     import NewsModal from "@/components/Modal/NewsModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import axios from 'axios';
-    import showToast from "@/utils/toastService";
+
     export default {
         components: {ConfirmationModal, NewsModal},
         async created() {
@@ -112,10 +112,10 @@
                 this.newsId = null;
             },
             async updateSiteCache() {
-                await this.$store.commit('enableLoading');
+                this.$loading.enable();
                 await axios.get('https://iron-addicts.kz/api/cache/update-all')
-                await this.$store.commit('disableLoading');
-                showToast('Кэш сброшен')
+                this.$loading.disable();
+                this.$toast.success('Кэш сброшен')
             }
         },
         computed: {

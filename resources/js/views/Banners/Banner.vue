@@ -78,9 +78,9 @@
 
 <script>
     import axios from 'axios';
-    import BannerModal from "../../components/Modal/BannerModal";
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import showToast from "../../utils/toastService";
+    import BannerModal from "@/components/Modal/BannerModal";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+
     export default {
         components: {ConfirmationModal, BannerModal},
         data: () => ({
@@ -112,11 +112,11 @@
                 this.currentBanner = {};
             },
             async deleteBanner() {
-                this.$store.commit('enableLoading');
+                this.$loading.enable();
                 await axios.delete(`/api/shop/banners/${this.currentBanner.id}`);
                 this.banners = this.banners.filter(b => b.id !== this.currentBanner.id);
-                this.$store.commit('disableLoading');
-                showToast('Баннер успешно удален');
+                this.$loading.disable();
+                this.$toast.success('Баннер успешно удален');
                 this.closeConfirmationModal();
             },
             closeConfirmationModal() {

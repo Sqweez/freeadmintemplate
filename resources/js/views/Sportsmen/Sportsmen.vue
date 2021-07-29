@@ -53,10 +53,9 @@
 </template>
 
 <script>
-    import SportsmenModal from "../../components/Modal/SportsmenModal";
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import ACTIONS from "../../store/actions";
-    import showToast from "../../utils/toastService";
+    import SportsmenModal from "@/components/Modal/SportsmenModal";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import ACTIONS from "@/store/actions";
 
     export default {
         data: () => ({
@@ -68,7 +67,7 @@
             async deleteSportsmen() {
                 await this.$store.dispatch(ACTIONS.DELETE_SPORTSMEN, this.id);
                 this.deleteModal = false;
-                showToast('Спортсмен успешно удален!');
+                this.$toast.success('Спортсмен успешно удален!');
             }
         },
         async created() {

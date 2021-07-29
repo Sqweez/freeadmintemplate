@@ -95,9 +95,9 @@
                 this.$emit('cancel');
             },
             async onConfirm() {
-                this.$store.commit('enableLoading');
+                this.$loading.enable();
                 const banner = Object.keys(this._banner).length ? await this.editBanner() : await this.createBanner();
-                this.$store.commit('disableLoading');
+                this.$loading.disable();
                 this.$toast.success('Успешно!');
                 this.$emit('confirm', banner.data);
             },

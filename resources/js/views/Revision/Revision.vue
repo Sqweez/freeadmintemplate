@@ -65,8 +65,6 @@
     import axios from 'axios';
     import ACTIONS from "../../store/actions";
     import RevisionModal from "../../components/Modal/RevisionModal";
-    import showToast from "../../utils/toastService";
-    import {TOAST_TYPE} from "../../config/consts";
     import RevisionInfoModal from "../../components/Modal/RevisionInfoModal";
 
     export default {
@@ -108,9 +106,9 @@
 
                 try {
                     const response = await axios.post('/api/revision', data);
-                    showToast('Ревизия успешно загружена!');
+                    this.$toast.success('Ревизия успешно загружена!');
                 } catch (e) {
-                    showToast('Что-то пошло не так!', TOAST_TYPE.ERROR);
+                    this.$toast.error('Что-то пошло не так!');
                 }
                 this.loading = false;
                 this.revisionModal = false;

@@ -241,8 +241,6 @@
 </template>
 
 <script>
-    import showToast from "@/utils/toastService";
-    import {TOAST_TYPE} from "@/config/consts";
     import ACTIONS from "@/store/actions";
     import {mapActions} from 'vuex';
     import CheckModal from "@/components/Modal/CheckModal";
@@ -361,10 +359,6 @@
                     text: 'Производитель',
                     align: ' d-none'
                 },
-               /* {
-                    text: 'Остаток',
-                    value: 'quantity'
-                },*/
                 {
                     text: 'Стоимость',
                     value: 'product_price'
@@ -389,13 +383,13 @@
             async createCertificate(certificate) {
                 this.certificateModal = false;
                 try {
-                    this.$loading();
+                    this.$loading.enable();
                     const {data} = await axios.post(`/api/v2/certificates`, certificate);
                     this.certificate = data;
                 } catch (e) {
-                    showToast('При создании сертификата произошла ошибка', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании сертификата произошла ошибка');
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             getFiltered(e) {
@@ -407,13 +401,13 @@
             },
             async deleteCertificate() {
                 try {
-                    this.$loading();
+                    this.$loading.enable();
                     await axios.delete(`/api/v2/certificates/${this.certificate.id}`);
                     this.certificate = null;
                 } catch (e) {
-                    showToast('Произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('Произошла ошибка!');
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             cancelClient() {
@@ -424,17 +418,17 @@
                 this.promocodeSet = false;
             },
             async searchPromocode() {
-                this.$loading();
+                this.$loading.enable();
                 try {
                     const response = await axios.get(`/api/promocode/search/${this.promocode}`);
                     this.partner_id = response.data.data.partner.id;
                     this.discountPercent = Math.max(this.discountPercent, response.data.data.discount);
-                    showToast('Партнер установлен');
+                    this.$toast.success('Партнер установлен');
                     this.promocodeSet = true;
                 } catch (e) {
-                    showToast('Промокод не найден', TOAST_TYPE.ERROR)
+                    this.$toast.error('Промокод не найден')
                 } finally {
-                    this.$loading();
+                    this.$loading.disable();
                 }
             },
             async refreshProducts() {
@@ -443,7 +437,7 @@
                 const store_id = this.is_admin ? null : this.user.store_id;
                 await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
                 await this.$store.dispatch(ACTIONS.GET_CLIENTS);
-                showToast('Список товаров обновлен!');
+                this.$toast.success('Список товаров обновлен!');
                 await this.getProductQuantities(this.storeFilter);
                 this.loading = false;
             },
@@ -473,7 +467,7 @@
                     link.href = `${window.location.origin}/${data.path}`;
                     link.click();
                 } catch (e) {
-                    showToast('При создании накладной произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании накладной произошла ошибка!');
                 } finally {
                     this.overlay = false;
                 }
@@ -494,7 +488,7 @@
                     link.href = `${window.location.origin}/${data.path}`;
                     link.click();
                 } catch (e) {
-                    showToast('При создании накладной произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании накладной произошла ошибка!');
                 } finally {
                     this.overlay = false;
                 }
@@ -514,7 +508,7 @@
                     link.href = `${window.location.origin}/${data.path}`;
                     link.click();
                 } catch (e) {
-                    showToast('При создании счет-фактуры произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании счет-фактуры произошла ошибка!');
                 } finally {
                     this.overlay = false;
                 }
@@ -534,7 +528,7 @@
                     link.href = `${window.location.origin}/${data.path}`;
                     link.click();
                 } catch (e) {
-                    showToast('При создании счет-фактуры произошла ошибка!', TOAST_TYPE.ERROR);
+                    this.$toast.error('При создании счет-фактуры произошла ошибка!');
                 } finally {
                     this.overlay = false;
                 }

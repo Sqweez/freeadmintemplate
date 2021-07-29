@@ -60,10 +60,10 @@
 </template>
 
 <script>
-    import GoalModal from "../../components/Modal/GoalModal";
-    import ACTIONS from "../../store/actions";
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import showToast from "../../utils/toastService";
+    import GoalModal from "@/components/Modal/GoalModal";
+    import ACTIONS from "@/store/actions";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+
     export default {
         components: {ConfirmationModal, GoalModal},
         data: () => ({
@@ -75,7 +75,7 @@
             async deleteGoal() {
                 await this.$store.dispatch(ACTIONS.DELETE_GOAL, this.goal_id);
                 this.goal_id = -1;
-                showToast('Цель удалена!');
+                this.$toast.success('Цель удалена!');
                 this.deleteModal = false;
             }
         },

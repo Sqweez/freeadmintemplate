@@ -160,11 +160,6 @@
         <SkuModal
             @cancel="$store.commit('modals/closeProductSkuModal')"
         />
-        <!-- <PriceTagModal
-             :state="priceTagModal"
-             :priceTag="priceTag"
-             @cancel="priceTagModal = false"
-         />-->
     </v-card>
 </template>
 
@@ -173,7 +168,6 @@
     import ProductModal from "@/components/v2/Modal/ProductModal";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import ProductQuantityModal from "@/components/Modal/ProductQuantityModal";
-    import showToast from "@/utils/toastService";
     import ACTIONS from "@/store/actions";
     import axios from 'axios';
     import PriceTagModal from "@/components/Modal/PriceTagModal";
@@ -365,10 +359,10 @@
                     await this.$store.dispatch('DELETE_PRODUCT_v2',
                         this.productId,
                     );
-                    showToast('Товар успешно удален');
+                    this.$toast.success('Товар успешно удален');
                 } catch (e) {
                     console.log(e.response);
-                    showToast('Произошла ошибка', TOAST_TYPE.ERROR);
+                    this.$toast.error('Произошла ошибка', TOAST_TYPE.ERROR);
                 } finally {
                     this.productId = null;
                     this.deleteModal = false;
@@ -376,7 +370,7 @@
             },
             async groupProduct() {
                 await axios.get('/api/v2/products/group');
-                showToast('Товары успешно сгруппированы!')
+                this.$toast.success('Товары успешно сгруппированы!')
             },
             updatePage(page) {
 
@@ -416,9 +410,9 @@
                         batch,
                         store_id: this.storeFilter,
                     });
-                    showToast('Количество товар успешно изменено!', TOAST_TYPE.SUCCESS);
+                    this.$toast.success('Количество товар успешно изменено!');
                 } catch (e) {
-                    showToast('При добавлении количества произошла ошибка', TOAST_TYPE.ERROR);
+                    this.$toast.error('При добавлении количества произошла ошибка');
                 } finally {
                     this.productId = false;
                     this.productQuantityModal = false;

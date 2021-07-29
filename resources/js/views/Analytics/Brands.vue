@@ -220,12 +220,12 @@
                 this.$refs.finishMenu.save(this.finish);
             },
             async loadReports() {
-                this.$store.commit('enableLoading');
+                this.$loading.enable();
                 const date_start = this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0];
                 const date_finish = this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1];
                 const response = await getBrandsAnalytics(this.currentCity, date_start, date_finish);
                 this.brandReport = response.data;
-                this.$store.commit('disableLoading');
+                this.$loading.disable();
             }
         },
         computed: {

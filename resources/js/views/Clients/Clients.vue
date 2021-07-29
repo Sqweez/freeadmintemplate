@@ -96,12 +96,12 @@
 </template>
 
 <script>
-    import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-    import UserModal from "../../components/Modal/UserModal";
-    import ACTIONS from "../../store/actions";
-    import ClientModal from "../../components/Modal/ClientModal";
-    import showToast from "../../utils/toastService";
-    import BalanceModal from "../../components/Modal/BalanceModal";
+    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+    import UserModal from "@/components/Modal/UserModal";
+    import ACTIONS from "@/store/actions";
+    import ClientModal from "@/components/Modal/ClientModal";
+    import BalanceModal from "@/components/Modal/BalanceModal";
+
     export default {
         components: {
             BalanceModal,
@@ -186,7 +186,7 @@
         methods: {
             async deleteUser() {
                 await this.$store.dispatch(ACTIONS.DELETE_CLIENT, this.userId);
-                showToast('Клиент удален');
+                this.$toast.success('Клиент удален');
                 this.userId = null;
                 this.confirmationModal = false;
             },
@@ -197,7 +197,7 @@
                 });
                 this.balanceModal = false;
                 this.userId = null;
-                showToast('Баланс успешно пополнен!');
+                this.$toast.success('Баланс успешно пополнен!');
             }
         }
     }
