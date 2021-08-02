@@ -475,8 +475,6 @@
                     start: this.currentDate[0],
                     finish: this.currentDate[1],
                 })
-                await this.$store.dispatch(ACTIONS.GET_STORES);
-                await this.$store.dispatch(ACTIONS.GET_USERS);
                 this.overlay = this.loading = false;
             },
             async onConfirm() {

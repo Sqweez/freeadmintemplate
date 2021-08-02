@@ -45,3 +45,15 @@ export async function getBrandsMotivation() {
     return data;
 }
 
+export async function createBrandsMotivation(motivations) {
+    const { data } = await axios.post(`/api/v2/brands/motivation`, {
+        motivations
+    });
+    return data;
+}
+
+export async function getBrandsMotivationPlans() {
+    const { data } = await axios.get('/api/v2/brands/motivation');
+    return data;
+}
+

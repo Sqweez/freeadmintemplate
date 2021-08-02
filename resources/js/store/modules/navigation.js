@@ -109,11 +109,6 @@ const navigationModule = {
                         isAdmin: true
                     },
                     {
-                        title: 'План продаж',
-                        url: '/plan',
-                        isAdmin: true
-                    },
-                    {
                         title: 'Товары',
                         url: '/products'
                     },
@@ -158,7 +153,12 @@ const navigationModule = {
                     {
                         title: 'Штрафы/Вознаграждения',
                         url: '/shifts/penalty'
-                    }
+                    },
+                    {
+                        title: 'План продаж',
+                        url: '/plan',
+                        isAdmin: true
+                    },
                 ]
             },
             {

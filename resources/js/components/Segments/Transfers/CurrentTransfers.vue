@@ -110,7 +110,6 @@
     export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'current'});
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             this.loading = false;
         },
         components: {ConfirmationModal, TransferModal, TransferPhotoModal},

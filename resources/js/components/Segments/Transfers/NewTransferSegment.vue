@@ -313,7 +313,6 @@
             this.loading = true;
             await this.$store.dispatch('GET_ARRIVALS', true);
             await this.$store.dispatch('GET_PRODUCTS_v2');
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             if (this.IS_SELLER) {

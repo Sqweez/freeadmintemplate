@@ -15,6 +15,7 @@ use App\Http\Controllers\api\v2\EducationController;
 use App\Http\Controllers\api\AnalyticsController;
 use App\Http\Controllers\api\v2\PreorderController;
 use App\Http\Controllers\api\v2\ShiftController;
+use App\Http\Controllers\api\v2\BrandMotivationController;
 
 // Authorization
 
@@ -309,5 +310,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/payroll', [ShiftController::class, 'getPayroll']);
             Route::get('/', [ShiftController::class, 'getShifts']);
         });
+
+        Route::post('brands/motivation', [BrandMotivationController::class, 'store']);
+        Route::get('brands/motivation', [BrandMotivationController::class, 'index']);
     });
 });

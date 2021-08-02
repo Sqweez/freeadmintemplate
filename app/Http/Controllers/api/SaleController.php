@@ -13,11 +13,13 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\ReportResource;
 use App\Http\Resources\v2\Report\ReportsResource;
 use App\Http\Resources\SaleByCityResource;
+use App\Manufacturer;
 use App\Product;
 use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
 use App\Store;
+use App\v2\Models\BrandMotivation;
 use App\v2\Models\Certificate;
 use App\v2\Models\Preorder;
 use App\v2\Models\ProductSku;
@@ -309,7 +311,8 @@ class SaleController extends Controller {
     }
 
     public function getMotivationReport(Request $request) {
-        $motivations = [
+        $motivations = BrandMotivation::all();
+        /*$motivations = [
             [
                 'name' => 'Dr.Hoffman',
                 'motivation' => $this->getBrandsMotivation([39])
@@ -322,7 +325,17 @@ class SaleController extends Controller {
                 'name' => 'Европ. бренды',
                 'motivation' => $this->getBrandsMotivation([181, 177, 182])
             ]
-        ];
+        ];*/
+        $motivations = $motivations->map(function ($item) {
+            return [
+                'name' => Manufacturer::whereIn('id', $item['brands'])
+                    ->get()
+                    ->pluck('manufacturer_name')
+                    ->join(' | ')
+                ,
+                'motivation' => $this->getBrandsMotivation($item['brands'])
+            ];
+        });
         $stores = Store::where('type_id', '=', 1)
             ->select(['id', 'name'])
             ->get();

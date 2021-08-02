@@ -43,21 +43,81 @@
                 </v-btn>
             </v-card-text>
         </v-card>
+        <v-card>
+            <v-card-title>
+                Мотивация по брендам
+            </v-card-title>
+            <v-card-text>
+                <v-simple-table v-slot:default :dense="false">
+                    <thead>
+                    <tr>
+                        <th>Бренды</th>
+                        <th>План</th>
+                        <th>Удалить</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(motivation, key) of motivations">
+                        <td>
+                            <v-autocomplete
+                                label="Бренды"
+                                multiple
+                                v-model="motivation.brands"
+                                :items="brands"
+                                item-text="manufacturer_name"
+                                item-value="id"
+                            />
+                        </td>
+                        <td>
+                            <v-text-field
+                                label="План"
+                                type="number"
+                                v-model.number="motivation.amount"
+                            />
+                        </td>
+                        <td>
+                            <v-btn icon text @click="motivations.splice(1, key)">
+                                <v-icon>
+                                    mdi-cancel
+                                </v-icon>
+                            </v-btn>
+                        </td>
+                    </tr>
+                    </tbody>
+                </v-simple-table>
+                <v-btn color="primary" class="mt-5" @click="addMotivation">
+                    Добавить пункт <v-icon>mdi-plus</v-icon>
+                </v-btn>
+                <v-btn color="success" class="ml-5 mt-5" @click="saveBrandsMotivation">
+                    Сохранить <v-icon>mdi-check</v-icon>
+                </v-btn>
+            </v-card-text>
+        </v-card>
     </div>
 </template>
 
 <script>
-    import ACTIONS from "../../store/actions";
+    import ACTIONS from "@/store/actions";
 
     export default {
         data: () => ({
             plans: [],
+            motivations: [],
         }),
         methods: {
             async savePlans() {
                 await this.$store.dispatch(ACTIONS.SAVE_PLANS, this.plans);
                 await this.init();
                 this.$toast.success('План успешно изменен!')
+            },
+            async saveBrandsMotivation() {
+                await this.$store.dispatch(ACTIONS.CREATE_BRANDS_MOTIVATION, this.motivations);
+            },
+            addMotivation() {
+                this.motivations.push({
+                    brands: [],
+                    amount: 0,
+                })
             },
             async init() {
                 this.plans = this.stores.map(s => {
@@ -82,12 +142,24 @@
             },
             _plans() {
                 return this.$store.getters.PLANS;
+            },
+            brands() {
+                return this.$store.getters.manufacturers;
+            },
+            BRANDS_MOTIVATION_PLAN() {
+                return this.$store.getters.BRANDS_MOTIVATION_PLAN;
             }
         },
         async created() {
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch(ACTIONS.GET_PLANS);
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
+            await this.$store.dispatch(ACTIONS.GET_BRANDS_MOTIVATIONS_PLAN);
             await this.init();
+        },
+        watch: {
+            BRANDS_MOTIVATION_PLAN(value) {
+                this.motivations = [...value];
+            }
         }
     }
 </script>

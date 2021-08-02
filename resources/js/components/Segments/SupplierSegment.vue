@@ -101,7 +101,6 @@
         components: {ConfirmationModal},
         async mounted() {
             await this.$store.dispatch(ACTIONS.GET_SUPPLIERS);
-            await this.$store.dispatch(ACTIONS.GET_USERS);
         },
         data: () => ({
             newSupplier: {

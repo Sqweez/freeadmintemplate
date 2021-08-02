@@ -383,8 +383,6 @@
         }),
         async created() {
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
-            await this.$store.dispatch(ACTIONS.GET_CITIES);
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
         },

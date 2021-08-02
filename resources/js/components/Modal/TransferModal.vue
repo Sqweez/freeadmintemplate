@@ -19,14 +19,14 @@
                     <template v-slot:default>
                         <thead>
                         <tr>
-                            <th v-if="confirmMode">Действие</th>
+                            <th v-if="canEdit">Действие</th>
                             <th>Наименование</th>
                             <th>Количество</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="(item, idx) of transfer" :key="idx">
-                            <td v-if="confirmMode">
+                            <td v-if="canEdit">
                                 <v-checkbox
                                     v-model="item.accepted"
                                 />
@@ -47,13 +47,13 @@
                             </td>
                             <td>
 
-                                <v-btn icon color="error" @click="decreaseCount(idx)" v-if="confirmMode">
+                                <v-btn icon color="error" @click="decreaseCount(idx)" v-if="canEdit">
                                     <v-icon>
                                         mdi-minus
                                     </v-icon>
                                 </v-btn>
                                 {{ item.count }}
-                                <v-btn icon color="success" @click="increaseCount(idx)" v-if="confirmMode">
+                                <v-btn icon color="success" @click="increaseCount(idx)" v-if="canEdit">
                                     <v-icon>
                                         mdi-plus
                                     </v-icon>
@@ -80,7 +80,7 @@
                     Закрыть
                 </v-btn>
                 <v-spacer/>
-                <v-btn color="success" text v-if="confirmMode && hasAccepted" @click="accept">
+                <v-btn color="success" text v-if="canEdit && hasAccepted" @click="accept">
                     Подтвердить
                     <v-icon>mdi-check</v-icon>
                 </v-btn>
@@ -181,6 +181,9 @@
         computed: {
             hasAccepted() {
                 return !!this.transfer.filter(t => t.accepted).length
+            },
+            canEdit() {
+                return this.isAdmin && this.confirmMode;
             }
         }
     }

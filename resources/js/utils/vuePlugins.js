@@ -18,6 +18,12 @@ export default {
                 },
                 $color() {
                     return new ColorService();
+                },
+                isSeller() {
+                    return this.$store.getters.IS_SELLER;
+                },
+                isAdmin() {
+                    return this.$store.getters.IS_ADMIN;
                 }
             }
         })

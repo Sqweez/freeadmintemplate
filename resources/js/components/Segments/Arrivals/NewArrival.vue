@@ -299,7 +299,6 @@
         async mounted() {
             this.loading = this.products.length === 0;
             await this.$store.dispatch('GET_PRODUCTS_v2');
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);

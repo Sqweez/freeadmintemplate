@@ -78,7 +78,6 @@
             revisionInfoModal: false
         }),
         async created() {
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             const { data } = await axios.get('/api/revision');
             this.revisions = data.data;
             this.store_id = this.user.store_id;

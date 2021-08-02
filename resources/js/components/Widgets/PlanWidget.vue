@@ -339,9 +339,6 @@
         async created() {
             this.loading = !(this.shops.length && this._plans.length && this.planReports.length);
             await this.$store.dispatch(ACTIONS.GET_PLANS);
-            if (!this.shops.length) {
-                await this.$store.dispatch(ACTIONS.GET_STORES);
-            }
             await this.$store.dispatch('getPlanReports');
             this.plans = this.shops.map(s => {
                 const _plan = this._plans.find(p => p.store_id == s.id);

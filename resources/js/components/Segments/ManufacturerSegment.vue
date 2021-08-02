@@ -64,6 +64,7 @@
 <script>
     import ConfirmationModal from "../Modal/ConfirmationModal";
     import ManufacturerModal from "../Modal/ManufacturerModal";
+    import ACTIONS from "@/store/actions";
 
     export default {
         components: {

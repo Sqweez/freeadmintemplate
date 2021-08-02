@@ -41,9 +41,6 @@
 
     export default {
         components: {TransferHistory, NewTransferSegment, CurrentTransfers},
-        async created() {
-            await this.$store.dispatch(ACTIONS.GET_STORES);
-        },
         data: () => ({
             loading: false,
             segments: [

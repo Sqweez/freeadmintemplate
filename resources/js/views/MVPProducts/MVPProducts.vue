@@ -128,7 +128,6 @@
         },
         async created() {
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             this.store_id = this.stores[0].id;
             this.timeFilter = this.times[0].key;
             await this.getMVPProducts();

@@ -1,4 +1,12 @@
-import {cancelSale, getBrandsMotivation, getPlanReports, getReports, getStoreReports, updateSale} from '@/api/sale'
+import {
+    cancelSale,
+    createBrandsMotivation,
+    getBrandsMotivation,
+    getPlanReports,
+    getReports,
+    getStoreReports,
+    updateSale
+} from '@/api/sale'
 import ACTIONS from '../actions/index';
 import moment from 'moment';
 
@@ -75,7 +83,7 @@ const reportsModule = {
         async getBrandsMotivation({commit}) {
             const data = await getBrandsMotivation();
             commit('setBrandsMotivation', data);
-        }
+        },
     }
 };
 

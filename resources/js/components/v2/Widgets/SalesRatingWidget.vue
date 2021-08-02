@@ -77,9 +77,6 @@
             current: null,
         }),
         mounted() {
-            if (!this.stores.length) {
-                this.$store.dispatch('getStores');
-            }
             this.$store.dispatch('getStoresReport')
             this.current = this.items[0];
         },

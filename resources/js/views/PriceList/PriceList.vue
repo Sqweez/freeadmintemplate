@@ -358,8 +358,6 @@
             },
             async init() {
                 this.loading = true;
-                await this.$store.dispatch(ACTIONS.GET_STORES);
-                await this.$store.dispatch(ACTIONS.GET_USERS);
                 this.overlay = this.loading = false;
             },
             async onConfirm() {

@@ -238,7 +238,6 @@
         },
         async mounted() {
             await this.getArrivals();
-            await this.$store.dispatch(ACTIONS.GET_STORES);
         }
     }
 </script>

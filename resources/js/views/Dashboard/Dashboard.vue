@@ -83,7 +83,6 @@
             }
         },
         async mounted() {
-            await this.$store.dispatch(ACTIONS.GET_STORES)
             if (this.IS_MALOY) {
                 const main = document.querySelector('.mdl-layout__content');
                 main.classList.add('main-maloy')

@@ -172,8 +172,6 @@
             }
         },
         async created() {
-            await this.$store.dispatch(ACTIONS.GET_STORES)
-            await this.$store.dispatch(ACTIONS.GET_USERS)
             this.currentDate = moment().format('YYYY-MM');
         },
         computed: {

@@ -111,8 +111,6 @@
         },
         async created() {
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
-            await this.$store.dispatch(ACTIONS.GET_STORES);
-            await this.$store.dispatch(ACTIONS.GET_CITIES);
         },
         data: () => ({
             confirmationModal: false,

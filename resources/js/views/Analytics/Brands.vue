@@ -239,9 +239,7 @@
             }
         },
         async created() {
-            this.$store.commit('enableLoading');
-            await this.$store.dispatch(ACTIONS.GET_STORES);
-            this.$store.commit('disableLoading');
+
         }
     }
 </script>

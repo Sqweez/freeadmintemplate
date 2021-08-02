@@ -65,7 +65,6 @@
     export default {
         components: {ConfirmationModal, ShiftPenaltyModal},
         async mounted() {
-            await this.$store.dispatch(ACTIONS.GET_USERS);
             await this.$store.dispatch(ACTIONS.GET_SHIFT_PENALTIES);
         },
         data: () => ({

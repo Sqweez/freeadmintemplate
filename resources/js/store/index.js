@@ -31,6 +31,7 @@ import educationModule from "@/store/modules/education";
 import arrivalModule from "@/store/modules/arrivals";
 import preordersModule from "@/store/modules/preorders";
 import shiftModule from "@/store/modules/shifts";
+import motivationModule from "@/store/modules/motivation";
 import vuexPlugins from "@/store/plugins/vuexPlugins";
 
 Vue.use(Vuex);
@@ -39,7 +40,15 @@ const store = new Store({
     state: {},
     mutations: {},
     actions: {
-
+        async INIT({commit, dispatch}) {
+            this.$loading.enable();
+            await dispatch(ACTIONS.GET_STORES);
+            await dispatch(ACTIONS.GET_STORE_TYPES);
+            await dispatch(ACTIONS.GET_USERS);
+            await dispatch(ACTIONS.GET_USER_ROLES);
+            await dispatch(ACTIONS.GET_CITIES);
+            this.$loading.disable();
+        }
     },
     modules: {
         navigationModule,
@@ -70,7 +79,8 @@ const store = new Store({
         educationModule,
         arrivalModule,
         preordersModule,
-        shiftModule
+        shiftModule,
+        motivationModule,
     },
     plugins: [
         createPersistedState({

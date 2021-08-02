@@ -313,7 +313,6 @@
         async mounted() {
             this.loading = this.products.length === 0;
             await this.$store.dispatch('GET_PRODUCTS_v2');
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             this.loading = false;
@@ -352,9 +351,6 @@
 
                 await this.$store.dispatch(ACTIONS.MAKE_TRANSFER, sale);
                 await this.$store.dispatch('GET_PRODUCTS_QUANTITIES', this.storeFilter);
-                await this.$store.dispatch(ACTIONS.GET_STORES);
-
-
                 this.overlay = false;
 
                 this.confirmationModal = true;

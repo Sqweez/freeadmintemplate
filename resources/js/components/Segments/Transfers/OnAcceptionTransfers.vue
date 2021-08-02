@@ -92,7 +92,6 @@
     export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'not_accepted'});
-            await this.$store.dispatch(ACTIONS.GET_STORES);
             this.loading = false;
         },
         components: {ConfirmationModal, TransferAcceptionModal, TransferPhotoModal},

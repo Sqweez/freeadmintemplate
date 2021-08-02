@@ -129,7 +129,6 @@
         },
         async created() {
             await this.$store.dispatch('GET_TASKS');
-            await this.$store.dispatch(ACTIONS.GET_STORES);
         }
     }
 </script>

@@ -156,11 +156,6 @@
             StoreModal,
             ConfirmationModal
         },
-        created() {
-            this.$store.dispatch(ACTIONS.GET_STORES);
-            this.$store.dispatch(ACTIONS.GET_STORE_TYPES);
-            this.$store.dispatch(ACTIONS.GET_CITIES);
-        },
         computed: {
             ...mapGetters(['shops', 'warehouses', 'partner_stores'])
         },

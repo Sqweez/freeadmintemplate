@@ -102,10 +102,6 @@
         async created() {
             this.loading = true;
             await this.$store.dispatch('getBrandsMotivation');
-            if (!this.shops.length) {
-                await this.$store.dispatch(ACTIONS.GET_STORES);
-            }
-
             this.loading = false;
         },
         methods: {

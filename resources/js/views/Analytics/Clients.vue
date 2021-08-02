@@ -163,7 +163,6 @@
             this.$loading.enable();
             this.start = moment().startOf('month').format('yyyy-MM-DD');
             this.finish = moment().endOf('month').format('yyyy-MM-DD');
-            await this.$store.dispatch(ACTIONS.GET_STORES)
             const response = await getClientAnalytics(this.start, this.finish);
             this.topClients = response.data.top_clients_all;
             this.topClientsByStore = response.data.top_clients_store;

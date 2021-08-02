@@ -68,11 +68,6 @@
             userModal: false,
             userId: null,
         }),
-        async created() {
-            await this.$store.dispatch(ACTIONS.GET_USERS);
-            await this.$store.dispatch(ACTIONS.GET_USER_ROLES);
-            await this.$store.dispatch(ACTIONS.GET_STORES);
-        },
         computed: {
             users() {
                 return this.$store.getters.users;

@@ -56,6 +56,9 @@
                 }, random * 60 * 1000);
             }
         },
+        async created() {
+            await this.$store.dispatch('INIT');
+        },
         watch: {
             IS_MALOY(value) {
                 if (value) {
