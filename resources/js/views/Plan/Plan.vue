@@ -71,7 +71,7 @@
                         <td>
                             <v-text-field
                                 v-for="amount of motivation.amount"
-                                :label="amount.store_name"
+                                :label="amount.user_name"
                                 type="number"
                                 v-model.number="amount.amount"
                             />
@@ -113,13 +113,14 @@
             },
             async saveBrandsMotivation() {
                 await this.$store.dispatch(ACTIONS.CREATE_BRANDS_MOTIVATION, this.motivations);
+                this.$toast.success('Информация обновлена');
             },
             addMotivation() {
                 this.motivations.push({
                     brands: [],
-                    amount: [...this.stores.map(s => ({
-                        store_id: s.id,
-                        store_name: s.name,
+                    amount: [...this.sellers.map(s => ({
+                        user_id: s.id,
+                        user_name: `${s.name} | ${s.city}`,
                         amount: 0,
                     }))],
                 })
@@ -150,6 +151,9 @@
             },
             brands() {
                 return this.$store.getters.manufacturers;
+            },
+            sellers() {
+                return this.$store.getters.USERS_SELLERS;
             },
             BRANDS_MOTIVATION_PLAN() {
                 return this.$store.getters.BRANDS_MOTIVATION_PLAN;

@@ -238,6 +238,10 @@ class Sale extends Model
         return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
+    public function setCommentAttribute($value) {
+        $this->attributes['comment'] = $value === null ? '' : $value;
+    }
+
     protected static function boot() {
         parent::boot();
         static::creating(function ($query) {
