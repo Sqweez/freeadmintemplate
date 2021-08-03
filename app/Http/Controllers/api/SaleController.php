@@ -312,20 +312,6 @@ class SaleController extends Controller {
 
     public function getMotivationReport(Request $request) {
         $motivations = BrandMotivation::all();
-        /*$motivations = [
-            [
-                'name' => 'Dr.Hoffman',
-                'motivation' => $this->getBrandsMotivation([39])
-            ],
-            [
-                'name' => 'Siberian Nutrogunz',
-                'motivation' => $this->getBrandsMotivation([2])
-            ],
-            [
-                'name' => 'Европ. бренды',
-                'motivation' => $this->getBrandsMotivation([181, 177, 182])
-            ]
-        ];*/
         $motivations = $motivations->map(function ($item) {
             return [
                 'name' => Manufacturer::whereIn('id', $item['brands'])
@@ -333,13 +319,14 @@ class SaleController extends Controller {
                     ->pluck('manufacturer_name')
                     ->join(' | ')
                 ,
-                'motivation' => $this->getBrandsMotivation($item['brands'])
+                'motivation' => $this->getBrandsMotivation($item['brands']),
+                'amount' => $item['amount']
             ];
         });
         $stores = Store::where('type_id', '=', 1)
             ->select(['id', 'name'])
             ->get();
-        return $stores->map(function ($store) use ($motivations){
+        return $stores->map(function ($store) use ($motivations) {
             return [
                 'id' => $store['id'],
                 'name' => $store['name'],
@@ -347,11 +334,14 @@ class SaleController extends Controller {
                     $currentMotivation = collect($motivation['motivation'])->filter(function ($item) use ($store) {
                             return $store['id'] === $item['store_id'];
                         })->first() ?? ['sum' => 0, 'percent' => 0];
+                    $currentPlan = collect($motivation['amount'])->filter(function ($i) use ($store) {
+                            return $i['store_id'] == $store['id'];
+                        })->first()['amount'] ?? 0;
                     return [
                         'name' => $motivation['name'],
-                        'plan' => 600000,
+                        'plan' => $currentPlan,
                         'sum' => $currentMotivation['sum'],
-                        'percent' => round($currentMotivation['percent'], 2)
+                        'percent' => round($currentMotivation['sum'] == 0 ? 0 : 100 * $currentMotivation['sum'] / $currentPlan)
                     ];
                 })
             ];

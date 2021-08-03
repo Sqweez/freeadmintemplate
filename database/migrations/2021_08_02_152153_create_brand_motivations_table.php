@@ -15,7 +15,7 @@ class CreateBrandMotivationsTable extends Migration
     {
         Schema::create('brand_motivations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('amount');
+            $table->text('amount');
             $table->text('brands');
         });
     }

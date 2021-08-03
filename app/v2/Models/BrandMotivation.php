@@ -12,7 +12,7 @@ class BrandMotivation extends Model
 
     protected $casts = [
         'id' => 'integer',
-        'amount' => 'integer',
+        'amount' => 'array',
         'brands' => 'array'
     ];
 

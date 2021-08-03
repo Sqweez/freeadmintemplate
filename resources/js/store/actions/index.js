@@ -22,7 +22,8 @@ export default {
     DELETE_ATTRIBUTE: 'deleteAttribute',
     CREATE_CLIENT: 'createClient',
     DELETE_CLIENT: 'deleteClient',
-    EDIT_CLIENT: 'editClient', GET_CATEGORIES: 'getCategories',
+    EDIT_CLIENT: 'editClient',
+    GET_CATEGORIES: 'getCategories',
     GET_ATTRIBUTES: 'getAttributes',
     GET_MANUFACTURERS: 'getManufacturers',
     INIT: 'init',
@@ -74,7 +75,6 @@ export default {
     CREATE_SHIFT: 'CREATE_SHIFT',
     EDIT_SHIFT: 'EDIT_SHIFT',
     CREATE_BRANDS_MOTIVATION: 'CREATE_BRANDS_MOTIVATION',
-    GET_BRANDS_MOTIVATIONS_PLAN: 'GET_BRANDS_MOTIVATIONS_PLAN'
-
+    GET_BRANDS_MOTIVATIONS_PLAN: 'GET_BRANDS_MOTIVATIONS_PLAN',
 }
 

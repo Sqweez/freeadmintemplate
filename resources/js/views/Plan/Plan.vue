@@ -70,9 +70,10 @@
                         </td>
                         <td>
                             <v-text-field
-                                label="План"
+                                v-for="amount of motivation.amount"
+                                :label="amount.store_name"
                                 type="number"
-                                v-model.number="motivation.amount"
+                                v-model.number="amount.amount"
                             />
                         </td>
                         <td>
@@ -97,7 +98,7 @@
 </template>
 
 <script>
-    import ACTIONS from "@/store/actions";
+    import ACTIONS from '@/store/actions';
 
     export default {
         data: () => ({
@@ -108,7 +109,7 @@
             async savePlans() {
                 await this.$store.dispatch(ACTIONS.SAVE_PLANS, this.plans);
                 await this.init();
-                this.$toast.success('План успешно изменен!')
+                this.$toast.success('План успешно изменен!');
             },
             async saveBrandsMotivation() {
                 await this.$store.dispatch(ACTIONS.CREATE_BRANDS_MOTIVATION, this.motivations);
@@ -116,7 +117,11 @@
             addMotivation() {
                 this.motivations.push({
                     brands: [],
-                    amount: 0,
+                    amount: [...this.stores.map(s => ({
+                        store_id: s.id,
+                        store_name: s.name,
+                        amount: 0,
+                    }))],
                 })
             },
             async init() {
