@@ -61,6 +61,14 @@
                             />
                         </v-col>
                     </v-row>
+                    <v-row>
+                        <v-col cols="12" xl="6">
+                            <v-checkbox
+                                label="Скрывать отсутствующие"
+                                v-model="hideNotInStock"
+                            />
+                        </v-col>
+                    </v-row>
                     <v-data-table
                         :search="searchQuery"
                         no-results-text="Нет результатов"
@@ -199,6 +207,7 @@
             await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
         },
         data: () => ({
+            hideNotInStock: false,
             priceTagModal: false,
             waitingQuantities: false,
             loading: false,
@@ -270,6 +279,12 @@
                         }
                         if (this.photoFilter === 2) {
                             return product.product_images.length !== 0;
+                        }
+                        return product;
+                    })
+                    .filter(product => {
+                        if (this.hideNotInStock) {
+                            return product.quantity > 0;
                         }
                         return product;
                     });
@@ -419,7 +434,12 @@
                 }
             }
         },
-        mixins: [product, product_search]
+        mixins: [product, product_search],
+        watch: {
+            storeFilter(value) {
+                this.$store.dispatch('GET_MODERATOR_PRODUCT_QUANTITIES', value);
+            }
+        }
     }
 </script>
 

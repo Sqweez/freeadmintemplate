@@ -45,6 +45,24 @@ const mutations = {
     SET_PRODUCTS_v2(state, payload) {
         state.products_v2 = payload;
     },
+    SET_MODERATOR_PRODUCT_QUANTITIES_v2(state, {quantities, store_id}) {
+        let products = state.moderator_products;
+        products = products.map((product) => {
+            const quantity = quantities.find(q => product.id == q.product_id);
+            if (quantity) {
+                product.quantity = quantity.quantity;
+            } else {
+                product.quantity = 0;
+            }
+            return product;
+        });
+        const _quantities = products.map(product => ({
+            product_id: product.id,
+            quantity: product.quantity
+        }))
+        state.quantities = {...state.quantities, [store_id]: _quantities};
+        state.moderator_products = products;
+    },
     SET_PRODUCT_QUANTITIES_v2(state, {quantities, store_id}) {
         let products = state.products_v2;
         products = products.map((product) => {
@@ -93,8 +111,6 @@ const mutations = {
     },
     CREATE_PRODUCT_SKU(state, {id, product}) {
         state.products_v2.push(product);
-        /*const findIndex = state.products_v2.findIndex(p => p.id === id);
-        return state.products_v2.splice(findIndex + 1, 0, product)*/
     },
     UPDATE_PRODUCT_SKU(state, {id, product}) {
         state.products_v2 = state.products_v2.map(p => {
@@ -153,6 +169,20 @@ const actions = {
             this.$loading.enable();
             const { data } = await getProductsQuantity(store_id);
             commit('SET_PRODUCT_QUANTITIES_v2', {
+                quantities: data,
+                store_id
+            })
+        } catch (e) {
+            console.log(e.response);
+        } finally {
+            this.$loading.disable();
+        }
+    },
+    async GET_MODERATOR_PRODUCT_QUANTITIES({commit}, store_id) {
+        try {
+            this.$loading.enable();
+            const { data } = await getProductsQuantity(store_id);
+            commit('SET_MODERATOR_PRODUCT_QUANTITIES_v2', {
                 quantities: data,
                 store_id
             })

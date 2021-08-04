@@ -349,32 +349,11 @@ class SaleController extends Controller {
                     ];
                 })
             ];
-        });
-
-        /*$stores = Store::where('type_id', '=', 1)
-            ->select(['id', 'name'])
-            ->get();
-
-        return $stores->map(function ($store) use ($motivations) {
-            return [
-                'id' => $store['id'],
-                'name' => $store['name'],
-                'motivations' => collect($motivations)->map(function ($motivation) use ($store) {
-                    $currentMotivation = collect($motivation['motivation'])->filter(function ($item) use ($store) {
-                            return $store['id'] === $item['store_id'];
-                        })->first() ?? ['sum' => 0, 'percent' => 0];
-                    $currentPlan = collect($motivation['amount'])->filter(function ($i) use ($store) {
-                            return $i['store_id'] == $store['id'];
-                        })->first()['amount'] ?? 0;
-                    return [
-                        'name' => $motivation['name'],
-                        'plan' => $currentPlan,
-                        'sum' => $currentMotivation['sum'],
-                        'percent' => round($currentMotivation['sum'] == 0 ? 0 : 100 * $currentMotivation['sum'] / $currentPlan)
-                    ];
-                })
-            ];
-        });*/
+        })->filter(function ($item) {
+            return collect($item['motivations'])->filter(function ($i) {
+                return $i['plan'] > 0;
+            })->count() > 0;
+        })->values()->all();
     }
 
     private function getBrandsMotivation($brands) {
