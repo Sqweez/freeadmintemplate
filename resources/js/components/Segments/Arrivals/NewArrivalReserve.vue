@@ -1,3 +1,4 @@
+<!--
 <template>
     <div>
         <div class="d-flex align-center">
@@ -22,8 +23,75 @@
         <v-card class="background-iron-darkgrey mb-5 mt-5" v-if="!emptyCart">
             <v-card-title class="justify-end">
             </v-card-title>
+            <table>
+                <thead class="background-iron-darkgrey fz-18">
+                <tr>
+                    <th>#</th>
+                    <th>Наименование</th>
+                    <th>Количество</th>
+                    <th>Стоимость</th>
+                    <th>Закупочная стоимость</th>
+                    <th>Закупочная стоимость по курсу</th>
+                    <th>Удалить</th>
+                </tr>
+                </thead>
+                <tbody class="background-iron-grey">
+                <tr v-for="(item, index) of cart" :key="item.uuid">
+                    <td>{{ index + 1 }}</td>
+                    <td>
+                        <v-list class="product__list" flat>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ item.product_name }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{
+                                        item.manufacturer.manufacturer_name }}
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </td>
+                    <td class="d-flex align-center">
+                        <v-btn icon color="error" @click="decreaseCartCount(index)">
+                            <v-icon>mdi-minus</v-icon>
+                        </v-btn>
+                        <v-text-field
+                            v-model.number="item.count"
+                            type="number"
+                            style="min-width: 60px; max-width: 60px; text-align: center"
+                            @input="changeCount($event, item, index)"
+                            @change="changeCount($event, item, index)"
+                        ></v-text-field>
+                        шт.
+                        <v-btn icon color="success" @click="increaseCartCount(index)">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </td>
+                    <td>{{ item.product_price | priceFilters}}</td>
+                    <td>
+                        <v-text-field
+                            label="Закупочная стоимость"
+                            type="number"
+
+                            v-model="item.purchase_price_initial"
+                        ></v-text-field>
+                    </td>
+                    &lt;!&ndash;<td>{{ item.purchase_price | priceFilters}}</td>&ndash;&gt;
+                    <td>
+                        {{ item.purchase_price_initial * moneyRate | priceFilters }}
+                    </td>
+                    <td>
+                        <v-btn icon color="error" @click="deleteFromCart(index)">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
             <v-card-text style="padding: 0;">
-                <v-simple-table v-slot:default class="mt-5">
+                &lt;!&ndash;<v-simple-table v-slot:default class="mt-5">
                     <template>
                         <thead class="background-iron-darkgrey fz-18">
                         <tr>
@@ -37,7 +105,7 @@
                         </tr>
                         </thead>
                         <tbody class="background-iron-grey">
-                        <tr v-for="(item, index) of cart" :key="item.id * 85">
+                        <tr v-for="(item, index) of cart" :key="item.uuid">
                             <td>{{ index + 1 }}</td>
                             <td>
                                 <v-list class="product__list" flat>
@@ -75,12 +143,14 @@
                                 <v-text-field
                                     label="Закупочная стоимость"
                                     type="number"
-                                    @change="updatePurchasePrice($event, index)"
-                                    @input="updatePurchasePrice($event, index)"
+
                                     v-model="item.purchase_price_initial"
                                 ></v-text-field>
                             </td>
-                            <td>{{ item.purchase_price | priceFilters}}</td>
+                            &lt;!&ndash;<td>{{ item.purchase_price | priceFilters}}</td>&ndash;&gt;
+                            <td>
+                                {{ item.purchase_price_initial * moneyRate | priceFilters }}
+                            </td>
                             <td>
                                 <v-btn icon color="error" @click="deleteFromCart(index)">
                                     <v-icon>mdi-close</v-icon>
@@ -89,7 +159,7 @@
                         </tr>
                         </tbody>
                     </template>
-                </v-simple-table>
+                </v-simple-table>&ndash;&gt;
                 <v-simple-table v-slot:default>
                     <template>
                         <thead class="background-iron-darkgrey fz-18">
@@ -100,19 +170,21 @@
                         </tr>
                         </thead>
                         <tbody class="background-iron-grey fz-18">
-                        <tr>
-                            <td class="text-center">{{ totalCost | priceFilters }}</td>
-                            <td class="text-center">{{ cartCount }} шт.</td>
-                            <td class="text-center" style="max-width: 300px; min-width: 300px;">
-                                <v-select
-                                    :items="stores"
-                                    item-text="name"
-                                    v-model="child_store"
-                                    item-value="id"
-                                    label="Склад"
-                                />
-                            </td>
-                        </tr>
+                        <v-lazy>
+                            <tr>
+                                <td class="text-center">{{ totalCost | priceFilters }}</td>
+                                <td class="text-center">{{ cartCount }} шт.</td>
+                                <td class="text-center" style="max-width: 300px; min-width: 300px;">
+                                    <v-select
+                                        :items="stores"
+                                        item-text="name"
+                                        v-model="child_store"
+                                        item-value="id"
+                                        label="Склад"
+                                    />
+                                </td>
+                            </tr>
+                        </v-lazy>
                         </tbody>
                     </template>
                 </v-simple-table>
@@ -247,6 +319,8 @@
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
     import SkuModal from "@/components/v2/Modal/SkuModal";
+    import _ from "lodash";
+
     export default {
         components: {
             SkuModal,
@@ -256,6 +330,7 @@
         },
         mixins: [product_search, cart],
         data: () => ({
+            awaitingRecalculate: false,
             moneyRate: 1,
             hideNotInStock: false,
             cart: [],
@@ -302,6 +377,7 @@
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
+            this.parseVuexCart();
             this.loading = false;
         },
         methods: {
@@ -329,10 +405,10 @@
                 });
             },
             updatePurchasePrice(e, index) {
-                this.$nextTick(() => {
+                /*this.$nextTick(() => {
                     this.$set(this.cart[index], 'purchase_price_initial', Math.max(0, Math.min(999999999, +e)));
                     this.$set(this.cart[index], 'purchase_price', +e * this.moneyRate);
-                })
+                })*/
             },
             calculatePrices() {
                 this.cart = this.cart.map(item => {
@@ -367,6 +443,7 @@
                     parent_store: this.storeFilter,
                     cart: this.cart,
                 });
+
                 const link = document.createElement('a');
                 link.href = data.path;
                 link.click();
@@ -379,13 +456,16 @@
                         purchase_price: c.purchase_price
                     }
                 });
+
                 const arrival = {
                     products: products,
                     store_id: this.child_store,
                     user_id: this.user.id,
                     is_completed: false,
                 };
+
                 this.overlay = false;
+
                 await createArrival(arrival);
                 this.overlay = false;
                 this.$toast.success('Поставка создана успешно!');
@@ -400,6 +480,24 @@
             },
             deleteFromCart(index) {
                 this.cart.splice(index, 1);
+            },
+            parseVuexCart() {
+                if (this.CURRENT_ARRIVAL === null) {
+                    return null;
+                }
+                const vuexCart = {...this.CURRENT_ARRIVAL};
+                this.moneyRate = vuexCart.moneyRate;
+                this.child_store = vuexCart.child_store;
+                this.cart = vuexCart.cart.map(item => {
+                    const product = this.products.find(p => p.id === +item.id);
+                    return {
+                        ...product,
+                        count: item.count,
+                        purchase_price_initial: item.purchase_price_initial,
+                        uuid: item.uuid,
+                        purchase_price: this.moneyRate * item.purchase_price_initial
+                    };
+                })
             }
         },
         computed: {
@@ -412,7 +510,13 @@
                 return this.cart.reduce((a, c) => {
                     return a + (+c.count * +c.purchase_price);
                 }, 0);
-            }
+            },
+            CURRENT_ARRIVAL() {
+                return this.$store.getters.CURRENT_ARRIVAL;
+            },
+           /* cartJsonStringified() {
+                return `${JSON.stringify(this.cart)}`
+            }*/
         },
         watch: {
             moneyRate(value) {
@@ -420,13 +524,28 @@
                     item.purchase_price = item.purchase_price_initial * value;
                     return item;
                 });
+                this.$store.commit('UPDATE_MONEY_RATE', value);
                 this.$nextTick(() => {
                     this.moneyRate = Math.max(0, Math.min(100000, +value));
                 });
-            }
+            },
+            child_store(value) {
+                this.$store.commit('UPDATE_CHILD_STORE', value);
+            },
+            /*cartJsonStringified(value) {
+                const simpleCart = JSON.parse(value).map(i => ({
+                    id: i.id,
+                    count: i.count,
+                    purchase_price_initial: i.purchase_price_initial,
+                    uuid: i.uuid
+                }));
+                this.$store.commit('UPDATE_CURRENT_ARRIVAL', simpleCart);
+            }*/
         }
     }
 </script>
 
 <style scoped>
+
 </style>
+-->

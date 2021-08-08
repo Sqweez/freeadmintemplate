@@ -144,4 +144,6 @@ return [
 
     ],
 
+    'dump_command_path' => ''
+
 ];

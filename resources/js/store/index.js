@@ -86,7 +86,8 @@ const store = new Store({
         createPersistedState({
             paths: [
                 'reportsModule.storesReports',
-                'reportsModule.planReports'
+                'reportsModule.planReports',
+                'arrivalModule.currentArrival'
             ]
         }),
         vuexPlugins

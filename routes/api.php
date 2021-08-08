@@ -33,6 +33,7 @@ Route::get('set-tags', 'api\ProductController@setTags');
 
 // HelpController
 Route::get('set-partner-expired-at', 'HelpController@setPartnerExpiredAt');
+Route::get('backup', 'Services\BackupController@backup');
 
 
 Route::middleware(AuthorizationMiddleware::class)->group(function () {

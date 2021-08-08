@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Services\BackupController;
+use App\Listeners\BackupCreatedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
-
+use Spatie\Backup\Events\BackupZipWasCreated;
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -18,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        BackupZipWasCreated::class => [
+            BackupCreatedListener::class
+        ]
     ];
 
     /**
