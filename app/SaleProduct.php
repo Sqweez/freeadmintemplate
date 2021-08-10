@@ -68,6 +68,10 @@ class SaleProduct extends Model
         return ceil($this->discount === 100 ? 0 : $this->final_price - $this->purchase_price);
     }
 
+    public function batch() {
+        return $this->belongsTo('App\ProductBatch', 'product_batch_id');
+    }
+
     /*public function getCountAttribute() {
         return static::query()->where('sale_id', $this->sale_id)->where('product_id', $this->product_id)->count();
     }*/

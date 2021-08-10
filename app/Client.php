@@ -98,6 +98,8 @@ class Client extends Model
         ]
     ];
 
+    const PLATINUM_CLIENT_MONTHLY_THRESHOLD = 50000;
+
     public function transactions() {
         return $this->hasMany('App\ClientTransaction', 'client_id');
     }
@@ -118,6 +120,10 @@ class Client extends Model
         return $this->belongsTo('App\v2\Models\City', 'client_city')->withDefault([
             'name' => 'Город не указан'
         ]);
+    }
+
+    public function loyalty() {
+        return $this->belongsTo('App\v2\Models\Loyalty', 'loyalty_id');
     }
 
     public function partner_sales() {
@@ -150,5 +156,11 @@ class Client extends Model
             return $total >= $item['amount'];
         })->first()['discount'] ?? 0;
         return min(max($this->client_discount, $discountByAmount), 100);
+    }
+
+    public function scopePlatinumClients($query) {
+        $query->whereHas('loyalty', function ($q) {
+            return $q->whereId(2);
+        });
     }
 }

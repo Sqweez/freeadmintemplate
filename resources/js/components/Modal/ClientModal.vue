@@ -51,6 +51,13 @@
                        v-model="client.is_partner"
                        :label="`Партнер`"
                    ></v-checkbox>
+                   <v-select
+                       v-model="client.loyalty_id"
+                       label="Тип лояльности"
+                       :items="loyalty"
+                       item-value="id"
+                       item-text="name"
+                   />
                </v-form>
            </v-card-text>
            <v-card-actions>
@@ -126,6 +133,9 @@
         computed: {
             cities() {
                 return [{id: -1, name: 'Город не указан'}, ...this.$store.getters.cities];
+            },
+            loyalty() {
+                return this.$store.getters.LOYALTY;
             }
         },
         props: {
@@ -142,8 +152,12 @@
             state() {
                 this.client = {};
                 if (this.id !== null) {
-                    this.client = JSON.parse(JSON.stringify(this.$store.getters.client(this.id)))
-                }
+                    const client = JSON.parse(JSON.stringify(this.$store.getters.client(this.id)))
+                    this.client = {...client};
+                    this.client.client_discount = client.client_initial_discount;
+                }/* else {
+                    this.client.loyalty_id = 1;
+                }*/
                 if (this.state === true) {
                     setTimeout(() => {
                         const phoneInput = document.getElementById('client_phone');

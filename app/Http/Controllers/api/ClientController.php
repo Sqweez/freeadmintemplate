@@ -25,7 +25,10 @@ class ClientController extends Controller {
      */
     public function index() {
         //return ClientResource::collection(Client::with(['sales', 'transactions', 'city'])->get());
-        return ClientResource::collection(Client::with(['sales', 'transactions', 'city'])->get());
+        return ClientResource::collection(
+            Client::with(['sales', 'transactions', 'city', 'loyalty'])
+                ->get()
+        );
     }
 
     /**
@@ -48,7 +51,7 @@ class ClientController extends Controller {
      */
     public function update(Request $request, Client $client) {
         if (!$request->has('site')) {
-            $_client = $request->only(['client_name', 'client_card', 'client_phone', 'client_discount', 'is_partner', 'client_city']);
+            $_client = $request->only(['client_name', 'client_card', 'client_phone', 'client_discount', 'is_partner', 'client_city', 'loyalty_id']);
             $_client = collect($_client)->filter(function ($i) {
                 return strlen($i) > 0;
             });

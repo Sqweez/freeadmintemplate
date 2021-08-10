@@ -65,7 +65,7 @@ use function foo\func;
  */
 class Sale extends Model
 {
-    protected $guarded = ['id'];
+    protected $guarded = [];
 
     protected $casts = [
         'id' => 'integer',
@@ -239,7 +239,7 @@ class Sale extends Model
     }
 
     public function setCommentAttribute($value) {
-        $this->attributes['comment'] = $value === null ? '' : $value;
+        $this->attributes['comment'] = '';//$value === null ? '' : $value;
     }
 
     protected static function boot() {

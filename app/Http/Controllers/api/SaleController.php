@@ -43,7 +43,7 @@ class SaleController extends Controller {
             $certificate = $request->get('certificate', null);
             $used_certificate = $request->get('used_certificate', null);
             $preorder = $request->get('preorder', null);
-            $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate']));
+            $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate', 'preorder']));
             $saleService->createSaleProducts($sale, $store_id, $cart);
             $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id);
             $saleService->createCompanionTransaction($sale, $request->header('user_id'));
@@ -79,6 +79,7 @@ class SaleController extends Controller {
             ];
         } catch (\Exception $exception) {
             \DB::rollBack();
+            \Log::info('error:' . $exception->getMessage());
             return response()->json([
                 'message' => $exception->getMessage(),
                 'trace' => $exception->getTrace()
@@ -345,14 +346,14 @@ class SaleController extends Controller {
                         'name' => $motivation['name'],
                         'plan' => $currentPlan,
                         'sum' => $currentMotivation['sum'],
-                        'percent' => round($currentMotivation['sum'] == 0 ? 0 : 100 * $currentMotivation['sum'] / $currentPlan)
+                        'percent' => round(($currentMotivation['sum'] == 0 || $currentPlan == 0) ? 0 : 100 * $currentMotivation['sum'] / $currentPlan)
                     ];
                 })
             ];
         })->filter(function ($item) {
             return collect($item['motivations'])->filter(function ($i) {
-                return $i['plan'] > 0;
-            })->count() > 0;
+                    return $i['plan'] > 0;
+                })->count() > 0;
         })->values()->all();
     }
 
@@ -382,50 +383,4 @@ class SaleController extends Controller {
                 ];
             })->values()->all();
     }
-
-    /*private function getBrandsMotivation($brands) {
-        $products_id = Product::whereIn('manufacturer_id', $brands)->select(['id'])->get();
-        $products_id = ProductSku::whereIn('product_id', $products_id)->select(['id'])->get()->pluck('id');
-        $date_start = now()->startOfMonth();
-        $date_finish = now()->endOfMonth();
-        return SaleProduct::query()
-            ->whereIn('product_id', $products_id)
-            ->whereHas('sale', function ($q) use ($date_start, $date_finish) {
-                $q->whereDate('created_at', '>=', $date_start)
-                    ->whereDate('created_at', '<=', $date_finish)
-                    ->physicalSales();
-            })
-            ->with('sale')->get()->map(function ($sale) {
-                $sale['store_id'] = $sale['sale']['store_id'];
-                $sale['discount'] = $sale['sale']['discount'];
-                return $sale;
-            })->groupBy('store_id')->map(function ($sale, $key) {
-                $totalSum = ceil(collect($sale)->reduce(function ($a, $c) use ($key) {
-                    return $a + $c['product_price'] - $c['product_price'] * ($c['discount'] / 100);
-                }, 0));
-                $percent = $totalSum == 0 ? 0 : (100 * $totalSum / 600000);
-                return [
-                    'sum' => $totalSum,
-                    'percent' => $percent,
-                    'store_id' => $key
-                ];
-            })->values()->all();
-    }*/
-
-
-    private function getBrandsMotivationByStore($motivations) {
-        $stores = Store::where('type_id', '=', 1)->select(['id', 'name'])->get();
-        return $stores->map(function ($store) use ($motivations) {
-            return [
-                'id' => $store['id'],
-                'name' => $store['name'],
-                'motivations' => collect($motivations)->map(function ($motivation) use ($store) {
-                    return collect($motivation)->filter(function ($item) use ($store) {
-                            return $item['store_id'] === $store['id'];
-                        })->first() ?? [];
-                })
-            ];
-        });
-    }
-
 }

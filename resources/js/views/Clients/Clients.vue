@@ -157,6 +157,10 @@
                     text: 'Город'
                 },
                 {
+                    value: 'loyalty.name',
+                    text: 'Тип лояльности'
+                },
+                {
                     value: 'actions',
                     text: 'Действие'
                 }

@@ -52,7 +52,7 @@ class SaleService {
         $client->transactions()->create([
             'sale_id' => $sale_id,
             'user_id' => $user_id,
-            'amount' => $amount * Sale::CLIENT_CASHBACK_PERCENT
+            'amount' => $amount * ($client->loyalty->cashback / 100)
         ]);
 
         if ($balance > 0) {

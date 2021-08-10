@@ -26,9 +26,9 @@ class BackupCreatedListener
     public function handle(BackupZipWasCreated $event)
     {
         $pathToZip = $event->pathToZip;
-        $filename = explode("\/", $pathToZip);
-        $path = 'iron_backups/' . "backup-" . now()->format('Y-m-d-H:i') . '.zip';
-        \Log::info('path is ' . $path);
+        $filename = explode("/", $pathToZip);
+        $path = 'iron_backups/' . "backup-" . collect($filename)->last();
+        $pathToZip = 'https://ironadmin.ariesdev.kz/storage/backups/Laravel/' . collect($filename)->last();
         return (new YandexDiskService())->upload($path, $pathToZip);
     }
 }

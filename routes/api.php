@@ -16,7 +16,7 @@ use App\Http\Controllers\api\AnalyticsController;
 use App\Http\Controllers\api\v2\PreorderController;
 use App\Http\Controllers\api\v2\ShiftController;
 use App\Http\Controllers\api\v2\BrandMotivationController;
-
+use App\Http\Controllers\api\v2\LoyaltyController;
 // Authorization
 
 Route::post('auth', 'api\UserController@auth')->name('auth');
@@ -242,6 +242,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::prefix('cron')->group(function () {
             Route::get('order/messages', 'api\v2\CronController@orderMessages');
             Route::get('order/cancel', 'api\v2\CronController@cancelOrders');
+            Route::get('loyalty', [LoyaltyController::class, 'checkLoyalties']);
         });
 
         Route::prefix('orders')->group(function () {
@@ -314,5 +315,6 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
         Route::post('brands/motivation', [BrandMotivationController::class, 'store']);
         Route::get('brands/motivation', [BrandMotivationController::class, 'index']);
+        Route::get('loyalty', [LoyaltyController::class, 'index']);
     });
 });
