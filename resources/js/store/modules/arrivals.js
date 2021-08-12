@@ -2,7 +2,7 @@ import {getArrivals} from "@/api/arrivals";
 
 const arrivalModule = {
     state: {
-        arrivals: null,
+        arrivals: [],
         currentArrival: {},
         currentMoneyRate: 0,
         currentChildStore: -1,
