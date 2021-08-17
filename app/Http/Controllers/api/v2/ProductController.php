@@ -154,17 +154,26 @@ class ProductController extends Controller
     }
 
     public function getProductBalance() {
-        $batches = ProductBatch::where('quantity', '>', 0)->with('product', 'product.product:id,product_price')->get();
+        $batches = ProductBatch::query()
+            ->where('quantity', '>', 0)
+            ->with('product', 'product.product:id,product_price,product_name')
+            ->get();
+
         $batches = $batches->map(function ($item) {
             return [
                 'id' => $item['id'],
                 'quantity' => $item['quantity'],
                 'store_id' => $item['store_id'],
                 'purchase_price' => $item['purchase_price'],
-                'product_price' => $item['product']['product']['product_price'] ?? 0
+                'product_price' => $item['product']['product']['product_price'] ?? 0,
+                //'product' => $item['product']['product']['product_name']
             ];
-        })->groupBy('store_id');
-        $stores = Store::all();
+        })
+            ->filter(function($item) { return $item['product_price'] > 0;})
+            ->values()
+            ->groupBy('store_id');
+
+
         $purchasePrices = $batches->map(function ($items, $key) {
             return collect($items)->reduce(function ($a, $c) {
                 return $a + $c['purchase_price'] * $c['quantity'];
@@ -203,8 +212,8 @@ class ProductController extends Controller
                 $batch['quantity'] = collect($_batch)->values();*/
                 return [
                     'has_batches' => collect($batch)->filter(function ($item) use ($date) {
-                        return Carbon::parse($item['created_at'])->gte($date);
-                    })->count() > 0,
+                            return Carbon::parse($item['created_at'])->gte($date);
+                        })->count() > 0,
                     'product_id' => $key,
                     'quantity' => collect($batch)->values()->reduce(function ($a, $c) {
                         return $a + $c['quantity'];

@@ -208,4 +208,46 @@ class AnalyticsController extends Controller
             ->values()
             ->all();
     }
+
+    public function getTopPartners() {
+        return Sale::query()
+            ->where('partner_id', '!=', null)
+            ->where('partner_id', '!=', 0)
+            ->with(['products' => function ($query) {
+                return $query->select(['product_price', 'discount', 'sale_id']);
+            }])
+            ->select(['id', 'partner_id'])
+            ->get()
+            ->groupBy('partner_id')
+            ->map(function ($item, $key) {
+                return [
+                    'partner_id' => $key,
+                    'amount' => collect($item)->reduce(function ($a, $c) {
+                        return $a + ceil(collect($c['products'])->reduce(function ($_a, $_c) {
+                            $amount = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
+                            return $_a + $amount;
+                            }, 0));
+                    }, 0)
+                ];
+            })
+            ->values()
+            ->sortByDesc('amount')
+            ->take(5)
+            ->values()
+            ->map(function ($item) {
+                $client = Client::find($item['partner_id']);
+                $clientNameArray = explode(' ', $client->client_name);
+                $clientFirstName = $clientNameArray[0];
+                array_shift($clientNameArray);
+                $clientLastName = implode(' ', $clientNameArray);
+                return [
+                    'amount' => $item['amount'],
+                    'first_name' => $clientFirstName,
+                    'last_name' => $clientLastName,
+                    'trainer_job' => $client->job,
+                    'trainer_image' => url('/') . ($client->photo ? \Storage::url($client->photo) : \Storage::url('partners/partner_default.jpg')),
+                    'trainer_instagram' => $client->instagram
+                ];
+            });
+    }
 }

@@ -58,6 +58,30 @@
                        item-value="id"
                        item-text="name"
                    />
+                   <v-text-field
+                       v-model="client.job"
+                       label="Место работы"
+                       v-if="client.is_partner"
+                   />
+                   <v-text-field
+                       v-model="client.instagram"
+                       label="Ссылка на instagram"
+                       v-if="client.is_partner"
+                   />
+                   <img
+                       v-if="photo"
+                       :src="'../storage/' + photo"
+                       width="150"
+                       alt="Изображение"><br>
+                   <input
+                       type="file"
+                       ref="fileInput"
+                       class="d-none"
+                       @change="uploadPhoto">
+                   <v-btn text class="mt-3" @click="$refs.fileInput.click()" v-if="client.is_partner">
+                       Загрузить фото
+                       <v-icon>mdi-photo</v-icon>
+                   </v-btn>
                </v-form>
            </v-card-text>
            <v-card-actions>
@@ -81,10 +105,12 @@
     import InputMask from 'inputmask';
     import ACTIONS from '@/store/actions/index';
     import {TOAST_TYPE} from "@/config/consts";
+    import uploadFile from "@/api/upload";
     export default {
         data: () => ({
             client: {},
             loading: false,
+            photo: null,
         }),
         mounted() {
             const phoneInput = document.getElementById('client_phone');
@@ -108,6 +134,7 @@
                 }
                 this.client.client_phone = this.modifyPhone(this.client.client_phone);
                 this.client.client_discount = Math.min(Math.max(this.client.client_discount, 0), 100) || 0;
+                this.client.photo = this.photo ? this.photo : '';
                 if(this.id === null) {
                     await this.createClient();
                     this.$emit('cancel');
@@ -128,7 +155,18 @@
             },
             modifyPhone(phone) {
                 return phone.replace(/[-()]/gi, '');
-            }
+            },
+            async uploadPhoto(e) {
+                try {
+                    const file = e.target.files[0];
+                    const { data } = await uploadFile(file, 'file', 'partners');
+                    this.photo = data;
+                } catch (e) {
+                    this.$toast.error('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию');
+                } finally {
+                    this.$refs.fileInput.value = null;
+                }
+            },
         },
         computed: {
             cities() {
@@ -155,6 +193,7 @@
                     const client = JSON.parse(JSON.stringify(this.$store.getters.client(this.id)))
                     this.client = {...client};
                     this.client.client_discount = client.client_initial_discount;
+                    this.photo = this.client.photo;
                 }/* else {
                     this.client.loyalty_id = 1;
                 }*/
@@ -168,6 +207,16 @@
                     }, 500);
                 }
 
+            },
+            client: {
+                deep: true,
+                handler: function (value) {
+                    if (!value.is_partner) {
+                        this.client.job = '';
+                        this.client.instagram = '';
+                        this.photo = null;
+                    }
+                }
             }
         },
     }

@@ -34,7 +34,10 @@ class ClientResource extends JsonResource
             'city' => $this->city->name,
             'client_city' => $this->client_city,
             'loyalty' => $this->loyalty,
-            'loyalty_id' => $this->loyalty->id
+            'loyalty_id' => $this->loyalty->id,
+            'job' => $this->job,
+            'instagram' => $this->instagram,
+            'photo' => $this->photo,
         ];
     }
 }

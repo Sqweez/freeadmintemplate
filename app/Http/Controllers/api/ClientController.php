@@ -38,6 +38,7 @@ class ClientController extends Controller {
      * @return ClientResource
      */
     public function store(Request $request) {
+        //return $request->all();
         $client = Client::create($request->all());
         return new ClientResource($client);
     }
@@ -51,7 +52,9 @@ class ClientController extends Controller {
      */
     public function update(Request $request, Client $client) {
         if (!$request->has('site')) {
-            $_client = $request->only(['client_name', 'client_card', 'client_phone', 'client_discount', 'is_partner', 'client_city', 'loyalty_id']);
+            $_client = $request->only(
+                ['client_name', 'client_card', 'client_phone', 'client_discount', 'is_partner', 'client_city', 'loyalty_id', 'job', 'instagram', 'photo']
+            );
             $_client = collect($_client)->filter(function ($i) {
                 return strlen($i) > 0;
             });

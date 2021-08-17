@@ -163,4 +163,16 @@ class Client extends Model
             return $q->whereId(2);
         });
     }
+
+    public function setPhotoAttribute($value) {
+        $this->attributes['photo'] = $value !== null ?  $value : '';
+    }
+
+    public function setJobAttribute($value) {
+        $this->attributes['job'] = $value !== null ?  $value : '';
+    }
+
+    public function setInstagramAttribute($value) {
+        $this->attributes['instagram'] = $value !== null ?  $value : '';
+    }
 }
