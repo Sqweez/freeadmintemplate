@@ -74,9 +74,18 @@ class ProductBatch extends Model
         $query->where('quantity', '>', 0);
     }
 
-    public function scopeQuantitiesOfStore($query, $store_id) {
+    public function scopeQuantitiesOfStore($query, $store_id = -1) {
         return $query->where('quantity', '>', 0)
-            ->whereStoreId($store_id)
+            ->when(($store_id != -1), function ($q) use ($store_id) {
+                return $q->where('store_id', $store_id);
+            })
+            ->when(($store_id == -1), function ($q) {
+                $stores = Store::whereIn('type_id', [1, 2])
+                    ->select(['id'])
+                    ->get();
+                return $q->whereIn('store_id', $stores);
+            })
+            //->whereStoreId($store_id)
             ->groupBy('product_id')
             ->select('product_id')
             ->selectRaw('sum(quantity) as quantity');

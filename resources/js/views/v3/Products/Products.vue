@@ -121,7 +121,7 @@
                                     Новый товар
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <v-btn color="primary" @click="productId = item.id; productQuantityModal = true;">
+                                <v-btn color="primary" @click="productId = item.id; productQuantityModal = true;" v-if="storeFilter !== -1">
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
@@ -137,7 +137,7 @@
                                     Удалить
                                     <v-icon>mdi-delete</v-icon>
                                 </v-btn>
-                                <div class="mb-2 d-flex justify-space-between">
+                                <div class="mb-2 d-flex justify-space-between" v-if="storeFilter !== -1">
                                     <v-btn color="error" class="mr-2" @click="changeCount(item.id, -1)">
                                         <v-icon>mdi-minus</v-icon>
                                     </v-btn>
@@ -293,7 +293,10 @@
                 return products;
             },
             stores() {
-                return this.$store.getters.stores;
+                return [{
+                    name: 'Все',
+                    id: -1
+                }, ...this.$store.getters.stores];
             },
             categories() {
                 return [{

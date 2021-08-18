@@ -210,9 +210,11 @@ class AnalyticsController extends Controller
     }
 
     public function getTopPartners() {
-        return Sale::query()
+        $top10Trainers = Sale::query()
             ->where('partner_id', '!=', null)
             ->where('partner_id', '!=', 0)
+            ->whereDate('created_at', '>=', now()->startOfMonth())
+            ->whereDate('created_at', '<=', now()->endOfMonth())
             ->with(['products' => function ($query) {
                 return $query->select(['product_price', 'discount', 'sale_id']);
             }])
@@ -224,18 +226,21 @@ class AnalyticsController extends Controller
                     'partner_id' => $key,
                     'amount' => collect($item)->reduce(function ($a, $c) {
                         return $a + ceil(collect($c['products'])->reduce(function ($_a, $_c) {
-                            $amount = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
-                            return $_a + $amount;
+                                $amount = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
+                                return $_a + $amount;
                             }, 0));
                     }, 0)
                 ];
             })
             ->values()
             ->sortByDesc('amount')
-            ->take(5)
+            ->take(12)
             ->values()
             ->map(function ($item) {
                 $client = Client::find($item['partner_id']);
+                if (!$client) {
+                    return null;
+                }
                 $clientNameArray = explode(' ', $client->client_name);
                 $clientFirstName = $clientNameArray[0];
                 array_shift($clientNameArray);
@@ -248,6 +253,100 @@ class AnalyticsController extends Controller
                     'trainer_image' => url('/') . ($client->photo ? \Storage::url($client->photo) : \Storage::url('partners/partner_default.jpg')),
                     'trainer_instagram' => $client->instagram
                 ];
+            })->filter(function ($item) {
+                return !is_null($item);
+            })
+            ->values()
+            ->take(10);
+
+        $trainersCount = $top10Trainers->count();
+        $difference = 10 - $trainersCount;
+        if ($difference > 0) {
+            $trainers = Client::partner()->take($difference)->get();
+            $trainers = $trainers->map(function ($item) {
+                $clientNameArray = explode(' ', $item['client_name']);
+                $clientFirstName = $clientNameArray[0];
+                array_shift($clientNameArray);
+                $clientLastName = implode(' ', $clientNameArray);
+                return [
+                    'amount' => 0,
+                    'first_name' => $clientFirstName,
+                    'last_name' => $clientLastName,
+                    'trainer_job' => $item['job'],
+                    'trainer_image' => url('/') . ($item['photo'] ? \Storage::url($item['photo']) : \Storage::url('partners/partner_default.jpg')),
+                    'trainer_instagram' => $item['instagram']
+                ];
             });
+            $top10Trainers = $top10Trainers->mergeRecursive($trainers);
+        }
+
+        $top1Trainer = Sale::query()
+            ->where('partner_id', '!=', null)
+            ->where('partner_id', '!=', 0)
+            ->whereDate('created_at', '>=', now()->subMonth()->startOfMonth())
+            ->whereDate('created_at', '<=', now()->subMonth()->endOfMonth())
+            ->with(['products' => function ($query) {
+                return $query->select(['product_price', 'discount', 'sale_id']);
+            }])
+            ->select(['id', 'partner_id'])
+            ->get()
+            ->groupBy('partner_id')
+            ->map(function ($item, $key) {
+                return [
+                    'partner_id' => $key,
+                    'amount' => collect($item)->reduce(function ($a, $c) {
+                        return $a + ceil(collect($c['products'])->reduce(function ($_a, $_c) {
+                                $amount = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
+                                return $_a + $amount;
+                            }, 0));
+                    }, 0)
+                ];
+            })
+            ->values()
+            ->sortByDesc('amount')
+            ->take(1)
+            ->values()
+            ->map(function ($item) {
+                $client = Client::find($item['partner_id']);
+                if (!$client) {
+                    return null;
+                }
+                $clientNameArray = explode(' ', $client->client_name);
+                $clientFirstName = $clientNameArray[0];
+                array_shift($clientNameArray);
+                $clientLastName = implode(' ', $clientNameArray);
+                return [
+                    'amount' => $item['amount'],
+                    'first_name' => $clientFirstName,
+                    'last_name' => $clientLastName,
+                    'trainer_job' => $client->job,
+                    'trainer_image' => url('/') . ($client->photo ? \Storage::url($client->photo) : \Storage::url('partners/partner_default.jpg')),
+                    'trainer_instagram' => $client->instagram
+                ];
+            })->filter(function ($item) {
+                return !is_null($item);
+            })
+            ->first();
+        if (!$top1Trainer) {
+            $top1Trainer = Client::partner()->take(1)->get();
+            $top1Trainer = $top1Trainer->map(function ($item) {
+                $clientNameArray = explode(' ', $item['client_name']);
+                $clientFirstName = $clientNameArray[0];
+                array_shift($clientNameArray);
+                $clientLastName = implode(' ', $clientNameArray);
+                return [
+                    'amount' => 0,
+                    'first_name' => $clientFirstName,
+                    'last_name' => $clientLastName,
+                    'trainer_job' => $item['job'],
+                    'trainer_image' => url('/') . ($item['photo'] ? \Storage::url($item['photo']) : \Storage::url('partners/partner_default.jpg')),
+                    'trainer_instagram' => $item['instagram']
+                ];
+            })->first();
+        }
+        return [
+            'top1' => $top1Trainer,
+            'top10' => $top10Trainers
+        ];
     }
 }
