@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 class ArrivalController extends Controller
 {
-
     public function index(Request $request) {
         $is_completed = $request->has('is_completed') ? $request->get('is_completed') : 0;
         return ArrivalResource::collection(

@@ -114,4 +114,19 @@ class SaleService {
             ]);
         }
     }
+
+    public function calculateSaleFinalAmount($sale): int {
+        return collect($sale)->reduce(function ($a, $c) {
+            $productCost = collect($c['products'])->reduce(function ($_a, $_c) {
+                return $_a + ($_c['product_price'] - ($_c['product_price'] * $_c['discount'] / 100));
+            }, 0);
+            if ($c['kaspi_red']) {
+                $productCost -= $productCost * Sale::KASPI_RED_PERCENT;
+            }
+            if ($c['balance'] > 0) {
+                $productCost  -= $c['balance'];
+            }
+            return $a + $productCost;
+        }, 0);
+    }
 }

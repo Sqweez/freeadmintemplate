@@ -33,6 +33,7 @@ import preordersModule from "@/store/modules/preorders";
 import shiftModule from "@/store/modules/shifts";
 import motivationModule from "@/store/modules/motivation";
 import vuexPlugins from "@/store/plugins/vuexPlugins";
+import analyticsModule from "@/store/modules/v2/analytics";
 
 Vue.use(Vuex);
 
@@ -82,6 +83,7 @@ const store = new Store({
         preordersModule,
         shiftModule,
         motivationModule,
+        analyticsModule
     },
     plugins: [
         createPersistedState({

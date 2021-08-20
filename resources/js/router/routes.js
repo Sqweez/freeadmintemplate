@@ -46,6 +46,8 @@ import PreordersIndex from "@/views/v3/Preorders/PreordersIndex";
 import ShiftSettings from "@/views/Shifts/ShiftSettings";
 import ShiftPenalty from "@/views/Shifts/ShiftPenalty";
 import ShiftsList from "@/views/Shifts/ShiftsList";
+import SaleAnalytics from "@/views/Analytics/SaleAnalytics";
+import ArrivalAnalytics from "@/views/Analytics/ArrivalAnalytics";
 
 const routes = [
     {
@@ -435,6 +437,14 @@ const routes = [
     {
         path: '/shifts/index',
         component: ShiftsList
+    },
+    {
+        path: '/analytics/sales',
+        component: SaleAnalytics
+    },
+    {
+        path: '/analytics/arrivals',
+        component: ArrivalAnalytics
     }
 ];
 

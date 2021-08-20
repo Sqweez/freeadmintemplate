@@ -194,6 +194,14 @@ const navigationModule = {
                     {
                         title: 'Бренды',
                         url: '/analytics/brands'
+                    },
+                    {
+                        title: 'Аналитика продаж',
+                        url: '/analytics/sales'
+                    },
+                    {
+                        title: 'Аналитика поступлений',
+                        url: '/analytics/arrivals'
                     }
                 ]
             },

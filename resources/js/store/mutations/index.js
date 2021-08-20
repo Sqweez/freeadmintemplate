@@ -47,6 +47,8 @@ export default {
     CREATE_CRITERIA: 'createCriteria',
     EDIT_CRITERIA: 'editCriteria',
     DELETE_CRITERIA: 'deleteCriteria',
-    SET_CITIES: 'setCities'
+    SET_CITIES: 'setCities',
+    SET_SALE_ANALYTICS: 'SET_SALE_ANALYTICS',
+    SET_ARRIVAL_ANALYTICS: 'SET_ARRIVAL_ANALYTICS'
 }
 

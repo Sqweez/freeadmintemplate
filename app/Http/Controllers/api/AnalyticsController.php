@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\AnalyticSearch;
+use App\Arrival;
 use App\Client;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Services\SaleService;
 use App\Http\Resources\shop\PartnerResource;
 use App\Product;
 use App\Sale;
@@ -348,5 +350,95 @@ class AnalyticsController extends Controller
             'top1' => $top1Trainer,
             'top10' => $top10Trainers
         ];
+    }
+
+    public function getSaleAnalytics(Request $request, SaleService $saleService) {
+        $startDate = Carbon::parse($request->get('start'))->startOfMonth()->locale('ru');
+        $finishDate = Carbon::parse($request->get('finish'))->endOfMonth()->locale('ru');
+        $sales = Sale::query()
+            ->with('products')
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $finishDate)
+            ->select(['id', 'kaspi_red', 'created_at', 'balance'])
+            ->get();
+        $saleAnalytics =  $sales->groupBy(function ($i) {
+            return Carbon::parse($i['created_at'])->format('Y-m');
+        })->map(function ($sale, $key) use ($saleService) {
+            $date = explode('-', $key);
+            $year = $date[0];
+            $monthNameRu = ucfirstRu(Carbon::parse($key)->locale('ru')->getTranslatedMonthName());
+            return [
+                'amount' => $saleService->calculateSaleFinalAmount($sale),
+                'period' => $key,
+                'date_name' => "$monthNameRu, $year"
+            ];
+        })->values()->all();
+        return $this->formatArrayOutput($startDate, $finishDate, $saleAnalytics);
+    }
+
+    public function getArrivalAnalytics(Request $request) {
+        $startDate = Carbon::parse($request->get('start'))->startOfMonth()->locale('ru');
+        $finishDate = Carbon::parse($request->get('finish'))->endOfMonth()->locale('ru');
+        $arrivals = Arrival::query()
+            ->where('is_completed', true)
+            ->whereDate('updated_at', '>=', $startDate)
+            ->whereDate('updated_at', '<=', $finishDate)
+            ->with(['products.product.product' => function ($q) {
+                return $q->select('id', 'product_price');
+            }])
+            ->select(['id', 'updated_at'])
+            ->get();
+
+        $arrivalAnalytics = $arrivals->groupBy(function ($item) {
+            return Carbon::parse($item['updated_at'])->format('Y-m');
+        })->map(function ($item, $key) {
+            $date = explode('-', $key);
+            $year = $date[0];
+            $monthNameRu = ucfirstRu(Carbon::parse($key)->locale('ru')->getTranslatedMonthName());
+            return [
+                'amount' => collect($item)->reduce(function ($a, $c) {
+                    return $a + collect($c['products'])->reduce(function ($_a, $_c) {
+                        $amount = !is_null($_c['product']) ? $_c['count'] * $_c['product']['product']['product_price'] : 0;
+                        return $_a + $amount;
+                        }, 0);
+                }, 0),
+                'period' => $key,
+                'date_name' => "$monthNameRu, $year"
+            ];
+        })->values()->all();
+        //return $arrivalAnalytics;
+        return $this->formatArrayOutput($startDate, $finishDate, $arrivalAnalytics);
+    }
+
+    private function formatArrayOutput($startDate, $finishDate,  $saleAnalytics) {
+        $date = $startDate->clone()->subMonth();
+        $diffInMonths = $startDate->diffInMonths($finishDate) + 1;
+        $periodArray = [];
+        for ($i = 0; $i < $diffInMonths; $i++) {
+            $periodArray[] = $date->addMonth()->format('Y-m');
+        }
+        foreach ($periodArray as $key => $item) {
+            if (isset($saleAnalytics[$key]) && $saleAnalytics[$key]['period'] !== $item) {
+                $date = explode('-', $item);
+                $year = $date[0];
+                $monthNameRu = ucfirstRu(Carbon::parse($item)->locale('ru')->getTranslatedMonthName());
+                array_splice($saleAnalytics, $key, 0, [[
+                    'amount' => 0,
+                    'period' => $item,
+                    'date_name' => "$monthNameRu, $year"
+                ]]);
+            }
+            if (!isset($saleAnalytics[$key])) {
+                $date = explode('-', $item);
+                $year = $date[0];
+                $monthNameRu = ucfirstRu(Carbon::parse($item)->locale('ru')->getTranslatedMonthName());
+                array_push($saleAnalytics, [
+                    'amount' => 0,
+                    'period' => $item,
+                    'date_name' => "$monthNameRu, $year"
+                ]);
+            }
+        }
+        return $saleAnalytics;
     }
 }

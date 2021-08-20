@@ -87,7 +87,7 @@
                                 outlined
                             />
                         </div>
-                        <div v-if="clientChosen && !isFree">
+                        <div v-if="!isFree">
                             <v-autocomplete
                                 label="Партнер"
                                 outlined
@@ -100,7 +100,7 @@
                                 @click:append-outer="partner_id = null"
                             ></v-autocomplete>
                         </div>
-                        <div v-if="clientChosen && !isFree">
+                        <div v-if="!isFree">
                             <v-text-field
                                 label="Промокод"
                                 :disabled="!!partner_id"

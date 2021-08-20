@@ -181,8 +181,12 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::patch('arrivals/{arrival}', 'api\ArrivalController@update');
 
     // AnalyticsController
-    Route::get('analytics/partners', 'api\AnalyticsController@partners');
-    Route::get('analytics/partners/{id}', 'api\AnalyticsController@partnerStats');
+    Route::prefix('analytics')->group(function() {
+        Route::get('partners', [AnalyticsController::class, 'partners']);
+        Route::get('partners/{id}', [AnalyticsController::class, 'partnerStats']);
+        Route::get('sales', [AnalyticsController::class, 'getSaleAnalytics']);
+        Route::get('arrivals', [AnalyticsController::class, 'getArrivalAnalytics']);
+    });
 
     // Promocode
     Route::get('promocode/search/{promocode}', 'api\PromocodeController@searchPromocode');
