@@ -336,6 +336,9 @@
                         <v-list-item>
                             <v-btn small depressed color="success" text :href="'/check/' + item.id" target="_blank">Печать чека</v-btn>
                         </v-list-item>
+                        <v-list-item>
+                            <v-btn small depressed color="success" text @click="createWaybill(item)">Накладная</v-btn>
+                        </v-list-item>
                     </v-list>
                     <v-list v-if="editMode && report.id === item.id">
                         <v-list-item>
@@ -366,6 +369,7 @@
     import moment from 'moment';
     import ReportCancelModal from "@/components/Modal/ReportCancelModal";
     import ACTIONS from '@/store/actions/index';
+    import axios from 'axios';
 
     const DATE_FILTERS = {
         ALL_TIME: 1,
@@ -509,6 +513,21 @@
                     await this.loadReport();
                 }
 
+            },
+            async createWaybill(report) {
+                this.$loading.enable();
+                const _report = JSON.parse(JSON.stringify(report));
+                const { data } = await axios.post(`/api/v2/documents/waybill`, {
+                    cart: _report.products.map(r => {
+                        r.attributes = r._attributes;
+                        return r;
+                    }),
+                    organization: report.client.client_name,
+                })
+                const link = document.createElement('a');
+                link.href = `${window.location.origin}/${data.path}`;
+                link.click();
+                this.$loading.disable();
             }
         },
         computed: {
