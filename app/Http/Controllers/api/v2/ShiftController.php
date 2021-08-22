@@ -60,15 +60,12 @@ class ShiftController extends Controller
         return $shops->map(function ($shop) use ($shifts, $dateArray) {
             return collect($dateArray)->map(function ($date) use ($shifts, $shop) {
                 $needleShift = $shifts->filter(function ($i) use ($date, $shop) {
-                    return Carbon::parse($i['created_at'])->toDateString() === $date && $i['store_id'] === $shop['id'];
+                    return Carbon::parse($i['created_at'])->toDateString() === $date && $i['store_id'] === $shop['id'] && !is_null($i['user']);
                 })->values();
                 return [
                     'date' => $date,
                     'shop_id' => $shop['id'],
                     'shifts' => $needleShift,
-                    /*'shift' => $needleShift,
-                    'user_name' => $needleShift['user']['name'] ?? null,
-                    'user_id' => $needleShift['user_id'] ?? null*/
                 ];
             });
         });

@@ -120,7 +120,16 @@
         }),
         methods: {
             getButtonColor(user) {
-                return this.sellers.find(s => s.id === user.id).color;
+                try {
+                    if (!user) {
+                        return 'tomato';
+                    }
+                    return this.sellers.find(s => s.id === user.id).color;
+                } catch (e) {
+                    console.log(user);
+                    return 'tomato';
+                }
+
             },
             showShiftCreateModal(store, date) {
                 this.storeId = store.id;
@@ -200,10 +209,13 @@
                 return this.$store.getters.shops;
             },
             sellers() {
-                return this.$store.getters.USERS_SELLERS.map(s => {
+                return [...this.$store.getters.users.map(s => {
                     s.color = `#${this.$color.getRandomColor()}`;
                     return s;
-                });
+                }), {
+                    id: -1,
+                    color: '#ff0000'
+                }];
             },
             shifts() {
                 return this.$store.getters.SHIFTS;

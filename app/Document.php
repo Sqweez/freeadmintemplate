@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -30,6 +31,10 @@ class Document extends Model
         'id'
     ];
 
+    protected $appends = [
+        'date', 'type'
+    ];
+
     const DOCUMENT_WAYBILL = 1;
     const DOCUMENT_INVOICE = 2;
     const DOCUMENT_INVOICE_PAYMENT = 3;
@@ -41,5 +46,13 @@ class Document extends Model
         3 => 'Счет на оплату',
         4 => 'Товарный чек'
     ];
+
+    public function getDateAttribute() {
+        return Carbon::parse($this->attributes['created_at'])->format('d.m.Y H:i:s');
+    }
+
+    public function getTypeAttribute() {
+        return self::DOCUMENT_TYPES[$this->attributes['document_type']];
+    }
 
 }

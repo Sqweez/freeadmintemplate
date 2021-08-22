@@ -64,6 +64,10 @@
                     text: 'Тип документа'
                 },
                 {
+                    value: 'date',
+                    text: 'Дата создания'
+                },
+                {
                     value: 'actions',
                     text: 'Скачать'
                 }

@@ -38,10 +38,7 @@ class WaybillController extends Controller
     ];
 
     public function getDocuments() {
-        return Document::all()->map(function ($doc) {
-            $doc['type'] = Document::DOCUMENT_TYPES[$doc['document_type']];
-            return $doc;
-        });
+        return Document::all();
     }
 
     public function transferWaybill(Request $request)
