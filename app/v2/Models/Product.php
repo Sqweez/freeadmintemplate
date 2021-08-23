@@ -28,6 +28,7 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property string $product_name
+ * @property string $product_name_web
  * @property string|null $product_description
  * @property int $product_price
  * @property string $product_barcode
@@ -151,6 +152,7 @@ class Product extends Model
     const KASPI_PRODUCT_PRICE = 'kaspi_product_price';
     const IS_KASPI_VISIBLE = 'is_kaspi_visible';
     const SUPPLIER_ID = 'supplier_id';
+    const PRODUCT_NAME_WEB = 'product_name_web';
 
 
     // filters constants

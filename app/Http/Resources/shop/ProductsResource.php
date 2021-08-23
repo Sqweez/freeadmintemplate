@@ -34,7 +34,7 @@ class ProductsResource extends JsonResource
         return [
             'product_id' => intval($this->id),
             'is_hit' => !!$this->is_hit,
-            'product_name' => $this->product_name,
+            'product_name' => strlen($this->product_name_web) ? $this->product_name_web : $this->product_name,
             'subcategory' => $this->subcategory->subcategory_name,
             'subcategory_id' => $this->subcategory->id,
             'product_price' => $this->product_price,

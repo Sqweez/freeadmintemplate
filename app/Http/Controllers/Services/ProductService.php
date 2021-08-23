@@ -54,6 +54,9 @@ class ProductService {
         array_push($tags, ['name' => $product->manufacturer->manufacturer_name]);
         array_push($tags, ['name' => $product->category->category_name]);
         array_push($tags, ['name' => $product->subcategory->subcategory_name]);
+        if (strlen($product->product_name_web)) {
+            array_push($tags, ['name' => $product->product_name_web]);
+        }
         return $tags;
     }
 
@@ -208,6 +211,7 @@ class ProductService {
             Product::SUPPLIER_ID,
             Product::META_TITLE,
             Product::META_DESCRIPTION,
+            Product::PRODUCT_NAME_WEB
         ]);
 
         $product[Product::CATEGORY_ID] = $request->get(Product::CATEGORY);

@@ -16,6 +16,11 @@
                         v-model="product_name"
                     />
 
+                    <v-text-field
+                        label="Наименование интернет-магазина"
+                        v-model="product_name_web"
+                    />
+
                     <vue-editor v-model="product_description"></vue-editor>
                     <div>
                         <div v-if="product_images.length">
@@ -430,6 +435,7 @@
                 charCounterCount: false,
             },
             product_name: '',
+            product_name_web: '',
             product_description: '',
             category: null,
             subcategory: null,
@@ -498,6 +504,7 @@
             },
             assignFields() {
                 this.product_name = this.product.product_name;
+                this.product_name_web = this.product.product_name_web;
                 this.product_description = this.product.product_description;
                 this.product_barcode = this.product.product_barcode;
                 this.category = this.product.category;
@@ -639,6 +646,7 @@
             getProductObject() {
                 return {
                     product_name: this.product_name,
+                    product_name_web: this.product_name_web,
                     product_description: this.product_description,
                     product_price: this.product_price,
                     kaspi_product_price: this.kaspi_product_price,

@@ -8,6 +8,11 @@ use App\v2\Models\RelatedProduct;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class ProductResource
+ * @package App\Http\Resources\shop
+ * @mixin Product
+ */
 
 class ProductResource extends JsonResource
 {
@@ -23,7 +28,7 @@ class ProductResource extends JsonResource
             'product_id' => $this->id,
             'product_price' => $this->product_price,
             'subcategory' => $this->subcategory->subcategory_name,
-            'product_name' => $this->product_name,
+            'product_name' => strlen($this->product_name_web) ? $this->product_name_web : $this->product_name,
             'product_description' => $this->product_description,
             'attributes' => $this->attributes->pluck('attribute_value'),
             'product_images' => $this->product_images->count() > 0 ? $this->product_images->pluck('image')->map(function ($image) {

@@ -65,6 +65,7 @@ class ProductResource extends JsonResource
             'supplier_id' => $this->product->supplier_id,
             'meta_title' => $this->product->meta_title,
             'meta_description' => $this->product->meta_description ?? '',
+            'product_name_web' => $this->product->product_name_web
         ];
     }
 }

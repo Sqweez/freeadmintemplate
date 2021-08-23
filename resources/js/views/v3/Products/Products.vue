@@ -330,6 +330,11 @@
                         sortable: true,
                     },
                     {
+                        value: 'product_name_web',
+                        text: 'Наименование интернет-магазина',
+                        sortable: true,
+                    },
+                    {
                         value: 'quantity',
                         text: 'Остаток'
                     },
