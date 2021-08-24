@@ -7,16 +7,23 @@
             <v-card-text>
                 <h5>Общая сумма: {{totalPurchasePrice | priceFilters}}</h5>
                 <h5>Общая продажная сумма: {{totalProductPrice | priceFilters}}</h5>
+                <v-text-field
+                    label="Поиск по поступлениям"
+                    append-icon="search"
+                    clearable
+                    v-model="search"
+                />
                 <v-data-table
-                        class="background-iron-grey fz-18 mt-2"
-                        no-results-text="Нет результатов"
-                        no-data-text="Нет данных"
-                        :headers="headers"
-                        :items="_arrivals"
-                        :footer-props="{
-                            'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
-                            'items-per-page-text': 'Записей на странице',
-                        }"
+                    :search="search"
+                    class="background-iron-grey fz-18 mt-2"
+                    no-results-text="Нет результатов"
+                    no-data-text="Нет данных"
+                    :headers="headers"
+                    :items="_arrivals"
+                    :footer-props="{
+                        'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
+                        'items-per-page-text': 'Записей на странице',
+                    }"
                 >
                    <template v-slot:item.total_cost="{item}">
                         {{ item.total_cost | priceFilters }}
@@ -102,6 +109,7 @@
     export default {
         components: {ConfirmationModal, ArrivalInfoModal},
         data: () => ({
+            search: '',
             overlay: true,
             loading: false,
             editArrivalMode: false,
@@ -145,6 +153,11 @@
                     text: 'Действие',
                     value: 'actions',
                     sortable: false
+                },
+                {
+                    text: 'Поиск',
+                    value: 'search',
+                    align: ' d-none'
                 }
             ],
         }),
@@ -152,7 +165,12 @@
             async getArrivals() {
                 this.overlay = true;
                 const { data } = await getArrivals(false);
-                this.arrivals = data;
+                this.arrivals = data.map(arrival => {
+                    arrival.search = arrival.products.map(product => {
+                        return `${product.product_name} ${product.manufacturer.manufacturer_name} ${product.attributes.map(a => a.attribute_value).join(' ')}`
+                    }).join(' ')
+                    return arrival
+                });
                 this.overlay = false;
             },
             async getArrival(id) {

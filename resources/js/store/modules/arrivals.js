@@ -8,7 +8,12 @@ const arrivalModule = {
         currentChildStore: -1,
     },
     getters: {
-        ARRIVALS: s => s.arrivals,
+        ARRIVALS: s => s.arrivals.map(arrival => {
+            arrival.search = arrival.products.map(product => {
+                return `${product.product_name} ${product.manufacturer.manufacturer_name}`
+            })
+            return arrival;
+        }),
         CURRENT_ARRIVAL: s => ({
             cart: s.currentArrival,
             moneyRate: s.currentMoneyRate,

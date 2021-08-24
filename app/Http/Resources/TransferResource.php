@@ -7,6 +7,10 @@ use App\ProductBatch;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/*
+ * @mixin Transfer
+ * */
+
 class TransferResource extends JsonResource
 {
     /**
@@ -17,6 +21,28 @@ class TransferResource extends JsonResource
      */
     public function toArray($request)
     {
+        try {
+            $search = $this->batches
+                ->groupBy('product_id')
+                ->map(function($batch) {
+                    return $batch[0];
+                })
+                ->values()
+                ->reduce(function($a, $c) {
+                    $product = $c['product']['product'];
+                    return $a . ' '
+                        . $product['product_name']
+                        . ' ' . $product['manufacturer']['manufacturer_name'] . ' '
+                        . collect($product['attributes'])->map(function ($attribute) {
+                            return $attribute['attribute_value'];
+                        })->join(' ') . ' ' .
+                        collect($c['product']['attribute'])->map(function ($attribute) {
+                            return $attribute['attribute_value'];
+                        })->join(' ');
+                }, '');
+        } catch (\Exception $exception) {
+            $search = '';
+        }
 
         return [
             'id' => $this->id,
@@ -37,7 +63,8 @@ class TransferResource extends JsonResource
             'photos' => json_decode($this->photos, true),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y'),
             'date_updated' => Carbon::parse($this->updated_at)->format('d.m.Y'),
-            'is_consignment' => $this->companionSale->is_consignment
+            'is_consignment' => $this->companionSale->is_consignment,
+            'search' => trim($search)
         ];
     }
 }

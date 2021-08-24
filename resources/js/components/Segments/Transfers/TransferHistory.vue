@@ -3,6 +3,12 @@
         <v-overlay :value="loading">
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
+        <v-text-field
+            label="Поиск по перемещениям"
+            v-model="search"
+            clearable
+            append-icon="search"
+        />
         <div
             class="text-center d-flex align-center justify-center"
             style="min-height: 651px"
@@ -14,6 +20,7 @@
             ></v-progress-circular>
         </div>
         <v-data-table
+            :search="search"
             v-if="!loading"
             class="background-iron-grey fz-18 mt-2"
             no-results-text="Нет результатов"
@@ -83,6 +90,7 @@
         },
         components: {TransferPhotoModal, ConfirmationModal, TransferModal},
         data: () => ({
+            search: '',
             loading: true,
             cancelModal: false,
             infoModal: false,
@@ -139,6 +147,11 @@
                     text: 'Действие',
                     value: 'actions',
                     sortable: false
+                },
+                {
+                    text: 'Поиск',
+                    value: 'search',
+                    align: ' d-none'
                 }
             ],
         }),

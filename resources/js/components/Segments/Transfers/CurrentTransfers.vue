@@ -10,8 +10,15 @@
                 color="primary"
             ></v-progress-circular>
         </div>
+        <v-text-field
+            label="Поиск по перемещениям"
+            v-model="search"
+            clearable
+            append-icon="search"
+        />
         <v-data-table
             v-if="!loading"
+            :search="search"
             class="background-iron-grey fz-18 mt-2"
             no-results-text="Нет результатов"
             no-data-text="Нет данных"
@@ -114,6 +121,7 @@
         },
         components: {ConfirmationModal, TransferModal, TransferPhotoModal},
         data: () => ({
+            search: '',
             editMode: false,
             loading: true,
             cancelModal: false,
@@ -167,6 +175,11 @@
                     text: 'Действие',
                     value: 'actions',
                     sortable: false
+                },
+                {
+                    text: 'Поиск',
+                    value: 'search',
+                    align: ' d-none'
                 }
             ],
         }),

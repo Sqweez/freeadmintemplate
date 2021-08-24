@@ -19,7 +19,12 @@ const reportsModule = {
     },
     getters: {
         STORES_REPORTS: state => state.storesReports,
-        REPORTS: state => state.reports,
+        REPORTS: state => state.reports.map(report => {
+            report.search = report.products.map(product => {
+                return `${product.product_name } ${product.manufacturer.manufacturer_name} ${product.attributes.join(' ')}`;
+            }).join(' ');
+            return report;
+        }),
         PLAN_REPORTS: state => state.planReports,
         BRANDS_MOTIVATION: s => s.brandsMotivation
     },

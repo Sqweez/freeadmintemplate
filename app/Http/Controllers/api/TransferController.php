@@ -46,7 +46,15 @@ class TransferController extends Controller {
             ->whereHas('batches.product')
             ->whereHas('batches.product.product')
             ->with(['parent_store', 'child_store', 'companionSale'])
-            ->with(['batches', 'batches.productBatch:id,purchase_price', 'batches.product:id,product_id,self_price', 'batches.product.product:id,product_price'])
+            ->with(
+                [
+                    'batches', 'batches.productBatch:id,purchase_price',
+                    'batches.product:id,product_id,self_price',
+                    'batches.product.product:id,product_price,product_name',
+                    'batches.product.product.manufacturer',
+                    'batches.product.product.attributes', 'batches.product.attributes',
+                    'batches.product.product.attributes.attribute_name'
+                ])
             ->select('id', 'parent_store_id', 'child_store_id', 'user_id', 'photos', 'created_at')
             ->orderByDesc('created_at');
 
@@ -55,7 +63,6 @@ class TransferController extends Controller {
                 return $q->where('type_id', Transfer::PARTNER_SELLER_ID);
             });
         }
-
         return TransferResource::collection($transfersQuery->get());
     }
 

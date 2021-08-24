@@ -174,6 +174,12 @@
                     </v-select>
                 </v-col>
             </v-row>
+            <v-text-field
+                label="Поиск по отчетам"
+                append-icon="search"
+                v-model="search"
+                clearable
+            />
             <v-data-table
                 no-results-text="Нет результатов"
                 no-data-text="Нет данных"
@@ -181,6 +187,7 @@
                 :loading="loading"
                 loading-text="Отчеты обновляются"
                 :items="_salesReport"
+                :search="search"
                 :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
@@ -384,6 +391,7 @@
     export default {
         components: {ReportCancelModal, ConfirmationModal},
         data: () => ({
+            search: '',
             overlay: false,
             loading: false,
             cancelModal: false,
@@ -445,6 +453,7 @@
                 {text: 'Данные', value: 'sale_data'},
                 {text: 'Экономические показатели', value: 'economy'},
                 {text: 'Дополнительные данные', value: 'additional_data'},
+                {text: 'Поиск', value: 'search', align: ' d-none'},
                 {
                     text: 'Действие', value: 'action'
                 },

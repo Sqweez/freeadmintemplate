@@ -5,16 +5,23 @@
         </v-overlay>
         <v-card>
             <v-card-text>
+                <v-text-field
+                    label="Поиск по поступлениям"
+                    append-icon="search"
+                    clearable
+                    v-model="search"
+                />
                 <v-data-table
-                        class="background-iron-grey fz-18 mt-2"
-                        no-results-text="Нет результатов"
-                        no-data-text="Нет данных"
-                        :headers="headers"
-                        :items="arrivals"
-                        :footer-props="{
-                            'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
-                            'items-per-page-text': 'Записей на странице',
-                        }"
+                    :search="search"
+                    class="background-iron-grey fz-18 mt-2"
+                    no-results-text="Нет результатов"
+                    no-data-text="Нет данных"
+                    :headers="headers"
+                    :items="arrivals"
+                    :footer-props="{
+                        'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
+                        'items-per-page-text': 'Записей на странице',
+                    }"
                 >
                     <template v-slot:item.product_count="{item}">
                         {{ item.product_count }} шт.
@@ -69,6 +76,7 @@
     export default {
         components: {ConfirmationModal, ArrivalInfoModal},
         data: () => ({
+            search: '',
             overlay: true,
             loading: false,
             confirmationModal: false,
@@ -108,6 +116,11 @@
                     text: 'Действие',
                     value: 'actions',
                     sortable: false
+                },
+                {
+                    text: 'Поиск',
+                    value: 'search',
+                    align: ' d-none'
                 }
             ],
         }),
@@ -133,7 +146,12 @@
         computed: {},
         async mounted() {
             const { data } = await getArrivals(true);
-            this.arrivals = data;
+            this.arrivals = data.map(arrival => {
+                arrival.search = arrival.products.map(product => {
+                    return `${product.product_name} ${product.manufacturer.manufacturer_name} ${product.attributes.map(a => a.attribute_value).join(' ')}`
+                }).join(' ')
+                return arrival
+            });
             this.overlay = false;
         }
     }
