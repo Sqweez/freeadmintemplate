@@ -192,10 +192,14 @@ class ProductController extends Controller
     }
 
     public function moderatorProducts() {
-        return ModeratorProducts::collection(ProductSku::with(ProductSku::PRODUCT_SKU_MODERATOR_LIST)
+        return ModeratorProducts::collection(
+            ProductSku::query()
+            ->with(ProductSku::PRODUCT_SKU_MODERATOR_LIST)
             ->orderBy('product_id')
             ->orderBy('id')
-            ->get());
+            ->get()
+            ->sortBy('product_name')
+        );
     }
 
     public function outOfStockProducts(Request $request) {

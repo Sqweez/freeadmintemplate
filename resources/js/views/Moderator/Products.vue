@@ -68,6 +68,12 @@
                                 v-model="hideNotInStock"
                             />
                         </v-col>
+                        <v-col cols="12" xl="6">
+                            <v-checkbox
+                                label="Группировать товары"
+                                v-model="groupProducts"
+                            />
+                        </v-col>
                     </v-row>
                     <v-data-table
                         :search="searchQuery"
@@ -105,7 +111,7 @@
                                     Ассортимент
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)" v-if="item.sku_can_be_created">
+                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)" v-if="item.sku_can_be_created && !groupProducts">
                                     Ассортимент
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
@@ -129,7 +135,7 @@
                                     Удалить
                                     <v-icon>mdi-delete</v-icon>
                                 </v-btn>
-                                <div class="mb-2 d-flex justify-space-between">
+                                <div class="mb-2 d-flex justify-space-between" v-if="!groupProducts">
                                     <v-btn color="error" class="mr-2" @click="changeCount(item.id, -1)">
                                         <v-icon>mdi-minus</v-icon>
                                     </v-btn>
@@ -183,6 +189,7 @@
     import product_search from "@/mixins/product_search";
     import {PRODUCT_MODAL_EVENTS, TOAST_TYPE} from "@/config/consts";
     import SkuModal from "@/components/v2/Modal/SkuModal";
+    import { uniqBy } from 'lodash';
 
     export default {
         components: {
@@ -208,6 +215,7 @@
         },
         data: () => ({
             hideNotInStock: false,
+            groupProducts: false,
             priceTagModal: false,
             waitingQuantities: false,
             loading: false,
@@ -263,7 +271,7 @@
                 return this.$store.getters.QUANTITIES_v2;
             },
             products() {
-                return this.$store.getters.MODERATOR_PRODUCTS
+                let products = this.$store.getters.MODERATOR_PRODUCTS
                     .filter(product => {
                         if (this.descriptionFilter === 2) {
                             return !product.product_description ||product.product_description.length <= 100;
@@ -288,6 +296,12 @@
                         }
                         return product;
                     });
+
+                if (this.groupProducts) {
+                    products = uniqBy(products, product => product.product_id);
+                }
+
+                return products;
             },
             stores() {
                 return this.$store.getters.stores;
