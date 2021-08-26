@@ -67,7 +67,7 @@
                     },
                 ];
 
-                if (this.IS_ADMIN) {
+                if (this.IS_SUPERUSER) {
                     segments.push({
                         name: 'Требуют подтверждения',
                         component: 'OnAcceptionTransfers'

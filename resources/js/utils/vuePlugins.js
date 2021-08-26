@@ -24,6 +24,12 @@ export default {
                 },
                 isAdmin() {
                     return this.$store.getters.IS_ADMIN;
+                },
+                IS_BOSS() {
+                    return this.$store.getters.IS_BOSS;
+                },
+                IS_SUPERUSER() {
+                    return this.IS_BOSS || this.isAdmin;
                 }
             }
         })

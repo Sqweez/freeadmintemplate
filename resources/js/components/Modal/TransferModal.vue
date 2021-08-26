@@ -183,7 +183,7 @@
                 return !!this.transfer.filter(t => t.accepted).length
             },
             canEdit() {
-                return this.isAdmin && this.confirmMode;
+                return this.IS_SUPERUSER && this.confirmMode;
             }
         }
     }

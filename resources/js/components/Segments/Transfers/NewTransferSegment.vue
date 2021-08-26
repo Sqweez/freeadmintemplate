@@ -96,7 +96,7 @@
                                     v-model="child_store"
                                     item-value="id"
                                     label="Склад"
-                                    :disabled="!IS_ADMIN"
+                                    :disabled="!IS_SUPERUSER"
                                 />
                             </td>
                         </tr>
@@ -111,7 +111,7 @@
             </v-card-text>
         </v-card>
         <v-select
-            v-if="IS_ADMIN"
+            v-if="IS_SUPERUSER"
             label="Поступления"
             :item-text="function(item) {
               return !item.name ? `${item.date} | ${item.total_sale_cost} тнг | ${item.product_count} шт` : item.name;
@@ -180,7 +180,7 @@
                             v-model="storeFilter"
                             item-value="id"
                             label="Склад"
-                            :disabled="!IS_ADMIN"
+                            :disabled="!IS_SUPERUSER"
                         />
                     </v-col>
                 </v-row>
@@ -343,7 +343,7 @@
                     child_store_id: this.child_store,
                     photos: JSON.stringify(this.photos),
                     discount: 0,
-                    is_accepted: !!this.IS_ADMIN
+                    is_accepted: !!this.IS_SUPERUSER
                 };
 
                 await this.$store.dispatch(ACTIONS.MAKE_TRANSFER, sale);
@@ -379,7 +379,7 @@
             },
             _stores() {
                 const stores = this.stores.filter(s => s.id !== this.storeFilter);
-                this.child_store = this.IS_ADMIN ? stores[0].id : this.user.store_id;
+                this.child_store = this.IS_SUPERUSER ? stores[0].id : this.user.store_id;
                 return stores;
             },
             arrivals() {

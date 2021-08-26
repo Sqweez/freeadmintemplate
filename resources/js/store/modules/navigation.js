@@ -1,5 +1,244 @@
 const navigationModule = {
     state: {
+        bossMenu: [
+            {
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
+            },
+            {
+                title: 'Пользователи',
+                url: '/users',
+                icon: 'person',
+            },
+            {
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person'
+            },
+            {
+                title: 'Документооборот',
+                url: '#',
+                icon: 'article',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Создать документ',
+                        url: '/documents',
+                    },
+                    {
+                        title: 'Список документов',
+                        url: '/documents/list',
+                    },
+                    {
+                        title: 'Прайс-лист',
+                        url: '/documents/price/list'
+                    }
+                ]
+            },
+            {
+                title: 'Склад',
+                url: '#',
+                icon: 'work',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Все склады',
+                        url: '/stores',
+                    },
+                    {
+                        title: 'Категории',
+                        url: '/categories',
+                    },
+                    {
+                        title: 'Товары',
+                        url: '/products'
+                    },
+                    {
+                        title: 'Корзина',
+                        url: '/cart'
+                    },
+                    {
+                        title: 'Перемещения',
+                        url: '/transfer',
+                    },
+                    {
+                        title: 'Поступления',
+                        url: '/arrivals',
+                    },
+                    {
+                        title: 'Заканчивающиеся товары',
+                        url: '/products/stock/out',
+                    },
+                    {
+                        title: 'Предзаказы',
+                        url: '/preorders/index'
+                    }
+                ],
+            },
+            {
+                title: 'Экономика',
+                url: '#',
+                hasDropdown: true,
+                icon: 'account_balance_wallet',
+                children: [
+                    {
+                        title: 'Список смен',
+                        url: '/shifts/index'
+                    },
+                    {
+                        title: 'Настройки смен',
+                        url: '/shifts/settings'
+                    },
+                    {
+                        title: 'Штрафы/Вознаграждения',
+                        url: '/shifts/penalty'
+                    },
+                    {
+                        title: 'План продаж',
+                        url: '/plan',
+                    },
+                ]
+            },
+            {
+                title: 'Продавцы',
+                url: '#',
+                hasDropdown: true,
+                icon: 'persons',
+                children: [
+                    {
+                        title: 'Задания',
+                        url: '/tasks/index',
+                    },
+                    {
+                        title: 'Обучение',
+                        url: '/education/index'
+                    }
+                ],
+            },
+            {
+                title: 'Статистика',
+                icon: 'analytics',
+                url: '#',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Баланс товаров',
+                        url: '/products/balance'
+                    },
+                    {
+                        title: 'Клиенты',
+                        url: '/analytics/clients'
+                    },
+                    {
+                        title: 'Бренды',
+                        url: '/analytics/brands'
+                    },
+                    {
+                        title: 'Аналитика продаж',
+                        url: '/analytics/sales'
+                    },
+                    {
+                        title: 'Аналитика поступлений',
+                        url: '/analytics/arrivals'
+                    }
+                ]
+            },
+            {
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по товарам',
+                url: '/reports/products',
+                icon: 'report',
+            },
+            {
+                title: 'Kaspi',
+                url: '#',
+                icon: 'home',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/kaspi/products'
+                    },
+                    {
+                        title: 'Заказы',
+                        url: '/kaspi/orders'
+                    },
+                    {
+                        title: 'Аналитика',
+                        url: '/kaspi/analytics'
+                    }
+                ]
+            },
+            {
+                title: 'Партнеры',
+                url: '#',
+                hasDropdown: true,
+                icon: 'supervised_user_circle',
+                children: [
+                    {
+                        title: 'Закупы',
+                        url: '/companions/transfer'
+                    }
+                ],
+            },
+            {
+                title: 'Модератор',
+                url: '#',
+                icon: 'dashboard',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/moderator/products'
+                    },
+                    {
+                        title: 'Новости',
+                        url: '/moderator/news'
+                    },
+                ]
+            },
+            {
+                title: 'Интернет-магазин',
+                url: '#',
+                icon: 'home',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Цели',
+                        url: '/shop/goals'
+                    },
+                    {
+                        title: 'Атлеты',
+                        url: '/shop/sportsmen'
+                    },
+                    {
+                        title: 'Рейтинг продавцов',
+                        url: '/shop/rating'
+                    },
+                    {
+                        title: 'Промокоды',
+                        url: '/promocode'
+                    },
+                    {
+                        title: 'Баннеры',
+                        url: '/shop/banners'
+                    },
+                    {
+                        title: "Связанные товары",
+                        url: '/shop/related'
+                    },
+                    {
+                        title: "Заказы",
+                        url: '/shop/orders'
+                    }
+                ]
+            }
+        ],
         partner_sellersMenu: [
             {
                 title: 'Главная',
@@ -136,7 +375,7 @@ const navigationModule = {
                     }
                 ],
             },
-            {
+           /* {
                 title: 'Экономика',
                 url: '#',
                 hasDropdown: true,
@@ -160,7 +399,7 @@ const navigationModule = {
                         isAdmin: true
                     },
                 ]
-            },
+            },*/
             {
                 title: 'Продавцы',
                 url: '#',
@@ -177,7 +416,7 @@ const navigationModule = {
                     }
                 ],
             },
-            {
+           /* {
                 title: 'Статистика',
                 icon: 'analytics',
                 url: '#',
@@ -204,7 +443,7 @@ const navigationModule = {
                         url: '/analytics/arrivals'
                     }
                 ]
-            },
+            },*/
             {
                 title: 'Отчеты по продажам',
                 url: '/reports',

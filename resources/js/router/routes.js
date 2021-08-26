@@ -59,7 +59,8 @@ const routes = [
         component: Users,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             },
         }
     },
@@ -68,7 +69,8 @@ const routes = [
         component: Stores,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             },
         }
 
@@ -78,7 +80,8 @@ const routes = [
         component: Control,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             },
         }
     },
@@ -89,6 +92,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_SELLER: true,
+                IS_BOSS: true,
             }
         }
     },
@@ -97,7 +101,7 @@ const routes = [
         component: Plan,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_BOSS: true,
             },
         }
     },
@@ -132,7 +136,8 @@ const routes = [
         component: MVPProducts,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             },
         }
     },
@@ -142,6 +147,7 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
+                IS_BOSS: true,
             },
         }
     },
@@ -151,7 +157,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_MODERATOR: true
+                IS_MODERATOR: true,
+                IS_BOSS: true,
             },
         }
     },
@@ -164,7 +171,8 @@ const routes = [
         component: RelatedProducts,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             }
         }
     },
@@ -174,7 +182,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_SELLER: true,
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             }
         }
     },
@@ -186,6 +195,7 @@ const routes = [
                 IS_ADMIN: true,
                 IS_SELLER: true,
                 IS_STOREKEEPER: true,
+                IS_BOSS: true,
             },
         }
     },
@@ -195,7 +205,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_OBSERVER: true
+                IS_OBSERVER: true,
+                IS_BOSS: true,
             },
         }
     },
@@ -204,7 +215,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_SELLER: true
+                IS_SELLER: true,
+                IS_BOSS: true,
             },
         },
         component: Promocodes
@@ -213,7 +225,8 @@ const routes = [
         path: '/stats/partners',
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             },
         },
         component: PartnersStats
@@ -222,7 +235,8 @@ const routes = [
         path: '/v2/products',
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             },
         },
         component: ProductsV2
@@ -233,7 +247,8 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_PARTNER_SELLERS: true,
-                IS_STOREKEEPER: true
+                IS_STOREKEEPER: true,
+                IS_BOSS: true,
             },
         },
         component: ProductsV3
@@ -242,7 +257,8 @@ const routes = [
         path: '/products/balance',
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             }
         },
         component: ProductBalance
@@ -254,6 +270,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_SELLER: true,
+                IS_BOSS: true,
             }
         }
     },
@@ -264,6 +281,7 @@ const routes = [
             CAN_ENTER: {
                 IS_PARTNER_SELLERS: true,
                 IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -276,7 +294,8 @@ const routes = [
         component: KaspiProducts,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             },
         },
     },
@@ -285,7 +304,8 @@ const routes = [
         component: KaspiOrders,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -294,7 +314,8 @@ const routes = [
         component: ModeratorProducts,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -303,7 +324,8 @@ const routes = [
         component: NewsPage,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -313,6 +335,7 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -323,6 +346,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_SUPPLIER: true,
+                IS_BOSS: true
             }
         }
     },
@@ -333,6 +357,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_PARTNER_SELLERS: true,
+                IS_BOSS: true,
             }
         }
     },
@@ -342,7 +367,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_PARTNER_SELLERS: true
+                IS_PARTNER_SELLERS: true,
+                IS_BOSS: true
             }
         }
     },
@@ -352,6 +378,7 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -360,7 +387,8 @@ const routes = [
         component: DocumentsList,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             }
         }
     },
@@ -369,7 +397,8 @@ const routes = [
         component: PriceList,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             }
         }
     },
@@ -378,7 +407,8 @@ const routes = [
         component: AnalyticsClients,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -387,7 +417,8 @@ const routes = [
         component: Brands,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -396,7 +427,8 @@ const routes = [
         component: KaspiAnalytics,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -405,7 +437,8 @@ const routes = [
         component: TasksIndex,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true
             }
         }
     },
@@ -418,7 +451,8 @@ const routes = [
         component: ProductsOutOfStock,
         meta: {
             CAN_ENTER: {
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_BOSS: true,
             }
         }
     },

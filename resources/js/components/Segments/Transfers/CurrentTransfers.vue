@@ -112,7 +112,6 @@
     import TransferModal from "@/components/Modal/TransferModal";
     import {declineTransfer} from "@/api/transfers";
     import axios from "axios";
-    import ACTIONS from "@/store/actions";
 
     export default {
         async mounted() {

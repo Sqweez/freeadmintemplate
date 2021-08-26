@@ -135,7 +135,7 @@
                                 <v-list-item-title>{{ totalSales | priceFilters }}</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
-                        <v-list-item v-if="is_admin">
+                        <v-list-item v-if="is_admin || IS_BOSS">
                             <v-list-item-content>
                                 <v-list-item-title class="font-weight-black">Общая сумма прибыли:</v-list-item-title>
                                 <v-list-item-title>{{ totalMargin | priceFilters }}</v-list-item-title>

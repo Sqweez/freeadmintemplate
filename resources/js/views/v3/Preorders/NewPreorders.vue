@@ -183,7 +183,7 @@
                         label="Бренд"
                     />
                 </v-col>
-                <v-col cols="12" xl="4" v-if="is_admin">
+                <v-col cols="12" xl="4" v-if="IS_SUPERUSER">
                     <v-select
                         :items="stores"
                         item-text="name"
@@ -354,9 +354,6 @@
             payment_types() {
                 return this.$store.getters.payment_types;
             },
-            is_admin() {
-                return this.$store.getters.IS_ADMIN;
-            },
             user() {
                 return this.$store.getters.USER;
             }
@@ -364,7 +361,7 @@
         async created() {
             this.loading = true;
             await this.$store.dispatch('GET_PRODUCTS_v2');
-            const store_id = this.is_admin ? null : this.user.store_id;
+            const store_id = this.IS_SUPERUSER ? null : this.user.store_id;
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);

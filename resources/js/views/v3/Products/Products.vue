@@ -14,9 +14,9 @@
         </v-card-text>
         <v-card-text v-else>
             <div class="mb-5">
-                <v-btn color="error" @click="showProductModal()" v-if="is_admin">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+                <v-btn color="error" @click="showProductModal()" v-if="is_admin || IS_BOSS">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
             </div>
-            <v-btn color="success" v-if="is_admin" @click="exportProductBatches">Выгрузить себестоимости</v-btn>
+            <v-btn color="success" v-if="is_admin || IS_BOSS" @click="exportProductBatches">Выгрузить себестоимости</v-btn>
             <v-row>
                 <v-col>
                     <v-row>
@@ -32,7 +32,7 @@
                                 hide-details
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12" xl="4" v-if="is_admin">
+                        <v-col cols="12" xl="4" v-if="is_admin || IS_BOSS">
                             <v-select
                                 :items="stores"
                                 item-text="name"
@@ -207,7 +207,7 @@
             ProductRangeModal
         },
         async created() {
-            const store_id = this.is_admin ? null : this.user.store_id;
+            const store_id = (this.is_admin || this.IS_BOSS) ? null : this.user.store_id;
             try {
                 await this.$store.dispatch('GET_PRODUCTS_v2');
             } catch (e) {
@@ -366,7 +366,7 @@
                     }
                 ];
 
-                if (this.is_admin) {
+                if (this.is_admin || this.IS_BOSS) {
                     headers.unshift( {
                         value: 'actions',
                         text: 'Действие',

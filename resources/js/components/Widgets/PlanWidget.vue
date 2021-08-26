@@ -16,7 +16,7 @@
             </v-card-title>
             <v-card-text class="pl-0 pr-0">
                 <v-row>
-                    <v-col v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.store_id" cols="12" md="6" lg="auto">
+                    <v-col v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER || IS_BOSS) || USER.store_id == store.store_id" cols="12" md="6" lg="auto">
                         <v-list >
                             <v-list-item>
                                 <v-list-item-content>
@@ -181,87 +181,6 @@
                         </v-list>
                     </v-col>
                 </v-row>
-
-               <!-- <v-row>
-                    <v-col>
-                        <h5 class="pl-4">На месяц:</h5>
-                        <v-simple-table v-slot:default>
-                            <thead>
-                            <tr>
-                                <th>Магазин</th>
-                                <th>План</th>
-                                <th>Выполнение, тенге</th>
-                                <th>Выполнение, %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.store_id" class="plan__data">
-                                    <td>{{ store.name }}</td>
-                                    <td>
-                                        {{ store.month_plan | priceFilters}}
-                                    </td>
-                                    <td>
-                                        {{ store.month_fact | priceFilters}}
-                                    </td>
-                                    <td>
-                                        {{ store.month_percent }}%
-                                    </td>
-                                </tr>
-                                <tr class="total" v-if="is_admin">
-                                    <td><b>Итого:</b></td>
-                                    <td>
-                                        {{ totalMonthPlan | priceFilters }}
-                                    </td>
-                                    <td>
-                                        {{ totalMonthPlanSum | priceFilters }}
-                                    </td>
-                                    <td>
-                                        {{ totalMonthPlanPercent }} %
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </v-simple-table>
-                    </v-col>
-                    <v-col lg="12">
-                        <h5 class="pl-4">На неделю:</h5>
-                        <v-simple-table v-slot:default>
-                            <thead>
-                            <tr>
-                                <th>Магазин</th>
-                                <th>План</th>
-                                <th>Выполнение, тенге</th>
-                                <th>Выполнение, %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(store) of plans" v-if="(IS_ADMIN || IS_OBSERVER) || USER.store_id == store.store_id" class="plan__data">
-                                <td>{{ store.name }}</td>
-                                <td>
-                                    {{ store.week_plan | priceFilters }}
-                                </td>
-                                <td>
-                                    {{ store.week_fact | priceFilters}}
-                                </td>
-                                <td>
-                                    {{ store.week_percent }}%
-                                </td>
-                            </tr>
-                            <tr class="total" v-if="is_admin">
-                                <td><b>Итого:</b></td>
-                                <td>
-                                    {{ totalWeekPlan | priceFilters }}
-                                </td>
-                                <td>
-                                    {{ totalWeekPlanSum | priceFilters }}
-                                </td>
-                                <td>
-                                    {{ totalWeekPlanPercent }} %
-                                </td>
-                            </tr>
-                            </tbody>
-                        </v-simple-table>
-                    </v-col>
-                </v-row>-->
             </v-card-text>
         </v-responsive>
     </v-card>
