@@ -26,6 +26,7 @@ class UserResource extends JsonResource
             'role' => $this->role->role_name,
             'store_slug' => Str::slug($this->store->city),
             'token' => $this->token,
+            'store' => $this->store,
         ];
     }
 }

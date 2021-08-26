@@ -7,6 +7,22 @@
                     <v-btn color="error" @click="clientModal = true">Добавить клиента <v-icon>mdi-plus</v-icon></v-btn>
                     <v-select
                         style="max-width: 270px;"
+                        label="Тип лояльности"
+                        :items="loyalties"
+                        item-value="id"
+                        item-text="name"
+                        v-model="loyaltyFilter"
+                    />
+                    <v-select
+                        style="max-width: 270px;"
+                        label="Тип клиента"
+                        :items="clientTypes"
+                        item-value="id"
+                        item-text="name"
+                        v-model="clientTypeFilter"
+                    />
+                    <v-select
+                        style="max-width: 270px;"
                         label="Города"
                         :items="cities"
                         item-value="id"
@@ -123,6 +139,22 @@
                 rowsPerPage: 10,
                 page: 1
             },
+            clientTypes: [
+                {
+                    id: -1,
+                    name: 'Все'
+                },
+                {
+                    id: 1,
+                    name: 'Клиент'
+                },
+                {
+                    id: 2,
+                    name: 'Тренер'
+                }
+            ],
+            clientTypeFilter: -1,
+            loyaltyFilter: -1,
             pageCount: 1,
             cityFilter: 0,
             headers: [
@@ -150,7 +182,7 @@
                 },
                 {
                     value: 'is_partner',
-                    text: 'Партнер'
+                    text: 'Тренер'
                 },
                 {
                     value: 'city',
@@ -167,12 +199,36 @@
             ]
         }),
         computed: {
+            loyalties() {
+                return [
+                    {
+                        id: -1,
+                        name: 'Все'
+                    },
+                    ...this.$store.getters.LOYALTY
+                ];
+            },
             clients() {
-                if (this.cityFilter === 0) {
-                    return this.$store.getters.clients;
-                } else {
-                    return this.$store.getters.clients.filter(client => +client.client_city === this.cityFilter);
-                }
+                return this.$store.getters.clients
+                    .filter(client => {
+                        if (this.cityFilter === 0) {
+                            return client;
+                        }
+                        return +client.client_city === this.cityFilter
+                    }).filter(client => {
+                        if (this.loyaltyFilter === -1) {
+                            return client;
+                        }
+                        return client.loyalty.id === this.loyaltyFilter;
+                    }).filter(client => {
+                        if (this.clientTypeFilter === -1) {
+                            return client;
+                        }
+                        if (this.clientTypeFilter === 1) {
+                            return !client.is_partner;
+                        }
+                        return client.is_partner;
+                    })
             },
             shops() {
                 return this.$store.getters.shops;

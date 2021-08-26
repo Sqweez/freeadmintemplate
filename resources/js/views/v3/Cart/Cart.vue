@@ -510,6 +510,14 @@
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch('GET_CERTIFICATES');
             await this.$store.dispatch('GET_PREORDERS');
+            this.client = this.user.store.type_id === 3 ? {
+                    id: -1,
+                    client_name: 'Гость',
+                    sale_sum: 0,
+                    client_balance: 0,
+                    client_discount: 0,
+                    total_sum: 0,
+                } : null;
             this.loading = false;
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },

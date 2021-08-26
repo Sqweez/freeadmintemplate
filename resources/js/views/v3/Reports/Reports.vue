@@ -346,6 +346,9 @@
                         <v-list-item>
                             <v-btn small depressed color="success" text @click="createWaybill(item)">Накладная</v-btn>
                         </v-list-item>
+                        <v-list-item>
+                            <v-btn small depressed color="success" text @click="createInvoice(item)">Счет-фактура</v-btn>
+                        </v-list-item>
                     </v-list>
                     <v-list v-if="editMode && report.id === item.id">
                         <v-list-item>
@@ -532,6 +535,31 @@
                         return r;
                     }),
                     organization: report.client.client_name,
+                })
+                const link = document.createElement('a');
+                link.href = `${window.location.origin}/${data.path}`;
+                link.click();
+                this.$loading.disable();
+            },
+            async createInvoice(report) {
+                this.$loading.enable();
+                const _report = JSON.parse(JSON.stringify(report));
+                const cart = _report.products.map(r => {
+                    r.attributes = r._attributes;
+                    return r;
+                });
+                const { data } = await axios.post(`/api/v2/documents/invoice`, {
+                    cart,
+                    organization: report.client.client_name,
+                    contract: '',
+                    location: '',
+                    waybill: '',
+                    consignee: '',
+                    recipient: '',
+                    IIK: '',
+                    BINLocation: '',
+                    product: cart.length > 1 ? 'Спортивные витамины в ассортименте'
+                        : `${cart[0].product_name} ${cart[0].attributes.map(a => a.attribute_value).join(' ')} ${cart[0].manufacturer.manufacturer_name}`,
                 })
                 const link = document.createElement('a');
                 link.href = `${window.location.origin}/${data.path}`;

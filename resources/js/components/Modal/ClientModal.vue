@@ -49,7 +49,7 @@
                    />
                    <v-checkbox
                        v-model="client.is_partner"
-                       :label="`Партнер`"
+                       :label="`Тренер`"
                    ></v-checkbox>
                    <v-select
                        v-model="client.loyalty_id"
