@@ -59,7 +59,7 @@ const reportsModule = {
             commit('setStoresReport', data);
         },
         async [ACTIONS.GET_REPORTS] ({commit, getters}, payload) {
-            if (!getters.IS_ADMIN || !getters.IS_BOSS) {
+            if (!(getters.IS_ADMIN || getters.IS_BOSS)) {
                 payload.user_id = getters.USER.id;
             }
             if (getters.IS_SUPPLIER) {
