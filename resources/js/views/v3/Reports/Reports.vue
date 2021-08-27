@@ -13,7 +13,7 @@
                                 <v-list-item-title>{{ totalSales | priceFilters }}</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
-                        <v-list-item v-if="is_admin">
+                        <v-list-item v-if="IS_SUPERUSER">
                             <v-list-item-content>
                                 <v-list-item-title class="font-weight-black">Общая сумма прибыли:</v-list-item-title>
                                 <v-list-item-title>{{ totalMargin | priceFilters }}</v-list-item-title>
@@ -39,7 +39,7 @@
                         item-text="name"
                         item-value="value"
                         v-model="currentDate"
-                        v-if="is_admin"
+                        v-if="IS_SUPERUSER"
                         label="Время:"
                         @change="loadReport"
                     />
@@ -140,7 +140,7 @@
                 <v-col>
                     <label>Прочие фильтры:</label>
                     <v-select
-                        v-if="is_admin"
+                        v-if="IS_SUPERUSER"
                         :items="store_types"
                         item-text="type"
                         item-value="id"
@@ -149,7 +149,7 @@
                     >
                     </v-select>
                     <v-select
-                        v-if="is_admin"
+                        v-if="IS_SUPERUSER"
                         :items="shops"
                         item-text="name"
                         item-value="id"
@@ -158,7 +158,7 @@
                     >
                     </v-select>
                     <v-select
-                        v-if="is_admin"
+                        v-if="IS_SUPERUSER"
                         :items="sellers"
                         label="Продавец:"
                         v-model="currentSeller"
@@ -237,7 +237,7 @@
                 </template>
                 <template v-slot:item.economy="{item}">
                     <v-list>
-                        <v-list-item v-if="is_admin">
+                        <v-list-item v-if="IS_SUPERUSER">
                             <v-list-item-content >
                                 <v-list-item-title>{{ item.purchase_price | priceFilters}}</v-list-item-title>
                                 <v-list-item-subtitle>Закупочная стоимость</v-list-item-subtitle>
@@ -255,7 +255,7 @@
                                 <v-list-item-subtitle>Финальная стоимость</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
-                        <v-list-item v-if="is_admin">
+                        <v-list-item v-if="IS_SUPERUSER">
                             <v-list-item-content>
                                 <v-list-item-title>{{ item.margin | priceFilters}} (<span v-if="item.final_price > 0" :class="Math.ceil(item.margin * 100 / item.final_price) > 0 ? 'green--text' : 'red--text'">{{ Math.ceil(item.margin * 100 / item.final_price) }}%</span>)</v-list-item-title>
                                 <v-list-item-subtitle>Прибыль</v-list-item-subtitle>
@@ -334,7 +334,7 @@
                 </template>
                 <template v-slot:item.action="{item}">
                     <v-list v-if="report.id !== item.id && !item.sale_type">
-                        <v-list-item v-if="is_admin">
+                        <v-list-item v-if="IS_SUPERUSER">
                             <v-btn small depressed color="error" text @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">Отмена</v-btn>
                         </v-list-item>
                         <v-list-item>

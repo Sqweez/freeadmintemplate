@@ -42,6 +42,19 @@ class SaleService {
             return false;
         }
 
+        $amountWithOutDiscount = $this->getTotalCost($cart, 0);
+        $newDiscount = 0;
+        if ($amountWithOutDiscount >= 15000) {
+            $newDiscount = 5;
+        }
+        if ($amountWithOutDiscount >= 30000) {
+            $newDiscount = 10;
+        }
+
+        if ($newDiscount > $client->client_discount) {
+            $client->update(['client_discount' => $newDiscount]);
+        }
+
         $amount = $this->getTotalCost($cart, $discount);
 
         $client->sales()->create([

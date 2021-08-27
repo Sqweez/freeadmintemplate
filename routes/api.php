@@ -243,6 +243,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('products/xml', [KaspiController::class, 'getProductsXML']);
             Route::get('orders', [KaspiController::class, 'getOrders']);
             Route::get('analytics', [KaspiController::class, 'getAnalytics']);
+            Route::get('products', [KaspiController::class, 'getProducts']);
         });
 
         Route::prefix('cron')->group(function () {

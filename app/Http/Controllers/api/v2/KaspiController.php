@@ -21,11 +21,29 @@ class KaspiController extends Controller {
     }
 
     public function getProducts() {
-        $products = ProductSku::whereHas('product', function ($q) {
-            return $q->where('is_kaspi_visible', true);
-        })->with(['attributes'])->with(['product', 'product.attributes'])->with('product.manufacturer')->with(['batches' => function ($q) {
-            return $q/*->where('store_id', 1)*/->where('quantity', '>', 0);
-        }])->get()->sortBy('product_id');
+        $products = ProductSku::query()
+            ->whereHas('product', function ($q) {
+                return $q->where('is_kaspi_visible', true);
+            })
+            ->with(['attributes'])
+            ->with(['product', 'product.attributes'])
+            ->with('product.manufacturer')
+            ->with(['batches' => function ($q) {
+                return $q->where('quantity', '>', 0);
+            }])
+            ->get()
+            ->sortBy('product_id')
+            ->values()
+            ->map(function ($product) {
+                $product['batches'] = collect($product['batches'])->map(function ($_product) {
+                    if ($_product['store_id'] === 6) {
+                        $_product['store_id'] = 1;
+                    }
+                    return $_product;
+                });
+                return $product;
+            });
+
         $stores = Store::whereTypeId(1)->get();
         return $products->map(function ($product) use ($stores) {
             return [
@@ -71,28 +89,28 @@ class KaspiController extends Controller {
 
     public function getOrders() {
         $client = new Client();
-      /*  $url = 'https://kaspi.kz/shop/api/v2/orders?page[number]=0&page[size]=1000&filter[orders][creationDate][$ge]=1611770400000&filter[orders][signatureRequired]=false&filter[orders][state]=PICKUP';
-        return $url;*/
+        /*  $url = 'https://kaspi.kz/shop/api/v2/orders?page[number]=0&page[size]=1000&filter[orders][creationDate][$ge]=1611770400000&filter[orders][signatureRequired]=false&filter[orders][state]=PICKUP';
+          return $url;*/
         $response = $client->get('https://kaspi.kz/shop/api/v2/orders', [
-            'query' => [
-                'page' => [
-                    'number' => 0,
-                    'size' => 1000
-                ],
-                'filter' => [
-                    'orders' => [
-                        'creationDate' => [
-                            '$ge' => 1611770400000
+                'query' => [
+                    'page' => [
+                        'number' => 0,
+                        'size' => 1000
+                    ],
+                    'filter' => [
+                        'orders' => [
+                            'creationDate' => [
+                                '$ge' => 1611770400000
+                            ],
+                            'signatureRequired' => false,
+                            'state' => 'PICKUP'
                         ],
-                        'signatureRequired' => false,
-                        'state' => 'PICKUP'
                     ],
                 ],
-            ],
-            'headers' => [
-                'Content-Type' => 'application/vnd.api+json',
-                'X-Auth-Token' => 'ULDaKPxr8fZzzxHBSj8HLc9YZ0x+VKhYdAd6vQ1NgnI='
-            ]]
+                'headers' => [
+                    'Content-Type' => 'application/vnd.api+json',
+                    'X-Auth-Token' => 'ULDaKPxr8fZzzxHBSj8HLc9YZ0x+VKhYdAd6vQ1NgnI='
+                ]]
         );
         return $response->getBody();
     }
@@ -104,7 +122,7 @@ class KaspiController extends Controller {
             return $query->wherePaymentType(Sale::KASPI_PAYMENT_TYPE)
                 ->whereDate('created_at', '>=', $start)
                 ->whereDate('created_at', '<=', $finish);
-            }
+        }
         )->get()->groupBy('product_id')->map(function ($items) {
             return [
                 'count' => count($items),
@@ -122,23 +140,23 @@ class KaspiController extends Controller {
             return isset($product) && isset($product['product']);
         })
             ->map(function ($sale) use ($products) {
-            $product = collect($products)->filter(function ($p) use ($sale) {
-                return $p['id'] === $sale['product_id'];
-            })->first();
-            $_product = $product['product'];
-            return [
-                'count' => $sale['count'],
-                'product_id' => $sale['product_id'],
-                'product_name' => $_product['product_name'],
-                'category' => $_product['category']['category_name'],
-                'manufacturer' => $_product['manufacturer']['manufacturer_name'],
-                'category_id' => $_product['category_id'],
-                'attributes' => collect($_product['attributes'])->map(function ($a) {
-                    return $a['attribute_value'];
-                })->merge(collect($product['attributes'])->map(function ($a) {
-                    return $a['attribute_value'];
-                }))->join(', ')
-            ];
-        })->values()->all();
+                $product = collect($products)->filter(function ($p) use ($sale) {
+                    return $p['id'] === $sale['product_id'];
+                })->first();
+                $_product = $product['product'];
+                return [
+                    'count' => $sale['count'],
+                    'product_id' => $sale['product_id'],
+                    'product_name' => $_product['product_name'],
+                    'category' => $_product['category']['category_name'],
+                    'manufacturer' => $_product['manufacturer']['manufacturer_name'],
+                    'category_id' => $_product['category_id'],
+                    'attributes' => collect($_product['attributes'])->map(function ($a) {
+                        return $a['attribute_value'];
+                    })->merge(collect($product['attributes'])->map(function ($a) {
+                        return $a['attribute_value'];
+                    }))->join(', ')
+                ];
+            })->values()->all();
     }
 }
