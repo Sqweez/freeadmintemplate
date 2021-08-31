@@ -4,11 +4,16 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+
+/**
+ * Class User
+ *
+ * @mixin \App\Store
+ * */
 class StoreResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -24,7 +29,9 @@ class StoreResource extends JsonResource
             'description' => $this->description ?? "",
             'type_id' => $this->type_id,
             'balance' => $this->balance,
-            'iron_balance' => $this->ironBalance
+            'iron_balance' => $this->ironBalance,
+            'kaspi_terminal_ip' => $this->kaspi_terminal_ip,
+            'has_kaspi_terminal' => !!strlen($this->kaspi_terminal_ip)
         ];
     }
 }

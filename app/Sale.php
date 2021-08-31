@@ -16,6 +16,7 @@ use function foo\func;
  * @property int $user_id
  * @property int $discount
  * @property int $kaspi_red
+ * @property string $kaspi_transaction_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $balance

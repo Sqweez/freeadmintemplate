@@ -91,7 +91,7 @@
         },
         computed: {
             roles() {
-                return this.$store.getters.user_roles;
+                return this.IS_BOSS ? this.$store.getters.user_roles : this.$store.getters.user_roles.filter(r => r.id !== 8);
             },
             stores() {
                 return this.$store.getters.stores;

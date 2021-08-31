@@ -36,6 +36,14 @@
                                 color="white darken-2"
                             />
                         </div>
+                        <div v-if="!isFree && currentStore.has_kaspi_terminal">
+                            <v-checkbox
+                                label="Оплата KaspiQR"
+                                v-model="payWithKaspiTerminal"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
                     </div>
                     <div class="cart__parameters">
                         <div v-if="!isFree">
@@ -565,6 +573,7 @@
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            payWithKaspiTerminal: false,
             preorderModal: false,
             preorder: null,
             comment: '',
@@ -626,7 +635,9 @@
                     value: 'product_barcode',
                     align: ' d-none'
                 }
-            ]
+            ],
+            kaspiProcessId: null,
+            kaspiTransactionId: null,
         }),
         methods: {
             ...mapActions([
@@ -788,6 +799,62 @@
                     this.overlay = false;
                 }
             },
+            /*async onSale() {
+                const split_payment = this.isSplitPayment ? this.splitPayment.filter(p => p.amount > 0) : null;
+                if (split_payment !== null && !split_payment.length) {
+                    this.$toast.error('Раздельная оплата не заполнена');
+                    return;
+                }
+                if (split_payment !== null) {
+                    const total = split_payment.reduce((a, c) => {
+                        return a + c.amount;
+                    }, 0)
+                    if (total !== this.finalPrice) {
+                        this.$toast.error('Суммарная раздельная оплата не совпадает с итоговой суммой');
+                        return;
+                    }
+                }
+                const sale = {
+                    cart: this.cart.map(c => {
+                        return {id: c.id, product_price: c.product_price, count: c.count, discount: c.discount};
+                    }),
+                    store_id: this.storeFilter,
+                    user_id: this.user.id,
+                    client_id: this.client.id,
+                    discount: this.discount,
+                    kaspi_red: this.isRed && !this.isFree,
+                    balance: this.balance,
+                    partner_id: this.partner_id,
+                    payment_type: this.payment_type,
+                    certificate: this.certificate,
+                    used_certificate: this.used_certificate,
+                    split_payment: split_payment,
+                    comment: this.comment,
+                    preorder: this.preorder
+                };
+                try {
+                    this.overlay = true;
+                    this.sale_id = await this.$store.dispatch('MAKE_SALE_v2', sale);
+                    this.$toast.success('Продажа совершена успешно!');
+                    this.confirmationModal = true;
+                    this.cart = [];
+                    this.client = null;
+                    this.discountPercent = '';
+                    this.isRed = false;
+                    this.isFree = false;
+                    this.balance = 0;
+                    this.payment_type = 0;
+                    this.partner_id = false;
+                    this.certificate = null;
+                    this.used_certificate = null;
+                    this.comment = '';
+                    this.preorder = null;
+                } catch (e) {
+                    this.$toast.error('Произошла ошибка', TOAST_TYPE.ERROR);
+                } finally {
+                    this.overlay = false;
+                }
+            },*/
             printCheck() {
                 this.confirmationModal = false;
                 window.open(`/check/${this.sale_id}`, '_blank');
@@ -873,6 +940,12 @@
             },
             clients() {
                 return this.$store.getters.clients;
+            },
+            currentStore() {
+                return this.stores.find(s => s.id === this.storeFilter)
+            },
+            isKaspiTerminalEnabled() {
+                return this.currentStore.has_kaspi_terminal && this.payWithKaspiTerminal;
             }
         },
     }

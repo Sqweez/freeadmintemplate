@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name
  * @property string|null $address
  * @property string|null $description
+ * @property string $kaspi_terminal_ip
+ * @property int $ironBalance
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $telegram_chat_id
