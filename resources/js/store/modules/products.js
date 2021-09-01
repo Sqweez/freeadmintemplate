@@ -26,6 +26,8 @@ const productsModule = {
             {id: 3, name: 'Перевод на карту'},
             {id: 4, name: 'Kaspi Магазин'},
             {id: 5, name: 'Раздельная оплата'},
+            {id: 6, name: 'Онлайн оплата'},
+            {id: 7, name: 'Почта'}
         ]
     },
     getters: {

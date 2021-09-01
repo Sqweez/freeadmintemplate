@@ -78,7 +78,8 @@ class Sale extends Model
         'balance' => 'integer',
         'kaspi_red' => 'boolean',
         'partner_id' => 'integer',
-        'split_payment' => 'array'
+        'split_payment' => 'array',
+        'kaspi_transaction_id' => 'array'
     ];
 
     const CLIENT_CASHBACK_PERCENT = 0.01;
@@ -108,6 +109,9 @@ class Sale extends Model
         ],
         6 => [
             'name' => 'Онлайн-оплата'
+        ],
+        7 => [
+            'name' => 'Почта'
         ]
     ];
 

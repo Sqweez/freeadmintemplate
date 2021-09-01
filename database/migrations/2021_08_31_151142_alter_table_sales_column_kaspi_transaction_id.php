@@ -14,7 +14,9 @@ class AlterTableSalesColumnKaspiTransactionId extends Migration
     public function up()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->string('kaspi_transaction_id')->default('');
+            $table->text('kaspi_transaction_id')
+                ->nullable()
+                ->default(null);
         });
     }
 
