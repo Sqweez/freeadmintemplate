@@ -49,6 +49,7 @@ const store = new Store({
             await dispatch(ACTIONS.GET_USER_ROLES);
             await dispatch(ACTIONS.GET_CITIES);
             await dispatch(ACTIONS.GET_LOYALTY);
+            await dispatch(ACTIONS.GET_SALE_TYPES);
             this.$loading.disable();
         }
     },

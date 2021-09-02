@@ -383,4 +383,13 @@ class SaleController extends Controller {
                 ];
             })->values()->all();
     }
+
+    public function getSaleTypes() {
+        return collect(Sale::PAYMENT_TYPES)->map(function ($item, $key) {
+            return [
+                'id' => $key,
+                'name' => collect($item)->first()
+            ];
+        });
+    }
 }

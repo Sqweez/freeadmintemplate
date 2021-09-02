@@ -57,3 +57,7 @@ export async function getBrandsMotivationPlans() {
     return data;
 }
 
+export async function getSaleTypes() {
+    const { data } = await axios.get(`/api/sales/types`);
+    return data;
+}

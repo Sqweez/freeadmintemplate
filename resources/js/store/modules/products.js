@@ -9,7 +9,7 @@ import {
     getProducts,
     getMainProducts, getProductsBySearch, changeProductCount
 } from "@/api/products";
-import {makeSale} from "@/api/sale";
+import {getSaleTypes, makeSale} from "@/api/sale";
 
 const productsModule = {
     state: {
@@ -19,15 +19,15 @@ const productsModule = {
         prev: null,
         next: null,
         main_products: [],
-        paymentTypes: [
-            {id: 0, name: 'Наличные'},
+        payment_types: [
+            /*{id: 0, name: 'Наличные'},
             {id: 1, name: 'Безналичная оплата'},
             {id: 2, name: 'Kaspi RED/PayDa!'},
             {id: 3, name: 'Перевод на карту'},
             {id: 4, name: 'Kaspi Магазин'},
             {id: 5, name: 'Раздельная оплата'},
             {id: 6, name: 'Онлайн оплата'},
-            {id: 7, name: 'Почта'}
+            {id: 7, name: 'Почта'}*/
         ]
     },
     getters: {
@@ -37,7 +37,7 @@ const productsModule = {
         prevLink: state => state.prev,
         nextLink: state => state.next,
         main_products: state => state.main_products,
-        payment_types: state => state.paymentTypes,
+        payment_types: state => state.payment_types,
         products_without_photo: state => state.products.filter(p => {
             if (p.product_images.length === 1 && p.product_images[0] === 'products/product_image_default.jpg') {
                 return p;
@@ -123,6 +123,9 @@ const productsModule = {
                 }
                 return product;
             })
+        },
+        [MUTATIONS.SET_PAYMENT_TYPES] (state, payload) {
+            state.payment_types = payload;
         }
     },
     actions: {
@@ -165,6 +168,10 @@ const productsModule = {
         async [ACTIONS.GET_MAIN_PRODUCTS]({commit}) {
             const {data} = await getMainProducts();
             commit(MUTATIONS.SET_MAIN_PRODUCTS, data);
+        },
+        async [ACTIONS.GET_SALE_TYPES]({commit}) {
+            const data = await getSaleTypes();
+            commit(MUTATIONS.SET_PAYMENT_TYPES, data);
         },
         async searchProducts({commit}, search) {
             const {data} = await getProductsBySearch(search);

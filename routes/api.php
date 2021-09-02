@@ -18,6 +18,7 @@ use App\Http\Controllers\api\v2\ShiftController;
 use App\Http\Controllers\api\v2\BrandMotivationController;
 use App\Http\Controllers\api\v2\LoyaltyController;
 use App\Http\Controllers\CronController;
+use App\Http\Controllers\api\SaleController;
 // Authorization
 
 Route::post('auth', 'api\UserController@auth')->name('auth');
@@ -133,9 +134,12 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::resource('transfers', 'api\TransferController');
 
     //SaleController
-    Route::post('sales/{sale}/cancel', 'api\SaleController@cancelSale');
-    Route::post('sales', 'api\SaleController@store');
-    Route::get('sales/brands/motivation', 'api\SaleController@getMotivationReport');
+    Route::prefix('sales')->group(function () {
+        Route::get('types', [SaleController::class, 'getSaleTypes']);
+        Route::post('{sale}/cancel', [SaleController::class, 'cancelSale']);
+        Route::post('/', [SaleController::class, 'store']);
+        Route::get('brands/motivation', [SaleController::class, 'getMotivationReport']);
+    });
 
     //ReportController
     Route::patch('reports/{report}', 'api\SaleController@update');
