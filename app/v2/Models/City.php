@@ -20,6 +20,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class City extends Model
 {
-    protected $fillable = ['name', 'region_id'];
+    protected $fillable = ['name', 'region_id', 'delivery_cost'];
     public $timestamps = false;
+    protected $casts = [
+        'delivery_cost' => 'integer',
+        'delivery_threshold' => 'integer'
+    ];
 }

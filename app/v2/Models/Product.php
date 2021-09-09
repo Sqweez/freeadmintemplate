@@ -316,9 +316,11 @@ class Product extends Model
         parent::boot();
         static::creating(function ($query) {
             $query->meta_title = $query->meta_title ?? '';
+            $query->product_name_web = $query->product_name_web ?? '';
         });
         static::updating(function ($query) {
             $query->meta_title = $query->meta_title ?? '';
+            $query->product_name_web = $query->product_name_web ?? '';
         });
     }
 }

@@ -140,11 +140,11 @@
                             Удалить заказ из истории
                             <v-icon>mdi-delete</v-icon>
                         </v-btn>
-                        <v-btn text color="success" @click="orderId = item.id; $refs.fileInput.click()">
+                        <v-btn text color="success" @click="orderId = item.id; $refs.fileInput.click()" v-if="item.status === 0">
                             Загрузить накладную
                             <v-icon>mdi-image</v-icon>
                         </v-btn>
-                        <v-btn text color="primary" @click="orderId = item.id; orderModal = true;">
+                        <v-btn text color="primary" @click="orderId = item.id; orderModal = true;" v-if="item.status === 0">
                             Редактировать заказ
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>

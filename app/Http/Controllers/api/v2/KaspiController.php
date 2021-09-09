@@ -12,10 +12,20 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 class KaspiController extends Controller {
+
+    public function getKaspiProductsXML() {
+        $xmlContent = $this->getKaspiProductsXML();
+        return $this->storeXML($xmlContent, 'kaspi\xml\kaspi_product.xml');
+    }
+
     public function getProductsXML() {
         $xmlContent =  $this->getXML($this->getProducts());
         $xmlContent = str_replace('&', '&amp;', $xmlContent);
-        \Storage::disk('public')->put('kaspi\xml\kaspi_products.xml', $xmlContent);
+        return $xmlContent;
+    }
+
+    private function storeXML($xmlContent, $path = 'kaspi\xml\kaspi_product.xml') {
+        \Storage::disk('public')->put($path, $xmlContent);
         return (new Response('success', 200))
             ->header('Last-Modified', now()->toRfc822String());
     }

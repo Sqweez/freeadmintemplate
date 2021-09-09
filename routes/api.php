@@ -29,9 +29,9 @@ Route::get('/unauthorised', function () {
 
 Route::get('order/{order}/accept', 'api\v2\OrderController@accept');
 Route::get('order/{order}/decline', 'api\v2\OrderController@decline');
-Route::get('excel/products', 'api\ProductController@excelProducts');
+/*Route::get('excel/products', 'api\ProductController@excelProducts');
 Route::get('json/products/parse', 'api\ProductController@jsonParseProduct');
-Route::get('set-tags', 'api\ProductController@setTags');
+Route::get('set-tags', 'api\ProductController@setTags'); */
 
 // HelpController
 Route::get('set-partner-expired-at', 'HelpController@setPartnerExpiredAt');
@@ -244,7 +244,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::prefix('kaspi')->group(function () {
-            Route::get('products/xml', [KaspiController::class, 'getProductsXML']);
+            Route::get('vlife/products/xml', [KaspiController::class, 'getProductsXML']);
+            Route::get('products/xml', [KaspiController::class, 'getKaspiProductsXML']);
             Route::get('orders', [KaspiController::class, 'getOrders']);
             Route::get('analytics', [KaspiController::class, 'getAnalytics']);
             Route::get('products', [KaspiController::class, 'getProducts']);
