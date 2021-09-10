@@ -94,11 +94,11 @@
                     Закрыть
                 </v-btn>
                 <v-spacer/>
-                <v-btn color="primary" text v-if="confirmMode && hasAccepted && editMode" @click="saveChanges">
+                <v-btn color="primary" text v-if="confirmMode && hasAccepted && editMode" @click="saveChanges" :disabled="!IS_SUPERUSER">
                     Сохранить изменения
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn color="success" text v-if="confirmMode && hasAccepted && !editMode" @click="accept">
+                <v-btn color="success" text v-if="confirmMode && hasAccepted && !editMode" @click="accept" :disabled="!IS_SUPERUSER">
                     Подтвердить
                     <v-icon>mdi-check</v-icon>
                 </v-btn>

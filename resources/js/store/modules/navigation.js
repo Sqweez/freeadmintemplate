@@ -375,31 +375,6 @@ const navigationModule = {
                     }
                 ],
             },
-           /* {
-                title: 'Экономика',
-                url: '#',
-                hasDropdown: true,
-                icon: 'account_balance_wallet',
-                children: [
-                    {
-                        title: 'Список смен',
-                        url: '/shifts/index'
-                    },
-                    {
-                        title: 'Настройки смен',
-                        url: '/shifts/settings'
-                    },
-                    {
-                        title: 'Штрафы/Вознаграждения',
-                        url: '/shifts/penalty'
-                    },
-                    {
-                        title: 'План продаж',
-                        url: '/plan',
-                        isAdmin: true
-                    },
-                ]
-            },*/
             {
                 title: 'Продавцы',
                 url: '#',
@@ -416,34 +391,6 @@ const navigationModule = {
                     }
                 ],
             },
-           /* {
-                title: 'Статистика',
-                icon: 'analytics',
-                url: '#',
-                hasDropdown: true,
-                children: [
-                    {
-                        title: 'Баланс товаров',
-                        url: '/products/balance'
-                    },
-                    {
-                        title: 'Клиенты',
-                        url: '/analytics/clients'
-                    },
-                    {
-                        title: 'Бренды',
-                        url: '/analytics/brands'
-                    },
-                    {
-                        title: 'Аналитика продаж',
-                        url: '/analytics/sales'
-                    },
-                    {
-                        title: 'Аналитика поступлений',
-                        url: '/analytics/arrivals'
-                    }
-                ]
-            },*/
             {
                 title: 'Отчеты по продажам',
                 url: '/reports',
@@ -602,6 +549,66 @@ const navigationModule = {
                     },
                 ]
             },*/
+        ],
+        seniorSellerMenu: [
+            {
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
+            },
+            {
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person'
+            },
+            {
+                title: 'Склад',
+                url: '#',
+                icon: 'home',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/products'
+                    },
+                    {
+                        title: 'Корзина',
+                        url: '/cart'
+                    },
+                    {
+                        title: 'Перемещения',
+                        url: '/transfer',
+                    },
+                    {
+                        title: 'Предзаказы',
+                        url: '/preorders/index'
+                    },
+                    {
+                        title: 'Поступления',
+                        url: '/arrivals',
+                    },
+                ],
+            },
+            {
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
+            },
+            {
+                title: 'Интернет-магазин',
+                url: '/shop/orders',
+                icon: 'store'
+            },
+            {
+                title: 'Обучение',
+                url: '/education/index',
+                icon: 'grading'
+            },
+            {
+                title: 'Промокоды',
+                url: '/promocode',
+                icon: 'receipt'
+            }
         ],
         sellerMenu: [
             {

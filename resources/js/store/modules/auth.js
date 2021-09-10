@@ -1,6 +1,7 @@
 import {auth, login} from '@/api/auth';
 import axios from 'axios';
 import {getKeyByValue} from '@/utils/objects';
+import ACTIONS from "@/store/actions";
 
 const authModule = {
     state: {
@@ -21,8 +22,9 @@ const authModule = {
         IS_PARTNER_SELLER: state => state.user && +state.user.role_id === 6,
         IS_STOREKEEPER: state => state.user && +state.user.role_id === 7,
         IS_BOSS: state => state.user && +state.user.role_id === 8,
+        IS_SENIOR_SELLER: state => state.user && +state.user.role_id === 9,
         IS_GUEST: state => !!!state.user,
-        CAN_SALE: (state, getters) => (getters.IS_ADMIN || getters.IS_SELLER || getters.IS_BOSS),
+        CAN_SALE: (state, getters) => (getters.IS_ADMIN || getters.IS_SELLER || getters.IS_BOSS || getters.IS_SENIOR_SELLER),
         IS_MALOY: (state, getters) => !!(getters.IS_MODERATOR && state.user.login === 'maloy'),
         CURRENT_ROLE: (state, getters) => {
             const roles = {
@@ -35,6 +37,7 @@ const authModule = {
                 partner_sellers: getters.IS_PARTNER_SELLER,
                 storekeeper: getters.IS_STOREKEEPER,
                 boss: getters.IS_BOSS,
+                seniorSeller: getters.IS_SENIOR_SELLER
             };
 
             return getKeyByValue(roles, true);
@@ -96,7 +99,7 @@ const authModule = {
                 axios.defaults.headers.Authorization = token;
                 axios.defaults.headers.store_id = user.store_id;
                 axios.defaults.headers.user_id = user.id;
-                dispatch('OPEN_SHIFT', user);
+                dispatch(ACTIONS.OPEN_SHIFT, user);
             }
         },
         async LOGOUT({commit}) {

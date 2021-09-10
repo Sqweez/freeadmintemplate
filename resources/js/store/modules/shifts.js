@@ -43,7 +43,7 @@ const shiftModule = {
     },
     actions: {
         async [ACTIONS.OPEN_SHIFT]({commit, getters}, user) {
-            if (!getters.IS_SELLER) {
+            if (!getters.IS_SELLER || !getters.IS_SENIOR_SELLER) {
                 return;
             }
             const response = await openShift({

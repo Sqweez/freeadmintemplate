@@ -44,20 +44,6 @@
         },
         data: () => ({
             loading: false,
-            segments: [
-                {
-                    name: 'Текущие поступления',
-                    component: 'CurrentArrivals'
-                },
-                {
-                    name: 'Новое поступление',
-                    component: 'NewArrival'
-                },
-                {
-                    name: 'История поступлений',
-                    component: 'ArrivalHistory'
-                },
-            ],
             currentSegment: 'CurrentArrivals'
         }),
         methods: {
@@ -65,7 +51,33 @@
                 this.currentSegment = segment.component;
             }
         },
-        computed: {}
+        computed: {
+            segments() {
+                return this.IS_SUPERUSER ? [
+                    {
+                        name: 'Текущие поступления',
+                        component: 'CurrentArrivals'
+                    },
+                    {
+                        name: 'Новое поступление',
+                        component: 'NewArrival'
+                    },
+                    {
+                        name: 'История поступлений',
+                        component: 'ArrivalHistory'
+                    },
+                ] : [
+                    {
+                        name: 'Текущие поступления',
+                        component: 'CurrentArrivals'
+                    },
+                    {
+                        name: 'История поступлений',
+                        component: 'ArrivalHistory'
+                    },
+                ]
+            }
+        }
     }
 </script>
 

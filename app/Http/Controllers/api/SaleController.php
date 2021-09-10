@@ -93,7 +93,8 @@ class SaleController extends Controller {
         $finish = $request->get('finish');
         $user_id = $request->get('user_id', null);
         $is_supplier = $request->has('is_supplier');
-        return ReportService::getReports($start, $finish, $user_id, $is_supplier);
+        $store_id = $request->get('store_id', null);
+        return ReportService::getReports($start, $finish, $user_id, $is_supplier, $store_id);
     }
 
     public function report(Sale $sale) {

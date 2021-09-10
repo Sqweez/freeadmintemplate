@@ -36,12 +36,17 @@
                         <v-btn icon color="success" @click="printWaybill(item.id)">
                             <v-icon>mdi-file-excel</v-icon>
                         </v-btn>
-                        <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;">
+                        <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;" v-if="IS_SUPERUSER">
                             <v-icon>mdi-cancel</v-icon>
                         </v-btn>
                     </template>
                     <template v-slot:item.total_cost="{item}">
-                        {{ item.total_cost | priceFilters }}
+                        <span v-if="IS_SUPERUSER">
+                            {{ item.total_cost | priceFilters }}
+                        </span>
+                        <span v-else>
+                            {{ 0 | priceFilters }}
+                        </span>
                     </template>
                     <template v-slot:item.total_sale_cost="{item}">
                         {{ item.total_sale_cost | priceFilters }}

@@ -5,7 +5,7 @@
         </v-overlay>
         <v-card>
             <v-card-text>
-                <h5>Общая сумма: {{totalPurchasePrice | priceFilters}}</h5>
+                <h5 v-if="IS_SUPERUSER">Общая сумма: {{totalPurchasePrice | priceFilters}}</h5>
                 <h5>Общая продажная сумма: {{totalProductPrice | priceFilters}}</h5>
                 <v-text-field
                     label="Поиск по поступлениям"
@@ -26,8 +26,13 @@
                     }"
                 >
                    <template v-slot:item.total_cost="{item}">
-                        {{ item.total_cost | priceFilters }}
-                    </template>
+                        <span v-if="IS_SUPERUSER">
+                            {{ item.total_cost | priceFilters }}
+                        </span>
+                       <span v-else>
+                            {{ 0 | priceFilters }}
+                        </span>
+                   </template>
                     <template v-slot:item.total_sale_cost="{item}">
                         {{ item.total_sale_cost | priceFilters }}
                     </template>
@@ -50,19 +55,19 @@
                     </template>
                     <template v-slot:item.actions="{item}">
                         <v-flex v-if="!editMode">
-                            <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;">
+                            <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;" v-if="IS_SUPERUSER">
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                             <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = false;">
                                 <v-icon>mdi-information-outline</v-icon>
                             </v-btn>
-                            <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;">
+                            <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;" v-if="IS_SUPERUSER">
                                 <v-icon>mdi-cancel</v-icon>
                             </v-btn>
-                            <v-btn icon color="success" @click="printWaybill(item.id)">
+                            <v-btn icon color="success" @click="printWaybill(item.id)" v-if="IS_SUPERUSER">
                                 <v-icon>mdi-file-excel</v-icon>
                             </v-btn>
-                            <v-btn icon color="primary" @click="editMode = true; arrivalId = item.id; storeId = item.store_id">
+                            <v-btn icon color="primary" @click="editMode = true; arrivalId = item.id; storeId = item.store_id" v-if="IS_SUPERUSER">
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                         </v-flex>

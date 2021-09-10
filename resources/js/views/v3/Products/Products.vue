@@ -108,7 +108,17 @@
                             <span>{{ item.manufacturer.manufacturer_name }}</span>
                         </template>
                         <template v-slot:item.actions="{ item }">
-                            <div class="actions-products__container">
+                            <div class="actions-products__container" v-if="IS_SENIOR_SELLER">
+                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)" v-if="item.sku_can_be_created">
+                                    Ассортимент
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn color="success" @click="changeCount(item.id, 1)">
+                                    Количество
+                                    <v-icon>mdi-plus</v-icon>
+                                </v-btn>
+                            </div>
+                            <div class="actions-products__container" v-if="IS_SUPERUSER">
                                 <v-btn color="success" @click="showProductSkuModal(item.id)" v-if="item.sku_can_be_created">
                                     Ассортимент
                                     <v-icon>mdi-plus</v-icon>
@@ -214,7 +224,11 @@
                 console.log(e.response);
             }
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
-            this.storeFilter = this.stores[0].id;
+            if (this.IS_SUPERUSER) {
+                this.storeFilter = this.stores[0].id;
+            } else {
+                this.storeFilter = this.user.store_id;
+            }
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
@@ -366,7 +380,7 @@
                     }
                 ];
 
-                if (this.is_admin || this.IS_BOSS) {
+                if (this.is_admin || this.IS_BOSS || this.IS_SENIOR_SELLER) {
                     headers.unshift( {
                         value: 'actions',
                         text: 'Действие',

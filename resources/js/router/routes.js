@@ -92,6 +92,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_SELLER: true,
+                IS_SENIORSELLER: true,
                 IS_BOSS: true,
             }
         }
@@ -184,6 +185,7 @@ const routes = [
                 IS_SELLER: true,
                 IS_ADMIN: true,
                 IS_BOSS: true,
+                IS_SENIORSELLER: true,
             }
         }
     },
@@ -196,6 +198,7 @@ const routes = [
                 IS_SELLER: true,
                 IS_STOREKEEPER: true,
                 IS_BOSS: true,
+                IS_SENIORSELLER: true,
             },
         }
     },
@@ -207,6 +210,7 @@ const routes = [
                 IS_ADMIN: true,
                 IS_OBSERVER: true,
                 IS_BOSS: true,
+
             },
         }
     },
@@ -217,6 +221,7 @@ const routes = [
                 IS_ADMIN: true,
                 IS_SELLER: true,
                 IS_BOSS: true,
+                IS_SENIORSELLER: true,
             },
         },
         component: Promocodes
@@ -249,6 +254,7 @@ const routes = [
                 IS_PARTNER_SELLERS: true,
                 IS_STOREKEEPER: true,
                 IS_BOSS: true,
+                IS_SENIORSELLER: true,
             },
         },
         component: ProductsV3
@@ -271,6 +277,7 @@ const routes = [
                 IS_ADMIN: true,
                 IS_SELLER: true,
                 IS_BOSS: true,
+                IS_SENIORSELLER: true,
             }
         }
     },

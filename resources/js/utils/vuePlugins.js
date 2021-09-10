@@ -30,6 +30,9 @@ export default {
                 },
                 IS_SUPERUSER() {
                     return this.IS_BOSS || this.isAdmin;
+                },
+                IS_SENIOR_SELLER() {
+                    return this.$store.getters.IS_SENIOR_SELLER;
                 }
             }
         })
