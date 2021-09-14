@@ -14,8 +14,8 @@ use Illuminate\Http\Request;
 class KaspiController extends Controller {
 
     public function getKaspiProductsXML() {
-        $xmlContent = $this->getKaspiProductsXML();
-        return $this->storeXML($xmlContent, 'kaspi\xml\kaspi_product.xml');
+        $xmlContent = $this->getProductsXML();
+        return $this->storeXML($xmlContent, 'kaspi\xml\kaspi_products.xml');
     }
 
     public function getProductsXML() {
@@ -24,7 +24,7 @@ class KaspiController extends Controller {
         return $xmlContent;
     }
 
-    private function storeXML($xmlContent, $path = 'kaspi\xml\kaspi_product.xml') {
+    private function storeXML($xmlContent, $path = 'kaspi\xml\kaspi_products.xml') {
         \Storage::disk('public')->put($path, $xmlContent);
         return (new Response('success', 200))
             ->header('Last-Modified', now()->toRfc822String());

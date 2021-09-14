@@ -267,12 +267,12 @@ class CartController extends Controller {
             $message .= 'Комментарий:' . $order['comment'] . "\n";
         }
 
-        $delivery = 'Доставка курьером';
+        $delivery = Order::ORDER_DELIVERY[$order['delivery']]['text'];
         $payment = 'Оплата наличными';
 
-        if ($order['delivery'] == 1) {
+       /* if ($order['delivery'] == 1) {
             $delivery = 'Самовывоз';
-        }
+        }*/
 
         if ($order['payment'] == 1) {
             $payment = 'Оплата картой';
@@ -289,15 +289,27 @@ class CartController extends Controller {
         $message .= 'Способ оплаты: ' . $payment . "\n";
         $message .= 'Способ получения: ' . $delivery . "\n";
 
-        $message .= 'Общая сумма: ' . ceil($order->items->reduce(function ($a, $c) use ($discount){
-                    return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
-                }, 0) - intval($order['balance'])) . 'тг' . "\n";
+        $totalCostWithDiscount = ceil($order->items->reduce(function ($a, $c) use ($discount){
+                return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
+            }, 0) - intval($order['balance']));
+        $deliveryCost = $this->getDeliveryCost($order->city_text, $totalCostWithDiscount, $order['delivery']);
+
+        $message .= 'Общая сумма: ' . $totalCostWithDiscount . 'тг' . "\n";
+        $message .= 'Стоимость доставки: ' . $deliveryCost . 'тг' . "\n";
+        $message .= 'Итого к оплате: ' . ($totalCostWithDiscount + $deliveryCost) . 'тг' . "\n";
 
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/decline'>Отменить заказ❌</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>";
 
 
         return urlencode($message);
+    }
+
+    private function getDeliveryCost($city, $total, $deliveryMethod) {
+        if ($deliveryMethod === 1) {
+            return 0;
+        }
+        return $total - $city['delivery_threshold'] >= 0 ? 0 : $city['delivery_cost'];
     }
 
 
