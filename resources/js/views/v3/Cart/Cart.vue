@@ -520,7 +520,6 @@
                 } : null;
             this.loading = false;
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
-            this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.user.store_id;
         },
         watch: {
             storeFilter() {

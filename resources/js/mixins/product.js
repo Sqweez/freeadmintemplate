@@ -27,8 +27,11 @@ export default {
         }
     },
     watch: {
-        async storeFilter(value) {
-            await this.getProductQuantities(value)
+        storeFilter: {
+            handler: async function (value) {
+                await this.getProductQuantities(value);
+            },
+            immediate: true
         }
     },
 }

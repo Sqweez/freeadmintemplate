@@ -192,6 +192,7 @@
                 this.loading = false;
             },
             async onConfirm() {
+                this.transferId = null;
                 this.infoModal = false;
                 this.loading = true;
                 await this.$store.dispatch('getTransfers', {mode: 'current'});
