@@ -107,6 +107,24 @@
                         <template v-slot:item.manufacturer="{ item }">
                             <span>{{ item.manufacturer.manufacturer_name }}</span>
                         </template>
+                        <template v-slot:item.quantity="{item}">
+                            <span v-if="storeFilter === -1">
+                                <v-list v-if="quantities[item.id]">
+                                    <v-list-item v-for="(quantity) of quantities[item.id]">
+                                        <v-list-item-content>
+                                            <v-list-item-title>{{ quantity.quantity }} шт</v-list-item-title>
+                                            <v-list-item-title class="font-weight-black">{{ quantity.name }}</v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                                <span v-else>
+                                    0
+                                </span>
+                            </span>
+                            <span v-else>
+                                {{ item.quantity }}
+                            </span>
+                        </template>
                         <template v-slot:item.actions="{ item }">
                             <div class="actions-products__container" v-if="IS_SENIOR_SELLER">
                                 <v-btn color="warning" @click="showProductSkuModal(item.id, true)" v-if="item.sku_can_be_created">
@@ -225,7 +243,7 @@
             }
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
             if (this.IS_SUPERUSER) {
-                this.storeFilter = this.stores[0].id;
+                this.storeFilter = -1;
             } else {
                 this.storeFilter = this.user.store_id;
             }
@@ -395,7 +413,7 @@
                 }
 
                 return headers;
-            }
+            },
         },
         methods: {
             async exportProductBatches() {

@@ -12,6 +12,7 @@ import axios from 'axios';
 import {changeProductCount} from "@/api/products";
 import ACTIONS from "@/store/actions";
 import {getArrivals} from "@/api/arrivals";
+import store from "@/store";
 
 const state = {
     products_v2: [],
@@ -64,22 +65,26 @@ const mutations = {
         state.moderator_products = products;
     },
     SET_PRODUCT_QUANTITIES_v2(state, {quantities, store_id}) {
-        let products = state.products_v2;
-        products = products.map((product) => {
-            const quantity = quantities.find(q => product.id == q.product_id);
-            if (quantity) {
-                product.quantity = quantity.quantity;
-            } else {
-                product.quantity = 0;
-            }
-            return product;
-        });
-        const _quantities = products.map(product => ({
-            product_id: product.id,
-            quantity: product.quantity
-        }))
-        state.quantities = {...state.quantities, [store_id]: _quantities};
-        state.products_v2 = products;
+        if (store_id !== -1) {
+            let products = state.products_v2;
+            products = products.map((product) => {
+                const quantity = quantities.find(q => product.id == q.product_id);
+                if (quantity) {
+                    product.quantity = quantity.quantity;
+                } else {
+                    product.quantity = 0;
+                }
+                return product;
+            });
+            const _quantities = products.map(product => ({
+                product_id: product.id,
+                quantity: product.quantity
+            }))
+            state.quantities = {...state.quantities, [store_id]: _quantities};
+            state.products_v2 = products;
+        } else {
+            state.quantities = quantities;
+        }
     },
     CREATE_PRODUCT_v2(state, product) {
         state.products_v2.push(product);
@@ -173,7 +178,7 @@ const actions = {
                 store_id
             })
         } catch (e) {
-            console.log(e.response);
+            console.log(e);
         } finally {
             this.$loading.disable();
         }

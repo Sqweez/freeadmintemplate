@@ -29,7 +29,9 @@ export default {
     watch: {
         storeFilter: {
             handler: async function (value) {
-                await this.getProductQuantities(value);
+                if (value !== null) {
+                    await this.getProductQuantities(value);
+                }
             },
             immediate: true
         }

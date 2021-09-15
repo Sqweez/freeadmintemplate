@@ -59,7 +59,38 @@ class ProductController extends Controller
     }
 
     public function getProductsQuantity($store) {
-        return ProductBatch::quantitiesOfStore($store)->get();
+        if (intval($store) > 0) {
+            return ProductBatch::query()
+                ->quantitiesOfStore($store)
+                ->get();
+        }
+        return ProductBatch::query()
+            ->quantities()
+            ->get()
+            ->groupBy('product_id')
+            ->map(function ($item) {
+                return collect($item)->groupBy('store_id');
+            })
+            ->map(function($product, $productId) {
+                $storesQuantity = collect($product)->map(function ($store, $storeId) {
+                    return [
+                        'store_id' => $storeId,
+                        'quantity' => collect($store)->reduce(function ($a, $c) {
+                            return $a + $c['quantity'];
+                        }, 0),
+                        'name' => collect($store)->first()['store']['name']
+                    ];
+                })->values()->all();
+                $totalQuantity = collect($storesQuantity)->reduce(function ($a, $c) {
+                    return $a + $c['quantity'];
+                }, 0);
+                $totalQuantity = [
+                    'store_id' => - 1,
+                    'quantity' => $totalQuantity,
+                    'name' => 'Всего'
+                ];
+                return array_merge([$totalQuantity], $storesQuantity);
+            });
     }
 
     public function update(Product $product, Request $request) {
