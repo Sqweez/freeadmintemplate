@@ -33,6 +33,9 @@ export default {
                 },
                 IS_SENIOR_SELLER() {
                     return this.$store.getters.IS_SENIOR_SELLER;
+                },
+                IS_LOADING_STATE() {
+                    return this.$store.getters.isLoading;
                 }
             }
         })

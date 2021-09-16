@@ -139,6 +139,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('{sale}/cancel', [SaleController::class, 'cancelSale']);
         Route::post('/', [SaleController::class, 'store']);
         Route::get('brands/motivation', [SaleController::class, 'getMotivationReport']);
+        Route::post('{sale}/list/edit', [SaleController::class, 'editSaleList']);
     });
 
     //ReportController

@@ -1,6 +1,6 @@
 import {
     cancelSale,
-    createBrandsMotivation,
+    createBrandsMotivation, editSaleList,
     getBrandsMotivation,
     getPlanReports,
     getReports,
@@ -94,6 +94,17 @@ const reportsModule = {
             const data = await getBrandsMotivation();
             commit('setBrandsMotivation', data);
         },
+        async [ACTIONS.EDIT_SALE_LIST]({commit}, payload) {
+            try {
+                this.$loading.enable();
+                const report = await editSaleList(payload);
+                commit('changeSale', report.data);
+            } catch (e) {
+                console.log(e);
+            } finally {
+                this.$loading.disable();
+            }
+        }
     }
 };
 

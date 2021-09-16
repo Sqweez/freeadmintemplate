@@ -335,19 +335,34 @@
                 <template v-slot:item.action="{item}">
                     <v-list v-if="report.id !== item.id && !item.sale_type">
                         <v-list-item v-if="IS_SUPERUSER">
-                            <v-btn small depressed color="error" text @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">Отмена</v-btn>
+                            <v-btn small depressed color="error" text @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
+                                Отмена <v-icon class="ml-2">mdi-cancel</v-icon>
+                            </v-btn>
                         </v-list-item>
                         <v-list-item>
-                            <v-btn small depressed color="primary" text @click="report = item; editMode = true;">Редактировать</v-btn>
+                            <v-btn small depressed color="primary" text @click="report = item; editMode = true;">
+                                Способ оплаты <v-icon class="ml-2">mdi-pencil</v-icon>
+                            </v-btn>
+                        </v-list-item>
+                        <v-list-item v-if="IS_SUPERUSER">
+                            <v-btn small depressed color="primary" text @click="report = {...item}; editModal = true;">
+                                Заказ <v-icon class="ml-2">mdi-pencil</v-icon>
+                            </v-btn>
                         </v-list-item>
                         <v-list-item>
-                            <v-btn small depressed color="success" text :href="'/check/' + item.id" target="_blank">Печать чека</v-btn>
+                            <v-btn small depressed color="success" text :href="'/check/' + item.id" target="_blank">
+                                Чек <v-icon class="ml-2">mdi-printer</v-icon>
+                            </v-btn>
                         </v-list-item>
                         <v-list-item>
-                            <v-btn small depressed color="success" text @click="createWaybill(item)">Накладная</v-btn>
+                            <v-btn small depressed color="success" text @click="createWaybill(item)">
+                                Накладная <v-icon class="ml-2">mdi-printer</v-icon>
+                            </v-btn>
                         </v-list-item>
                         <v-list-item>
-                            <v-btn small depressed color="success" text @click="createInvoice(item)">Счет-фактура</v-btn>
+                            <v-btn small depressed color="success" text @click="createInvoice(item)">
+                                Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
+                            </v-btn>
                         </v-list-item>
                     </v-list>
                     <v-list v-if="editMode && report.id === item.id">
@@ -371,6 +386,11 @@
             v-on:cancel="closeModal"
             v-on:confirm="onConfirm"
         />
+        <SaleEditModal
+            :state="editModal"
+            :report="report"
+            @cancel="editModal = false; report = {}"
+        />
     </v-card>
 </template>
 
@@ -380,6 +400,7 @@
     import ReportCancelModal from "@/components/Modal/ReportCancelModal";
     import ACTIONS from '@/store/actions/index';
     import axios from 'axios';
+    import SaleEditModal from "@/components/Modal/SaleEditModal";
 
     const DATE_FILTERS = {
         ALL_TIME: 1,
@@ -392,8 +413,9 @@
     const DATE_FORMAT = 'YYYY-MM-DD';
 
     export default {
-        components: {ReportCancelModal, ConfirmationModal},
+        components: {SaleEditModal, ReportCancelModal, ConfirmationModal},
         data: () => ({
+            editModal: false,
             search: '',
             overlay: false,
             loading: false,

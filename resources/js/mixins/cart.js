@@ -71,6 +71,9 @@ export default {
         },
     },
     computed: {
+        productsWithoutFilters() {
+            return this.$store.getters.PRODUCTS_v2;
+        },
         products() {
             let products = this.$store.getters.PRODUCTS_v2;
             if (this.manufacturerId !== -1) {

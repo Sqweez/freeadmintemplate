@@ -64,3 +64,8 @@ export async function getSaleTypes() {
     const { data } = await axios.get(`/api/sales/types`);
     return data;
 }
+
+export async function editSaleList(res) {
+    const { data } = await axios.post(`/api/sales/${res.id}/list/edit`, res);
+    return data;
+}
