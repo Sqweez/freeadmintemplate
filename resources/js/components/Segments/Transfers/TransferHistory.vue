@@ -79,7 +79,7 @@
                             text
                             outlined
                             color="primary"
-                            @click="changeCustomDate(startMenu, start)"
+                            @click="changeCustomDate()"
                         >
                             OK
                         </v-btn>
@@ -124,7 +124,7 @@
                             text
                             outlined
                             color="primary"
-                            @click="changeCustomDate(finishMenu, finish) "
+                            @click="changeCustomDate()"
                         >
                             OK
                         </v-btn>
@@ -172,14 +172,14 @@
                             text
                             outlined
                             color="primary"
-                            @click="changeCustomDate(startMenu, start)"
+                            @click="changeCustomDate()"
                         >
                             OK
                         </v-btn>
                     </v-date-picker>
                 </v-menu>
                 <v-menu
-                    ref="finishMenu"
+                    ref="finishMenuSecondary"
                     v-model="finishMenuSecondary"
                     :close-on-content-click="false"
                     :nudge-right="40"
@@ -217,7 +217,7 @@
                             text
                             outlined
                             color="primary"
-                            @click="changeCustomDate(finishMenu, finish) "
+                            @click="changeCustomDate()"
                         >
                             OK
                         </v-btn>
@@ -393,11 +393,17 @@
                 this.currentPhotos = photos;
                 this.photoModal = true;
             },
-            async changeCustomDate() {
+            changeCustomDate() {
                 this.$refs.startMenu.save(this.start);
                 this.$refs.finishMenu.save(this.finish);
                 this.$refs.startMenuSecondary.save(this.startSecondary);
                 this.$refs.finishMenuSecondary.save(this.finishSecondary);
+                /*if (this.$refs.startMenuSecondary) {
+                    this.$refs.startMenuSecondary.save(this.startSecondary);
+                }
+                if (this.$refs.finishMenuSecondary) {
+                    this.$refs.finishMenuSecondary.save(this.finishSecondary);
+                }*/
             },
         },
         computed: {
