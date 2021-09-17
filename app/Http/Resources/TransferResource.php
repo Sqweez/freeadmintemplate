@@ -7,10 +7,11 @@ use App\ProductBatch;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/*
- * @mixin Transfer
+/**
+ * Class User
+ *
+ * @mixin \App\Transfer
  * */
-
 class TransferResource extends JsonResource
 {
     /**
@@ -49,6 +50,7 @@ class TransferResource extends JsonResource
             'parent_store' => $this->parent_store->name,
             'child_store' => $this->child_store->name,
             'child_store_id' => intval($this->child_store->id),
+            'parent_store_id' => $this->parent_store_id,
             'user' => 'Администратор',
             'product_count' => $this->batches->count(),
             'position_count' => $this->batches->unique('product_id')->count(),
@@ -62,9 +64,11 @@ class TransferResource extends JsonResource
             }, 0),
             'photos' => json_decode($this->photos, true),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y'),
-            'date_updated' => Carbon::parse($this->updated_at)->format('d.m.Y'),
+            'date_updated' => $this->updated_at ? Carbon::parse($this->updated_at)->format('d.m.Y') : null,
             'is_consignment' => $this->companionSale->is_consignment,
-            'search' => trim($search)
+            'search' => trim($search),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 }

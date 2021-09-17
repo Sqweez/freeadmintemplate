@@ -19,6 +19,212 @@
                 color="primary"
             ></v-progress-circular>
         </div>
+        <v-row>
+            <v-col>
+                <v-select
+                    v-if="IS_SUPERUSER"
+                    :items="stores"
+                    item-text="name"
+                    item-value="id"
+                    v-model="parentCity"
+                    label="Отправитель:"
+                />
+                <v-select
+                    v-if="IS_SUPERUSER"
+                    :items="stores"
+                    item-text="name"
+                    item-value="id"
+                    v-model="childCity"
+                    label="Получатель:"
+                />
+            </v-col>
+            <v-col>
+                <label>Дата создания</label>
+                <v-menu
+                    ref="startMenu"
+                    v-model="startMenu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="start"
+                    transition="scale-transition"
+                    min-width="290px"
+                    offset-y
+                    full-width
+                >
+                    <template v-slot:activator="{ on }">
+                        <v-text-field
+                            v-model="start"
+                            label="Дата начала"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                        ></v-text-field>
+                    </template>
+                    <v-date-picker
+                        v-model="start"
+                        locale="ru"
+                        no-title
+                        scrollable
+                    >
+                        <div class="flex-grow-1"></div>
+                        <v-btn
+                            text
+                            outlined
+                            color="primary"
+                            @click="startMenu = false"
+                        >
+                            Отмена
+                        </v-btn>
+                        <v-btn
+                            text
+                            outlined
+                            color="primary"
+                            @click="changeCustomDate(startMenu, start)"
+                        >
+                            OK
+                        </v-btn>
+                    </v-date-picker>
+                </v-menu>
+                <v-menu
+                    ref="finishMenu"
+                    v-model="finishMenu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="finish"
+                    transition="scale-transition"
+                    min-width="290px"
+                    offset-y
+                    full-width
+                >
+                    <template v-slot:activator="{ on }">
+                        <v-text-field
+                            v-model="finish"
+                            label="Дата окончания"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                        ></v-text-field>
+                    </template>
+                    <v-date-picker
+                        v-model="finish"
+                        locale="ru"
+                        no-title
+                        scrollable
+                    >
+                        <div class="flex-grow-1"></div>
+                        <v-btn
+                            text
+                            outlined
+                            color="primary"
+                            @click="finishMenu = false"
+                        >
+                            Отмена
+                        </v-btn>
+                        <v-btn
+                            text
+                            outlined
+                            color="primary"
+                            @click="changeCustomDate(finishMenu, finish) "
+                        >
+                            OK
+                        </v-btn>
+                    </v-date-picker>
+                </v-menu>
+            </v-col>
+            <v-col>
+                <label>Дата принятия</label>
+                <v-menu
+                    ref="startMenuSecondary"
+                    v-model="startMenuSecondary"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="startSecondary"
+                    transition="scale-transition"
+                    min-width="290px"
+                    offset-y
+                    full-width
+                >
+                    <template v-slot:activator="{ on }">
+                        <v-text-field
+                            v-model="startSecondary"
+                            label="Дата начала"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                        ></v-text-field>
+                    </template>
+                    <v-date-picker
+                        v-model="startSecondary"
+                        locale="ru"
+                        no-title
+                        scrollable
+                    >
+                        <div class="flex-grow-1"></div>
+                        <v-btn
+                            text
+                            outlined
+                            color="primary"
+                            @click="startMenuSecondary = false"
+                        >
+                            Отмена
+                        </v-btn>
+                        <v-btn
+                            text
+                            outlined
+                            color="primary"
+                            @click="changeCustomDate(startMenu, start)"
+                        >
+                            OK
+                        </v-btn>
+                    </v-date-picker>
+                </v-menu>
+                <v-menu
+                    ref="finishMenu"
+                    v-model="finishMenuSecondary"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="finishSecondary"
+                    transition="scale-transition"
+                    min-width="290px"
+                    offset-y
+                    full-width
+                >
+                    <template v-slot:activator="{ on }">
+                        <v-text-field
+                            v-model="finishSecondary"
+                            label="Дата окончания"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                        ></v-text-field>
+                    </template>
+                    <v-date-picker
+                        v-model="finishSecondary"
+                        locale="ru"
+                        no-title
+                        scrollable
+                    >
+                        <div class="flex-grow-1"></div>
+                        <v-btn
+                            text
+                            outlined
+                            color="primary"
+                            @click="finishMenuSecondary = false"
+                        >
+                            Отмена
+                        </v-btn>
+                        <v-btn
+                            text
+                            outlined
+                            color="primary"
+                            @click="changeCustomDate(finishMenu, finish) "
+                        >
+                            OK
+                        </v-btn>
+                    </v-date-picker>
+                </v-menu>
+            </v-col>
+        </v-row>
         <v-data-table
             :search="search"
             v-if="!loading"
@@ -83,6 +289,7 @@
     import TransferModal from "@/components/Modal/TransferModal";
     import axios from 'axios';
     import TransferPhotoModal from "@/components/Modal/TransferPhotoModal";
+    import moment from 'moment';
     export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'history'});
@@ -124,7 +331,7 @@
                     sortable: false
                 },
                 {
-                    text: 'Дата',
+                    text: 'Дата создания',
                     value: 'date',
                     sortable: false
                 },
@@ -154,6 +361,16 @@
                     align: ' d-none'
                 }
             ],
+            parentCity: -1,
+            childCity: -1,
+            start: null,
+            startMenu: null,
+            finish: null,
+            finishMenu: null,
+            startSecondary: null,
+            startMenuSecondary: null,
+            finishSecondary: null,
+            finishMenuSecondary: null,
         }),
         methods: {
             cancelTransfer() {
@@ -175,7 +392,13 @@
                 }
                 this.currentPhotos = photos;
                 this.photoModal = true;
-            }
+            },
+            async changeCustomDate() {
+                this.$refs.startMenu.save(this.start);
+                this.$refs.finishMenu.save(this.finish);
+                this.$refs.startMenuSecondary.save(this.startSecondary);
+                this.$refs.finishMenuSecondary.save(this.finishSecondary);
+            },
         },
         computed: {
             transfers() {
@@ -184,6 +407,34 @@
                         return +s.child_store_id === +this.user.store_id || +s.parent_store_id === +this.user.store_id;
                     }
                     return s;
+                }).filter(t => {
+                    if (this.childCity === -1) {
+                        return t;
+                    }
+                    return t.child_store_id === this.childCity;
+                }).filter(t => {
+                    if (this.parentCity === -1) {
+                        return t;
+                    }
+                    return t.parent_store_id === this.parentCity;
+                }).filter(t => {
+                    if (!(this.start && this.finish)) {
+                        return t;
+                    }
+                    return moment(t.created_at)
+                        .startOf('day')
+                        .isSameOrBefore(this.finish) && moment(t.created_at)
+                        .startOf('day')
+                        .isSameOrAfter(this.start);
+                }).filter(t => {
+                    if (!(this.startSecondary && this.finishSecondary)) {
+                        return t;
+                    }
+                    return moment(t.updated_at)
+                        .startOf('day')
+                        .isSameOrBefore(this.finishSecondary) && moment(t.updated_at)
+                        .startOf('day')
+                        .isSameOrAfter(this.startSecondary);
                 });
             },
             isSeller() {
@@ -191,6 +442,15 @@
             },
             user() {
                 return this.$store.getters.USER;
+            },
+            stores() {
+                return [
+                    {
+                        id: -1,
+                        name: 'Все'
+                    },
+                    ...this.$store.getters.stores
+                ];
             }
         }
     }

@@ -120,7 +120,7 @@
                             <div class="flex-grow-1"></div>
                             <v-btn
                                 text
-                                outline
+                                outlined
                                 color="primary"
                                 @click="finishMenu = false"
                             >
@@ -128,7 +128,7 @@
                             </v-btn>
                             <v-btn
                                 text
-                                outline
+                                outlined
                                 color="primary"
                                 @click="changeCustomDate(finishMenu, finish) "
                             >
