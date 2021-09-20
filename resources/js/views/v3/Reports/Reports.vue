@@ -39,7 +39,6 @@
                         item-text="name"
                         item-value="value"
                         v-model="currentDate"
-                        v-if="IS_SUPERUSER"
                         label="Время:"
                         @change="loadReport"
                     />

@@ -6,16 +6,19 @@ namespace App\Http\Controllers\Services;
 
 use App\Http\Resources\v2\Report\ReportsResource;
 use App\Sale;
+use App\User;
 use App\v2\Models\Supplier;
 
 class ReportService {
     public static function getReports($start, $finish, $user_id, $is_supplier = false, $store_id = null) {
         $saleQuery = Sale::query();
         $sales = null;
+        $user = null;
         if (!$is_supplier) {
             $saleQuery = $saleQuery->report()->reportDate([$start, $finish]);
             if ($user_id) {
-                $saleQuery->whereUserId($user_id);
+                $user = User::find($user_id);
+                $saleQuery->whereStoreId($user->store_id);
             }
             if ($store_id) {
                 $saleQuery->whereStoreId($store_id);
@@ -37,6 +40,7 @@ class ReportService {
 
             });
         }
+
 
         return ReportsResource::collection(
             $sales
