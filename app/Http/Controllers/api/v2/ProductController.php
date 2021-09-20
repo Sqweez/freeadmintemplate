@@ -12,6 +12,7 @@ use App\Http\Resources\v2\Product\ProductResource;
 use App\Store;
 use App\v2\Models\Product;
 use App\ProductBatch;
+use App\v2\Models\ProductSaleEarning;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -257,5 +258,28 @@ class ProductController extends Controller
             })->values()->filter(function ($item) {
                 return $item['has_batches'] && $item['quantity'] <= 3;
             })->values();
+    }
+
+    public function getProductSellerEarning() {
+        return ProductSaleEarning::all();
+    }
+
+    public function setProductSellerEarning(Request $request) {
+        $products = $request->get('products');
+        $earnings = $request->get('earnings');
+
+        ProductSaleEarning::query()
+            ->whereIn('product_id', $products)
+            ->delete();
+
+        collect($products)->each(function ($product) use ($earnings) {
+            collect($earnings)->each(function ($store) use ($product) {
+                ProductSaleEarning::create([
+                    'product_id' => $product,
+                    'percent' => $store['percent'],
+                    'store_id' => $store['id']
+                ]);
+            });
+        });
     }
 }

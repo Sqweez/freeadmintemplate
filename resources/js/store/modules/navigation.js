@@ -98,6 +98,10 @@ const navigationModule = {
                         title: 'План продаж',
                         url: '/plan',
                     },
+                    {
+                        title: 'Проценты от продаж',
+                        url: '/economy/seller/earnings'
+                    }
                 ]
             },
             {

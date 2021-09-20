@@ -214,6 +214,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::prefix('products')->group(function () {
+            Route::get('seller/earning', [ProductController::class, 'getProductSellerEarning']);
+            Route::post('seller/earning', [ProductController::class, 'setProductSellerEarning']);
             Route::get('search', [ProductController::class, 'search']);
             Route::get('balance', [ProductController::class, 'getProductBalance']);
             Route::get('{id}/count', [ProductController::class, 'changeCount']);

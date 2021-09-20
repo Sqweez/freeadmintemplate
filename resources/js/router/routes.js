@@ -48,6 +48,7 @@ import ShiftPenalty from "@/views/Shifts/ShiftPenalty";
 import ShiftsList from "@/views/Shifts/ShiftsList";
 import SaleAnalytics from "@/views/Analytics/SaleAnalytics";
 import ArrivalAnalytics from "@/views/Analytics/ArrivalAnalytics";
+import ProductEarning from "@/views/Economy/ProductEarning";
 
 const routes = [
     {
@@ -486,6 +487,15 @@ const routes = [
     {
         path: '/analytics/arrivals',
         component: ArrivalAnalytics
+    },
+    {
+        path: '/economy/seller/earnings',
+        component: ProductEarning,
+        meta: {
+            CAN_ENTER: {
+                IS_BOSS: true
+            }
+        }
     }
 ];
 

@@ -49,3 +49,11 @@ export async function getModeratorProducts() {
 export async function getProductBalance() {
     return await axios.get('/api/v2/products/balance')
 }
+
+export async function getProductSaleEarnings() {
+    return await axios.get(`/api/v2/products/seller/earning`);
+}
+
+export async function createProductSaleEarnings(payload) {
+    return await axios.post(`/api/v2/products/seller/earning`, payload);
+}

@@ -247,6 +247,10 @@ class Product extends Model
         );
     }
 
+    public function seller_earning() {
+        return $this->hasMany('App\v2\Models\ProductSaleEarning');
+    }
+
     public function price() {
         return $this->hasMany('App\Price', 'product_id');
     }

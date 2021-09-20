@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Services;
 use App\Http\Resources\Shifts\ShiftPenaltyResource;
 use App\Sale;
 use App\User;
+use App\v2\Models\ProductSaleEarning;
 use App\v2\Models\Shift;
 use App\v2\Models\ShiftPenalty;
 use App\v2\Models\ShiftTax;
@@ -21,6 +22,7 @@ class PayrollService {
     private $shifts;
     private $taxes;
     private $penalties;
+    private $productSellerEarning;
 
     public function __construct($date) {
         $this->start = Carbon::parse($date)->startOfMonth();
@@ -37,21 +39,22 @@ class PayrollService {
     private function getNeedleData() {
         $this->sellers = $this->getSellers();
         $this->sellersIds = $this->sellers->pluck('id')->all();
+        $this->productSellerEarning = ProductSaleEarning::all();
+        $this->taxes = $this->getShiftTaxes();
         $this->sales = $this->getSales();
         $this->shifts = $this->getShifts();
-        $this->taxes = $this->getShiftTaxes();
         $this->penalties = $this->getShiftPenalties();
     }
 
     private function createPayroll($seller) {
         $sellerId = $seller['id'];
         $storeId = $seller['store_id'];
-        $salePercent = $this->taxes[$storeId]['sale_percent'] ?? 0;
+        //$salePercent = $this->taxes[$storeId]['sale_percent'] ?? 0;
         $shiftTax = $this->taxes[$storeId]['shift_tax'] ?? 0;
         $shiftCount = count($this->shifts[$sellerId] ?? []);
         $currentPenalties = collect($this->penalties[$sellerId] ?? []);
         $saleAmount =  $this->sales[$sellerId]['amount'] ?? 0;
-        $saleAmountSalary = ceil($saleAmount * $salePercent / 100);
+        $saleAmountSalary = ceil($this->sales[$sellerId]['salary'] ?? 0);//ceil($saleAmount * $salePercent / 100);
         $shiftPenaltiesAmount = $currentPenalties->reduce(function ($a, $c) {
             return $a + $c['amount'];
         }, 0);
@@ -81,6 +84,7 @@ class PayrollService {
             ->whereDate('created_at', '<=', $this->finish)
             ->whereIn('user_id', $this->sellersIds)
             ->with('products')
+            ->with('products.product:id,product_id')
             ->get()
             ->groupBy('user_id')
             ->map(function ($item, $key) {
@@ -90,7 +94,13 @@ class PayrollService {
                             return $_a + $_c['product_price'];
                         }, 0);
                     }, 0),
-                    'user_id' => $key
+                    'salary' => collect($item)->reduce(function ($a, $c) {
+                        $store_id = $c['store_id'];
+                        return $a + collect($c['products'])->reduce(function ($_a, $_c) use ($store_id) {
+                                return $_a + $this->getProductEarning($_c, $store_id);
+                            }, 0);
+                    }, 0),
+                    'user_id' => $key,
                 ];
             });
     }
@@ -116,5 +126,14 @@ class PayrollService {
             ->whereDate('created_at', '<=', $this->finish)
             ->get()
             ->groupBy('user_id');
+    }
+
+    private function getProductEarning($product, $store_id) {
+        $price = $product['product_price'];
+        $earningPercent = $this->productSellerEarning->filter(function ($item) use ($product, $store_id) {
+            return $item['store_id'] === $store_id && $item['product_id'] === $product['product']['product_id'];
+        });
+        $percent = (count($earningPercent) > 0) ? $earningPercent->first() : ($this->taxes[$store_id]['sale_percent']);
+        return $price * ($percent / 100);
     }
 }

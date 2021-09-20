@@ -4,7 +4,13 @@ import {
     getProductsQuantity,
     getProduct,
     deleteProduct,
-    editProduct, addProductQuantity, createProductSku, updateProductSku, getModeratorProducts, getProductBalance
+    editProduct,
+    addProductQuantity,
+    createProductSku,
+    updateProductSku,
+    getModeratorProducts,
+    getProductBalance,
+    createProductSaleEarnings, getProductSaleEarnings
 } from "@/api/v2/products";
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
@@ -21,6 +27,7 @@ const state = {
     certificates: [],
     moderator_products: [],
     product_balance: [],
+    product_earnings: [],
 };
 
 const getters = {
@@ -40,6 +47,7 @@ const getters = {
     CERTIFICATES: s => s.certificates,
     MODERATOR_PRODUCTS: s => s.moderator_products,
     PRODUCT_BALANCE: s => s.product_balance,
+    PRODUCT_EARNINGS: s => s.product_earnings,
 };
 
 const mutations = {
@@ -155,6 +163,9 @@ const mutations = {
     },
     SET_PRODUCT_BALANCE(state, payload) {
         state.product_balance = payload;
+    },
+    [MUTATATIONS.SET_PRODUCT_SALE_EARNINGS](state, payload) {
+        state.product_earnings = payload;
     }
 };
 
@@ -361,6 +372,29 @@ const actions = {
             return a + +c.total_sale_cost;
         }, 0);
         commit('SET_PRODUCT_BALANCE', {...data, totalArrivalsPurchasePrice, totalArrivalsProductPrice});
+    },
+    async [ACTIONS.GET_PRODUCT_SALE_EARNINGS]({commit}) {
+        try {
+            this.$loading.enable();
+            const { data } = await getProductSaleEarnings();
+            commit(MUTATATIONS.SET_PRODUCT_SALE_EARNINGS, data);
+        } catch (e) {
+
+        } finally {
+            this.$loading.disable();
+        }
+    },
+    async [ACTIONS.CREATE_PRODUCT_SELLERS_EARNINGS]({commit, dispatch}, payload) {
+        try {
+            this.$loading.enable();
+            await createProductSaleEarnings(payload);
+            dispatch(ACTIONS.GET_STORES);
+            dispatch(ACTIONS.GET_PRODUCT_SALE_EARNINGS);
+        } catch (e) {
+
+        } finally {
+            this.$loading.disable();
+        }
     }
 };
 
