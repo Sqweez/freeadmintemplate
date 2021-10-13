@@ -59,6 +59,10 @@ const navigationModule = {
                         url: '/cart'
                     },
                     {
+                        title: 'Бронирование товара',
+                        url: '/booking'
+                    },
+                    {
                         title: 'Перемещения',
                         url: '/transfer',
                     },
@@ -360,6 +364,10 @@ const navigationModule = {
                         url: '/cart'
                     },
                     {
+                        title: 'Бронирование товара',
+                        url: '/booking'
+                    },
+                    {
                         title: 'Перемещения',
                         url: '/transfer',
                     },
@@ -580,6 +588,10 @@ const navigationModule = {
                         url: '/cart'
                     },
                     {
+                        title: 'Бронирование товара',
+                        url: '/booking'
+                    },
+                    {
                         title: 'Перемещения',
                         url: '/transfer',
                     },
@@ -632,8 +644,16 @@ const navigationModule = {
                 hasDropdown: true,
                 children: [
                     {
+                        title: 'Товары',
+                        url: '/products'
+                    },
+                    {
                         title: 'Корзина',
                         url: '/cart'
+                    },
+                    {
+                        title: 'Бронирование товара',
+                        url: '/booking'
                     },
                     {
                         title: 'Перемещения',

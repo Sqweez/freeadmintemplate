@@ -29,6 +29,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereUserId($value)
  * @mixin \Eloquent
+ * @property string $comment
+ * @property string|null $arrived_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\Booking[] $bookings
+ * @property-read int|null $bookings_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereArrivedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereComment($value)
  */
 class Arrival extends Model
 {
@@ -37,7 +43,7 @@ class Arrival extends Model
     protected $casts = [
         'is_completed' => 'boolean',
         'count' => 'integer',
-        'purchase_price' => 'integer'
+        'purchase_price' => 'integer',
     ];
 
     public function products() {
@@ -54,5 +60,19 @@ class Arrival extends Model
 
     public function store() {
         return $this->belongsTo('App\Store');
+    }
+
+    public function bookings() {
+        return $this->hasMany('App\v2\Models\Booking');
+    }
+
+    protected static function boot() {
+        parent::boot();
+        static::creating(function ($query) {
+            $query->comment = $query->comment ?? '';
+        });
+        static::updating(function ($query) {
+            $query->comment = $query->comment ?? '';
+        });
     }
 }

@@ -22,6 +22,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ArrivalProducts whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ArrivalProducts wherePurchasePrice($value)
  * @mixin \Eloquent
+ * @property-read \App\Arrival $arrival
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\BookingProduct[] $bookingProducts
+ * @property-read int|null $booking_products_count
+ * @property-read mixed $available_booking_count
+ * @property-read mixed $booking_count
  */
 class ArrivalProducts extends Model
 {
@@ -31,4 +36,25 @@ class ArrivalProducts extends Model
     public function product() {
         return $this->belongsTo('App\v2\Models\ProductSku')->withTrashed();
     }
+
+    public function arrival() {
+        return $this->belongsTo('App\Arrival');
+    }
+
+    public function bookingProducts() {
+        return $this->hasMany('App\v2\Models\BookingProduct', 'arrival_product_id');
+    }
+
+    public function getAvailableBookingCountAttribute() {
+        return $this->attributes['count'] - $this->bookingProducts->reduce(function ($a, $c) {
+                return $a + $c['count'];
+            }, 0);
+    }
+
+    public function getBookingCountAttribute() {
+        return $this->bookingProducts->reduce(function ($a, $c) {
+            return $a + $c['count'];
+        }, 0);
+    }
+
 }

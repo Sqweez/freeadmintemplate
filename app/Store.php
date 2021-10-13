@@ -46,6 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\CompanionTransaction[] $transactions
  * @property-read int|null $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|Store shops()
+ * @method static \Illuminate\Database\Eloquent\Builder|Store whereKaspiTerminalIp($value)
  */
 class Store extends Model
 {

@@ -4,6 +4,23 @@ namespace App\v2\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\v2\Models\ProductSaleEarning
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property int $percent
+ * @property int $store_id
+ * @property-read \App\Store $store
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleEarning newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleEarning newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleEarning query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleEarning whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleEarning wherePercent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleEarning whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleEarning whereStoreId($value)
+ * @mixin \Eloquent
+ */
 class ProductSaleEarning extends Model
 {
     public $timestamps = false;

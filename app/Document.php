@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Document whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Document whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read mixed $date
+ * @property-read mixed $type
  */
 class Document extends Model
 {

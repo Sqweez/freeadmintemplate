@@ -55,20 +55,52 @@
                     </template>
                     <template v-slot:item.actions="{item}">
                         <v-flex v-if="!editMode">
-                            <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;" v-if="IS_SUPERUSER">
+                            <v-btn
+                                icon
+                                color="primary"
+                                @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;"
+                                v-if="IS_SUPERUSER"
+                            >
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
-                            <v-btn icon color="primary" @click="current_arrival = item; arrivalModal = true; editArrivalMode = false;">
+                            <v-btn
+                                icon
+                                color="primary"
+                                @click="current_arrival = item; arrivalModal = true; editArrivalMode = false;"
+                                v-if="IS_SUPERUSER"
+                            >
                                 <v-icon>mdi-information-outline</v-icon>
                             </v-btn>
-                            <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;" v-if="IS_SUPERUSER">
+                            <v-btn
+                                icon
+                                color="error"
+                                @click="current_arrival = item; confirmationModal = true;"
+                                v-if="IS_SUPERUSER"
+                            >
                                 <v-icon>mdi-cancel</v-icon>
                             </v-btn>
-                            <v-btn icon color="success" @click="printWaybill(item.id)" v-if="IS_SUPERUSER">
+                            <v-btn
+                                icon
+                                color="success"
+                                @click="printWaybill(item.id)"
+                                v-if="IS_SUPERUSER"
+                            >
                                 <v-icon>mdi-file-excel</v-icon>
                             </v-btn>
-                            <v-btn icon color="primary" @click="editMode = true; arrivalId = item.id; storeId = item.store_id" v-if="IS_SUPERUSER">
+                            <v-btn
+                                icon
+                                color="primary"
+                                @click="editMode = true; arrivalId = item.id; storeId = item.store_id"
+                                v-if="IS_SUPERUSER"
+                            >
                                 <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn
+                                icon
+                                color="primary"
+                                @click="current_arrival = {...item}; bookingModal = true;"
+                            >
+                                <v-icon>mdi-lock</v-icon>
                             </v-btn>
                         </v-flex>
                         <v-flex v-else>
@@ -94,12 +126,19 @@
             @cancel="arrivalModal = false; current_arrival = {}"
             @submit="onSubmit"
             @edit="onEdit"
+            :search="search"
         />
         <ConfirmationModal
             :state="confirmationModal"
             message="Вы действительно хотите удалить выбранную поставку?"
             :on-confirm="deleteArrival"
             v-on:cancel="current_arrival = {}; confirmationModal = false"
+        />
+        <BookingModal
+            :state="bookingModal"
+            :arrival="current_arrival"
+            @cancel="bookingModal = false; current_arrival = {}"
+            @submit="onBookingSubmit"
         />
     </div>
 </template>
@@ -110,9 +149,11 @@
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import axios from "axios";
     import {TOAST_TYPE} from "@/config/consts";
+    import BookingModal from "@/components/Modal/BookingModal";
+    import ACTIONS from "@/store/actions";
 
     export default {
-        components: {ConfirmationModal, ArrivalInfoModal},
+        components: {BookingModal, ConfirmationModal, ArrivalInfoModal},
         data: () => ({
             search: '',
             overlay: true,
@@ -125,46 +166,7 @@
             editMode: false,
             storeId: null,
             arrivalId: null,
-            headers: [
-                {
-                    text: 'Количество позиций',
-                    value: 'position_count',
-                },
-                {
-                    text: 'Количество товаров',
-                    value: 'product_count',
-                },
-                {
-                    text: 'Общая сумма',
-                    value: 'total_cost'
-                },
-                {
-                    text: 'Общая продажная сумма',
-                    value: 'total_sale_cost'
-                },
-                {
-                    text: 'Пользователь',
-                    value: 'user',
-                },
-                {
-                    text: 'Склад',
-                    value: 'store',
-                },
-                {
-                    text: 'Дата создания',
-                    value: 'date',
-                },
-                {
-                    text: 'Действие',
-                    value: 'actions',
-                    sortable: false
-                },
-                {
-                    text: 'Поиск',
-                    value: 'search',
-                    align: ' d-none'
-                }
-            ],
+            bookingModal: false,
         }),
         methods: {
             async getArrivals() {
@@ -188,6 +190,11 @@
                     return arrival;
                 })
                 this.overlay = false;
+            },
+            async onBookingSubmit() {
+                await this.getArrivals();
+                this.arrival = {};
+                this.bookingModal = false;
             },
             async onSubmit() {
                 this.arrivals = this.arrivals.filter(a => a.id !== this.current_arrival.id);
@@ -236,6 +243,100 @@
             }
         },
         computed: {
+            headers() {
+                return this.IS_SUPERUSER ?
+                 [
+                    {
+                        text: 'Количество позиций',
+                        value: 'position_count',
+                    },
+                    {
+                        text: 'Количество товаров',
+                        value: 'product_count',
+                    },
+                    {
+                        text: 'Общая сумма',
+                        value: 'total_cost'
+                    },
+                    {
+                        text: 'Общая продажная сумма',
+                        value: 'total_sale_cost'
+                    },
+                    {
+                        text: 'Пользователь',
+                        value: 'user',
+                    },
+                    {
+                        text: 'Склад',
+                        value: 'store',
+                    },
+                    {
+                        text: 'Дата создания',
+                        value: 'date',
+                    },
+                    {
+                        text: 'Ожидаемое поступление',
+                        value: 'arrived_at',
+                    },
+                    {
+                        text: 'Комментарий',
+                        value: 'comment',
+                    },
+                    {
+                        text: 'Действие',
+                        value: 'actions',
+                        sortable: false
+                    },
+                    {
+                        text: 'Поиск',
+                        value: 'search',
+                        align: ' d-none'
+                    }
+                ] :     [
+                        {
+                            text: 'Количество позиций',
+                            value: 'position_count',
+                        },
+                        {
+                            text: 'Количество товаров',
+                            value: 'product_count',
+                        },
+                        {
+                            text: 'Общая продажная сумма',
+                            value: 'total_sale_cost'
+                        },
+                        {
+                            text: 'Пользователь',
+                            value: 'user',
+                        },
+                        {
+                            text: 'Склад',
+                            value: 'store',
+                        },
+                        {
+                            text: 'Дата создания',
+                            value: 'date',
+                        },
+                        {
+                            text: 'Ожидаемое поступление',
+                            value: 'arrived_at',
+                        },
+                        {
+                            text: 'Комментарий',
+                            value: 'comment',
+                        },
+                        {
+                            text: 'Действие',
+                            value: 'actions',
+                            sortable: false
+                        },
+                        {
+                            text: 'Поиск',
+                            value: 'search',
+                            align: ' d-none'
+                        }
+                    ];
+            },
             totalPurchasePrice() {
                 return this.arrivals.reduce((a, c) => {
                     return a + +c.total_cost;
@@ -260,6 +361,7 @@
         },
         async mounted() {
             await this.getArrivals();
+            await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         }
     }
 </script>

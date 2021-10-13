@@ -58,6 +58,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read mixed $all_attributes
  * @property-read mixed $is_kaspi_visible
  * @property-read mixed $kaspi_product_price
+ * @property-read mixed $product_name_web
  */
 class ProductSku extends Model
 {

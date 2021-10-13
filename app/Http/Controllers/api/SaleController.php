@@ -25,6 +25,7 @@ use App\v2\Models\Certificate;
 use App\v2\Models\Preorder;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
+use Facade\FlareClient\Report;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller {
@@ -105,7 +106,9 @@ class SaleController extends Controller {
         $dateFilter = $request->get('date_filter');
         $sales = Sale::whereDate('created_at', '>=', $dateFilter)
             ->with(['products'])
+            ->with(['certificate'])
             ->get();
+
 
         return $this->calculateTotalAmount($sales);
     }
@@ -423,5 +426,44 @@ class SaleController extends Controller {
                 'name' => collect($item)->first()
             ];
         });
+    }
+
+    public function sendTelegramOrderMessage(Sale $sale) {
+        $message = $this->getDeliveryMessage($sale);
+        // @TODO сделать отправку
+    }
+
+    private function getDeliveryMessage($sale) {
+        $sale = new ReportsResource($sale);
+        $message = 'Новая доставка 💪💪💪' . "\n";
+        $message .= 'ФИО: ' . $sale['client']['client_name'] . "\n";
+        $message .= 'Телефон: ' . $sale['client']['client_phone'] . "\n";
+        $message .= 'Дополнительно: ' . $sale['comment'] . "\n";
+        $message .= "Товары: \n";
+        $saleProducts = $sale['products'];
+        $products = collect($sale['products'])
+            ->groupBy('product_id')
+            ->map(function ($item) {
+                return collect($item)->first();
+            })
+            ->values()
+            ->all();
+        foreach ($products as $key => $product) {
+            $_product = $product['product']['product'];
+            $attributes = collect($product['product']['product']['attributes'])
+                ->mergeRecursive(collect($product['product']['attributes']))
+                ->pluck('attribute_value')
+                ->join(', ');
+            $count = $saleProducts->filter(function ($item) use ($product) {
+                return $item['product_id'] === $product['product_id'];
+            })->count();
+            $message .=
+                ($key + 1) . '. ' .
+                $_product['product_name'] . ' ' . $attributes .
+                ' | ' . $count . 'шт' .
+                "\n";
+        }
+        $message .= 'К оплате: ' . $sale->final_price . 'тнг';
+        return $message;
     }
 }

@@ -117,6 +117,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereMetaTitle($value)
  * @method static Builder|Product whereSupplierId($value)
  * @property-read \App\v2\Models\Favorite|null $favorite
+ * @property-read Collection|\App\v2\Models\ProductSaleEarning[] $seller_earning
+ * @property-read int|null $seller_earning_count
+ * @method static Builder|Product whereProductNameWeb($value)
  */
 class Product extends Model
 {

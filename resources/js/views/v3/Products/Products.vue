@@ -14,9 +14,12 @@
         </v-card-text>
         <v-card-text v-else>
             <div class="mb-5">
-                <v-btn color="error" @click="showProductModal()" v-if="is_admin || IS_BOSS">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+                <v-btn color="error" @click="showProductModal()" v-if="is_admin || IS_BOSS">Добавить товар
+                    <v-icon>mdi-plus</v-icon>
+                </v-btn>
             </div>
-            <v-btn color="success" v-if="is_admin || IS_BOSS" @click="exportProductBatches">Выгрузить себестоимости</v-btn>
+            <v-btn color="success" v-if="is_admin || IS_BOSS" @click="exportProductBatches">Выгрузить себестоимости
+            </v-btn>
             <v-row>
                 <v-col>
                     <v-row>
@@ -110,16 +113,22 @@
                         <template v-slot:item.quantity="{item}">
                             <span v-if="storeFilter === -1">
                                 <v-list v-if="quantities[item.id]">
-                                    <v-list-item v-for="(quantity) of quantities[item.id]">
+                                    <v-list-item v-for="(quantity) of getQuantities(item.id)">
                                         <v-list-item-content>
                                             <v-list-item-title>{{ quantity.quantity }} шт</v-list-item-title>
-                                            <v-list-item-title class="font-weight-black">{{ quantity.name }}</v-list-item-title>
+                                            <v-list-item-title
+                                                class="font-weight-black">{{ quantity.name }}</v-list-item-title>
                                         </v-list-item-content>
                                     </v-list-item>
                                 </v-list>
-                                <span v-else>
-                                    0
-                                </span>
+                                <v-list v-else>
+                                    <v-list-item>
+                                         <v-list-item-content>
+                                            <v-list-item-title>0 шт</v-list-item-title>
+                                            <v-list-item-title class="font-weight-black">Всего</v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
                             </span>
                             <span v-else>
                                 {{ item.quantity }}
@@ -127,7 +136,8 @@
                         </template>
                         <template v-slot:item.actions="{ item }">
                             <div class="actions-products__container" v-if="IS_SENIOR_SELLER">
-                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)" v-if="item.sku_can_be_created">
+                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)"
+                                       v-if="item.sku_can_be_created">
                                     Ассортимент
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
@@ -135,13 +145,19 @@
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
+                                <v-btn v-if="!item.sku_can_be_created" color="warning" @click="showProductModal(item.id, 'editProduct')">
+                                    Ассортимент
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
                             </div>
                             <div class="actions-products__container" v-if="IS_SUPERUSER">
-                                <v-btn color="success" @click="showProductSkuModal(item.id)" v-if="item.sku_can_be_created">
+                                <v-btn color="success" @click="showProductSkuModal(item.id)"
+                                       v-if="item.sku_can_be_created">
                                     Ассортимент
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)" v-if="item.sku_can_be_created">
+                                <v-btn color="warning" @click="showProductSkuModal(item.id, true)"
+                                       v-if="item.sku_can_be_created">
                                     Ассортимент
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
@@ -149,14 +165,15 @@
                                     Новый товар
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <v-btn color="primary" @click="productId = item.id; productQuantityModal = true;" v-if="storeFilter !== -1">
+                                <v-btn color="primary" @click="productId = item.id; productQuantityModal = true;"
+                                       v-if="storeFilter !== -1">
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                              <!--  <v-btn color="primary" @click="priceTag = item; priceTagModal = true;">
-                                    Печать ценника
-                                    <v-icon>mdi-plus</v-icon>
-                                </v-btn>-->
+                                <!--  <v-btn color="primary" @click="priceTag = item; priceTagModal = true;">
+                                      Печать ценника
+                                      <v-icon>mdi-plus</v-icon>
+                                  </v-btn>-->
                                 <v-btn color="warning" @click="showProductModal(item.id, 'editProduct')">
                                     Товар
                                     <v-icon>mdi-pencil</v-icon>
@@ -189,7 +206,7 @@
             </v-row>
         </v-card-text>
         <ProductModal
-            v-on:cancel="onCloseProductModal" />
+            v-on:cancel="onCloseProductModal"/>
         <ConfirmationModal
             :message="modalText"
             :state="deleteModal"
@@ -204,11 +221,11 @@
         <SkuModal
             @cancel="$store.commit('modals/closeProductSkuModal')"
         />
-       <!-- <PriceTagModal
-            :state="priceTagModal"
-            :priceTag="priceTag"
-            @cancel="priceTagModal = false"
-        />-->
+        <!-- <PriceTagModal
+             :state="priceTagModal"
+             :priceTag="priceTag"
+             @cancel="priceTagModal = false"
+         />-->
     </v-card>
 </template>
 
@@ -245,7 +262,7 @@
             if (this.IS_SUPERUSER) {
                 this.storeFilter = -1;
             } else {
-                this.storeFilter = this.user.store_id;
+                this.storeFilter = -1;
             }
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
@@ -337,13 +354,13 @@
                 }, ...this.$store.getters.categories];
             },
             subcategories() {
-                return[
+                return [
                     {
                         id: -1,
                         subcategory_name: 'Все'
-                    },...this.categories
-                    .find(c => c.id === this.categoryId)
-                    .subcategories || []];
+                    }, ...this.categories
+                        .find(c => c.id === this.categoryId)
+                        .subcategories || []];
             },
             totalProducts() {
                 return this.$store.getters.totalProducts;
@@ -355,7 +372,7 @@
                 return this.$store.getters.IS_ADMIN || this.$store.getters.IS_STOREKEEPER;
             },
             headers() {
-                const headers = [
+                let headers = [
                     {
                         value: 'product_name',
                         text: 'Наименование',
@@ -399,7 +416,7 @@
                 ];
 
                 if (this.is_admin || this.IS_BOSS || this.IS_SENIOR_SELLER) {
-                    headers.unshift( {
+                    headers.unshift({
                         value: 'actions',
                         text: 'Действие',
                         sortable: false
@@ -412,13 +429,35 @@
                     })
                 }
 
+                if (!this.IS_SUPERUSER) {
+                    headers = headers.filter(h => h.value !== 'product_name_web');
+                }
+
                 return headers;
             },
         },
         methods: {
+            getQuantities(id) {
+                let qnt = this.quantities[id];
+                if (!this.IS_SUPERUSER) {
+                    qnt = qnt.filter(q => {
+                        return [-1, 1, 6, this.user.store_id].includes(q.store_id);
+                    });
+                    qnt = qnt.map(q => {
+                        if (q.store_id === -1) {
+                            q.quantity = qnt.filter(q => q.store_id !== -1).reduce((a, c) => {
+                                return a + c.quantity;
+                            }, 0)
+                            console.log(q);
+                        }
+                        return q;
+                    })
+                }
+                return qnt;
+            },
             async exportProductBatches() {
                 this.loading = true;
-                const { data } = await axios.get('/api/v2/documents/batches/purchases');
+                const {data} = await axios.get('/api/v2/documents/batches/purchases');
                 const link = document.createElement('a');
                 link.href = data.path;
                 link.click();

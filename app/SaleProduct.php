@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $final_price
  * @property-read mixed $margin
  * @method static \Illuminate\Database\Eloquent\Builder|SaleProduct whereDiscount($value)
+ * @property-read \App\ProductBatch $batch
  */
 class SaleProduct extends Model
 {

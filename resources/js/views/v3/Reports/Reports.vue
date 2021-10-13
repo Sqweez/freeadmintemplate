@@ -266,6 +266,16 @@
                     <v-list>
                         <v-list-item>
                             <v-list-item-content>
+                                <v-list-item-title>
+                                    <v-icon :color="item.is_delivery ? 'success': 'error'">
+                                        {{ item.is_delivery ? 'mdi-check' : 'mdi-cancel' }}
+                                    </v-icon>
+                                </v-list-item-title>
+                                <v-list-item-subtitle>Доставка</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-list-item-content>
                                 <v-list-item-title>{{ item.balance | priceFilters}}</v-list-item-title>
                                 <v-list-item-subtitle>Списано с баланса</v-list-item-subtitle>
                             </v-list-item-content>
@@ -361,6 +371,11 @@
                         <v-list-item>
                             <v-btn small depressed color="success" text @click="createInvoice(item)">
                                 Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
+                            </v-btn>
+                        </v-list-item>
+                        <v-list-item v-if="IS_SUPERUSER">
+                            <v-btn small depressed color="success" text @click="sendTelegram(item.id)">
+                                Отправить в телегу <v-icon class="ml-2">mdi-email</v-icon>
                             </v-btn>
                         </v-list-item>
                     </v-list>
@@ -586,6 +601,12 @@
                 link.href = `${window.location.origin}/${data.path}`;
                 link.click();
                 this.$loading.disable();
+            },
+            async sendTelegram(saleId) {
+                this.$loading.enable();
+                const response = await axios.get(`/api/sales/telegram/${saleId}`);
+                console.log(response);
+                this.$loading.disable();
             }
         },
         computed: {
@@ -687,7 +708,17 @@
                             return s;
                         }
                         return s.store_type == this.currentStoreType;
-                    });
+                    })
+                    .map(s => {
+                        if (!this.search) {
+                            s.products = [...s._products];
+                            return s;
+                        }
+                        s.products = [...s._products.filter(p => {
+                            return p.product_name.toLowerCase().includes(this.search.toLowerCase());
+                        })]
+                        return s;
+                    })
             }
         }
     }

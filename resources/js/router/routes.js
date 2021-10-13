@@ -49,6 +49,8 @@ import ShiftsList from "@/views/Shifts/ShiftsList";
 import SaleAnalytics from "@/views/Analytics/SaleAnalytics";
 import ArrivalAnalytics from "@/views/Analytics/ArrivalAnalytics";
 import ProductEarning from "@/views/Economy/ProductEarning";
+import CurrentArrivals from "@/components/Segments/Arrivals/CurrentArrivals";
+import BookingIndex from "@/views/Booking/BookingIndex";
 
 const routes = [
     {
@@ -256,6 +258,7 @@ const routes = [
                 IS_STOREKEEPER: true,
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
+                IS_SELLER: true
             },
         },
         component: ProductsV3
@@ -496,6 +499,14 @@ const routes = [
                 IS_BOSS: true
             }
         }
+    },
+    {
+        path: '/booking',
+        component: BookingIndex,
+    },
+    {
+        path: '/booking/create',
+        component: CurrentArrivals,
     }
 ];
 

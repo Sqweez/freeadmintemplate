@@ -80,7 +80,7 @@
                     Закрыть
                 </v-btn>
                 <v-spacer/>
-                <v-btn color="success" text v-if="canEdit && hasAccepted" @click="accept">
+                <v-btn color="success" text v-if="canEdit && hasAccepted && !search" @click="accept">
                     Подтвердить
                     <v-icon>mdi-check</v-icon>
                 </v-btn>
@@ -102,6 +102,10 @@
             },
             confirmMode: {
                 default: false,
+            },
+            search: {
+                type: String,
+                default: ''
             }
         },
         watch: {
@@ -115,6 +119,11 @@
                         p.accepted = true;
                         p.initial_count = p.count;
                         return p;
+                    }).filter(p => {
+                        if (!this.search) {
+                            return p;
+                        }
+                        return p.product_name.toLowerCase().includes(this.search.toLowerCase());
                     });
                     this.loading = false;
                 }

@@ -28,6 +28,14 @@
                                 color="white darken-2"
                             />
                         </div>
+                        <div>
+                            <v-checkbox
+                                label="Доставка"
+                                v-model="isDelivery"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
                         <div v-if="!isFree">
                             <v-checkbox
                                 label="Раздельная оплата"
@@ -36,6 +44,7 @@
                                 color="white darken-2"
                             />
                         </div>
+
                     </div>
                     <div class="cart__parameters">
                         <div v-if="!isFree">
@@ -570,6 +579,7 @@
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            isDelivery: false,
             awaitingForKaspiPayment: false,
             preorderModal: false,
             preorder: null,
@@ -780,7 +790,7 @@
                         return {id: c.id, product_price: c.product_price, count: c.count, discount: c.discount};
                     }),
                     store_id: this.storeFilter,
-                    user_id: this.user.id,
+                    user_id: !this.isDelivery ?  this.user.id : 1,
                     client_id: this.client.id,
                     discount: this.discount,
                     kaspi_red: this.isRed && !this.isFree,
@@ -791,7 +801,8 @@
                     used_certificate: this.used_certificate,
                     split_payment: split_payment,
                     comment: this.comment,
-                    preorder: this.preorder
+                    preorder: this.preorder,
+                    is_delivery: this.isDelivery
                 };
                 try {
                     this.overlay = true;
@@ -943,7 +954,7 @@
     }
     .cart__parameters__checkboxes {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(4, 1fr);
         grid-gap: 10px;
         padding: 15px 25px;
     }

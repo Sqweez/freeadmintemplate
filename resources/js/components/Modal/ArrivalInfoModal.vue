@@ -66,12 +66,17 @@
                                         mdi-minus
                                     </v-icon>
                                 </v-btn>
-                                {{ item.count }}
+                                <span>
+                                   {{ item.count }} ед.
+                                </span>
                                 <v-btn icon color="success" @click="increaseCount(idx)" v-if="confirmMode && editMode">
                                     <v-icon>
                                         mdi-plus
                                     </v-icon>
                                 </v-btn>
+                                <div v-if="item.booking_count">
+                                    <b>Забронировано:</b> {{ item.booking_count }} ед.
+                                </div>
                             </td>
                         </tr>
                         </tbody>
@@ -98,7 +103,7 @@
                     Сохранить изменения
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn color="success" text v-if="confirmMode && hasAccepted && !editMode" @click="accept" :disabled="!IS_SUPERUSER">
+                <v-btn color="success" text v-if="confirmMode && hasAccepted && !editMode && !search" @click="accept" :disabled="!IS_SUPERUSER">
                     Подтвердить
                     <v-icon>mdi-check</v-icon>
                 </v-btn>
@@ -126,6 +131,10 @@
             editMode: {
                 type: Boolean,
                 default: false
+            },
+            search: {
+                type: String,
+                default: '',
             }
         },
         watch: {
@@ -134,6 +143,11 @@
                     this.products = this.arrival.products.map(p => {
                         p.accepted = true;
                         return p;
+                    }).filter(p => {
+                        if (!this.search) {
+                            return p;
+                        }
+                        return p.product_name.toLowerCase().includes(this.search.toLowerCase())
                     });
                 } else {
                     this._arrival = {};

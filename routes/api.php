@@ -19,6 +19,8 @@ use App\Http\Controllers\api\v2\BrandMotivationController;
 use App\Http\Controllers\api\v2\LoyaltyController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\api\SaleController;
+use App\Http\Controllers\api\v2\BookingController;
+
 // Authorization
 
 Route::post('auth', 'api\UserController@auth')->name('auth');
@@ -140,6 +142,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('/', [SaleController::class, 'store']);
         Route::get('brands/motivation', [SaleController::class, 'getMotivationReport']);
         Route::post('{sale}/list/edit', [SaleController::class, 'editSaleList']);
+        Route::get('telegram/{sale}', [SaleController::class, 'sendTelegramOrderMessage']);
     });
 
     //ReportController
@@ -328,6 +331,12 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::delete('/penalty/{id}', [ShiftController::class, 'deletePenalty']);
             Route::get('/payroll', [ShiftController::class, 'getPayroll']);
             Route::get('/', [ShiftController::class, 'getShifts']);
+        });
+
+        Route::prefix('booking')->group(function() {
+            Route::post('/', [BookingController::class, 'store']);
+            Route::get('/', [BookingController::class, 'index']);
+            Route::delete('{id}', [BookingController::class, 'destroy']);
         });
 
         Route::post('brands/motivation', [BrandMotivationController::class, 'store']);

@@ -14,15 +14,17 @@
                     <v-text-field
                         label="Наименование"
                         v-model="product_name"
+                        :disabled="!IS_SUPERUSER"
                     />
 
                     <v-text-field
+                        v-if="IS_SUPERUSER"
                         label="Наименование интернет-магазина"
                         v-model="product_name_web"
                     />
 
-                    <vue-editor v-model="product_description"></vue-editor>
-                    <div>
+                    <vue-editor v-model="product_description" v-if="IS_SUPERUSER"></vue-editor>
+                    <div v-if="IS_SUPERUSER">
                         <div v-if="product_images.length">
                             <h4>Изображения для общих товаров:</h4>
                             <div class="d-flex" >
@@ -110,6 +112,7 @@
                         v-model="category"
                         no-data-text="Нет данных"
                         label="Категория"
+                        :disabled="!IS_SUPERUSER"
                     />
                     <v-autocomplete
                         :items="subcategories"
@@ -118,13 +121,16 @@
                         v-model="subcategory"
                         label="Подкатегория"
                         no-data-text="Нет данных"
+                        :disabled="!IS_SUPERUSER"
                     />
                     <v-text-field
                         label="Стоимость"
+                        :disabled="!IS_SUPERUSER"
                         v-model.number="product_price"
                         type="number"/>
                     <v-text-field
                         label="Стоимость в Kaspi Магазине"
+                        :disabled="!IS_SUPERUSER"
                         v-model.number="kaspi_product_price"
                         type="number"/>
                     <v-text-field
@@ -134,6 +140,7 @@
                         type="text"/>
                     <v-autocomplete
                         label="Производитель"
+                        :disabled="!IS_SUPERUSER"
                         :items="manufacturers"
                         item-text="manufacturer_name"
                         item-value="id"
@@ -142,166 +149,169 @@
                         :append-outer-icon="'mdi-plus'"
                         @click:append-outer="manufacturerModal = true"
                     />
-                    <v-checkbox
-                        label="Хит продаж"
-                        v-model="is_hit"
-                    />
-                    <v-checkbox
-                        label="Виден на сайте"
-                        v-model="is_site_visible"
-                    />
-                    <v-checkbox
-                        label="Виден в Kaspi магазине"
-                        v-model="is_kaspi_visible"
-                    />
-                    <p>
-                        Отвечает за видимость на сайте iron-addicts.kz
-                        <br>
-                        Выбирайте если это товар для внутреннего закупа или которым торгуем только оффлайн
-                    </p>
-                    <v-divider></v-divider>
-                    <h5>Поставщик:</h5>
-                    <v-select
-                        label="Поставщик"
-                        :items="suppliers"
-                        item-text="supplier_name"
-                        item-value="id"
-                        v-model="supplier_id"
-                    />
-                    <v-divider></v-divider>
-                    <h5>Теги:</h5>
-                    <div class="d-flex">
-                        <div>
-                            <v-chip
-                                v-for="(tag, key) of tags"
-                                :key="key"
-                                class="mr-2 mb-2"
-                                close
-                                link
-                                pill
-                                @click:close="removeTag(key)"
-                            >{{ tag.name }}</v-chip>
+                    <div v-if="IS_SUPERUSER">
+                        <v-checkbox
+                            label="Хит продаж"
+                            v-model="is_hit"
+                        />
+                        <v-checkbox
+                            label="Виден на сайте"
+                            v-model="is_site_visible"
+                        />
+                        <v-checkbox
+                            label="Виден в Kaspi магазине"
+                            v-model="is_kaspi_visible"
+                        />
+                        <p>
+                            Отвечает за видимость на сайте iron-addicts.kz
+                            <br>
+                            Выбирайте если это товар для внутреннего закупа или которым торгуем только оффлайн
+                        </p>
+                        <v-divider></v-divider>
+                        <h5>Поставщик:</h5>
+                        <v-select
+                            label="Поставщик"
+                            :items="suppliers"
+                            item-text="supplier_name"
+                            item-value="id"
+                            v-model="supplier_id"
+                        />
+                        <v-divider></v-divider>
+                        <h5>Теги:</h5>
+                        <div class="d-flex">
+                            <div>
+                                <v-chip
+                                    v-for="(tag, key) of tags"
+                                    :key="key"
+                                    class="mr-2 mb-2"
+                                    close
+                                    link
+                                    pill
+                                    @click:close="removeTag(key)"
+                                >{{ tag.name }}</v-chip>
+                                <v-text-field
+                                    label="Новый тег"
+                                    v-model="newTag"
+                                    :append-outer-icon="'mdi-plus'"
+                                    @click:append-outer="createTag"
+                                />
+                            </div>
+                        </div>
+                        <v-divider></v-divider>
+                        <h5>Мета-теги</h5>
+                        <v-text-field
+                            label="Title"
+                            v-model="meta_title"
+                        />
+                        <v-text-field
+                            label="Description"
+                            v-model="meta_description"
+                        />
+                        <v-divider></v-divider>
+                        <h5>Цены по городам:</h5>
+                        <div class="d-flex">
+                            <v-select
+                                style="max-width: 300px;"
+                                :items="getPriceStores(0)"
+                                item-text="name"
+                                item-value="id"
+                                label="Магазин"
+                                v-model="prices[0].store_id"
+                            ></v-select>
+                            <v-spacer />
                             <v-text-field
-                                label="Новый тег"
-                                v-model="newTag"
-                                :append-outer-icon="'mdi-plus'"
-                                @click:append-outer="createTag"
+                                label="Стоимость"
+                                v-model.number="prices[0].price"
+                            ></v-text-field>
+                            <v-btn icon @click="addPricesSelect">
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                        </div>
+                        <div class="d-flex" v-for="(attrs, idx) of pricesSelect" :key="idx * 1500" v-if="pricesSelect.length !== 0">
+                            <component
+                                v-if="pricesSelect.length !== 0"
+                                style="max-width: 300px;"
+                                :is="attrs"
+                                :items="getPriceStores(idx + 1)"
+                                item-text="name"
+                                item-value="id"
+                                label="Магазин"
+                                v-model="prices[idx + 1].store_id"
                             />
+                            <v-spacer/>
+                            <v-text-field
+                                label="Стоимость"
+                                v-model.number="prices[idx + 1].price"
+                            ></v-text-field>
+                            <v-btn icon @click="removePriceSelect(idx)">
+                                <v-icon>mdi-minus</v-icon>
+                            </v-btn>
+                        </div>
+                        <v-divider></v-divider>
+                        <h5>Атрибуты:</h5>
+                        <div v-if="!isEditing">
+                            <v-checkbox
+                                label="Без ассортимента"
+                                v-model="withoutAnotherSku"
+                            />
+                            <p>Выбирайте в случае, если товар не будет иметь ассортимента, например Samyum wan slim <br>
+                                В остальных случае, если есть ассортимент по вкусу, цвету оставляйте галочку не нажатой</p>
+                        </div>
+
+                        <div class="d-flex">
+                            <v-btn text @click="addAttributesSelect">
+                                Добавить атрибут<v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                            <!--<v-select
+                                style="max-width: 300px;"
+                                :items="getAttributes(0)"
+                                item-text="attribute_name"
+                                item-value="id"
+                                label="Атрибут"
+                                v-model="product_attributes[0].attribute_id"
+                            ></v-select>
+                            <v-spacer />
+                            <v-text-field
+                                label="Значение"
+                                v-model="product_attributes[0].attribute_value"
+                            ></v-text-field>
+                            <v-btn icon @click="addAttributesSelect">
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>-->
+                        </div>
+                        <div class="d-flex" v-for="(attrs, idx) of attributesSelect" :key="`attribute-select-${idx}`" v-if="attributesSelect.length !== 0">
+                            <component
+                                v-if="attributesSelect.length !== 0"
+                                style="max-width: 300px;"
+                                :is="attrs"
+                                :items="getAttributes(idx)"
+                                item-text="attribute_name"
+                                item-value="id"
+                                label="Атрибут"
+                                v-model="product_attributes[idx].attribute_id"
+                            />
+                            <v-spacer/>
+                            <v-text-field
+                                label="Значение"
+                                v-model="product_attributes[idx].attribute_value"
+                            ></v-text-field>
+                            <v-btn icon @click="removeAttributeSelect(idx)">
+                                <v-icon>mdi-minus</v-icon>
+                            </v-btn>
+                        </div>
+                        <div v-if="!withoutAnotherSku && !isEditing">
+                            <v-radio-group v-model="grouping_attribute_id">
+                                <v-radio
+                                    v-for="(attr, key) of product_attributes.filter(pa => pa.attribute_id)"
+                                    :label="attributes.find(a => a.id === attr.attribute_id).attribute_name"
+                                    :value="attr.attribute_id"
+                                    :key="`product_attribute-radio-${key}`"/>
+                            </v-radio-group>
+                            <p>Выберите один из параметров по которому будет группироваться товар<br>
+                                Например, вкус для протеина, размер для одежды, цвет для шейкера</p>
                         </div>
                     </div>
-                    <v-divider></v-divider>
-                    <h5>Мета-теги</h5>
-                    <v-text-field
-                        label="Title"
-                        v-model="meta_title"
-                    />
-                    <v-text-field
-                        label="Description"
-                        v-model="meta_description"
-                    />
-                    <v-divider></v-divider>
-                    <h5>Цены по городам:</h5>
-                    <div class="d-flex">
-                        <v-select
-                            style="max-width: 300px;"
-                            :items="getPriceStores(0)"
-                            item-text="name"
-                            item-value="id"
-                            label="Магазин"
-                            v-model="prices[0].store_id"
-                        ></v-select>
-                        <v-spacer />
-                        <v-text-field
-                            label="Стоимость"
-                            v-model.number="prices[0].price"
-                        ></v-text-field>
-                        <v-btn icon @click="addPricesSelect">
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>
-                    </div>
-                    <div class="d-flex" v-for="(attrs, idx) of pricesSelect" :key="idx * 1500" v-if="pricesSelect.length !== 0">
-                        <component
-                            v-if="pricesSelect.length !== 0"
-                            style="max-width: 300px;"
-                            :is="attrs"
-                            :items="getPriceStores(idx + 1)"
-                            item-text="name"
-                            item-value="id"
-                            label="Магазин"
-                            v-model="prices[idx + 1].store_id"
-                        />
-                        <v-spacer/>
-                        <v-text-field
-                            label="Стоимость"
-                            v-model.number="prices[idx + 1].price"
-                        ></v-text-field>
-                        <v-btn icon @click="removePriceSelect(idx)">
-                            <v-icon>mdi-minus</v-icon>
-                        </v-btn>
-                    </div>
-                    <v-divider></v-divider>
-                    <h5>Атрибуты:</h5>
-                    <div v-if="!isEditing">
-                        <v-checkbox
-                            label="Без ассортимента"
-                            v-model="withoutAnotherSku"
-                        />
-                        <p>Выбирайте в случае, если товар не будет иметь ассортимента, например Samyum wan slim <br>
-                            В остальных случае, если есть ассортимент по вкусу, цвету оставляйте галочку не нажатой</p>
-                    </div>
 
-                    <div class="d-flex">
-                        <v-btn text @click="addAttributesSelect">
-                            Добавить атрибут<v-icon>mdi-plus</v-icon>
-                        </v-btn>
-                        <!--<v-select
-                            style="max-width: 300px;"
-                            :items="getAttributes(0)"
-                            item-text="attribute_name"
-                            item-value="id"
-                            label="Атрибут"
-                            v-model="product_attributes[0].attribute_id"
-                        ></v-select>
-                        <v-spacer />
-                        <v-text-field
-                            label="Значение"
-                            v-model="product_attributes[0].attribute_value"
-                        ></v-text-field>
-                        <v-btn icon @click="addAttributesSelect">
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>-->
-                    </div>
-                    <div class="d-flex" v-for="(attrs, idx) of attributesSelect" :key="`attribute-select-${idx}`" v-if="attributesSelect.length !== 0">
-                        <component
-                            v-if="attributesSelect.length !== 0"
-                            style="max-width: 300px;"
-                            :is="attrs"
-                            :items="getAttributes(idx)"
-                            item-text="attribute_name"
-                            item-value="id"
-                            label="Атрибут"
-                            v-model="product_attributes[idx].attribute_id"
-                        />
-                        <v-spacer/>
-                        <v-text-field
-                            label="Значение"
-                            v-model="product_attributes[idx].attribute_value"
-                        ></v-text-field>
-                        <v-btn icon @click="removeAttributeSelect(idx)">
-                            <v-icon>mdi-minus</v-icon>
-                        </v-btn>
-                    </div>
-                    <div v-if="!withoutAnotherSku && !isEditing">
-                        <v-radio-group v-model="grouping_attribute_id">
-                            <v-radio
-                                v-for="(attr, key) of product_attributes.filter(pa => pa.attribute_id)"
-                                :label="attributes.find(a => a.id === attr.attribute_id).attribute_name"
-                                :value="attr.attribute_id"
-                                :key="`product_attribute-radio-${key}`"/>
-                        </v-radio-group>
-                        <p>Выберите один из параметров по которому будет группироваться товар<br>
-                            Например, вкус для протеина, размер для одежды, цвет для шейкера</p>
-                    </div>
                 </v-form>
             </v-card-text>
             <v-divider />

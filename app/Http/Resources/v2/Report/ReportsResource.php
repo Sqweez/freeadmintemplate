@@ -6,6 +6,12 @@ use App\Sale;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * Class Arrival
+ *
+ * @mixin \App\Sale
+ * */
+
 class ReportsResource extends JsonResource
 {
     /**
@@ -46,7 +52,8 @@ class ReportsResource extends JsonResource
             'store_type' => intval($this->store->type_id),
             'purchase_price' => $user_id ? $this->purchase_price : 0,
             'fact_price' => $this->product_price + $this->certificate->final_amount,
-            'final_price' => $this->final_price + $this->certificate->final_amount - $this->preorder->amount,
+            /*'final_price' => $this->final_price + $this->certificate->final_amount - $this->preorder->amount,*/
+            'final_price' => $this->final_price - $this->preorder->amount,
             'margin' => $user_id ? $this->margin + $this->certificate->final_amount + $this->certificate_margin : 0,
             'certificate' => $this->used_certificate,
             'split_payment' => $this->split_payment !== null ?
@@ -58,6 +65,7 @@ class ReportsResource extends JsonResource
                 : null,
             'comment' => $this->comment,
             'preorder' => $this->preorder,
+            'is_delivery' => $this->is_delivery
         ];
     }
 }

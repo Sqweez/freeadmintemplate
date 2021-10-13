@@ -22,6 +22,7 @@ use function foo\func;
  * @property int $balance
  * @property int|null $partner_id
  * @property int $payment_type
+ * @property boolean $is_delivery
  * @property-read \App\Client $client
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\SaleProduct[] $products
  * @property-read int|null $products_count
@@ -79,7 +80,12 @@ class Sale extends Model
         'kaspi_red' => 'boolean',
         'partner_id' => 'integer',
         'split_payment' => 'array',
-        'kaspi_transaction_id' => 'array'
+        'kaspi_transaction_id' => 'array',
+        'is_delivery' => 'boolean'
+    ];
+
+    protected $appends = [
+        'final_price'
     ];
 
     const CLIENT_CASHBACK_PERCENT = 0.01;
@@ -222,6 +228,8 @@ class Sale extends Model
             $price -= $price * self::KASPI_RED_PERCENT;
         }
 
+        $price += $this->certificate->final_amount;
+
         return ceil($price - $this->balance);
     }
 
@@ -243,15 +251,15 @@ class Sale extends Model
         return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
-    public function setCommentAttribute($value) {
-        $this->attributes['comment'] = '';//$value === null ? '' : $value;
-    }
+    /* public function setCommentAttribute($value) {
+         $this->attributes['comment'] = '';//$value === null ? '' : $value;
+     }*/
 
     protected static function boot() {
         parent::boot();
         static::creating(function ($query) {
             $query->client_id = $query->client_id ?? -1;
-            $query->comment = strlen($query->comment) === 0 ? null : $query->comment;
+            $query->comment = strlen($query->comment) === 0 ? '' : $query->comment;
         });
         static::updating(function ($query) {
             $query->client_id = $query->client_id ?? -1;

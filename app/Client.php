@@ -64,6 +64,16 @@ use Illuminate\Support\Carbon;
  * @mixin \Eloquent
  * @property-read Collection|\App\Promocode[] $promocodes
  * @property-read int|null $promocodes_count
+ * @property int $loyalty_id
+ * @property string $photo
+ * @property string $job
+ * @property string $instagram
+ * @property-read \App\v2\Models\Loyalty $loyalty
+ * @method static \Illuminate\Database\Eloquent\Builder|Client platinumClients()
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereInstagram($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereJob($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereLoyaltyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client wherePhoto($value)
  */
 class Client extends Model
 {
@@ -174,5 +184,15 @@ class Client extends Model
 
     public function setInstagramAttribute($value) {
         $this->attributes['instagram'] = $value !== null ?  $value : '';
+    }
+
+    protected static function boot() {
+        parent::boot();
+        static::creating(function ($query) {
+            $query->loyalty_id = $query->loyalty_id ?? 1;
+        });
+        static::updating(function ($query) {
+            $query->loyalty_id = $query->loyalty_id ?? 1;
+        });
     }
 }

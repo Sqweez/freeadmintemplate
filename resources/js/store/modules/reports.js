@@ -33,7 +33,10 @@ const reportsModule = {
             state.storesReports = payload;
         },
         setReports(state, payload) {
-            state.reports = payload;
+            state.reports = payload.map(p => {
+                p._products = [...p.products];
+                return p;
+            });
         },
         cancelSale(state, id) {
             state.reports = state.reports.filter(s => s.id !== id);

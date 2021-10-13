@@ -210,6 +210,7 @@
             :confirm-mode="true"
             v-on:cancel="transferId = null; infoModal = false"
             v-on:confirmed="onConfirm"
+            :search="search"
         />
         <TransferPhotoModal
             :state="photoModal"

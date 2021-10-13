@@ -1,8 +1,14 @@
 <?php
 
 namespace App\Http\Resources;
-
+use App\ArrivalProducts;
 use Illuminate\Http\Resources\Json\JsonResource;
+
+/**
+ * Class Arrival
+ *
+ * @mixin ArrivalProducts
+ * */
 
 class ArrivalProductResource extends JsonResource
 {
@@ -28,10 +34,14 @@ class ArrivalProductResource extends JsonResource
             })),
             'id' => $this->product->id,
             'count' => $this->count,
+            'available_booking_count' => $this->available_booking_count,
+            'booking_count' => $this->booking_count,
             'product_name' => $this->product->product_name,
             'product_price' => $this->product->product_price,
             'purchase_price' => $this->purchase_price,
             'manufacturer' => $this->product->manufacturer,
+            'arrival_product_id' => $this->id,
+            'bookingProducts' => $this->bookingProducts
         ];
     }
 }

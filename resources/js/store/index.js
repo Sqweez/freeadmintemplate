@@ -34,8 +34,10 @@ import shiftModule from "@/store/modules/shifts";
 import motivationModule from "@/store/modules/motivation";
 import vuexPlugins from "@/store/plugins/vuexPlugins";
 import analyticsModule from "@/store/modules/v2/analytics";
+import bookingModule from "@/store/modules/booking";
 
 Vue.use(Vuex);
+
 
 const store = new Store({
     state: {},
@@ -84,7 +86,8 @@ const store = new Store({
         preordersModule,
         shiftModule,
         motivationModule,
-        analyticsModule
+        analyticsModule,
+        bookingModule
     },
     plugins: [
         createPersistedState({
@@ -97,5 +100,6 @@ const store = new Store({
         vuexPlugins
     ],
 });
+
 
 export default store;

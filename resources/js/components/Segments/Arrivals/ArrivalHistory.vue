@@ -62,6 +62,7 @@
                 :arrival="current_arrival"
                 :confirm-mode="false"
                 @cancel="arrivalModal = false; current_arrival = {}"
+                :search="search"
         />
         <ConfirmationModal
             :state="confirmationModal"

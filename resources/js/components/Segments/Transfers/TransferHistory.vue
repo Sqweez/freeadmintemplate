@@ -275,6 +275,7 @@
             :state="infoModal"
             :id="transferId"
             v-on:cancel="transferId = null; infoModal = false"
+            :search="search"
         />
         <TransferPhotoModal
             :state="photoModal"

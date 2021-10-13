@@ -630,7 +630,7 @@
 
     .cart__parameters__checkboxes {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(4, 1fr);
         grid-gap: 10px;
         padding: 15px 25px;
     }

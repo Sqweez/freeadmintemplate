@@ -91,6 +91,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Product whereMetaDescription($value)
  * @method static Builder|Product whereMetaTitle($value)
  * @method static Builder|Product whereSupplierId($value)
+ * @property string $product_name_web
+ * @method static Builder|Product whereProductNameWeb($value)
  */
 class Product extends Model {
 

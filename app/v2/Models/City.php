@@ -17,6 +17,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|City whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|City whereRegionId($value)
  * @mixin \Eloquent
+ * @property int $delivery_cost
+ * @property int $delivery_threshold
+ * @method static \Illuminate\Database\Eloquent\Builder|City whereDeliveryCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|City whereDeliveryThreshold($value)
  */
 class City extends Model
 {

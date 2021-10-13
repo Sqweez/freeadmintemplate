@@ -6,8 +6,13 @@ use App\ArrivalProducts;
 use App\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
-use function foo\func;
+use App\Arrival;
 
+/**
+ * Class Arrival
+ *
+ * @mixin Arrival
+ * */
 class ArrivalResource extends JsonResource
 {
     /**
@@ -26,7 +31,9 @@ class ArrivalResource extends JsonResource
             'user_id' => $this->user_id,
             'user' => $this->user->name,
             'is_completed' => $this->is_completed,
-            'products' => ArrivalProductResource::collection($this->products),
+            'products' => collect(ArrivalProductResource::collection($this->products))->map(function ($product) {
+                return $product;
+            }),
             'position_count' => $this->products->count(),
             'product_count' => $this->products->sum('count'),
             'total_cost' => $this->products->reduce(function ($a, $c) {
@@ -36,6 +43,9 @@ class ArrivalResource extends JsonResource
                 return $a + intval($c->count) * intval($c->product->product_price ?? 0);
             }, 0),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
+            'arrived_at' => $this->arrived_at ? Carbon::parse($this->arrived_at)->format('d.m.Y') : null,
+            'comment' => $this->comment,
+            'bookings' => $this->bookings,
         ];
     }
 }

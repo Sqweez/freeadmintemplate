@@ -116,6 +116,23 @@
                         </tbody>
                     </template>
                 </v-simple-table>
+                <div class="px-4">
+                    <v-row>
+                        <v-col>
+                            <v-text-field
+                                type="date"
+                                label="Ожидаемая дата поступления"
+                                v-model="arrivedAt"/>
+                        </v-col>
+                        <v-col>
+                            <v-text-field
+                                label="Комментарий"
+                                v-model="comment"/>
+                        </v-col>
+                    </v-row>
+
+
+                </div>
                 <div class="background-iron-grey pa-10">
                     <v-btn color="error" block style="font-size: 16px" @click="onSubmit">
                         Создать поставку
@@ -208,7 +225,8 @@
                         <v-btn icon @click="addToCart(item, true)" color="success">
                             +1
                         </v-btn>
-                        <v-btn color="success" outlined v-if="item.sku_can_be_created" @click="showProductSkuModal(item.id)">
+                        <v-btn color="success" outlined v-if="item.sku_can_be_created"
+                               @click="showProductSkuModal(item.id)">
                             Ассортимент
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
@@ -247,6 +265,7 @@
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
     import SkuModal from "@/components/v2/Modal/SkuModal";
+
     export default {
         components: {
             SkuModal,
@@ -256,6 +275,8 @@
         },
         mixins: [product_search, cart],
         data: () => ({
+            comment: '',
+            arrivedAt: null,
             moneyRate: 1,
             hideNotInStock: false,
             cart: [],
@@ -384,6 +405,8 @@
                     store_id: this.child_store,
                     user_id: this.user.id,
                     is_completed: false,
+                    comment: this.comment,
+                    arrived_at: this.arrivedAt
                 };
                 this.overlay = false;
                 await createArrival(arrival);
