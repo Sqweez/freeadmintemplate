@@ -36,8 +36,11 @@
                     {{ item.paid_sum | priceFilters }}
                 </template>
                 <template v-slot:item.actions="{item}">
-                    <v-btn icon text color="error" @click="bookingId = item.id; deleteModal = true;">
-                        <v-icon>mdi-delete</v-icon>
+                    <v-btn text color="error" @click="bookingId = item.id; deleteModal = true;" v-if="item.is_sold === 0">
+                        Удалить
+                    </v-btn>
+                    <v-btn text color="success" @click="onSaleModal(item)" v-if="item.is_sold === 0">
+                        Продать
                     </v-btn>
                 </template>
                 <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
@@ -57,7 +60,6 @@
 <script>
     import ACTIONS from "@/store/actions";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-
     export default {
         components: {ConfirmationModal},
         data: () => ({
@@ -116,6 +118,12 @@
                 } finally {
                     this.closeDeleteModal();
                 }
+            },
+            onSaleModal(booking) {
+                if (!booking.can_sold) {
+                    return this.$toast.error('Товар из данной брони еще не поступил на склад!')
+                }
+                return this.$router.push(`/booking/${booking.id}`)
             }
         },
         computed: {

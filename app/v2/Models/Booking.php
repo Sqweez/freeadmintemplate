@@ -4,6 +4,7 @@ namespace App\v2\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\v2\Models\Booking
@@ -39,6 +40,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Booking extends Model
 {
+
+    use SoftDeletes;
+
     protected $guarded = ['id'];
     protected $casts = [
         'store_id' => 'integer',
@@ -46,12 +50,12 @@ class Booking extends Model
         'arrival_id' => 'integer',
         'client_id' => 'integer',
         'paid_sum' => 'integer',
-        'is_sold' => 'boolean',
     ];
 
     const STATUSES = [
         0 => 'Ожидание',
-        1 => 'Продан'
+        1 => 'Продан',
+        -1 => 'Отменен'
     ];
 
     public function user() {

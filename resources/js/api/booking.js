@@ -12,3 +12,7 @@ export async function deleteBooking(id) {
     return await axios.delete(`/api/v2/booking/${id}`);
 }
 
+export async function createBookingSale(sale) {
+    return await axios.post(`/api/v2/booking/sale`, sale)
+}
+

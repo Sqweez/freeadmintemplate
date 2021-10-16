@@ -65,7 +65,9 @@ class ReportsResource extends JsonResource
                 : null,
             'comment' => $this->comment,
             'preorder' => $this->preorder,
-            'is_delivery' => $this->is_delivery
+            'is_delivery' => $this->is_delivery,
+            'is_booking' => $this->booking ? true : false,
+            'booking_paid_sum' => $this->booking ? $this->booking->paid_sum : 0,
         ];
     }
 }

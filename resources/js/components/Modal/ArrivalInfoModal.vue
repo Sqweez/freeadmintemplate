@@ -184,10 +184,10 @@
                     .map(p => {
                         return {
                             product_id: p.id,
-                            count: p.count,
+                            count: p.count - p.booking_count,
                             purchase_price: p.purchase_price
                         }
-                    })
+                    }).filter(p => p.count > 0);
 
                 await createBatch({
                     arrival_id: this.arrival.id,

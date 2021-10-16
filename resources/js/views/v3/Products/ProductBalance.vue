@@ -33,6 +33,17 @@
                             </tr>
                             <tr>
                                 <td>
+                                    Перемещения:
+                                </td>
+                                <td>
+                                    {{ transferPurchasePrice | priceFilters }}
+                                </td>
+                                <td>
+                                    {{ transferProductPrice | priceFilters }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <b>Итого:</b>
                                 </td>
                                 <td>{{ totalPurchasePrices | priceFilters }}</td>
@@ -66,15 +77,21 @@
             arrivalProductPrice() {
                 return this.$store.getters.PRODUCT_BALANCE.totalArrivalsProductPrice;
             },
+            transferPurchasePrice() {
+                return this.$store.getters.PRODUCT_BALANCE.totalTransfersPurchasePrice;
+            },
+            transferProductPrice() {
+                return this.$store.getters.PRODUCT_BALANCE.totalTransfersProductPrice;
+            },
             totalPurchasePrices() {
                 return Object.values(this.purchasePrices).reduce((a, c) => {
                     return a + c;
-                }, 0) + this.arrivalPurchasePrice;
+                }, 0) + this.arrivalPurchasePrice + this.transferPurchasePrice;
             },
             totalProductPrices() {
                 return Object.values(this.productPrices).reduce((a, c) => {
                     return a + c;
-                }, 0) + this.arrivalProductPrice;
+                }, 0) + this.arrivalProductPrice + this.transferProductPrice;
             }
         },
         async mounted() {

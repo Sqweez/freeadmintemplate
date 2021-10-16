@@ -128,6 +128,10 @@ class Sale extends Model
         ])->withTrashed();
     }
 
+    public function booking() {
+        return $this->belongsTo('App\v2\Models\Booking');
+    }
+
     public function preorder() {
         return $this->hasOne('App\v2\Models\Preorder')->withDefault([
             'id' => -1,
@@ -229,6 +233,9 @@ class Sale extends Model
         }
 
         $price += $this->certificate->final_amount;
+        if ($this->booking) {
+            $price -= $this->booking->paid_sum;
+        }
 
         return ceil($price - $this->balance);
     }

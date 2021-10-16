@@ -1,6 +1,6 @@
 import ACTIONS from '@/store/actions'
 import MUTATIONS from '@/store/mutations'
-import {createBooking, deleteBooking, getBookings} from "@/api/booking";
+import {createBooking, createBookingSale, deleteBooking, getBookings} from "@/api/booking";
 
 const bookingModule = {
     state: {
@@ -42,6 +42,17 @@ const bookingModule = {
             try {
                 this.$loading.enable();
                 const { data } = await createBooking(booking);
+                console.log(data);
+            } catch (e) {
+                throw e;
+            } finally {
+                this.$loading.disable();
+            }
+        },
+        async MAKE_BOOKING_SALE_v2({commit}, sale) {
+            try {
+                this.$loading.enable();
+                const { data } = await createBookingSale(sale);
                 console.log(data);
             } catch (e) {
                 throw e;

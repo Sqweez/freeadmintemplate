@@ -21,3 +21,7 @@ export async function setImage(order, image) {
     formData.append('file', image);
     return await axios.post(`/api/v2/orders/${order}/image`, formData);
 }
+
+export async function restoreOrder(order) {
+    return await axios.get(`/api/v2/orders/restore/${order}`)
+}

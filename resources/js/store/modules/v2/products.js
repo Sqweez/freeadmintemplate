@@ -19,6 +19,7 @@ import {changeProductCount} from "@/api/products";
 import ACTIONS from "@/store/actions";
 import {getArrivals} from "@/api/arrivals";
 import store from "@/store";
+import {getTransfers} from "@/api/transfers";
 
 const state = {
     products_v2: [],
@@ -371,7 +372,14 @@ const actions = {
         const totalArrivalsProductPrice = response.data.reduce((a, c) => {
             return a + +c.total_sale_cost;
         }, 0);
-        commit('SET_PRODUCT_BALANCE', {...data, totalArrivalsPurchasePrice, totalArrivalsProductPrice});
+        const transferResponse = await getTransfers({mode: 'current'});
+        const totalTransfersPurchasePrice = transferResponse.reduce((a, c) => {
+            return a + +c.total_purchase_cost;
+        }, 0);
+        const totalTransfersProductPrice = transferResponse.reduce((a, c) => {
+            return a + +c.total_cost;
+        }, 0);
+        commit('SET_PRODUCT_BALANCE', {...data, totalArrivalsPurchasePrice, totalArrivalsProductPrice, totalTransfersPurchasePrice, totalTransfersProductPrice});
     },
     async [ACTIONS.GET_PRODUCT_SALE_EARNINGS]({commit}) {
         try {

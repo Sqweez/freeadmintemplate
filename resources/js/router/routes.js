@@ -51,6 +51,7 @@ import ArrivalAnalytics from "@/views/Analytics/ArrivalAnalytics";
 import ProductEarning from "@/views/Economy/ProductEarning";
 import CurrentArrivals from "@/components/Segments/Arrivals/CurrentArrivals";
 import BookingIndex from "@/views/Booking/BookingIndex";
+import BookingCart from "@/views/Booking/BookingCart";
 
 const routes = [
     {
@@ -268,7 +269,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true
+                IS_BOSS: true,
+                IS_OBSERVER: true
             }
         },
         component: ProductBalance
@@ -503,6 +505,10 @@ const routes = [
     {
         path: '/booking',
         component: BookingIndex,
+    },
+    {
+        path: '/booking/:id',
+        component: BookingCart,
     },
     {
         path: '/booking/create',

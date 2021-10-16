@@ -25,6 +25,7 @@ class BookingProductResource extends JsonResource
         return [
             'id' => $this->id,
             'product_name' => $this->product->product_name,
+            'product_price' => $this->product->product_price,
             'count' => $this->count,
             'manufacturer' => $this->product->product->manufacturer->manufacturer_name,
             'attributes' => collect($this->product->product->attributes)

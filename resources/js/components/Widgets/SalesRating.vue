@@ -8,6 +8,7 @@
                     :items="items"
                     item-text="name"
                     item-value="value"
+                    :disabled="IS_OBSERVER"
                     style="max-width: 300px; margin-bottom: 0!important;"
                     class="pa-0" v-model="current"/>
             </v-card-title>
@@ -21,7 +22,7 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS">
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS || IS_OBSERVER">
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
@@ -33,7 +34,7 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS">
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS || IS_OBSERVER">
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
@@ -45,7 +46,19 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS">
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS || IS_OBSERVER">
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                <div class="d-flex justify-space-between">
+                                    <span>Бронирования</span>
+                                    <span>
+                                        {{ getAmount(9999) | priceFilters}}
+                                    </span>
+                                </div>
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS || IS_OBSERVER">
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">

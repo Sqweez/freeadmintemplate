@@ -686,6 +686,18 @@ const navigationModule = {
                 icon: 'receipt'
             }
         ],
+        observerMenu: [
+            {
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
+            },
+            {
+                title: 'Баланс товаров',
+                url: '/products/balance',
+                icon: 'analytics'
+            },
+        ]
     },
     getters: {
         navigations: (state, getters) => {

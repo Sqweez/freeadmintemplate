@@ -32,6 +32,8 @@ class BookingResource extends JsonResource
             'paid_sum' => $this->paid_sum,
             'date_create' => $this->date_create,
             'status' => $this->status,
+            'is_sold' => $this->is_sold,
+            'can_sold' => !!$this->arrival->is_completed
         ];
     }
 }

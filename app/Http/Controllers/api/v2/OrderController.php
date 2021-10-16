@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api\v2;
 
 use App\Client;
+use App\ClientSale;
+use App\ClientTransaction;
 use App\Http\Controllers\api\CartController;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v2\Order\OrderResource;
@@ -21,21 +23,6 @@ class OrderController extends Controller
 {
 
     public function getOrders() {
-        /*return Order::query()
-            ->whereHas('items', function ($query) {
-                return $query->has('product');
-            })
-            ->with(
-                [
-                    'store:id,name', 'items',
-                    'items.batch.store',
-                    'items.product', 'items.product.attributes',
-                    'items.product.product', 'items.product.product.attributes',
-                    'items.product.product.manufacturer', 'image'
-                ]
-            )
-            ->orderByDesc('created_at')
-            ->get();*/
         return OrderResource::collection(Order::with(
             [
                 'store:id,name', 'items',
@@ -45,6 +32,23 @@ class OrderController extends Controller
                 'items.product.product.manufacturer', 'image'
             ]
         )->orderByDesc('created_at')->get());
+    }
+
+    public function restoreOrder(Order $order) {
+        $sale = Sale::whereOrderId($order->id)->first();
+        if (!$sale) {
+            return response()->json([
+                'message' => 'Невозможно восстановить заказ, потому что он старый!'
+            ], 500);
+        }
+        SaleProduct::whereSaleId($sale->id)->delete();
+        if (intval($sale->client_id) !== -1) {
+            ClientSale::where('sale_id', $sale->id)->first()->delete();
+            ClientTransaction::where('sale_id', $sale->id)->first()->delete();
+        }
+        $sale->delete();
+        $order->update(['status' => 0]);
+        return response()->json([], 200);
     }
 
     public function getOrder($id) {
@@ -163,7 +167,8 @@ class OrderController extends Controller
             'user_id' => User::IRON_WEB_STORE,
             'discount' => $order['discount'],
             'kaspi_red' => 0,
-            'balance' => $order['balance'] ?? 0
+            'balance' => $order['balance'] ?? 0,
+            'order_id' => $order->id,
         ]);
 
 

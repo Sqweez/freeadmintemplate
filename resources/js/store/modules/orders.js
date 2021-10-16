@@ -1,4 +1,4 @@
-import {acceptOrder, declineOrder, deleteOrder, getOrders, setImage} from "@/api/orders";
+import {acceptOrder, declineOrder, deleteOrder, getOrders, restoreOrder, setImage} from "@/api/orders";
 
 const orderModule = {
     state: {
@@ -39,6 +39,14 @@ const orderModule = {
                 }
                 return _order;
             })
+        },
+        RESTORE_ORDER(state, order) {
+            state.orders = state.orders.map(o => {
+                if (o.id === order) {
+                    o.status = 0;
+                }
+                return o;
+            })
         }
     },
     actions: {
@@ -53,6 +61,18 @@ const orderModule = {
                 commit('disableLoading');
             }
 
+        },
+        async RESTORE_ORDER({commit}, payload) {
+            try {
+                commit('enableLoading');
+                await restoreOrder(payload);
+                commit('RESTORE_ORDER', payload);
+                this.$toast.success('Заказ успешно восстановлен!')
+            } catch (e) {
+                this.$toast.error(e.response.data.message);
+            } finally {
+                commit('disableLoading');
+            }
         },
         async DELETE_ORDER({commit}, payload) {
             try {

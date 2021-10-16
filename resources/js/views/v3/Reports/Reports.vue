@@ -300,6 +300,22 @@
                                 <v-list-item-subtitle>Комментарий</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-list-item v-if="item.is_booking">
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    <v-icon>mdi-check</v-icon>
+                                </v-list-item-title>
+                                <v-list-item-subtitle>По брони</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="item.is_booking">
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{ item.booking_paid_sum | priceFilters }}
+                                </v-list-item-title>
+                                <v-list-item-subtitle>Предоплата по брони</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
                     </v-list>
                 </template>
                 <template v-slot:item.payment_type_text="{item}">

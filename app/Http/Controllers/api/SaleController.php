@@ -8,6 +8,7 @@ use App\ClientTransaction;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ReportService;
 use App\Http\Controllers\Services\SaleService;
+use App\Http\Controllers\Services\TelegramService;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ReportResource;
@@ -20,6 +21,7 @@ use App\Sale;
 use App\SaleProduct;
 use App\Store;
 use App\User;
+use App\v2\Models\Booking;
 use App\v2\Models\BrandMotivation;
 use App\v2\Models\Certificate;
 use App\v2\Models\Preorder;
@@ -109,8 +111,19 @@ class SaleController extends Controller {
             ->with(['certificate'])
             ->get();
 
+        $bookingSales = collect([
+            9999 => [
+                'store_id' => 9999,
+                'amount' => intval(Booking::whereDate('created_at', '>=', $dateFilter)->sum('paid_sum'))
+            ]
+        ]);
 
-        return $this->calculateTotalAmount($sales);
+        return $this->calculateTotalAmount($sales)
+            ->mergeRecursive($bookingSales)
+            ->groupBy('store_id')
+            ->map(function ($item) {
+                return collect($item)->first();
+            });
     }
 
     public function getPlanReports() {
@@ -428,17 +441,26 @@ class SaleController extends Controller {
         });
     }
 
-    public function sendTelegramOrderMessage(Sale $sale) {
-        $message = $this->getDeliveryMessage($sale);
-        // @TODO сделать отправку
+    public function sendTelegramOrderMessage(Sale $sale, TelegramService $telegramService) {
+        try {
+            $message = $this->getDeliveryMessage($sale);
+            $ironDeliveryChat = '-1001615606567';
+            $telegramService->sendMessage($ironDeliveryChat, urlencode($message));
+            return response()->json([], 200);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => $exception->getMessage()
+            ], 200);
+        }
     }
 
     private function getDeliveryMessage($sale) {
         $sale = new ReportsResource($sale);
-        $message = 'Новая доставка 💪💪💪' . "\n";
+        $message = 'Новая доставка №' . $sale->id . "\n";
         $message .= 'ФИО: ' . $sale['client']['client_name'] . "\n";
         $message .= 'Телефон: ' . $sale['client']['client_phone'] . "\n";
-        $message .= 'Дополнительно: ' . $sale['comment'] . "\n";
+        $message .= $sale['comment'] . "\n";
+        $message .= 'Способ оплаты: ' . Sale::PAYMENT_TYPES[$sale->payment_type]['name'] . "\n";
         $message .= "Товары: \n";
         $saleProducts = $sale['products'];
         $products = collect($sale['products'])

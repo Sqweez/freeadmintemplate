@@ -267,6 +267,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
         Route::prefix('orders')->group(function () {
             Route::get('/', 'api\v2\OrderController@getOrders');
+            Route::get('/restore/{order}', 'api\v2\OrderController@restoreOrder');
             Route::delete('/{order}', 'api\v2\OrderController@deleteOrder');
             Route::patch('/{order}', 'api\v2\OrderController@update');
             Route::post('/{order}/image', 'api\v2\OrderController@setImage');
@@ -334,8 +335,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::prefix('booking')->group(function() {
+            Route::post('/sale', [BookingController::class, 'createSale']);
             Route::post('/', [BookingController::class, 'store']);
             Route::get('/', [BookingController::class, 'index']);
+            Route::get('/{id}', [BookingController::class, 'show']);
             Route::delete('{id}', [BookingController::class, 'destroy']);
         });
 

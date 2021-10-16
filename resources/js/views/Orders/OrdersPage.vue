@@ -136,6 +136,10 @@
                             Заказ выполнен
                             <v-icon>mdi-check</v-icon>
                         </v-btn>
+                        <v-btn text v-if="item.status === 1 && IS_SUPERUSER" color="success" @click="orderId = item.id; restoreModal = true;">
+                            Восстановить заказ
+                            <v-icon>mdi-check</v-icon>
+                        </v-btn>
                         <v-btn text v-if="item.status !== 0" color="red" @click="orderId = item.id; deleteModal = true;">
                             Удалить заказ из истории
                             <v-icon>mdi-delete</v-icon>
@@ -173,6 +177,12 @@
             :on-confirm="acceptOrder"
             @cancel="orderId = null; acceptModal = false;"
         />
+        <ConfirmationModal
+            :state="restoreModal"
+            message="Вы действительно хотите восстановить выбранный заказ?"
+            :on-confirm="restoreOrder"
+            @cancel="orderId = null; restoreModal = false;"
+        />
         <OrderModal :state="orderModal" :id="orderId" @cancel="orderModal = false; orderId = null;"/>
     </div>
 </template>
@@ -189,6 +199,7 @@
             declineModal: false,
             acceptModal: false,
             orderModal: false,
+            restoreModal: false,
             statusFilter: -2,
             orderId: null,
             statuses: [
@@ -259,6 +270,11 @@
             ]
         }),
         methods: {
+            async restoreOrder() {
+                await this.$store.dispatch('RESTORE_ORDER', this.orderId);
+                this.orderId = null;
+                this.restoreModal = false;
+            },
             async deleteOrder() {
                 await this.$store.dispatch('DELETE_ORDER', this.orderId);
                 this.orderId = null;

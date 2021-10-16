@@ -25,6 +25,9 @@ export default {
                 isAdmin() {
                     return this.$store.getters.IS_ADMIN;
                 },
+                IS_OBSERVER() {
+                    return this.$store.getters.IS_OBSERVER;
+                },
                 IS_BOSS() {
                     return this.$store.getters.IS_BOSS;
                 },

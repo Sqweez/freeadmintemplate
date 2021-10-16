@@ -22,6 +22,8 @@
                             <th>Наименование</th>
                             <th>Стоимость</th>
                             <th>Количество</th>
+                            <th>Ожидается</th>
+                            <th>Доступно для бронирования</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -58,6 +60,12 @@
                                         mdi-plus
                                     </v-icon>
                                 </v-btn>
+                            </td>
+                            <td>
+                                {{ item.count }} шт
+                            </td>
+                            <td>
+                                {{ item.available_booking_count }} шт
                             </td>
                         </tr>
                         </tbody>
@@ -205,6 +213,7 @@
                         arrival_product_id: product.arrival_product_id,
                         product_price: product.product_price,
                         count: product.quantity,
+                        purchase_price: product.purchase_price,
                     };
                 })
 
