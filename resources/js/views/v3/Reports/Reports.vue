@@ -508,10 +508,10 @@
                 {text: 'Данные', value: 'sale_data'},
                 {text: 'Экономические показатели', value: 'economy'},
                 {text: 'Дополнительные данные', value: 'additional_data'},
-                {text: 'Поиск', value: 'search', align: ' d-none'},
                 {
                     text: 'Действие', value: 'action'
                 },
+                {text: 'Поиск', value: 'search', align: ' d-none'},
             ],
         }),
         async mounted() {
@@ -761,6 +761,10 @@
 
     .w-30 {
         width: 30%;
+    }
+
+    .v-data-table__mobile-row:last-child {
+        display: none;
     }
 
 

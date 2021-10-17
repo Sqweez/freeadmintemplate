@@ -169,6 +169,8 @@ class OrderController extends Controller
             'kaspi_red' => 0,
             'balance' => $order['balance'] ?? 0,
             'order_id' => $order->id,
+            // Безналичная оплата для интернет-заказов
+            'payment_type' => 1
         ]);
 
 
