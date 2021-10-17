@@ -296,7 +296,7 @@
                         </div>
                         <v-list-item v-if="item.comment">
                             <v-list-item-content>
-                                <v-list-item-title>{{ item.comment }}</v-list-item-title>
+                                <v-list-item-title style="white-space: normal;">{{ item.comment }}</v-list-item-title>
                                 <v-list-item-subtitle style="white-space: normal;">Комментарий</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
