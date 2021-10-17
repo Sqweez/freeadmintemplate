@@ -297,7 +297,7 @@
                         <v-list-item v-if="item.comment">
                             <v-list-item-content>
                                 <v-list-item-title>{{ item.comment }}</v-list-item-title>
-                                <v-list-item-subtitle>Комментарий</v-list-item-subtitle>
+                                <v-list-item-subtitle style="white-space: normal;">Комментарий</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item v-if="item.is_booking">
@@ -765,6 +765,10 @@
 
     .v-data-table__mobile-row:last-child {
         display: none;
+    }
+
+    .v-data-table__mobile-row__header, .v-data-table__mobile-row__cell {
+        flex: 1;
     }
 
 
