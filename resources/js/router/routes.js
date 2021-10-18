@@ -52,6 +52,7 @@ import ProductEarning from "@/views/Economy/ProductEarning";
 import CurrentArrivals from "@/components/Segments/Arrivals/CurrentArrivals";
 import BookingIndex from "@/views/Booking/BookingIndex";
 import BookingCart from "@/views/Booking/BookingCart";
+import SiteFooter from "@/views/Site/SiteFooter";
 
 const routes = [
     {
@@ -513,6 +514,17 @@ const routes = [
     {
         path: '/booking/create',
         component: CurrentArrivals,
+    },
+    {
+        path: '/site/footer',
+        component: SiteFooter,
+        meta: {
+            CAN_ENTER: {
+                IS_BOSS: true,
+                IS_ADMIN: true,
+                IS_MODERATOR: true
+            }
+        }
     }
 ];
 

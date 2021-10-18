@@ -20,6 +20,7 @@ use App\Http\Controllers\api\v2\LoyaltyController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\api\SaleController;
 use App\Http\Controllers\api\v2\BookingController;
+use App\Http\Controllers\api\v2\SiteController;
 
 // Authorization
 
@@ -82,6 +83,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('hits', [\App\Http\Controllers\api\shop\ProductController::class, 'getHitProducts']);
         Route::get('promocode/search/{promocode}', [PromocodeController::class, 'searchPromocode']);
         Route::get('partners', [AnalyticsController::class, 'getTopPartners']);
+        Route::get('footer', [SiteController::class, 'getFooter']);
     });
 
     // RevisionController
@@ -340,6 +342,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/', [BookingController::class, 'index']);
             Route::get('/{id}', [BookingController::class, 'show']);
             Route::delete('{id}', [BookingController::class, 'destroy']);
+        });
+
+        Route::prefix('site')->group(function () {
+            Route::post('/footer', [SiteController::class, 'editFooter']);
         });
 
         Route::post('brands/motivation', [BrandMotivationController::class, 'store']);

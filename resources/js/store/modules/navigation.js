@@ -243,6 +243,10 @@ const navigationModule = {
                     {
                         title: "Заказы",
                         url: '/shop/orders'
+                    },
+                    {
+                        title: 'Футер',
+                        url: '/site/footer'
                     }
                 ]
             }
@@ -274,6 +278,10 @@ const navigationModule = {
                 title: 'Баннеры',
                 url: '/shop/banners',
                 icon: 'dashboard',
+            },
+            {
+                title: 'Футер',
+                url: '/site/footer'
             }
         ],
         supplierMenu: [
@@ -498,6 +506,10 @@ const navigationModule = {
                     {
                         title: "Заказы",
                         url: '/shop/orders'
+                    },
+                    {
+                        title: 'Футер',
+                        url: '/site/footer'
                     }
                 ]
             },

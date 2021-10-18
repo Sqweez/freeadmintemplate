@@ -685,56 +685,61 @@
                 return [...this.$store.getters.REPORTS, ...this.$store.getters.PREORDERS] || [];
             },
             _salesReport() {
-                return this.salesReport
-                    .filter(s => {
-                        if (this.currentSeller === -1) {
-                            return s
-                        } else {
-                            return s.user.id === this.currentSeller;
-                        }
-                    })
-                    .filter(s => {
-                        if (this.currentCity === -1) {
-                            return s;
-                        } else {
-                            return s.store.id === this.currentCity;
-                        }
-                    })
-                    .filter(s => {
-                        if (this.currentType == -1) {
-                            return s;
-                        }
-
-                        if (this.currentType === -2) {
-                            return s.certificate;
-                        }
-
-                        else {
-                            if (this.currentType == 5 && s.payment_type === 5) {
-                                return true;
+                try {
+                    return this.salesReport
+                        .filter(s => {
+                            if (this.currentSeller === -1) {
+                                return s
+                            } else {
+                                return s.user.id === this.currentSeller;
                             }
-                            if (s.split_payment !== null) {
-                                return s.split_payment.find(s => s.payment_type == this.currentType);
+                        })
+                        .filter(s => {
+                            if (this.currentCity === -1) {
+                                return s;
+                            } else {
+                                return s.store.id === this.currentCity;
                             }
-                            return s.payment_type == this.currentType;
-                        }
-                    })
-                    .filter(s => {
-                        if (this.currentStoreType === -1) {
+                        })
+                        .filter(s => {
+                            if (this.currentType == -1) {
+                                return s;
+                            }
+
+                            if (this.currentType === -2) {
+                                return s.certificate;
+                            }
+
+                            else {
+                                if (this.currentType == 5 && s.payment_type === 5) {
+                                    return true;
+                                }
+                                if (s.split_payment !== null) {
+                                    return s.split_payment.find(s => s.payment_type == this.currentType);
+                                }
+                                return s.payment_type == this.currentType;
+                            }
+                        })
+                        .filter(s => {
+                            if (this.currentStoreType === -1) {
+                                return s;
+                            }
+                            return s.store_type == this.currentStoreType;
+                        })
+                        .map(s => {
+                            if (!this.search) {
+                                s.products = [...s._products];
+                                return s;
+                            }
+                            s.products = [...s._products.filter(p => {
+                                return p.product_name.toLowerCase().includes(this.search.toLowerCase());
+                            })]
                             return s;
-                        }
-                        return s.store_type == this.currentStoreType;
-                    })
-                    .map(s => {
-                        if (!this.search) {
-                            s.products = [...s._products];
-                            return s;
-                        }
-                        s.products = [...s._products.filter(p => {
-                            return p.product_name.toLowerCase().includes(this.search.toLowerCase());
-                        })]
-                        return s;
-                    })
+                        });
+                } catch (e) {
+                    return [];
+                }
+
             }
         }
     }
