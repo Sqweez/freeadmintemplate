@@ -24,6 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|BookingProduct whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BookingProduct whereProductPrice($value)
  * @mixin \Eloquent
+ * @property int $purchase_price
+ * @property-read \App\v2\Models\ProductSku $product
+ * @method static \Illuminate\Database\Eloquent\Builder|BookingProduct wherePurchasePrice($value)
  */
 class BookingProduct extends Model
 {

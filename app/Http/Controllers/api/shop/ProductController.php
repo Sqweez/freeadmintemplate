@@ -113,7 +113,7 @@ class ProductController extends Controller {
             return $q->where('is_site_visible', true);
         });
 
-        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images']);
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
         $productQuery->with(['favorite' => function ($query) use ($user_token) {
             return $query->where('user_token', $user_token);
         }]);
@@ -148,9 +148,44 @@ class ProductController extends Controller {
 
     public function getProduct(Product $product) {
         return new ProductResource(
-            Product::with(['sku', 'sku.attributes', 'sku.batches', 'product_images', 'attributes'])
+            Product::with(['sku', 'sku.attributes', 'sku.batches', 'product_images', 'attributes', 'stocks'])
                 ->whereKey($product->id)
                 ->first()
+        );
+    }
+
+    public function getStockProducts(Request $request) {
+        $store_id = intval($request->get('store_id')) || -1;
+        $user_token = $request->get('user_token');
+        $stock_id = $request->get('stock_id');
+        $productQuery = Product::query()->whereIsSiteVisible(true);
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
+        $productQuery->with(['favorite' => function ($query) use ($user_token) {
+            return $query->where('user_token', $user_token);
+        }]);
+
+        $productQuery->whereHas('batches', function ($q) use ($store_id) {
+            if ($store_id === -1) {
+                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+            } else {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+            }
+        })->with(['batches' => function ($q) use ($store_id) {
+            if ($store_id === -1) {
+                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+            } else {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+            }
+        }]);
+
+        $productQuery->whereHas('stocks', function ($q) use ($stock_id) {
+            return $q->where('stock_id', $stock_id);
+        });
+
+        $products = $productQuery->get();
+
+        return ProductsResource::collection(
+            $products
         );
     }
 
@@ -161,7 +196,7 @@ class ProductController extends Controller {
 
         $productQuery = Product::query()->whereIsSiteVisible(true)->whereIsHit(true);
 
-        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images']);
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
         $productQuery->with(['favorite' => function ($query) use ($user_token) {
             return $query->where('user_token', $user_token);
         }]);

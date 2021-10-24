@@ -58,6 +58,7 @@ class CartController extends Controller {
             Cart::whereKey($cart->id)
                 ->with([
                     'products', 'products.product',
+                    'products.product.product.stocks',
                     'products.product.attributes', 'products.product.product.attributes'])
                 ->with(['products.product.batches' => function ($q) use ($store_id) {
                     if (intval($store_id) === -1) {
@@ -131,6 +132,7 @@ class CartController extends Controller {
         $store_id = $request->get('store_id');
         $cart = Cart::with([
                 'products', 'products.product',
+                'products.product.product.stocks',
                 'products.product.attributes', 'products.product.product.attributes'])
                 ->ofUser($user_token)
                 ->with(['products.product.batches' => function ($q) use ($store_id) {
@@ -249,7 +251,7 @@ class CartController extends Controller {
             });
             $count = $_cartProducts->count();
             $batches = ProductBatch::with('store')->whereIn('id', $_cartProducts->pluck('product_batch_id'))->get();
-            $message .= ($key + 1) . '.' . $product->product_name . ',' . $attributes . ' ' . $product['product_price'] . 'тг' . ' | ' . $count . 'шт.' . "\n";
+            $message .= ($key + 1) . '.' . $product->product_name . ',' . $attributes . ' ' . $product['product']['stock_price'] . 'тг' . ' | ' . $count . 'шт.' . "\n";
             $message .= 'Склады товаров: ' . $batches->reduce(function ($a, $c) {
                     return $a . ' ' . $c['store']['name'] . ',';
                 }, '') . "\n";
@@ -382,12 +384,15 @@ class CartController extends Controller {
                         $product_batch = ProductBatch::where('product_id', $product['product_id'])->where('store_id', $store_id)->where('quantity', '>=', 1)->first();
                     }
                     if ($product_batch) {
+                        $sku = ProductSku::find($product['product_id']);
+                        $mainProduct = $sku->product;
+                        $productPrice = $mainProduct->stock_price;
                         $product_sale = [
                             'product_batch_id' => $product_batch['id'],
                             'product_id' => $product['product_id'],
                             'order_id' => $order['id'],
                             'purchase_price' => $product_batch['purchase_price'],
-                            'product_price' => ProductSku::find($product['product_id'])['product_price']
+                            'product_price' => $productPrice
                         ];
 
                         OrderProduct::create($product_sale);

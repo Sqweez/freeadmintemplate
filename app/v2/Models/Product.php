@@ -319,6 +319,41 @@ class Product extends Model
         });
     }
 
+    public function stocks() {
+        return $this->hasMany('App\v2\Models\StockProducts')->with(['stock' => function ($q) {
+            return $q->whereDate('started_at', '<=', now())->whereDate('finished_at', '>=', now());
+        }]);
+    }
+
+    public function getStockPriceAttribute() {
+        $stocks = $this->stocks;
+        if (!$stocks || $stocks->count() === 0) {
+            return $this->product_price;
+        }
+
+        $stocks = $this->stocks->filter(function ($item) {
+            return $item['stock'];
+        });
+
+        if (!$stocks || $stocks->count() === 0) {
+            return $this->product_price;
+        }
+
+        $discount = $stocks->first()['stock']['discount'] / 100;
+        return ceil($this->product_price *  (1 - $discount));
+
+        /*$stock = $this->stocks;
+        if ($stock && $stock->count() > 0) {
+            $discount = $stock->first()->discount / 100;
+            return $this->product_price * (1 - $discount);
+        }
+        return $this->product_price;*/
+    }
+
+    public function scopeOfStocks($query) {
+        //return $query->
+    }
+
     protected static function boot() {
         parent::boot();
         static::creating(function ($query) {

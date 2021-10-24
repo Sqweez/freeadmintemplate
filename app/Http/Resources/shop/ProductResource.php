@@ -42,6 +42,8 @@ class ProductResource extends JsonResource
             'has_group' => intval($this->grouping_attribute_id) > 0,
             'meta_title' => $this->meta_title ?? '',
             'meta_description' => $this->meta_description ?? '',
+            'stock_price' => $this->stock_price,
+            'has_stock' => $this->stock_price !== $this->product_price,
             'related_products' => ProductsResource::collection(Product::whereIn('id',
                 RelatedProduct::whereCategoryId($this->category_id)->get()->pluck('product_id')
             )->get())

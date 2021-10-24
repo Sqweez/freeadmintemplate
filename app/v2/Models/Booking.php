@@ -37,6 +37,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereUserId($value)
  * @mixin \Eloquent
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read mixed $date_create
+ * @property-read mixed $status
+ * @method static \Illuminate\Database\Query\Builder|Booking onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Booking withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Booking withoutTrashed()
  */
 class Booking extends Model
 {

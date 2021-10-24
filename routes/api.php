@@ -21,6 +21,7 @@ use App\Http\Controllers\CronController;
 use App\Http\Controllers\api\SaleController;
 use App\Http\Controllers\api\v2\BookingController;
 use App\Http\Controllers\api\v2\SiteController;
+use App\Http\Controllers\api\v2\StockController;
 
 // Authorization
 
@@ -47,6 +48,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('stores', 'api\StoreController@indexStores');
         Route::get('categories', 'api\CategoryController@indexShop');
         Route::get('products', 'api\shop\ProductController@getProducts');
+        Route::get('stocks/products', 'api\shop\ProductController@getStockProducts');
+        Route::get('stocks', [StockController::class, 'getShopActiveStock']);
         Route::get('products/search', 'api\shop\ProductController@getBySearch');
         Route::get('products-group', 'api\shop\ProductController@groupProducts');
         Route::get('products/{product}', 'api\shop\ProductController@getProduct');
@@ -351,5 +354,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('brands/motivation', [BrandMotivationController::class, 'store']);
         Route::get('brands/motivation', [BrandMotivationController::class, 'index']);
         Route::get('loyalty', [LoyaltyController::class, 'index']);
+        Route::get('stocks', [StockController::class, 'index']);
+        Route::post('stocks', [StockController::class, 'store']);
+        Route::delete('stocks/{id}', [StockController::class, 'destroy']);
     });
 });

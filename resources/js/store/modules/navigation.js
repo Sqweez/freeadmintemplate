@@ -217,6 +217,10 @@ const navigationModule = {
                 hasDropdown: true,
                 children: [
                     {
+                        title: 'Акции',
+                        url: '/stocks/index'
+                    },
+                    {
                         title: 'Цели',
                         url: '/shop/goals'
                     },
@@ -479,6 +483,10 @@ const navigationModule = {
                 hasDropdown: true,
                 isAdmin: true,
                 children: [
+                    {
+                        title: 'Акции',
+                        url: '/stocks/index'
+                    },
                     {
                         title: 'Цели',
                         url: '/shop/goals'

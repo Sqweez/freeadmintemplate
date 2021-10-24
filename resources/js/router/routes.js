@@ -53,6 +53,8 @@ import CurrentArrivals from "@/components/Segments/Arrivals/CurrentArrivals";
 import BookingIndex from "@/views/Booking/BookingIndex";
 import BookingCart from "@/views/Booking/BookingCart";
 import SiteFooter from "@/views/Site/SiteFooter";
+import StocksIndex from "@/views/Stocks/StocksIndex";
+import StocksCreate from "@/views/Stocks/StocksCreate";
 
 const routes = [
     {
@@ -508,12 +510,12 @@ const routes = [
         component: BookingIndex,
     },
     {
-        path: '/booking/:id',
-        component: BookingCart,
-    },
-    {
         path: '/booking/create',
         component: CurrentArrivals,
+    },
+    {
+        path: '/booking/:id',
+        component: BookingCart,
     },
     {
         path: '/site/footer',
@@ -523,6 +525,26 @@ const routes = [
                 IS_BOSS: true,
                 IS_ADMIN: true,
                 IS_MODERATOR: true
+            }
+        }
+    },
+    {
+        path: '/stocks/index',
+        component: StocksIndex,
+        meta: {
+            CAN_ENTER: {
+                IS_BOSS: true,
+                IS_ADMIN: true,
+            }
+        }
+    },
+    {
+        path: '/stocks/create',
+        component: StocksCreate,
+        meta: {
+            CAN_ENTER: {
+                IS_BOSS: true,
+                IS_ADMIN: true,
             }
         }
     }

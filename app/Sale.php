@@ -64,6 +64,13 @@ use function foo\func;
  * @property-read \App\v2\Models\Preorder $preorder
  * @method static \Illuminate\Database\Eloquent\Builder|Sale physicalSales()
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereComment($value)
+ * @property int|null $order_id
+ * @property int|null $booking_id
+ * @property-read \App\v2\Models\Booking|null $booking
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereBookingId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereIsDelivery($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereKaspiTransactionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereOrderId($value)
  */
 class Sale extends Model
 {

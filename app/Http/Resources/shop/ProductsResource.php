@@ -44,7 +44,9 @@ class ProductsResource extends JsonResource
             'in_selected_city' => $in_selected_city,
             'in_other_city' => $in_other_city,
             'is_favorite' => !!$this->favorite,
-            'category_id' => intval($this->category_id)
+            'category_id' => intval($this->category_id),
+            'stock_price' => $this->stock_price,
+            'has_stock' => $this->stock_price !== $this->product_price
         ];
     }
 }

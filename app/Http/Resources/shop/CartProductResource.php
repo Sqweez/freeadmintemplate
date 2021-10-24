@@ -37,7 +37,7 @@ class CartProductResource extends JsonResource
             'attribute_product' => $this->product->product->attributes->pluck('attribute_value'),
             'subcategory' => $this->product->subcategory->subcategory_name,
             'is_site_visible' => $this->product->is_site_visible,
-            'product_price' => $this->product->product_price,
+            'product_price' => $this->product->stock_price,
             'product_name_slug' => Str::slug($this->product->product_name, '-'),
             'product_id' => $this->product->product_id,
         ];

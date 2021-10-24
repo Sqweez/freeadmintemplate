@@ -20,7 +20,7 @@ class ManufacturerController extends Controller
      */
     public function index(Request $request)
     {
-        return ManufacturerResource::collection(Manufacturer::all());
+        return ManufacturerResource::collection(Manufacturer::query()->orderBy('manufacturer_name')->get());
     }
 
     /**
@@ -60,3 +60,4 @@ class ManufacturerController extends Controller
         $manufacturer->delete();
     }
 }
+
