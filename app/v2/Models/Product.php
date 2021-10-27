@@ -321,7 +321,7 @@ class Product extends Model
 
     public function stocks() {
         return $this->hasMany('App\v2\Models\StockProducts')->with(['stock' => function ($q) {
-            return $q->whereDate('started_at', '<=', now())->whereDate('finished_at', '>=', now());
+            return $q->where('started_at', '<=', now())->where('finished_at', '>=', now());
         }]);
     }
 

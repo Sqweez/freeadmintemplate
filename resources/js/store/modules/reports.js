@@ -42,12 +42,7 @@ const reportsModule = {
             state.reports = state.reports.filter(s => s.id !== id);
         },
         changeSale(state, payload) {
-            state.reports = state.reports.map(s => {
-                if (s.id == payload.id) {
-                    s = payload;
-                }
-                return s;
-            })
+            state.reports.push(payload);
         },
         setPlanReports(state, payload) {
             state.planReports = payload;

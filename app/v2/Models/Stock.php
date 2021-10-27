@@ -40,7 +40,7 @@ class Stock extends Model
     }
 
     public function scopeActive($q) {
-        return $q->whereDate('started_at', '<=', now())
-            ->whereDate('created_at', '>=', now());
+        return $q->where('started_at', '<=', now())
+            ->where('finished_at', '>=', now());
     }
 }
