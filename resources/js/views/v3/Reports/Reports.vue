@@ -431,6 +431,7 @@
     import ACTIONS from '@/store/actions/index';
     import axios from 'axios';
     import SaleEditModal from "@/components/Modal/SaleEditModal";
+import { log } from '../../../scripts/nv.d3.min';
 
     const DATE_FILTERS = {
         ALL_TIME: 1,
@@ -737,6 +738,7 @@
                             return s;
                         });
                 } catch (e) {
+                    console.log(e)
                     return [];
                 }
 
