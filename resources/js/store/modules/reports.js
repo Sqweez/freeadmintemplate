@@ -42,13 +42,26 @@ const reportsModule = {
             state.reports = state.reports.filter(s => s.id !== id);
         },
         changeSale(state, payload) {
-            state.reports.push(payload);
+            state.reports = state.reports.map(r => {
+                if (r.id == payload.id) {
+                    r = payload;
+                }
+                return r;
+            })
         },
         setPlanReports(state, payload) {
             state.planReports = payload;
         },
         setBrandsMotivation(state, payload) {
             state.brandsMotivation = payload;
+        },
+        editSaleList(state, payload) {
+            state.reports = state.reports.map(report => {
+                if (report.id == payload.id) {
+                    report = payload.report;
+                }
+                return report;
+            })
         }
     },
     actions: {
@@ -96,7 +109,7 @@ const reportsModule = {
             try {
                 this.$loading.enable();
                 const report = await editSaleList(payload);
-                commit('changeSale', report.data);
+                commit('editSaleList', {report: report.data, id: payload.id});
             } catch (e) {
                 console.log(e);
             } finally {
