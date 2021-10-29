@@ -122,7 +122,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     Route::prefix('stores')->group(function () {
         Route::get('types', 'api\StoreController@types');
-        Route::resource('', 'api\StoreController');
+        Route::patch('/{store}', 'api\StoreController@update');
+        Route::resource('/', 'api\StoreController');
         Route::post('balance/{store}', [CompanionController::class, 'addBalance']);
     });
 

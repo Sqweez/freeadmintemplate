@@ -75,7 +75,7 @@ class User extends Authenticatable
     }
 
     public function scopeSellers($q) {
-        return $q->whereRoleId(2);
+        return $q->whereIn('role_id', [2, 9]);
     }
 
 }

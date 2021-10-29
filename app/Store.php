@@ -57,7 +57,8 @@ class Store extends Model
 
     protected $casts = [
         'id' => 'integer',
-        'type_id' => 'integer'
+        'type_id' => 'integer',
+        'etc' => 'array'
     ];
 
     public function type() {

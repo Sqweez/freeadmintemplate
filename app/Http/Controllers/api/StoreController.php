@@ -50,7 +50,7 @@ class StoreController extends Controller
      */
     public function update(Request $request, Store $store)
     {
-        $store->update($request->all());
+        $store->update($request->except(['balance', 'iron_balance', 'has_kaspi_terminal']));
         return new StoreResource($store);
     }
 

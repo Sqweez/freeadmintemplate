@@ -33,6 +33,40 @@
                         no-data-text="Нет данных"
                         :items="cities"
                     />
+                    <v-divider />
+                    <div v-if="store.type_id === 1">
+                        <v-textarea
+                            label="Описание"
+                            v-model.trim="description"
+                        />
+                        <v-textarea
+                            label="Продавцы"
+                            v-model.trim="sellers"
+                        />
+                        <v-text-field
+                            label="Ссылка на карту"
+                            v-model.trim="mapUrl"
+                        />
+                        <div class="d-flex" v-if="images.length">
+                            <div
+                                class="image-container"
+                                v-for="(image, idx) of images"
+                                :key="idx">
+                                <button class="delete-image" @click.prevent="deleteImage(idx)">&times;</button>
+                                <img
+                                    :src="'../storage/' + image"
+                                    width="150"
+                                    height="150"
+                                    alt="Изображение">
+                            </div>
+
+                        </div>
+                        <v-btn text class="mt-3" @click="$refs.fileInput.click()">
+                            Загрузить фото
+                            <v-icon>mdi-photo</v-icon>
+                        </v-btn>
+                        <input type="file" class="d-none" ref="fileInput" @change="uploadPhoto">
+                    </div>
                 </v-form>
             </v-card-text>
             <v-card-actions class="p-2" v-if="!loading">
@@ -61,6 +95,7 @@
 
 <script>
     import ACTIONS from "@/store/actions";
+    import uploadFile, {deleteFile} from "@/api/upload";
 
     export default {
         watch: {
@@ -68,6 +103,12 @@
                 this.store = {};
                 if (this.id !== null) {
                     this.store = {...this.$store.getters.store(this.id)};
+                    if (this.store.etc) {
+                        this.description = this.store.etc.description;
+                        this.mapUrl = this.store.etc.mapUrl;
+                        this.sellers = this.store.etc.sellers;
+                        this.images = this.store.etc.images;
+                    }
                 }
             }
         },
@@ -82,6 +123,10 @@
         data: () => ({
             loading: false,
             store: {},
+            description: '',
+            mapUrl: '',
+            sellers: '',
+            images: [],
         }),
         props: {
             state: {
@@ -94,12 +139,37 @@
             }
         },
         methods: {
+            async deleteImage(key) {
+                await deleteFile(this.images[key]);
+                this.images.splice(key, 1);
+            },
+            async uploadPhoto(e) {
+                const file = e.target.files[0];
+                const result = await uploadFile(file, 'file', 'stores');
+                this.images.push(result.data);
+            },
             async createStore() {
+                if (this.store.type_id === 1) {
+                    this.store.etc = {
+                        description: this.description,
+                        sellers: this.sellers,
+                        images: this.images,
+                        mapUrl: this.mapUrl
+                    };
+                }
                 await this.$store.dispatch(ACTIONS.CREATE_STORE, this.store);
                 this.$toast.success('Склад создан')
             },
             async editStore() {
                 delete this.store.type;
+                if (this.store.type_id === 1) {
+                    this.store.etc = {
+                        description: this.description,
+                        sellers: this.sellers,
+                        images: this.images,
+                        mapUrl: this.mapUrl
+                    };
+                }
                 await this.$store.dispatch(ACTIONS.EDIT_STORE, this.store);
                 this.$toast.success('Склад отредактирован')
 
