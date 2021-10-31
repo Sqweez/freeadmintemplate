@@ -40,7 +40,9 @@ class BookingController extends Controller
         $booking = $request->get('booking');
         $products = $request->get('products');
         $_booking = Booking::create($booking);
-        collect($products)->each(function ($product) use ($_booking) {
+        collect($products)->filter(function ($product) {
+            return $product['count'] > 0;
+        })->each(function ($product) use ($_booking) {
             $_booking->products()->create([
                 'arrival_id' => $_booking['id'],
                 'product_id' => $product['product_id'],

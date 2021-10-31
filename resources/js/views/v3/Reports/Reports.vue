@@ -21,6 +21,12 @@
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-content>
+                                <v-list-item-title class="font-weight-black">Общая сумма бронирований:</v-list-item-title>
+                                <v-list-item-title>{{ bookingTotal | priceFilters }}</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-list-item-content>
                                 <v-list-item-title class="font-weight-black">Количество продаж:</v-list-item-title>
                                 <v-list-item-title>{{ totalSaleCount }}</v-list-item-title>
                             </v-list-item-content>
@@ -447,6 +453,7 @@ import { log } from '../../../scripts/nv.d3.min';
         components: {SaleEditModal, ReportCancelModal, ConfirmationModal},
         data: () => ({
             editModal: false,
+            bookings: [],
             search: '',
             overlay: false,
             loading: false,
@@ -544,6 +551,8 @@ import { log } from '../../../scripts/nv.d3.min';
                     start: this.currentDate[0],
                     finish: this.currentDate[1],
                 })
+                const { data } = await axios.get(`/api/v2/booking?start=${this.currentDate[0]}&finish=${this.currentDate[1]}`);
+                this.bookings = data.data;
                 this.overlay = this.loading = false;
             },
             async onConfirm() {
@@ -566,6 +575,8 @@ import { log } from '../../../scripts/nv.d3.min';
                 };
                 await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
                 await this.$store.dispatch('GET_PREORDERS_REPORT', dateObject);
+                const { data } = await axios.get(`/api/v2/booking?start=${dateObject.start}&finish=${dateObject.finish}`);
+                this.bookings = data.data;
                 this.overlay = false;
                 this.loading = false;
 
@@ -648,6 +659,26 @@ import { log } from '../../../scripts/nv.d3.min';
             store_types() {
                 return [{id: -1, type: 'Все'}, ...this.$store.getters.store_types];
             },
+            _bookings() {
+                return this.bookings.filter(b => {
+                    if (this.currentSeller === -1) {
+                        return b
+                    } else {
+                        return b.user.id === this.currentSeller;
+                    }
+                }).filter(s => {
+                    if (this.currentCity === -1) {
+                        return s;
+                    } else {
+                        return s.store.id === this.currentCity;
+                    }
+                })
+            },
+            bookingTotal() {
+                return this._bookings.reduce((a, c) => {
+                    return a + c.paid_sum
+                }, 0)
+            },
             totalSales() {
                 return this._salesReport
                     .reduce((a, c) => {
@@ -668,7 +699,7 @@ import { log } from '../../../scripts/nv.d3.min';
                         else {
                             return a + +c.split_payment.find(s => s.payment_type == this.currentType).amount - certificateAmount;
                         }
-                    }, 0);
+                    }, 0) + this.bookingTotal;
             },
             totalMargin() {
                 return this._salesReport

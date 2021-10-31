@@ -682,7 +682,11 @@ const navigationModule = {
                     {
                         title: 'Предзаказы',
                         url: '/preorders/index'
-                    }
+                    },
+                    {
+                        title: 'Поступления',
+                        url: '/arrivals',
+                    },
                 ],
             },
             {

@@ -69,11 +69,25 @@
                             />
                         </td>
                         <td>
-                            <v-text-field
-                                v-for="amount of motivation.amount"
-                                :label="amount.user_name"
-                                type="number"
-                                v-model.number="amount.amount"
+                            <div class="d-flex" v-for="(amount, idx) of motivation.amount">
+                                <v-text-field
+                                    :label="amount.user_name"
+                                    type="number"
+                                    v-model.number="amount.amount"
+                                />
+                                <v-btn text color="error" @click="deleteSeller(key, idx)">
+                                    х
+                                </v-btn>
+                            </div>
+                            <v-divider></v-divider>
+                            <v-autocomplete
+                                label="Продавцы"
+                                multiple
+                                v-model="motivation.sellers"
+                                :items="sellers"
+                                item-text="name"
+                                item-value="id"
+                                @change="onSelectChange(key)"
                             />
                         </td>
                         <td>
@@ -112,17 +126,48 @@
                 this.$toast.success('План успешно изменен!');
             },
             async saveBrandsMotivation() {
-                await this.$store.dispatch(ACTIONS.CREATE_BRANDS_MOTIVATION, this.motivations);
+                await this.$store.dispatch(ACTIONS.CREATE_BRANDS_MOTIVATION, this.motivations.map(m => {
+                    return {
+                        amount: m.amount,
+                        brands: m.brands,
+                    };
+                }));
                 this.$toast.success('Информация обновлена');
+            },
+            deleteSeller(key, idx) {
+                const userId = this.motivations[key].amount[idx].user_id;
+                this.motivations[key].amount.splice(idx, 1);
+                this.motivations[key].sellers = this.motivations[key].sellers.filter(s => s != userId);
+            },
+            onSelectChange(key) {
+                this.motivations = this.motivations.map((m, index) => {
+                    if (key !== index) {
+                        return m;
+                    }
+
+                    m.amount = m.amount.filter(a => m.sellers.includes(a.user_id));
+
+                    m.sellers.forEach(s => {
+                        if (!m.amount.map(u => u.user_id).includes(s)) {
+                            m.amount.push({
+                                user_id: s,
+                                amount: 0,
+                                user_name: this.getName(s)
+                            });
+                        }
+                    })
+
+                    return m;
+                });
+            },
+            getName(id) {
+                return this.sellers.find(s => s.id === id).name ?? 'Неизвестно';
             },
             addMotivation() {
                 this.motivations.push({
                     brands: [],
-                    amount: [...this.sellers.map(s => ({
-                        user_id: s.id,
-                        user_name: `${s.name} | ${s.city}`,
-                        amount: 0,
-                    }))],
+                    amount: [],
+                    sellers: [],
                 })
             },
             async init() {
@@ -163,13 +208,12 @@
             await this.$store.dispatch(ACTIONS.GET_PLANS);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_BRANDS_MOTIVATIONS_PLAN);
+            this.motivations = [...this.BRANDS_MOTIVATION_PLAN].map(function (motivation) {
+                motivation.sellers = motivation.amount.map(a => a.user_id);
+                return motivation;
+            });
             await this.init();
         },
-        watch: {
-            BRANDS_MOTIVATION_PLAN(value) {
-                this.motivations = [...value];
-            }
-        }
     }
 </script>
 

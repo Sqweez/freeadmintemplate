@@ -67,7 +67,6 @@
                                 icon
                                 color="primary"
                                 @click="current_arrival = item; arrivalModal = true; editArrivalMode = false;"
-                                v-if="IS_SUPERUSER"
                             >
                                 <v-icon>mdi-information-outline</v-icon>
                             </v-btn>

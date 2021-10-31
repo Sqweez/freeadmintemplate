@@ -24,7 +24,7 @@
                         <tr>
                             <th v-if="confirmMode">Действие</th>
                             <th>Наименование</th>
-                            <th>Закуп</th>
+                            <th v-if="IS_SUPERUSER">Закуп</th>
                             <th>Количество</th>
                         </tr>
                         </thead>
@@ -49,7 +49,7 @@
                                     </v-list-item>
                                 </v-list>
                             </td>
-                            <td>
+                            <td v-if="IS_SUPERUSER">
                                 <v-text-field
                                     v-if="confirmMode && editMode"
                                     v-model="item.purchase_price"
