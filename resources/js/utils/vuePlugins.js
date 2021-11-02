@@ -2,6 +2,7 @@ import ToastService from "@/utils/toastService";
 import LoadingService from "@/utils/loadingService";
 import ColorService from "@/utils/colorService";
 import store from "@/store";
+import FileService from "@/utils/fileService";
 
 export default {
     install(Vue, options) {
@@ -18,6 +19,9 @@ export default {
                 },
                 $color() {
                     return new ColorService();
+                },
+                $file() {
+                    return new FileService();
                 },
                 isSeller() {
                     return this.$store.getters.IS_SELLER;

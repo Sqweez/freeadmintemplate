@@ -39,15 +39,11 @@
                             label="Описание"
                             v-model.trim="description"
                         />
-                        <v-textarea
-                            label="Продавцы"
-                            v-model.trim="sellers"
-                        />
                         <v-text-field
                             label="Ссылка на карту"
                             v-model.trim="mapUrl"
                         />
-                        <div class="d-flex" v-if="images.length">
+                        <div class="d-flex flex-wrap align-center items-center" v-if="images.length">
                             <div
                                 class="image-container"
                                 v-for="(image, idx) of images"
@@ -55,7 +51,6 @@
                                 <button class="delete-image" @click.prevent="deleteImage(idx)">&times;</button>
                                 <img
                                     :src="'../storage/' + image"
-                                    width="150"
                                     height="150"
                                     alt="Изображение">
                             </div>
@@ -66,6 +61,29 @@
                             <v-icon>mdi-photo</v-icon>
                         </v-btn>
                         <input type="file" class="d-none" ref="fileInput" @change="uploadPhoto">
+                        <v-divider></v-divider>
+                        <h5>Продавцы:</h5>
+                        <div v-for="(seller, index) of sellers">
+                            <v-text-field
+                                label="Имя"
+                                v-model="seller.name"
+                                type="text"
+                            />
+                            <v-textarea
+                                label="Доп данные"
+                                v-model="seller.description"
+                                type="text"
+                            />
+                            <img :src="`../storage/${seller.image}`" alt="" height="150" v-if="seller.image">
+                            <input type="file" :data-index="index" class="d-none" ref="sellerFileInput" @change="uploadSellerPhoto">
+                            <v-btn text class="mt-3" @click="$refs.sellerFileInput[index].click()">
+                                Загрузить фото
+                                <v-icon>mdi-photo</v-icon>
+                            </v-btn>
+                        </div>
+                        <v-btn color="success" @click="sellers.push({name: '', photo: null, description: ''})">
+                            Добавить продавца +
+                        </v-btn>
                     </div>
                 </v-form>
             </v-card-text>
@@ -106,9 +124,16 @@
                     if (this.store.etc) {
                         this.description = this.store.etc.description;
                         this.mapUrl = this.store.etc.mapUrl;
-                        this.sellers = this.store.etc.sellers;
+                        this.sellers = this.store.etc.sellers ?? [];
                         this.images = this.store.etc.images;
                     }
+                }
+
+                if (!this.state) {
+                    this.description = '';
+                    this.mapUrl = '';
+                    this.sellers = [];
+                    this.images = [];
                 }
             }
         },
@@ -125,7 +150,7 @@
             store: {},
             description: '',
             mapUrl: '',
-            sellers: '',
+            sellers: [],
             images: [],
         }),
         props: {
@@ -139,13 +164,17 @@
             }
         },
         methods: {
+            async uploadSellerPhoto(e) {
+                const index = +e.target.dataset.index;
+                const result = await this.$file.upload(e.target.files[0], 'sellers');
+                this.$set(this.sellers, index, {...this.sellers[index], image: result.data});
+            },
             async deleteImage(key) {
-                await deleteFile(this.images[key]);
+                await this.$file.remove(this.images[key]);
                 this.images.splice(key, 1);
             },
             async uploadPhoto(e) {
-                const file = e.target.files[0];
-                const result = await uploadFile(file, 'file', 'stores');
+                const result = await this.$file.upload(e.target.files[0], 'stores');
                 this.images.push(result.data);
             },
             async createStore() {

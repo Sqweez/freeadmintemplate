@@ -10,6 +10,14 @@
                 </v-btn>
             </v-card-title>
             <v-card-text>
+                <v-select
+                    style="max-width: 270px;"
+                    label="Тип лояльности"
+                    :items="loyalties"
+                    item-value="id"
+                    item-text="name"
+                    v-model="loyaltyFilter"
+                />
                 <v-row justify="space-between">
                     <v-col>
                         <v-text-field
@@ -69,6 +77,7 @@
         components: {ClientModal},
         data: () => ({
             search: '',
+            loyaltyFilter: -1,
             clientModal: false,
             headers: [
                 {
@@ -116,8 +125,22 @@
         },
         computed: {
             clients() {
-                return this.$store.getters.clients;
-            }
+                return this.$store.getters.clients.filter(client => {
+                    if (this.loyaltyFilter === -1) {
+                        return client;
+                    }
+                    return client.loyalty_id === this.loyaltyFilter;
+                });
+            },
+            loyalties() {
+                return [
+                    {
+                        id: -1,
+                        name: 'Все'
+                    },
+                    ...this.$store.getters.LOYALTY
+                ];
+            },
         },
         props: {
             state: {

@@ -17,7 +17,14 @@ class BookingController extends Controller
 {
     public function index(Request $request) {
         return BookingResource::collection(
-            Booking::with([
+            Booking::query()
+                ->when($request->has('start'), function ($query) use ($request) {
+                    return $query->whereDate('created_at', '<=', $request->get('start'));
+                })
+                ->when($request->has('finish'), function ($query) use ($request) {
+                    return $query->whereDate('created_at', '>=', $request->get('finish'));
+                })
+                ->with([
                 'user:id,name',
                 'store:id,name',
                 'client:id,client_name',

@@ -185,6 +185,12 @@
                 v-model="search"
                 clearable
             />
+            <v-text-field
+                label="Поиск по комментарию"
+                append-icon="search"
+                v-model="searchComment"
+                clearable
+            />
             <v-data-table
                 no-results-text="Нет результатов"
                 no-data-text="Нет данных"
@@ -521,6 +527,7 @@ import { log } from '../../../scripts/nv.d3.min';
                 },
                 {text: 'Поиск', value: 'search', align: ' d-none'},
             ],
+            searchComment: '',
         }),
         async mounted() {
             await this.init();
@@ -719,6 +726,9 @@ import { log } from '../../../scripts/nv.d3.min';
             _salesReport() {
                 try {
                     return this.salesReport
+                        .filter(s => {
+                            return s.comment.toLowerCase().includes(this.searchComment.toLowerCase());
+                        })
                         .filter(s => {
                             if (this.currentSeller === -1) {
                                 return s
