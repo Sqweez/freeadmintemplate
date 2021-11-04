@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-card-title>Все товары</v-card-title>
+        <v-card-title>Все т1овары</v-card-title>
         <v-card-text v-if="loading">
             <div
                 class="text-center d-flex align-center justify-center"
@@ -14,7 +14,7 @@
         </v-card-text>
         <v-card-text v-else>
             <div class="mb-5">
-                <v-btn color="error" @click="showProductModal()" v-if="is_admin">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
+                <v-btn color="error" @click="showProductModal()">Добавить товар <v-icon>mdi-plus</v-icon></v-btn>
             </div>
             <v-row>
                 <v-col>
@@ -31,7 +31,7 @@
                                 hide-details
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12" xl="6" v-if="is_admin">
+                        <v-col cols="12" xl="6">
                             <v-select
                                 :items="stores"
                                 item-text="name"
@@ -51,7 +51,7 @@
                                 label="Фотографии"
                             />
                         </v-col>
-                        <v-col cols="12" xl="6" v-if="is_admin">
+                        <v-col cols="12" xl="6">
                             <v-select
                                 :items="descriptionFilters"
                                 item-text="name"
@@ -123,10 +123,6 @@
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <!--  <v-btn color="primary" @click="priceTag = item; priceTagModal = true;">
-                                      Печать ценника
-                                      <v-icon>mdi-plus</v-icon>
-                                  </v-btn>-->
                                 <v-btn color="warning" @click="showProductModal(item.id, 'editProduct')">
                                     Товар
                                     <v-icon>mdi-pencil</v-icon>
@@ -201,13 +197,12 @@
             ProductRangeModal
         },
         async created() {
-            const store_id = this.is_admin ? null : this.user.store_id;
             try {
                 await this.$store.dispatch('GET_MODERATOR_PRODUCTS');
             } catch (e) {
                 console.log(e.response);
             }
-            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+            await this.$store.dispatch(ACTIONS.GET_STORES, null);
             this.storeFilter = this.stores[0].id;
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
@@ -357,20 +352,17 @@
                     }
                 ];
 
-                if (this.is_admin) {
-                    headers.unshift( {
-                        value: 'actions',
-                        text: 'Действие',
-                        sortable: false
-                    });
+                headers.unshift( {
+                    value: 'actions',
+                    text: 'Действие',
+                    sortable: false
+                });
 
-                    headers.unshift({
-                        value: 'id',
-                        text: 'ID',
-                        sortable: true
-                    })
-                }
-
+                headers.unshift({
+                    value: 'id',
+                    text: 'ID',
+                    sortable: true
+                })
                 return headers;
             }
         },
