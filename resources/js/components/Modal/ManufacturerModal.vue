@@ -19,8 +19,12 @@
                         label="Наименование"
                         v-model="manufacturer.manufacturer_name"
                     />
-                    <img v-if="manufacturer.manufacturer_img" :src="'../storage/' + manufacturer.manufacturer_img"
-                         alt="" width="200" height="200">
+                    <div v-if="manufacturer.manufacturer_img">
+                        <img :src="'../storage/' + manufacturer.manufacturer_img"
+                             alt="" height="200"><br>
+                        <v-btn color="error" @click="manufacturer.manufacturer_img = null;">Удалить картинку</v-btn>
+                    </div>
+
                     <div v-else>
                         <div>
                             <v-btn color="primary" @click="chooseFile">Выбрать изображение</v-btn>

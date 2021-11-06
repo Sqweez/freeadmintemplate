@@ -198,6 +198,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // AnalyticsController
     Route::prefix('analytics')->group(function() {
         Route::get('partners', [AnalyticsController::class, 'partners']);
+        Route::get('partner/sales', [AnalyticsController::class, 'getClientPartnerSales']);
         Route::get('partners/{id}', [AnalyticsController::class, 'partnerStats']);
         Route::get('sales', [AnalyticsController::class, 'getSaleAnalytics']);
         Route::get('arrivals', [AnalyticsController::class, 'getArrivalAnalytics']);

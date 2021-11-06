@@ -211,12 +211,19 @@ class AnalyticsController extends Controller
             ->all();
     }
 
-    public function getTopPartners() {
+    public function getTopPartners(Request $request) {
         $top10Trainers = Sale::query()
             ->where('partner_id', '!=', null)
             ->where('partner_id', '!=', 0)
-            ->whereDate('created_at', '>=', now()->startOfMonth())
-            ->whereDate('created_at', '<=', now()->endOfMonth())
+            ->when($request->has('date'), function ($q) use ($request) {
+                return $q
+                ->whereDate('created_at', '>=', Carbon::parse($request->get('date'))->startOfMonth())
+                ->whereDate('created_at', '<=', Carbon::parse($request->get('date'))->endOfMonth());
+            })
+            ->when(!$request->has('date'), function ($q) {
+                return $q->whereDate('created_at', '>=', now()->startOfMonth())
+                    ->whereDate('created_at', '<=', now()->endOfMonth());
+            })
             ->with(['products' => function ($query) {
                 return $query->select(['product_price', 'discount', 'sale_id']);
             }])
@@ -251,6 +258,7 @@ class AnalyticsController extends Controller
                     'amount' => $item['amount'],
                     'first_name' => $clientFirstName,
                     'last_name' => $clientLastName,
+                    'name' => $client->client_name,
                     'trainer_job' => $client->job,
                     'trainer_image' => url('/') . ($client->photo ? \Storage::url($client->photo) : \Storage::url('partners/partner_default.jpg')),
                     'trainer_instagram' => $client->instagram
@@ -275,6 +283,7 @@ class AnalyticsController extends Controller
                     'first_name' => $clientFirstName,
                     'last_name' => $clientLastName,
                     'trainer_job' => $item['job'],
+                    'name' => $item['client_name'],
                     'trainer_image' => url('/') . ($item['photo'] ? \Storage::url($item['photo']) : \Storage::url('partners/partner_default.jpg')),
                     'trainer_instagram' => $item['instagram']
                 ];
@@ -440,5 +449,63 @@ class AnalyticsController extends Controller
             }
         }
         return $saleAnalytics;
+    }
+
+    public function getClientPartnerSales(Request $request) {
+        $dateStart = Carbon::parse($request->get('date', now()))->startOfMonth();
+        $dateFinish = Carbon::parse($request->get('date', now()))->endOfMonth();
+        $clients = Client::whereLoyaltyId(3)->get();
+        $sales = Sale::query()
+            ->report()
+            ->reportDate([$dateStart, $dateFinish])
+            ->whereIn('client_id', $clients->pluck('id'))
+            ->get();
+
+        $sales = $sales->groupBy('client_id')->map(function ($client, $key) {
+            $data = collect($client);
+
+            $amount = $data->reduce(function ($a, $c) {
+                return $a + $c['final_price'];
+            }, 0);
+
+            $products = $data
+                ->pluck('products')
+                ->flatten()
+                ->groupBy('product_id')
+                ->map(function ($_product, $key) {
+                    $products = collect($_product);
+                    $product = $products->first()['product'];
+                    return [
+                        'count' => $products->count(),
+                        'product_id' => $key,
+                        'product_name' => $product['product_name'],
+                        'manufacturer' => $product['manufacturer']['manufacturer_name'],
+                        'attributes' => collect($product['attributes'])
+                            ->map(function ($attribute) {
+                                return $attribute->attribute_value;
+                            })
+                            ->merge(collect(collect($product['product']['attributes'])
+                                ->map(function ($attribute) {
+                                    return $attribute->attribute_value;
+                                }))),
+
+                    ];
+                })->values()->sortByDesc('count')->values()
+            ;
+
+            $margin = $amount - $data->reduce(function ($a, $c) {
+                    return $a + collect($c['products'])->reduce(function ($_a, $_c) {
+                            return $_a + $_c['purchase_price'];
+                        }, 0);
+                }, 0);
+            return [
+                'name' => $client[0]['client']['client_name'],
+                'amount' => $amount,
+                'margin' => $margin,
+                'products' => $products
+            ];
+        });
+
+        return $sales->values()->sortByDesc('amount')->values();
     }
 }

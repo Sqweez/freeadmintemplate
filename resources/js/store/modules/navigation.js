@@ -163,6 +163,16 @@ const navigationModule = {
                 icon: 'report',
             },
             {
+                title: 'Отчеты по тренерам',
+                url: '/analytics/trainer/rating',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по партнерам',
+                url: '/analytics/partners/rating',
+                icon: 'report',
+            },
+            {
                 title: 'Kaspi',
                 url: '#',
                 icon: 'home',
@@ -423,6 +433,16 @@ const navigationModule = {
             {
                 title: 'Отчеты по товарам',
                 url: '/reports/products',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по тренерам',
+                url: '/analytics/trainer/rating',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по партнерам',
+                url: '/analytics/partners/rating',
                 icon: 'report',
             },
             {

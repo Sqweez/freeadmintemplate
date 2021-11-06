@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-card-title>Все т1овары</v-card-title>
+        <v-card-title>Все товары</v-card-title>
         <v-card-text v-if="loading">
             <div
                 class="text-center d-flex align-center justify-center"

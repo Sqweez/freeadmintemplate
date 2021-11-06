@@ -55,6 +55,8 @@ import BookingCart from "@/views/Booking/BookingCart";
 import SiteFooter from "@/views/Site/SiteFooter";
 import StocksIndex from "@/views/Stocks/StocksIndex";
 import StocksCreate from "@/views/Stocks/StocksCreate";
+import TrainerSales from "@/views/Analytics/TrainerSales";
+import PartnerSales from "@/views/Analytics/PartnerSales";
 
 const routes = [
     {
@@ -545,6 +547,26 @@ const routes = [
             CAN_ENTER: {
                 IS_BOSS: true,
                 IS_ADMIN: true,
+            }
+        }
+    },
+    {
+        path: '/analytics/trainer/rating',
+        component: TrainerSales,
+        meta: {
+            CAN_ENTER: {
+                IS_BOSS: true,
+                IS_ADMIN: true
+            }
+        }
+    },
+    {
+        path: '/analytics/partners/rating',
+        component: PartnerSales,
+        meta: {
+            CAN_ENTER: {
+                IS_BOSS: true,
+                IS_ADMIN: true
             }
         }
     }
