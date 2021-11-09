@@ -41,6 +41,10 @@ class WaybillController extends Controller
         return Document::all();
     }
 
+    public function getClientList(Request $request) {
+
+    }
+
     public function transferWaybill(Request $request)
     {
         $transfer_id = $request->get('transfer') ?? -1;

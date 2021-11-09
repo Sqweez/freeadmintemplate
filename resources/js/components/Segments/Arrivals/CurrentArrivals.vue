@@ -25,14 +25,14 @@
                         'items-per-page-text': 'Записей на странице',
                     }"
                 >
-                   <template v-slot:item.total_cost="{item}">
+                    <template v-slot:item.total_cost="{item}">
                         <span v-if="IS_SUPERUSER">
                             {{ item.total_cost | priceFilters }}
                         </span>
-                       <span v-else>
+                        <span v-else>
                             {{ 0 | priceFilters }}
                         </span>
-                   </template>
+                    </template>
                     <template v-slot:item.total_sale_cost="{item}">
                         {{ item.total_sale_cost | priceFilters }}
                     </template>
@@ -89,7 +89,7 @@
                             <v-btn
                                 icon
                                 color="primary"
-                                @click="editMode = true; arrivalId = item.id; storeId = item.store_id"
+                                @click="editMode = true; arrivalId = item.id; storeId = item.store_id; paymentCost = item.payment_cost;"
                                 v-if="IS_SUPERUSER"
                             >
                                 <v-icon>mdi-pencil</v-icon>
@@ -111,6 +111,17 @@
                             </v-btn>
                         </v-flex>
 
+                    </template>
+                    <template v-slot:item.payment_cost="{item}">
+                        <span v-if="!editMode">
+                            {{ item.payment_cost | priceFilters }}
+                        </span>
+                        <v-text-field
+                            v-else
+                            label="Стоимость доставки"
+                            type="number"
+                            v-model="paymentCost"
+                        />
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -166,11 +177,12 @@
             storeId: null,
             arrivalId: null,
             bookingModal: false,
+            paymentCost: 0,
         }),
         methods: {
             async getArrivals() {
                 this.overlay = true;
-                const { data } = await getArrivals(false);
+                const {data} = await getArrivals(false);
                 this.arrivals = data.map(arrival => {
                     arrival.search = arrival.products.map(product => {
                         return `${product.product_name} ${product.manufacturer.manufacturer_name} ${product.attributes.map(a => a.attribute_value).join(' ')}`
@@ -181,7 +193,7 @@
             },
             async getArrival(id) {
                 this.overlay = true;
-                const { data } = await getArrival(id);
+                const {data} = await getArrival(id);
                 this.arrivals = this.arrivals.map(arrival => {
                     if (arrival.id === data.id) {
                         arrival = data;
@@ -214,7 +226,7 @@
             },
             async printWaybill(id) {
                 this.loading = true;
-                const { data } = await axios.get(`/api/excel/transfer/waybill?arrival=${id}`)
+                const {data} = await axios.get(`/api/excel/transfer/waybill?arrival=${id}`)
                 const link = document.createElement('a');
                 link.href = data.path;
                 link.click();
@@ -222,9 +234,10 @@
             },
             async editArrival() {
                 try {
-                    const { data } = await editArrival({
+                    const {data} = await editArrival({
                         id: this.arrivalId,
                         store_id: this.storeId,
+                        payment_cost: this.paymentCost,
                     });
                     this.arrivals = this.arrivals.map(s => {
                         if (s.id === data.data.id) {
@@ -244,54 +257,58 @@
         computed: {
             headers() {
                 return this.IS_SUPERUSER ?
-                 [
-                    {
-                        text: 'Количество позиций',
-                        value: 'position_count',
-                    },
-                    {
-                        text: 'Количество товаров',
-                        value: 'product_count',
-                    },
-                    {
-                        text: 'Общая сумма',
-                        value: 'total_cost'
-                    },
-                    {
-                        text: 'Общая продажная сумма',
-                        value: 'total_sale_cost'
-                    },
-                    {
-                        text: 'Пользователь',
-                        value: 'user',
-                    },
-                    {
-                        text: 'Склад',
-                        value: 'store',
-                    },
-                    {
-                        text: 'Дата создания',
-                        value: 'date',
-                    },
-                    {
-                        text: 'Ожидаемое поступление',
-                        value: 'arrived_at',
-                    },
-                    {
-                        text: 'Комментарий',
-                        value: 'comment',
-                    },
-                    {
-                        text: 'Действие',
-                        value: 'actions',
-                        sortable: false
-                    },
-                    {
-                        text: 'Поиск',
-                        value: 'search',
-                        align: ' d-none'
-                    }
-                ] :     [
+                    [
+                        {
+                            text: 'Количество позиций',
+                            value: 'position_count',
+                        },
+                        {
+                            text: 'Количество товаров',
+                            value: 'product_count',
+                        },
+                        {
+                            text: 'Общая сумма',
+                            value: 'total_cost'
+                        },
+                        {
+                            text: 'Общая продажная сумма',
+                            value: 'total_sale_cost'
+                        },
+                        {
+                            text: 'Пользователь',
+                            value: 'user',
+                        },
+                        {
+                            text: 'Склад',
+                            value: 'store',
+                        },
+                        {
+                            text: 'Дата создания',
+                            value: 'date',
+                        },
+                        {
+                            text: 'Ожидаемое поступление',
+                            value: 'arrived_at',
+                        },
+                        {
+                            text: 'Комментарий',
+                            value: 'comment',
+                        },
+                        {
+                            text: 'Стоимость доставки',
+                            value: 'payment_cost'
+                        },
+                        {
+                            text: 'Действие',
+                            value: 'actions',
+                            sortable: false
+                        },
+                        {
+                            text: 'Поиск',
+                            value: 'search',
+                            align: ' d-none'
+                        }
+                    ] : [
                         {
                             text: 'Количество позиций',
                             value: 'position_count',

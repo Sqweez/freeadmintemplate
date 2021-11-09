@@ -221,6 +221,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('report/products', [WaybillController::class, 'getProductReport']);
             Route::post('products/check', [WaybillController::class, 'getProductCheck']);
             Route::post('price/list', [WaybillController::class, 'getPriceList']);
+            Route::post('client/list', [WaybillController::class, 'getClientList']);
         });
 
         Route::prefix('products')->group(function () {
@@ -359,5 +360,6 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('stocks', [StockController::class, 'index']);
         Route::post('stocks', [StockController::class, 'store']);
         Route::delete('stocks/{id}', [StockController::class, 'destroy']);
+        Route::patch('stocks/{stock}', [StockController::class, 'update']);
     });
 });

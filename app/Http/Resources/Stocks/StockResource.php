@@ -22,7 +22,8 @@ class StockResource extends JsonResource
             'discount' => $this->discount,
             'started_at' => Carbon::parse($this->started_at)->format('d.m.Y H:i:s'),
             'finished_at' => Carbon::parse($this->finished_at)->format('d.m.Y H:i:s'),
-            'products' => StockProductResource::collection($this->products)
+            'products' => StockProductResource::collection($this->products),
+            'is_active' => $this->started_at <= now() && $this->finished_at >= now()
         ];
     }
 }

@@ -38,8 +38,9 @@ export async function changeArrival(id, payload) {
     await axios.post(`/api/arrivals/change/${id}`, payload);
 }
 
-export async function editArrival({id, store_id}) {
+export async function editArrival({id, store_id, payment_cost}) {
     return await axios.patch(`/api/arrivals/${id}`, {
-        store_id
+        store_id,
+        payment_cost
     })
 }

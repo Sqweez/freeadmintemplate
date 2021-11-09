@@ -30,6 +30,9 @@
                         v-model="cityFilter"
                     />
                 </div>
+                <v-btn color="success" @click="exportModal = true;">
+                    Экспорт клиентов <v-icon>mdi-file-excel-box</v-icon>
+                </v-btn>
                 <v-row>
                     <v-col>
                         <v-text-field
@@ -108,6 +111,10 @@
             @cancel="userId = null; balanceModal = false"
             @submit="addBalance"
         />
+        <ExportClientsModal
+            @cancel="exportModal = false;"
+            :state="exportModal"
+        />
     </v-card>
 </template>
 
@@ -117,9 +124,11 @@
     import ACTIONS from "@/store/actions";
     import ClientModal from "@/components/Modal/ClientModal";
     import BalanceModal from "@/components/Modal/BalanceModal";
+    import ExportClientsModal from "@/components/Modal/Export/ExportClientsModal";
 
     export default {
         components: {
+            ExportClientsModal,
             BalanceModal,
             ClientModal,
             ConfirmationModal,
@@ -129,6 +138,7 @@
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         data: () => ({
+            exportModal: false,
             confirmationModal: false,
             clientModal: false,
             userId: null,

@@ -46,6 +46,7 @@ class ArrivalResource extends JsonResource
             'arrived_at' => $this->arrived_at ? Carbon::parse($this->arrived_at)->format('d.m.Y') : null,
             'comment' => $this->comment,
             'bookings' => $this->bookings,
+            'payment_cost' => $this->payment_cost
         ];
     }
 }

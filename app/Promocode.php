@@ -33,7 +33,10 @@ class Promocode extends Model
     protected $fillable = ['client_id', 'promocode', 'discount', 'is_active', 'id'];
 
     public function partner() {
-        return $this->belongsTo('App\Client', 'client_id');
+        return $this->belongsTo('App\Client', 'client_id')->withTrashed()->withDefault([
+            'client_name' => 'Удален',
+            'id' => -1,
+        ]);
     }
 
     public function scopeOfPartner($query, $id) {

@@ -126,6 +126,13 @@
                         </v-col>
                         <v-col>
                             <v-text-field
+                                type="number"
+                                label="Стоимость доставки"
+                                v-model="paymentCost"
+                            />
+                        </v-col>
+                        <v-col>
+                            <v-text-field
                                 label="Комментарий"
                                 v-model="comment"/>
                         </v-col>
@@ -278,6 +285,7 @@
             comment: '',
             arrivedAt: null,
             moneyRate: 1,
+            paymentCost: 0,
             hideNotInStock: false,
             cart: [],
             search: '',
@@ -406,7 +414,8 @@
                     user_id: this.user.id,
                     is_completed: false,
                     comment: this.comment,
-                    arrived_at: this.arrivedAt
+                    arrived_at: this.arrivedAt,
+                    payment_cost: this.paymentCost,
                 };
                 this.overlay = false;
                 await createArrival(arrival);

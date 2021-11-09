@@ -12,6 +12,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import axios from 'axios';
 import './filters/filters';
 import loadingPlugin from "./utils/loadingPlugin";
+import JsonExcel from "vue-json-excel";
 axios.defaults.withCredentials = true;
 
 import VueFroala from 'vue-froala-wysiwyg'
@@ -22,6 +23,7 @@ Vue.use(VueFroala);
 Vue.use(VueEditor);
 Vue.use(loadingPlugin);
 Vue.use(vuePlugins);
+Vue.component('downloadExcel', JsonExcel);
 
 
 Vue.config.productionTip = false;

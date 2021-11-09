@@ -17,6 +17,7 @@
                         <th>Состав</th>
                         <th>Дата начала</th>
                         <th>Дата окончания</th>
+                        <th>Статус</th>
                         <th>Действие</th>
                     </tr>
                     </thead>
@@ -41,12 +42,59 @@
                                 </v-expansion-panel>
                             </v-expansion-panels>
                         </td>
-                        <td>{{ stock.started_at }}</td>
-                        <td>{{ stock.finished_at }}</td>
                         <td>
-                            <v-btn text color="error" @click="stockId = stock.id; deleteModal = true;">
-                                Удалить
-                            </v-btn>
+                            <span v-if="!editMode || stockId !== stock.id">
+                                {{ stock.started_at }}
+                            </span>
+                            <v-text-field
+                                v-else
+                                v-model="startedAt"
+                                type="datetime-local"
+                                label="Время начала"
+                            />
+                        </td>
+                        <td>
+                             <span v-if="!editMode || stockId !== stock.id">
+                                {{ stock.finished_at }}
+                            </span>
+                            <v-text-field
+                                v-else
+                                v-model="finishedAt"
+                                type="datetime-local"
+                                label="Время окончания"
+                            />
+                        </td>
+                        <td>
+                            <v-icon color="success" v-if="stock.is_active">
+                                mdi-check
+                            </v-icon>
+                            <v-icon color="error" v-else>
+                                mdi-close
+                            </v-icon>
+                        </td>
+                        <td>
+                            <div v-if="!editMode || stockId !== stock.id">
+                                <div>
+                                    <v-btn text color="error" @click="stockId = stock.id; deleteModal = true;">
+                                        Удалить
+                                    </v-btn>
+                                </div>
+                                <div>
+                                    <v-btn text color="success" v-if="!stock.is_active" @click="editMode = true; stockId = stock.id;">
+                                        Восстановить
+                                    </v-btn>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div>
+                                    <v-btn text icon color="error" @click="editMode = false; stockId = null;">
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-btn>
+                                    <v-btn text icon color="success" @click="restoreStock">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     </tbody>
@@ -71,6 +119,9 @@
             stocks: [],
             deleteModal: false,
             stockId: null,
+            editMode: false,
+            startedAt: null,
+            finishedAt: null,
         }),
         methods: {
             async deleteStock() {
@@ -80,6 +131,32 @@
                 this.deleteModal = false;
                 this.stockId = null;
                 this.$toast.success('Акция удалена!');
+                this.$loading.disable();
+            },
+            async restoreStock() {
+                const stock = {
+                    started_at: this.startedAt,
+                    finished_at: this.finishedAt,
+                };
+
+                if (!Object.values(stock).every(c => c)) {
+                    return this.$toast.error('Заполните все поля');
+                }
+
+                this.$loading.enable();
+
+                const { data } = await axios.patch(`/api/v2/stocks/${this.stockId}`, stock);
+
+                this.stocks = this.stocks.map(s => {
+                    if (s.id === this.stockId) {
+                        s = data.data;
+                    }
+                    return s;
+                })
+                this.editMode = false;
+                this.stockId = null;
+                this.startedAt = this.finishedAt = null;
+                this.$toast.success('Акция восстановлена!');
                 this.$loading.disable();
             }
         },

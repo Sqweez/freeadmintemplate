@@ -37,6 +37,11 @@ class StockController extends Controller
         $stock->products()->createMany($products);
     }
 
+    public function update(Stock $stock, Request $request) {
+        $stock->update($request->all());
+        return new StockResource(Stock::query()->find($stock->id));
+    }
+
     public function destroy($id) {
         $stock = Stock::findOrFail($id);
         $stock->products()->delete();
