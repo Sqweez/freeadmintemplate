@@ -64,11 +64,16 @@
                         <v-divider></v-divider>
                         <h5>Продавцы:</h5>
                         <div v-for="(seller, index) of sellers">
-                            <v-text-field
-                                label="Имя"
-                                v-model="seller.name"
-                                type="text"
-                            />
+                            <div class="d-flex justify-space-between align-center">
+                                <v-text-field
+                                    label="Имя"
+                                    v-model="seller.name"
+                                    type="text"
+                                />
+                                <v-btn color="error" class="ml-5" icon @click="deleteSeller(index)">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                            </div>
                             <v-textarea
                                 label="Доп данные"
                                 v-model="seller.description"
@@ -164,6 +169,9 @@
             }
         },
         methods: {
+            deleteSeller(index) {
+                this.sellers.splice(index, 1);
+            },
             async uploadSellerPhoto(e) {
                 const index = +e.target.dataset.index;
                 const result = await this.$file.upload(e.target.files[0], 'sellers');

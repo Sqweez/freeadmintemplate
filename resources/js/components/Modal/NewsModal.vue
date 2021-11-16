@@ -269,6 +269,7 @@
                     this.title = '';
                     this.short_text = '';
                     this.image = null;
+                    this.cart = [];
                 }
             }
         }

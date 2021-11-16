@@ -20,7 +20,7 @@ class OrderProductResource extends JsonResource
     {
 
         return [
-            'product_id' => $this->product->id,
+            'product_id' => $this->product->product_id,
             'product_price' => $this->product->product_price,
             'product_name' => $this->product->product_name,
             'product_image' => url('/') . Storage::url($this->product->general_images->first()->image ?? 'products/product_image_default.jpg'),

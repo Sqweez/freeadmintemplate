@@ -223,7 +223,7 @@ class ClientController extends Controller {
         $orders = OrderResource::collection($orders);
         $sales = OrderResource::collection($sales);
 
-        return collect($orders)->merge(collect($sales));
+        return collect($orders)->merge(collect($sales))->sortByDesc('created_at')->values()->all();
     }
 
     public function addBalance(Request $request, Client $client) {

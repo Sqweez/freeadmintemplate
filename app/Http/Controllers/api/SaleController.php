@@ -485,7 +485,7 @@ class SaleController extends Controller {
                 ' | ' . $count . 'шт' .
                 "\n";
         }
-        $message .= 'К оплате: ' . $sale->final_price . 'тнг';
+        $message .= 'К оплате: ' . $sale->final_price_without_red . 'тнг';
         return $message;
     }
 }

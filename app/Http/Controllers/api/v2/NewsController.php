@@ -36,7 +36,7 @@ class NewsController extends Controller
             ]);
         }
         return News::with('news_image')
-            ->with('products')
+            ->with('productNews')
             ->whereKey($news->id)
             ->get()
             ->first();

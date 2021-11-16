@@ -29,6 +29,7 @@ class OrderResource extends JsonResource
         return [
             'status' => $this->status ?? 1,
             'id' => $this->id,
+            'created_at' => $this->created_at,
             'products' => $productCollection,
             'date' => Carbon::parse($this->created_at)->format('H:i:s d.m.Y'),
             'status_text' => Order::ORDER_STATUS[$this->status ?? 1]['text'],

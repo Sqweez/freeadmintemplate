@@ -92,7 +92,8 @@ class Sale extends Model
     ];
 
     protected $appends = [
-        'final_price'
+        'final_price',
+        'final_price_without_red'
     ];
 
     const CLIENT_CASHBACK_PERCENT = 0.01;
@@ -238,6 +239,19 @@ class Sale extends Model
         if ($this->kaspi_red) {
             $price -= $price * self::KASPI_RED_PERCENT;
         }
+
+        $price += $this->certificate->final_amount;
+        if ($this->booking) {
+            $price -= $this->booking->paid_sum;
+        }
+
+        return ceil($price - $this->balance);
+    }
+
+    public function getFinalPriceWithoutRedAttribute() {
+        $price = ($this->products->reduce(function ($a, $c) {
+            return $a + $c->final_price;
+        }, 0));
 
         $price += $this->certificate->final_amount;
         if ($this->booking) {
