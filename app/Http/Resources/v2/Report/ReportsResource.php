@@ -68,6 +68,7 @@ class ReportsResource extends JsonResource
             'is_delivery' => $this->is_delivery,
             'is_booking' => $this->booking ? true : false,
             'booking_paid_sum' => $this->booking ? $this->booking->paid_sum : 0,
+            'is_paid' => $this->is_paid,
         ];
     }
 }

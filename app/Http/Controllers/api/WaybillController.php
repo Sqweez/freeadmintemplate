@@ -168,8 +168,8 @@ class WaybillController extends Controller
         ]);
     }
 
-    public function getPriceList(Request $request) {
-        $cart = $request->get('cart');
+    public function getPriceList(Request $request, $_cart = []) {
+        $cart = count($_cart) === 0 ? $request->get('cart') : $_cart;
         $excelService = new ExcelService();
         $excelTemplate = $excelService->loadFile('price_list_template', 'xlsx');
         $excelSheet = $excelTemplate->getActiveSheet();

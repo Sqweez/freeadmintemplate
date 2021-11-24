@@ -18,7 +18,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use ProductService;
-use function React\Promise\reduce;
 
 class ProductController extends Controller
 {

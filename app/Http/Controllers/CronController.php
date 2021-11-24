@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Http\Controllers\api\WaybillController;
+use App\Http\Resources\v2\Product\ProductsResource;
+use App\ProductBatch;
 use App\Promocode;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use ProductService;
 
 class CronController extends Controller
 {
@@ -33,5 +37,41 @@ class CronController extends Controller
         return $users->each(function (User $user) {
             return $user->update(['token' => Str::random(60)]);
         });
+    }
+
+    public function storePriceList(Request $request) {
+        $products = ProductsResource::collection(ProductService::all())->toArray($request);
+        $batches = ProductBatch::query()
+            ->whereIn('store_id', [1, 6])
+            ->where('quantity', '>', 0)
+            ->select(['quantity', 'product_id'])
+            ->get();
+
+        $quantities = $batches
+            ->groupBy('product_id')
+            ->map(function ($item, $key) {
+                return [
+                    'product_id' => $key,
+                    'quantity' => collect($item)->reduce(function ($a, $c) {
+                        return $a + $c['quantity'];
+                    }, 0)
+                ];
+            })->values();
+
+        $products = collect($products)->map(function ($product) use ($quantities) {
+            $id = $product['id'];
+            $qnt = collect($quantities)->filter(function ($q) use ($id) {
+                return $q['product_id'] == $id;
+            })->reduce(function ($a, $c) {
+                return $a + $c['quantity'];
+            }, 0);
+            unset($product['quantity']);
+            $product['quantity'] = $qnt;
+            return $product;
+        })->values()->filter(function ($i) {
+            return $i['quantity'] > 0;
+        })->values();
+
+        return (new WaybillController())->getPriceList(new Request(), $products);
     }
 }

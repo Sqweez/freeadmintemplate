@@ -44,6 +44,14 @@
                                 color="white darken-2"
                             />
                         </div>
+                        <div>
+                            <v-checkbox
+                                label="Оплачен"
+                                v-model="is_paid"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
 
                     </div>
                     <div class="cart__parameters">
@@ -608,6 +616,7 @@
             balance: 0,
             showCheckModal: false,
             currentItems: [],
+            is_paid: false,
             headers: [
                 {
                     text: 'Наименование',
@@ -802,7 +811,8 @@
                     split_payment: split_payment,
                     comment: this.comment,
                     preorder: this.preorder,
-                    is_delivery: this.isDelivery
+                    is_delivery: this.isDelivery,
+                    is_paid: this.is_paid
                 };
                 try {
                     this.overlay = true;

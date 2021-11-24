@@ -460,6 +460,7 @@ class SaleController extends Controller {
         $message .= 'ФИО: ' . $sale['client']['client_name'] . "\n";
         $message .= 'Телефон: ' . $sale['client']['client_phone'] . "\n";
         $message .= $sale['comment'] . "\n";
+        $message .= $sale['is_paid'] ? 'Оплачен ✅✅✅' : 'НЕ ОПЛАЧЕН ❌❌❌';
         $message .= 'Способ оплаты: ' . Sale::PAYMENT_TYPES[$sale->payment_type]['name'] . "\n";
         $message .= "Товары: \n";
         $saleProducts = $sale['products'];

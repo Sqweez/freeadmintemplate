@@ -224,6 +224,7 @@ const actions = {
             const storeQuantities = response.data.filter((item) => {
                 return quantities.findIndex(q => q.product_id === item.product_id) === -1;
             })
+            console.log(storeQuantities);
             commit('SET_PRODUCT_QUANTITIES_v2', {
                 quantities: [...quantities, ...storeQuantities],
                 store_id: 1

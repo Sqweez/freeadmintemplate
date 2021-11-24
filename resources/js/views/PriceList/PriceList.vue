@@ -391,6 +391,9 @@
             }
         },
         computed: {
+            quantities() {
+                return this.$store.getters.QUANTITIES_v2;
+            },
             is_admin() {
                 return this.$store.getters.CURRENT_ROLE === 'admin';
             },

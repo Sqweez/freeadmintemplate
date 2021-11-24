@@ -24,7 +24,7 @@ class StockProducts extends Model
     public $timestamps = false;
 
     public function product() {
-        return $this->belongsTo('App\v2\Models\Product');
+        return $this->belongsTo('App\v2\Models\Product')->withTrashed();
     }
 
     public function stock() {

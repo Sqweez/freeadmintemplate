@@ -88,7 +88,8 @@ class Sale extends Model
         'partner_id' => 'integer',
         'split_payment' => 'array',
         'kaspi_transaction_id' => 'array',
-        'is_delivery' => 'boolean'
+        'is_delivery' => 'boolean',
+        'is_paid' => 'boolean'
     ];
 
     protected $appends = [
