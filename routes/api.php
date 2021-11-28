@@ -22,6 +22,7 @@ use App\Http\Controllers\api\SaleController;
 use App\Http\Controllers\api\v2\BookingController;
 use App\Http\Controllers\api\v2\SiteController;
 use App\Http\Controllers\api\v2\StockController;
+use App\Http\Controllers\api\v2\CommentController;
 
 // Authorization
 
@@ -362,5 +363,11 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('stocks', [StockController::class, 'store']);
         Route::delete('stocks/{id}', [StockController::class, 'destroy']);
         Route::patch('stocks/{stock}', [StockController::class, 'update']);
+
+        Route::prefix('comment')->group(function () {
+            // Route::get('/{product_id}', [ProductCo])
+            Route::post('/', [CommentController::class, 'createComment']);
+            Route::delete('/{id}', [CommentController::class, 'delete']);
+        });
     });
 });

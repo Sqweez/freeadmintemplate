@@ -5,6 +5,7 @@ namespace App\v2\Models;
 use App\AttributeProduct;
 use App\Category;
 use App\CategoryProduct;
+use App\Http\Resources\ProductCommentResource;
 use App\Manufacturer;
 use App\ManufacturerProducts;
 use App\Price;
@@ -193,6 +194,9 @@ class Product extends Model
 
     public $timestamps = true;
 
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany {
+        return $this->hasMany('App\v2\Models\ProductComment');
+    }
 
     public function sku()
     {

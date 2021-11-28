@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\v2\Product;
 
+use App\Http\Controllers\api\v2\CommentController;
 use App\Http\Resources\AttributeResource;
 use App\Product;
 use App\v2\Models\ProductSku;
@@ -65,7 +66,8 @@ class ProductResource extends JsonResource
             'supplier_id' => $this->product->supplier_id,
             'meta_title' => $this->product->meta_title,
             'meta_description' => $this->product->meta_description ?? '',
-            'product_name_web' => $this->product->product_name_web
+            'product_name_web' => $this->product->product_name_web,
+            'comments' => CommentController::parseComments($this->product->comments)
         ];
     }
 }

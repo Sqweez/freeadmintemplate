@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\shop;
 
+use App\Http\Controllers\api\v2\CommentController;
+use App\Http\Resources\ProductCommentResource;
 use App\Http\Resources\shop\v2\ProductSkuResource;
 use App\v2\Models\Product;
 use App\v2\Models\RelatedProduct;
@@ -46,7 +48,8 @@ class ProductResource extends JsonResource
             'has_stock' => $this->stock_price !== $this->product_price,
             'related_products' => ProductsResource::collection(Product::whereIn('id',
                 RelatedProduct::whereCategoryId($this->category_id)->get()->pluck('product_id')
-            )->get())
+            )->get()),
+            'comments' => CommentController::parseComments($this->comments)
         ];
     }
 }
