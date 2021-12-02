@@ -57,6 +57,7 @@ import StocksIndex from "@/views/Stocks/StocksIndex";
 import StocksCreate from "@/views/Stocks/StocksCreate";
 import TrainerSales from "@/views/Analytics/TrainerSales";
 import PartnerSales from "@/views/Analytics/PartnerSales";
+import ClientView from "@/views/Clients/ClientView";
 
 const routes = [
     {
@@ -97,6 +98,18 @@ const routes = [
     {
         path: '/clients',
         component: Clients,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+                IS_SENIORSELLER: true,
+                IS_BOSS: true,
+            }
+        }
+    },
+    {
+        path: '/clients/:id',
+        component: ClientView,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,

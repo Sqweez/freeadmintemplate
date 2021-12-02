@@ -43,6 +43,9 @@ export default {
                 },
                 IS_LOADING_STATE() {
                     return this.$store.getters.isLoading;
+                },
+                IS_LOADING() {
+                    return this.$store.getters.IS_LOADING;
                 }
             }
         })

@@ -46,4 +46,13 @@ class ReportService {
             $sales
         );
     }
+
+    public static function getClientReports($client_id) {
+        $saleQuery = Sale::query();
+        $saleQuery = $saleQuery->report()->whereClientId($client_id);
+
+        return ReportsResource::collection(
+            $saleQuery->get()
+        );
+    }
 }

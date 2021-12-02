@@ -80,6 +80,11 @@
                                 <v-btn icon @click="balanceModal = true; userId = item.id;">
                                     <v-icon>mdi-cash</v-icon>
                                 </v-btn>
+                                <v-btn icon @click="$router.push(`/clients/${item.id}`)">
+                                    <v-icon>
+                                        mdi-eye
+                                    </v-icon>
+                                </v-btn>
                             </template>
                             <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                                 {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}

@@ -72,6 +72,7 @@ class CronController extends Controller
             return $i['quantity'] > 0;
         })->values()->sortBy('manufacturer_id')->values();
 
+
         return (new WaybillController())->getPriceList(new Request(), $products);
     }
 }

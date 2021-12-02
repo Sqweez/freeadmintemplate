@@ -6,6 +6,7 @@ use App\Cart;
 use App\CartProduct;
 use App\Client;
 use App\ClientTransaction;
+use App\Http\Controllers\Services\ReportService;
 use App\Sale;
 use App\Store;
 use App\Http\Controllers\Controller;
@@ -29,6 +30,17 @@ class ClientController extends Controller {
             Client::with(['sales', 'transactions', 'city', 'loyalty'])
                 ->get()
         );
+    }
+
+    public function show(Client $client) {
+        $client->load('sales');
+        $client->load('transactions');
+        $client->load('city');
+        $client->load('loyalty');
+        return [
+            'client' => new ClientResource($client),
+            'sales' => ReportService::getClientReports($client->id)
+        ];
     }
 
     /**
