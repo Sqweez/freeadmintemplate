@@ -58,6 +58,7 @@ import StocksCreate from "@/views/Stocks/StocksCreate";
 import TrainerSales from "@/views/Analytics/TrainerSales";
 import PartnerSales from "@/views/Analytics/PartnerSales";
 import ClientView from "@/views/Clients/ClientView";
+import ClientSalesDate from "@/views/Clients/ClientSalesDate";
 
 const routes = [
     {
@@ -115,6 +116,16 @@ const routes = [
                 IS_ADMIN: true,
                 IS_SELLER: true,
                 IS_SENIORSELLER: true,
+                IS_BOSS: true,
+            }
+        }
+    },
+    {
+        path: '/analytics/clients/sales',
+        component: ClientSalesDate,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
                 IS_BOSS: true,
             }
         }

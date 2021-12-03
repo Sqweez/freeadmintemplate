@@ -244,6 +244,25 @@ class ClientController extends Controller {
         return new ClientResource($client);
     }
 
+    public function getClientsWithoutSales(Request $request) {
+        $start = $request->get('start');
+        $finish = $request->get('finish');
+        $clients = Client::with(['sales', 'transactions', 'city', 'loyalty'])
+            ->get();
+
+        $sales = Sale::query()
+            ->reportDate([$start, $finish])
+            ->where('client_id', '!=', -1)
+            ->select(['id', 'client_id'])
+            ->get();
+
+        $sales = $sales->pluck('client_id')->values()->unique()->values()->all();
+        $clients = $clients->filter(function ($client) use ($sales) {
+           return !in_array($client['id'], $sales);
+        });
+        return ClientResource::collection($clients);
+    }
+
     public function getClientAnalytics(Request $request) {
         $start = $request->get('start');
         $finish = $request->get('finish');

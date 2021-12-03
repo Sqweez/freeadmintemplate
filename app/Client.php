@@ -118,6 +118,10 @@ class Client extends Model
         return $this->hasMany('App\ClientSale', 'client_id');
     }
 
+    public function real_sales() {
+        return $this->hasMany('App\Sale')->orderByDesc('created_at');
+    }
+
     public function promocodes() {
         return $this->hasMany('App\Promocode', 'client_id');
     }
