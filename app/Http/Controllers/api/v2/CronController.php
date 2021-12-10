@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v2;
 
 use App\Http\Controllers\api\CartController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Services\TelegramService;
 use App\Order;
 use App\v2\Models\OrderMessage;
 use Illuminate\Http\Request;
@@ -20,7 +21,9 @@ class CronController extends Controller
                 } else {
                     if ($order !== null) {
                         $_message = (new CartController())->getMessage($order, null);
-                        \TelegramService::sendMessage($message['chat_id'], $_message);
+                        if (!(strlen($_message) > 4095)) {
+                            \TelegramService::sendMessage($message['chat_id'], $_message);
+                        }
                         OrderMessage::find($message['id'])->update([
                             'is_delivered' => true
                         ]);

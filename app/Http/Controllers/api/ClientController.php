@@ -260,6 +260,7 @@ class ClientController extends Controller {
         $clients = $clients->filter(function ($client) use ($sales) {
            return !in_array($client['id'], $sales);
         });
+
         return ClientResource::collection($clients);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Client;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,6 +22,11 @@ class ClientResource extends JsonResource
     {
 
         $total = $this->sales->sum('amount');
+        $last_sale = $this->sales->sortByDesc('created_at')->first();
+        $last_sale_date = null;
+        if ($last_sale) {
+            $last_sale_date = Carbon::parse($last_sale['created_at'])->format('d.m.Y H:i:s');
+        }
         return [
             'id' => $this->id,
             'client_name' => $this->client_name,
@@ -38,6 +44,7 @@ class ClientResource extends JsonResource
             'job' => $this->job,
             'instagram' => $this->instagram,
             'photo' => $this->photo,
+            'last_sale_date' => $last_sale_date
         ];
     }
 }

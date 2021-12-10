@@ -98,6 +98,9 @@
                 <v-btn color="primary" @click="loadReport">
                     Получить отчет
                 </v-btn>
+                <v-btn color="primary" @click="exportModal = true">
+                    Экспорт клиентов
+                </v-btn>
                 <div class="d-flex mt-2 align-center">
                     <v-select
                         style="max-width: 270px; margin-right: 20px;"
@@ -182,14 +185,18 @@
                 </v-row>
             </v-card-text>
         </v-card>
+        <ExportClientsSimple :state="exportModal" :clients="clients" @cancel="exportModal = false"/>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
 import MUTATIONS from '@/store/mutations';
+import ExportClientsSimple from "@/components/Modal/Export/ExportClientsSimple";
 export default {
+    components: {ExportClientsSimple},
     data: () => ({
+        exportModal: false,
         start: null,
         startMenu: null,
         finish: null,
@@ -205,6 +212,11 @@ export default {
                 value: 'client_phone',
                 text: 'Телефон',
                 sortable: false,
+            },
+            {
+                value: 'last_sale_date',
+                text: 'Дата последней покупки',
+                sortable: true,
             },
             {
                 value: 'client_balance',

@@ -23,7 +23,12 @@
                         v-model="product_name_web"
                     />
 
-                    <vue-editor v-model="product_description" v-if="IS_SUPERUSER"></vue-editor>
+                    <vue-editor
+                        use-custom-image-handler
+                        @image-added="handleImageAdded"
+                        :editor-options="editorSettings"
+                        v-model="product_description" v-if="IS_SUPERUSER"
+                    ></vue-editor>
                     <div v-if="IS_SUPERUSER">
                         <div v-if="product_images.length">
                             <h4>Изображения для общих товаров:</h4>
@@ -390,10 +395,13 @@
 import {VSelect} from 'vuetify/lib'
 import ManufacturerModal from "@/components/Modal/ManufacturerModal";
 import uploadFile, {deleteFile} from "@/api/upload";
-import {VueEditor} from "vue2-editor";
+import {VueEditor, Quill} from "vue2-editor";
 import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
 import {generateThumb} from "@/api/image";
 import axios from 'axios';
+import ImageResize from 'quill-image-resize-vue';
+
+Quill.register('modules/imageResize', ImageResize);
 
 export default {
     components: {ManufacturerModal, VSelect, VueEditor},
@@ -509,6 +517,12 @@ export default {
         }
     },
     data: () => ({
+        editorSettings: {
+            modules: {
+                imageResize: {},
+            },
+            preserveWhiteSpace: true
+        },
         froalaConfig: {
             placeholderText: 'Введите описание',
             charCounterCount: false,
@@ -559,6 +573,12 @@ export default {
         commentId: null,
     }),
     methods: {
+        async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+            const response = await this.$file.upload(file, 'uploads', 'file');
+            const photo = `${window.location.protocol}//${window.location.hostname}/storage/${response.data}`;
+            Editor.insertEmbed(cursorLocation, "image", photo);
+            resetUploader();
+        },
         async createComment () {
             if (this.commentText.trim().length === 0) {
                 return this.$toast.error('Введите комментарий!');
