@@ -252,6 +252,7 @@
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
+    import {db} from "@/db";
 
     export default {
         components: {

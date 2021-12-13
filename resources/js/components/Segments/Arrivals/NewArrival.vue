@@ -7,6 +7,9 @@
             <v-btn color="error" class="top-button" @click="wayBillModal = true;" style="margin-left: 10px;">
                 Сформировать накладную
             </v-btn>
+            <v-btn color="primary" class="top-button" @click="clearCache" style="margin-left: 10px;">
+                Сбросить кэш
+            </v-btn>
 
             <div style="margin-left: auto; max-width: 200px;">
                 <v-text-field
@@ -272,6 +275,7 @@
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
     import SkuModal from "@/components/v2/Modal/SkuModal";
+    import { db } from '@/db';
 
     export default {
         components: {
@@ -331,9 +335,34 @@
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
+            const response = await db.arrivals.toArray();
+            if (response && response.length > 0) {
+                const arrival = response[0];
+                console.log(arrival);
+                this.cart = arrival.products;
+                this.child_store = arrival.child_store;
+                this.comment = arrival.comment;
+                this.arrivedAt = arrival.arrivedAt;
+                this.paymentCost = arrival.paymentCost;
+                this.moneyRate = arrival.moneyRate;
+            }
             this.loading = false;
+           setInterval(async () => {
+                await db.arrivals.clear();
+                db.arrivals.add({
+                    products: this.cart,
+                    child_store: this.child_store,
+                    comment: this.comment,
+                    arrivedAt: this.arrivedAt,
+                    paymentCost: this.paymentCost,
+                    moneyRate: this.moneyRate
+                });
+            }, 5000);
         },
         methods: {
+            clearCache() {
+                db.arrivals.clear()
+            },
             changeCount(e, item, index) {
                 this.$nextTick(() => {
                     this.$set(this.cart[index], 'count', Math.max(1, Math.min(10000, e)))
@@ -420,6 +449,7 @@
                 this.overlay = false;
                 await createArrival(arrival);
                 this.overlay = false;
+                await db.arrivals.clear();
                 this.$toast.success('Поставка создана успешно!');
                 this.cart = [];
             },
