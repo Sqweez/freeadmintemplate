@@ -36,7 +36,7 @@ class SaleService {
     }
 
 
-    public function createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale_id, $partner_id) {
+    public function createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale_id, $partner_id, $payment_type = 1): bool {
         $client = Client::find($client_id);
         if (!$client) {
             return false;
@@ -62,10 +62,12 @@ class SaleService {
             'amount' => $amount
         ]);
 
+        $cashbackPercent = $payment_type === 3 ? 5 : $client->loyalty->cashback;
+
         $client->transactions()->create([
             'sale_id' => $sale_id,
             'user_id' => $user_id,
-            'amount' => $amount * ($client->loyalty->cashback / 100)
+            'amount' => $amount * ($cashbackPercent / 100)
         ]);
 
         if ($balance > 0) {

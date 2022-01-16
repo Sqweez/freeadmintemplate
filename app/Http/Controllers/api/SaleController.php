@@ -48,7 +48,7 @@ class SaleController extends Controller {
             $preorder = $request->get('preorder', null);
             $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate', 'preorder']));
             $saleService->createSaleProducts($sale, $store_id, $cart);
-            $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id);
+            $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id, $request->get('payment_type'));
             $saleService->createCompanionTransaction($sale, $request->header('user_id'));
             if ($certificate) {
                 $_certificate = Certificate::find($certificate['id']);
@@ -226,13 +226,31 @@ class SaleController extends Controller {
         $kaspiAndWebSales = $kaspiSales->mergeRecursive($internetSales);
         $otherSales = collect($sales)->diff($kaspiAndWebSales)->all();
 
-        $otherSales = collect($otherSales)->groupBy('store_id')
+        $retailSales = collect($otherSales)
+            ->filter(function ($sale) {
+                return !$sale['is_opt'];
+            })
+            ->values()
+            ->groupBy('store_id')
             ->map(function ($sale, $store_id) {
                 return [
                     'store_id' => $store_id,
                     'amount' => $this->getTotalAmount($sale)
                 ];
             });
+
+        $optSales = collect($otherSales)
+            ->filter(function ($sale) {
+                return $sale['is_opt'];
+            })
+            ->values();
+
+        $optSales = collect([
+            7845 => [
+                'store_id' => 7845,
+                'amount' => $this->getTotalAmount($optSales)
+            ]
+        ]);
 
         $kaspiSales = collect([
             5555 => [
@@ -249,8 +267,9 @@ class SaleController extends Controller {
         ]);
 
         return $kaspiSales
-            ->mergeRecursive($otherSales)
+            ->mergeRecursive($retailSales)
             ->mergeRecursive($internetSales)
+            ->mergeRecursive($optSales)
             ->groupBy('store_id')
             ->map(function ($item) {
                 return collect($item)->first();

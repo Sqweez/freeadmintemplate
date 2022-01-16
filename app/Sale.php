@@ -2,10 +2,8 @@
 
 namespace App;
 
-use App\v2\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use function foo\func;
 
 /**
  * App\Sale
@@ -89,7 +87,8 @@ class Sale extends Model
         'split_payment' => 'array',
         'kaspi_transaction_id' => 'array',
         'is_delivery' => 'boolean',
-        'is_paid' => 'boolean'
+        'is_paid' => 'boolean',
+        'is_opt' => 'boolean'
     ];
 
     protected $appends = [

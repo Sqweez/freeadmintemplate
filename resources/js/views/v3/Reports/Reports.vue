@@ -490,6 +490,13 @@ import { log } from '../../../scripts/nv.d3.min';
                     ],
                 },
                 {
+                    name: 'Вчера',
+                    value: [
+                        moment().subtract(1, 'days').format(DATE_FORMAT),
+                        moment().subtract(1, 'days').format(DATE_FORMAT),
+                    ],
+                },
+                {
                     name: 'Последние 3 дня',
                     value: [
                         moment().subtract(3, 'days').format(DATE_FORMAT),

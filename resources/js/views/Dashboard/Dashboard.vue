@@ -82,12 +82,6 @@
                 return this.$store.getters.stores.find(s => s.id == this.USER.store_id);
             }
         },
-        async mounted() {
-            if (this.IS_MALOY) {
-                const main = document.querySelector('.mdl-layout__content');
-                main.classList.add('main-maloy')
-            }
-        }
     }
 </script>
 

@@ -4,7 +4,7 @@
         <div class="scroll__wrapper" id="scroll__wrapper">
             <div class="scroller" id="scroller">
                 <div class="scroll__container" id="scroll__container">
-                    <nav class="mdl-navigation">
+                    <nav class="mdl-navigation" style="padding-bottom: 100px;">
                         <DrawerLink v-for="(link, key) of navigations"
                                     :link="link"
                                     :key="key" />

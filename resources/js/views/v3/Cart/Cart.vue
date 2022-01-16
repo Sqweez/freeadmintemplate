@@ -52,6 +52,14 @@
                                 color="white darken-2"
                             />
                         </div>
+                        <div>
+                            <v-checkbox
+                                label="Оптовая продажа"
+                                v-model="isOpt"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
 
                     </div>
                     <div class="cart__parameters">
@@ -587,6 +595,7 @@
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            isOpt: false,
             isDelivery: false,
             awaitingForKaspiPayment: false,
             preorderModal: false,
@@ -812,7 +821,8 @@
                     comment: this.comment,
                     preorder: this.preorder,
                     is_delivery: this.isDelivery,
-                    is_paid: this.is_paid
+                    is_paid: this.is_paid,
+                    is_opt: this.isOpt,
                 };
                 try {
                     this.overlay = true;
@@ -843,6 +853,9 @@
                     this.used_certificate = null;
                     this.comment = '';
                     this.preorder = null;
+                    this.isSplitPayment = false;
+                    this.isDelivery = false;
+                    this.isOpt = false;
                 } catch (e) {
                     throw e;
                 }
