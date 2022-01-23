@@ -85,6 +85,9 @@
                                         mdi-eye
                                     </v-icon>
                                 </v-btn>
+                                <v-btn icon @click="sendWhatsapp(item)" color="success">
+                                    <v-icon>mdi-whatsapp</v-icon>
+                                </v-btn>
                             </template>
                             <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                                 {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -271,7 +274,11 @@
                 this.balanceModal = false;
                 this.userId = null;
                 this.$toast.success('Баланс успешно пополнен!');
-            }
+            },
+            sendWhatsapp(client) {
+                const message = '';
+                window.location.href = `https://api.whatsapp.com/send?phone=${client.client_phone}&text=${message}`;
+            },
         }
     }
 </script>

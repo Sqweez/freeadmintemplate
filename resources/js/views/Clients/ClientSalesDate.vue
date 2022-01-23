@@ -170,6 +170,9 @@
                                         mdi-eye
                                     </v-icon>
                                 </v-btn>
+                                <v-btn icon @click="sendWhatsapp(item)" color="success">
+                                    <v-icon>mdi-whatsapp</v-icon>
+                                </v-btn>
                             </template>
                             <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                                 {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -323,7 +326,11 @@ export default {
             const { data } = await axios.get(`/api/clients/analytics/sales?start=${this.start}&finish=${this.finish}`);
             this.$store.commit(MUTATIONS.SET_CLIENTS_WITHOUT_SALES, data.data);
             this.$loading.disable();
-        }
+        },
+        sendWhatsapp(client) {
+            const message = '';
+            window.location.href = `https://api.whatsapp.com/send?phone=${client.client_phone}&text=${message}`;
+        },
     }
 }
 </script>

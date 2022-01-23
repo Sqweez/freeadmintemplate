@@ -60,6 +60,14 @@
                                 color="white darken-2"
                             />
                         </div>
+                        <div>
+                            <v-checkbox
+                                label="Отправить в телеграм"
+                                v-model="isSendTelegram"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
 
                     </div>
                     <div class="cart__parameters">
@@ -595,6 +603,7 @@
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            isSendTelegram: false,
             isOpt: false,
             isDelivery: false,
             awaitingForKaspiPayment: false,
@@ -691,6 +700,12 @@
 
                 this.preorder = {...preorder};
 
+            },
+            async sendTelegram(saleId) {
+                this.$loading.enable();
+                const response = await axios.get(`/api/sales/telegram/${saleId}`);
+                console.log(response);
+                this.$loading.disable();
             },
             async createCertificate(certificate) {
                 this.certificateModal = false;
@@ -839,6 +854,9 @@
             async createSale(sale) {
                 try {
                     this.sale_id = await this.$store.dispatch('MAKE_SALE_v2', sale);
+                    if (this.isSendTelegram) {
+                        await this.sendTelegram(this.sale_id);
+                    }
                     this.$toast.success('Продажа совершена успешно!');
                     this.confirmationModal = true;
                     this.cart = [];
@@ -856,6 +874,7 @@
                     this.isSplitPayment = false;
                     this.isDelivery = false;
                     this.isOpt = false;
+                    this.isSendTelegram = false;
                 } catch (e) {
                     throw e;
                 }
