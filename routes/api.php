@@ -202,7 +202,9 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('partners', [AnalyticsController::class, 'partners']);
         Route::get('partner/sales', [AnalyticsController::class, 'getClientPartnerSales']);
         Route::get('partners/{id}', [AnalyticsController::class, 'partnerStats']);
-        Route::get('sales', [AnalyticsController::class, 'getSaleAnalytics']);
+        Route::post('sales/sellers', [AnalyticsController::class, 'getSaleSellersAnalytics']);
+        Route::get('sales/schedule', [AnalyticsController::class, 'getSalesSchedule']);
+        Route::post('sales', [AnalyticsController::class, 'getSaleAnalytics']);
         Route::get('arrivals', [AnalyticsController::class, 'getArrivalAnalytics']);
     });
 

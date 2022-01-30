@@ -149,6 +149,18 @@ const navigationModule = {
                     {
                         title: 'Аналитика поступлений',
                         url: '/analytics/arrivals'
+                    },
+                    {
+                        title: 'Аналитика продаж бренды',
+                        url: '/analytics/sales/brands'
+                    },
+                    {
+                        url: '/analytics/sales/brands/sellers',
+                        title: 'Аналитика продаж продавцы'
+                    },
+                    {
+                        url: '/analytics/sales/schedule',
+                        title: 'График продаж'
                     }
                 ]
             },
@@ -454,6 +466,18 @@ const navigationModule = {
                 title: 'Отчеты по клиентам',
                 url: '/analytics/clients/sales',
                 icon: 'report',
+            },
+            {
+                title: 'Аналитика продаж бренды',
+                url: '/analytics/sales/brands'
+            },
+            {
+                title: 'Аналитика продаж продавцы',
+                url: '/analytics/sales/brands/sellers'
+            },
+            {
+                url: '/analytics/sales/schedule',
+                title: 'График продаж'
             },
             {
                 title: 'Kaspi',

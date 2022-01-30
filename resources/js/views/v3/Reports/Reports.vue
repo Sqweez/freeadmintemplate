@@ -177,6 +177,22 @@
                         item-value="id"
                         item-text="name">
                     </v-select>
+                    <v-row>
+                        <v-col>
+                            <v-text-field
+                                label="Процент скидки, от"
+                                type="number"
+                                v-model="discountFrom"
+                            />
+                        </v-col>
+                        <v-col>
+                            <v-text-field
+                                label="Процент скидки, до"
+                                type="number"
+                                v-model="discountTo"
+                            />
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
             <v-text-field
@@ -437,15 +453,14 @@
 </template>
 
 <script>
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import moment from 'moment';
-    import ReportCancelModal from "@/components/Modal/ReportCancelModal";
-    import ACTIONS from '@/store/actions/index';
-    import axios from 'axios';
-    import SaleEditModal from "@/components/Modal/SaleEditModal";
-import { log } from '../../../scripts/nv.d3.min';
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import moment from 'moment';
+import ReportCancelModal from "@/components/Modal/ReportCancelModal";
+import ACTIONS from '@/store/actions/index';
+import axios from 'axios';
+import SaleEditModal from "@/components/Modal/SaleEditModal";
 
-    const DATE_FILTERS = {
+const DATE_FILTERS = {
         ALL_TIME: 1,
         CURRENT_MONTH: 2,
         TODAY: 3,
@@ -458,6 +473,8 @@ import { log } from '../../../scripts/nv.d3.min';
     export default {
         components: {SaleEditModal, ReportCancelModal, ConfirmationModal},
         data: () => ({
+            discountFrom: 0,
+            discountTo: 100,
             editModal: false,
             bookings: [],
             search: '',
@@ -538,6 +555,34 @@ import { log } from '../../../scripts/nv.d3.min';
         }),
         async mounted() {
             await this.init();
+        },
+        watch: {
+            discountFrom(value) {
+                this.$nextTick(() => {
+                    if (this.discountFrom > 99) {
+                        this.discountFrom = 100;
+                    }
+                    if (value.toString().length > 3) {
+                        this.discountFrom = +(value.toString().slice(0, 3));
+                    }
+                    if (this.discountFrom < 0) {
+                        this.discountFrom = 0;
+                    }
+                })
+            },
+            discountTo(value) {
+                this.$nextTick(() => {
+                    if (this.discountTo > 99) {
+                        this.discountTo = 100;
+                    }
+                    if (value.toString().length > 3) {
+                        this.discountTo = +(value.toString().slice(0, 3));
+                    }
+                    if (this.discountTo < 0) {
+                        this.discountTo = 0;
+                    }
+                })
+            }
         },
         methods: {
             async changeSale() {
@@ -647,7 +692,6 @@ import { log } from '../../../scripts/nv.d3.min';
             async sendTelegram(saleId) {
                 this.$loading.enable();
                 const response = await axios.get(`/api/sales/telegram/${saleId}`);
-                console.log(response);
                 this.$loading.disable();
             }
         },
@@ -784,6 +828,15 @@ import { log } from '../../../scripts/nv.d3.min';
                                 return p.product_name.toLowerCase().includes(this.search.toLowerCase());
                             })]
                             return s;
+                        })
+                        .filter(s => {
+                            if (this.discountFrom === 0 && this.discountTo === 100) {
+                                return true;
+                            } else {
+                                return s.products.some(i => {
+                                    return i.discount >= this.discountFrom && i.discount <= this.discountTo;
+                                });
+                            }
                         });
                 } catch (e) {
                     console.log(e)

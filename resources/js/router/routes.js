@@ -59,6 +59,9 @@ import TrainerSales from "@/views/Analytics/TrainerSales";
 import PartnerSales from "@/views/Analytics/PartnerSales";
 import ClientView from "@/views/Clients/ClientView";
 import ClientSalesDate from "@/views/Clients/ClientSalesDate";
+import SaleAnalyticsByBrand from "@/views/Analytics/SaleAnalyticsByBrand";
+import SaleAnalyticsBySellerAndProducts from "@/views/Analytics/SaleAnalyticsBySellerAndProducts";
+import SalesSchedule from "@/views/Analytics/SalesSchedule";
 
 const routes = [
     {
@@ -457,6 +460,36 @@ const routes = [
     {
         path: '/analytics/brands',
         component: Brands,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_BOSS: true
+            }
+        }
+    },
+    {
+        path: '/analytics/sales/brands',
+        component: SaleAnalyticsByBrand,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_BOSS: true
+            }
+        }
+    },
+    {
+        path: '/analytics/sales/brands/sellers',
+        component: SaleAnalyticsBySellerAndProducts,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_BOSS: true
+            }
+        }
+    },
+    {
+        path: '/analytics/sales/schedule',
+        component: SalesSchedule,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,

@@ -29,6 +29,31 @@ class AnalyticsController extends Controller
         ]);
     }
 
+    public function getSalesSchedule(Request $request) {
+        $startDate = Carbon::parse($request->get('date'))->startOfMonth()->locale('ru');
+        $finishDate = Carbon::parse($request->get('date'))->endOfMonth()->locale('ru');
+        $daysInMonth = $startDate->daysInMonth;
+        $dateArray = [];
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            $day = $i;
+            $dateArray[] = $day;
+        }
+        return Sale::query()
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $finishDate)
+            ->with(['store', 'products'])
+            ->get()
+            ->groupBy('store_id')
+            ->map(function ($sale, $store_id) use ($dateArray) {
+                return collect($dateArray)->map(function ($date) use ($sale) {
+                    $needleSales = collect($sale)->filter(function ($i) use ($date) {
+                        return Carbon::parse($i['created_at'])->day === $date;
+                    })->values();
+                    return (new SaleService())->calculateSaleFinalAmount($needleSales);
+                });
+            });
+    }
+
     public function partners(Request $request) {
         $partners = collect(Client::Partner()->with('city')->with('transactions')->get())->map(function ($client) {
             $client['balance'] = collect($client['transactions'])->reduce(function ($i, $a) {
@@ -361,15 +386,65 @@ class AnalyticsController extends Controller
         ];
     }
 
+    public function getSaleSellersAnalytics(Request $request, SaleService $saleService) {
+        $startDate = Carbon::parse($request->get('start'))->startOfMonth()->locale('ru');
+        $finishDate = Carbon::parse($request->get('finish'))->endOfMonth()->locale('ru');
+        $products = $request->get('products', null);
+        $sales = Sale::query()
+            ->with('products')
+            ->with('user:id,name')
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $finishDate)
+            ->select(['id', 'kaspi_red', 'created_at', 'balance', 'user_id'])
+            ->get();
+
+        if ($products && count($products) > 0) {
+            $sales = $sales->map(function ($sale) use ($products) {
+                $sale_products = collect($sale['products'])->filter(function ($product) use ($products) {
+                    return in_array($product['product_id'], $products);
+                });
+                unset($sale['products']);
+                $sale['products'] = $sale_products;
+                return $sale;
+            })->filter(function ($sale) {
+                return count($sale['products']) > 0;
+            })->values();
+        }
+
+        return $sales->groupBy('user_id')
+            ->map(function ($sale, $key) use ($saleService) {
+                return [
+                    'amount' => $saleService->calculateSaleFinalAmount($sale),
+                    'user' => $sale[0]['user']
+                ];
+            })
+            ->values()->all();
+    }
+
     public function getSaleAnalytics(Request $request, SaleService $saleService) {
         $startDate = Carbon::parse($request->get('start'))->startOfMonth()->locale('ru');
         $finishDate = Carbon::parse($request->get('finish'))->endOfMonth()->locale('ru');
+        $products = $request->get('products', null);
         $sales = Sale::query()
             ->with('products')
             ->whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<=', $finishDate)
             ->select(['id', 'kaspi_red', 'created_at', 'balance'])
             ->get();
+
+        if ($products && count($products) > 0) {
+            $sales = $sales->map(function ($sale) use ($products) {
+                $sale_products = collect($sale['products'])->filter(function ($product) use ($products) {
+                    return in_array($product['product_id'], $products);
+                });
+                unset($sale['products']);
+                $sale['products'] = $sale_products;
+                return $sale;
+            })->filter(function ($sale) {
+                return count($sale['products']) > 0;
+            })->values();
+        }
+
         $saleAnalytics =  $sales->groupBy(function ($i) {
             return Carbon::parse($i['created_at'])->format('Y-m');
         })->map(function ($sale, $key) use ($saleService) {
@@ -415,7 +490,6 @@ class AnalyticsController extends Controller
                 'date_name' => "$monthNameRu, $year"
             ];
         })->values()->all();
-        //return $arrivalAnalytics;
         return $this->formatArrayOutput($startDate, $finishDate, $arrivalAnalytics);
     }
 
