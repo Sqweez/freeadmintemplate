@@ -86,6 +86,7 @@ export default {
         async getSchedule() {
             this.$loading.enable();
             let numberOfDays = moment(this.date).daysInMonth();
+            this.currentDays = [];
             for (let i = 1; i <= numberOfDays; i++) {
                 const date = this.months.find(m => m.value === this.date);
                 this.currentDays.push(`${i > 9 ? i : `0${i}`}, ${date.name}`);
