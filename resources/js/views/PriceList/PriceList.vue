@@ -87,6 +87,12 @@
                         Выбрать все товары <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
+                <v-col cols="12" xl="4">
+                    <v-checkbox
+                        label="Скрыть отсутствующие"
+                        v-model="hideNotInStock"
+                    />
+                </v-col>
             </v-row>
             <v-data-table
                 class="background-iron-grey fz-18"
@@ -235,6 +241,7 @@
             currentSeller: -1,
             currentType: -1,
             reports: [],
+            hideNotInStock: false,
             dateFilters: [
                 {
                     name: 'Сегодня',
@@ -404,6 +411,9 @@
                 }
                 if (this.categoryId !== -1) {
                     products = products.filter(product => product.category.id === this.categoryId);
+                }
+                if (this.hideNotInStock) {
+                    products = products.filter(p => p.quantity > 0);
                 }
                 return products;
             },

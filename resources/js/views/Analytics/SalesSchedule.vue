@@ -14,7 +14,11 @@
                 <v-btn color="primary" @click="getSchedule">
                     Получить отчет
                 </v-btn>
-                <v-simple-table v-slot:default v-if="schedule">
+                <div v-for="shop of shops" :key="`line-chart-shop-${shop.id}`" v-if="dataCollection">
+                    <h4>{{ shop.name }}</h4>
+                    <LineChart :chart-data="dataCollection[shop.id]" :options="options"/>
+                </div>
+                <v-simple-table v-slot:default v-if="schedule" class="mt-2">
                     <thead>
                     <tr>
                         <th>Дата</th>
@@ -40,38 +44,46 @@
 <script>
 import axios from "axios";
 import moment from 'moment';
+import LineChart from "@/components/Charts/LineChart";
+
 export default {
+    components: {LineChart},
     data: () => ({
         months: [],
-        monthNames: [
-            'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-        ],
         date: null,
         schedule: null,
         currentDays: [],
+        dataCollection: null,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        return `Продажи: ${new Intl.NumberFormat('ru-RU').format(Math.ceil(tooltipItem.yLabel))}₸`
+                    }
+                }
+            },
+            scales: {
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        precision: 4,
+                        maxTicksLimit: 10,
+                        callback: function (value, index, values) {
+                            return `${new Intl.NumberFormat('ru-RU').format(Math.ceil(value))}₸`                     }
+                    }
+                }],
+                xAxes: [{
+                    display: true,
+                }],
+            }
+        }
     }),
     methods: {
-        parseMonths() {
-            let dateEnd = moment();
-            let dateStart = moment().subtract(5, 'months');
-            let interim = dateStart.clone();
-            let timeValues = [];
-
-            while (dateEnd > interim || interim.format('M') === dateEnd.format('M')) {
-                timeValues.push(interim.format('YYYY-MM'));
-                interim.add(1,'month');
-            }
-
-            return timeValues.map((m) => {
-                const dates = m.split('-');
-                const year = dates[0];
-                const month = this.monthNames[parseInt(dates[1]) - 1];
-                return {
-                    name: `${month}, ${year} г.`,
-                    value: m + '-01',
-                };
-            }).reverse();
-        },
         getAmount(shopId, day) {
             if (!this.schedule) {
                 return 0;
@@ -93,7 +105,32 @@ export default {
             }
             const response = await axios.get(`/api/analytics/sales/schedule?date=${this.date}`);
             this.schedule = response.data;
+            this.shops.forEach(shop => {
+                const schedule = this.schedule[shop.id] || new Array(numberOfDays).fill(0);
+                this.fillData(this.currentDays, schedule, shop.id);
+            });
+
             this.$loading.disable();
+        },
+        fillData(days, data, idx) {
+            this.dataCollection = {
+                ...this.dataCollection,
+                [idx]: {
+                    labels: [
+                        ...days
+                    ],
+                    datasets: [
+                        {
+                            borderColor: '#f00', // цвет линии
+                            pointBackgroundColor: '#000',
+                            label: 'Data One',
+                            backgroundColor: '#f00',
+                            data: [...data],
+                            pointRadius: 4,
+                        }
+                    ]
+                },
+            };
         },
     },
     computed: {
@@ -102,7 +139,7 @@ export default {
         }
     },
     async mounted() {
-        this.months = this.parseMonths();
+        this.months = this.$date.parseMonthsDiff(12);
         this.date = this.months[0].value;
         console.log(this.date);
     },

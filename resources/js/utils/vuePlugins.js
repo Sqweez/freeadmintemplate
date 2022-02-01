@@ -3,6 +3,7 @@ import LoadingService from "@/utils/loadingService";
 import ColorService from "@/utils/colorService";
 import store from "@/store";
 import FileService from "@/utils/fileService";
+import DatePlugin from "@/utils/datePlugin";
 
 export default {
     install(Vue, options) {
@@ -13,6 +14,9 @@ export default {
             computed: {
                 $toast() {
                     return new ToastService();
+                },
+                $date() {
+                    return new DatePlugin();
                 },
                 $loading() {
                     return new LoadingService(store)
