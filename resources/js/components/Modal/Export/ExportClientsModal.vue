@@ -157,7 +157,7 @@
             jsonData() {
                 return this.clients.map((client, key) => {
                     return {
-                        key: key + 1,
+                        key: client.id,
                         client_name: client.client_name,
                         city: client.city,
                         phone: client.client_phone,
