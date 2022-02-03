@@ -102,7 +102,6 @@ const authModule = {
                 axios.interceptors.response.use((response) => {
                     console.groupCollapsed('API response url:' + response.config.url);
                     console.log(response);
-                    console.trace();
                     console.groupEnd();
                     return response
                 })
