@@ -93,9 +93,17 @@ export default {
                 value: 'last_sale_date',
                 title: 'Дата последней покупки',
             },
+            {
+                value: 'gender_name',
+                title: 'Пол'
+            },
+            {
+                value: 'birth_date_formatted',
+                title: 'Дата рождения'
+            }
         ],
         selectedFields: [
-            "ФИО", "Телефон", "Баланс", "Номер карты", "Процент скидки", "Город", "Тип лояльности", "Сумма покупок", "Дата последней покупки"
+            "ФИО", "Телефон", "Баланс", "Номер карты", "Процент скидки", "Город", "Тип лояльности", "Сумма покупок", "Дата последней покупки", "Пол", "Дата рождения"
         ],
         clientTypeFilter: -1,
         loyaltyFilter: -1,
@@ -142,7 +150,9 @@ export default {
                     discount: client.client_discount,
                     loyalty: client.loyalty.name,
                     total_sum: `${new Intl.NumberFormat('ru-RU').format(Math.ceil(client.total_sum))} ₸`,
-                    last_sale_date: client.last_sale_date
+                    last_sale_date: client.last_sale_date,
+                    gender_name: client.gender_name,
+                    birth_date_formatted: client.birth_date_formatted,
                 };
             });
         },

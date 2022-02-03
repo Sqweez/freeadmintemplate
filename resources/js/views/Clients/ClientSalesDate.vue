@@ -126,6 +126,14 @@
                         item-text="name"
                         v-model="cityFilter"
                     />
+                    <v-select
+                        style="max-width: 270px;"
+                        label="Пол"
+                        :items="genders"
+                        item-value="id"
+                        item-text="value"
+                        v-model="genderId"
+                    />
                 </div>
                 <v-row>
                     <v-col>
@@ -164,6 +172,62 @@
                                     {{ item.is_partner ? 'mdi-check' : 'mdi-close' }}
                                 </v-icon>
                             </template>
+                            <template v-slot:item.extra="{item}">
+                                <v-list>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.gender_name }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Пол
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.city }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Город
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-icon :color="item.is_partner ? 'success' : 'error'">
+                                                    {{ item.is_partner ? 'mdi-check' : 'mdi-close' }}
+                                                </v-icon>
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Партнер
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.birth_date_formatted }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Дата рождения
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.loyalty.name }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Тип лояльности
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </template>
                             <template v-slot:item.actions="{ item }">
                                 <v-btn icon @click="$router.push(`/clients/${item.id}`)">
                                     <v-icon>
@@ -196,6 +260,8 @@
 import axios from 'axios';
 import MUTATIONS from '@/store/mutations';
 import ExportClientsSimple from "@/components/Modal/Export/ExportClientsSimple";
+import GENDERS from "@/common/enums/genders";
+
 export default {
     components: {ExportClientsSimple},
     data: () => ({
@@ -234,6 +300,10 @@ export default {
                 text: 'Процент скидки'
             },
             {
+                value: 'extra',
+                text: 'Доп информация'
+            },
+/*            {
                 value: 'is_partner',
                 text: 'Тренер'
             },
@@ -244,7 +314,7 @@ export default {
             {
                 value: 'loyalty.name',
                 text: 'Тип лояльности'
-            },
+            },*/
             {
                 value: 'actions',
                 text: 'Действие'
@@ -255,6 +325,14 @@ export default {
             rowsPerPage: 10,
             page: 1
         },
+        genderId: -1,
+        genders: [
+            {
+                id: -1,
+                value: 'Все'
+            },
+            ...GENDERS
+        ],
         clientTypeFilter: -1,
         loyaltyFilter: -1,
         clientTypes: [
@@ -277,24 +355,30 @@ export default {
         clients() {
             return this.$store.getters.CLIENTS_WITHOUT_SALES
                 .filter(client => {
-                if (this.cityFilter === 0) {
-                    return client;
-                }
-                return +client.client_city === this.cityFilter
-            }).filter(client => {
-                if (this.loyaltyFilter === -1) {
-                    return client;
-                }
-                return client.loyalty.id === this.loyaltyFilter;
-            }).filter(client => {
-                if (this.clientTypeFilter === -1) {
-                    return client;
-                }
-                if (this.clientTypeFilter === 1) {
-                    return !client.is_partner;
-                }
-                return client.is_partner;
-            });
+                    if (this.cityFilter === 0) {
+                        return client;
+                    }
+                    return +client.client_city === this.cityFilter
+                }).filter(client => {
+                    if (this.loyaltyFilter === -1) {
+                        return client;
+                    }
+                    return client.loyalty.id === this.loyaltyFilter;
+                }).filter(client => {
+                    if (this.clientTypeFilter === -1) {
+                        return client;
+                    }
+                    if (this.clientTypeFilter === 1) {
+                        return !client.is_partner;
+                    }
+                    return client.is_partner;
+                }).filter(c => {
+                    if (this.genderId === -1) {
+                        return true;
+                    } else {
+                        return c.gender === this.genderId;
+                    }
+                });
         },
         loyalties() {
             return [
@@ -323,7 +407,7 @@ export default {
                 return this.$toast.error('Введите обе даты');
             }
             this.$loading.enable();
-            const { data } = await axios.get(`/api/clients/analytics/sales?start=${this.start}&finish=${this.finish}`);
+            const {data} = await axios.get(`/api/clients/analytics/sales?start=${this.start}&finish=${this.finish}`);
             this.$store.commit(MUTATIONS.SET_CLIENTS_WITHOUT_SALES, data.data);
             this.$loading.disable();
         },

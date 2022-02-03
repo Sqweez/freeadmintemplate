@@ -44,7 +44,11 @@ class ClientResource extends JsonResource
             'job' => $this->job,
             'instagram' => $this->instagram,
             'photo' => $this->photo,
-            'last_sale_date' => $last_sale_date
+            'last_sale_date' => $last_sale_date,
+            'gender_name' => Client::GENDERS[$this->gender],
+            'gender' => $this->gender,
+            'birth_date_formatted' => $this->birth_date ? Carbon::parse($this->birth_date)->format('d.m.Y') : 'Не указана',
+            'birth_date' => $this->birth_date,
         ];
     }
 }

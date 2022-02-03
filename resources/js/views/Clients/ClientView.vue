@@ -11,6 +11,8 @@
                 <h5>Сумма покупок: {{ client.total_sum | priceFilters }}</h5>
                 <h5>Город: {{ client.city }}</h5>
                 <h5>Тип лояльности: {{ client.loyalty.name }}</h5>
+                <h5>Пол: {{ client.gender_name }}</h5>
+                <h5>Дата рождения: {{ client.birth_date_formatted }}</h5>
                 <v-data-table
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"

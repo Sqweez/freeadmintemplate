@@ -41,6 +41,16 @@
                             v-model="cityFilter"
                         />
                     </v-col>
+                    <v-col>
+                        <v-select
+                            style="max-width: 270px;"
+                            label="Пол"
+                            :items="genders"
+                            item-value="id"
+                            item-text="value"
+                            v-model="genderId"
+                        />
+                    </v-col>
                 </v-row>
                 <v-select
                     label="Поля"
@@ -75,6 +85,8 @@
 </template>
 
 <script>
+
+    import GENDERS from "@/common/enums/genders";
 
     export default {
         props: {
@@ -117,9 +129,17 @@
                     value: 'total_sum',
                     title: 'Сумма покупок',
                 },
+                {
+                    value: 'gender_name',
+                    title: 'Пол'
+                },
+                {
+                    value: 'birth_date_formatted',
+                    title: 'Дата рождения'
+                }
             ],
             selectedFields: [
-                "ФИО", "Телефон", "Баланс", "Номер карты", "Процент скидки", "Город", "Тип лояльности", "Сумма покупок"
+                "ФИО", "Телефон", "Баланс", "Номер карты", "Процент скидки", "Город", "Тип лояльности", "Сумма покупок", "Пол", "Дата рождения"
             ],
             clientTypeFilter: -1,
             loyaltyFilter: -1,
@@ -132,6 +152,14 @@
                         " value ": " utf- 8 "
                     }
                 ]
+            ],
+            genderId: -1,
+            genders: [
+                {
+                    id: -1,
+                    value: 'Все'
+                },
+                ...GENDERS
             ],
             clientTypes: [
                 {
@@ -166,6 +194,8 @@
                         discount: client.client_discount,
                         loyalty: client.loyalty.name,
                         total_sum: `${new Intl.NumberFormat('ru-RU').format(Math.ceil(client.total_sum))} ₸`,
+                        gender_name: client.gender_name,
+                        birth_date_formatted: client.birth_date_formatted,
                     };
                 });
             },
@@ -215,6 +245,12 @@
                             return !client.is_partner;
                         }
                         return client.is_partner;
+                    }).filter(c => {
+                        if (this.genderId === -1) {
+                            return true;
+                        } else {
+                            return c.gender === this.genderId;
+                        }
                     })
             },
             shops() {

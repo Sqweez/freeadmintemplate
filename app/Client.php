@@ -108,6 +108,12 @@ class Client extends Model
         ]
     ];
 
+    const GENDERS = [
+        'M' => 'Мужчина',
+        'F' => 'Женщина',
+        'U' => 'Не определен'
+    ];
+
     const PLATINUM_CLIENT_MONTHLY_THRESHOLD = 50000;
 
     public function transactions() {

@@ -47,6 +47,19 @@
                        item-value="id"
                        v-model="client.client_city"
                    />
+                   <v-select
+                       v-model="client.gender"
+                       class="mt-3"
+                       label="Пол"
+                       :items="genders"
+                       item-text="value"
+                       item-value="id"
+                   />
+                   <v-text-field
+                       label="Дата рождения"
+                       v-model="client.birth_date"
+                       type="date"
+                   />
                    <v-checkbox
                        v-model="client.is_partner"
                        :label="`Тренер`"
@@ -102,15 +115,16 @@
 </template>
 
 <script>
+    import GENDERS from "@/common/enums/genders";
     import InputMask from 'inputmask';
     import ACTIONS from '@/store/actions/index';
-    import {TOAST_TYPE} from "@/config/consts";
     import uploadFile from "@/api/upload";
     export default {
         data: () => ({
             client: {},
             loading: false,
             photo: null,
+            genders: GENDERS,
         }),
         mounted() {
             const phoneInput = document.getElementById('client_phone');
@@ -129,6 +143,11 @@
                 this.loading = true;
                 if (this.client.client_city === -1 || !this.client.client_city) {
                     this.$toast.error('Выберите город!');
+                    this.loading = false;
+                    return null;
+                }
+                if (!this.client.gender) {
+                    this.$toast.error('Выберите пол!');
                     this.loading = false;
                     return null;
                 }
@@ -222,6 +241,8 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+.theme--dark input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: #ccc;
+}
 </style>

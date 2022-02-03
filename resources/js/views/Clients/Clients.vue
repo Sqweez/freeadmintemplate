@@ -29,6 +29,14 @@
                         item-text="name"
                         v-model="cityFilter"
                     />
+                    <v-select
+                        style="max-width: 270px;"
+                        label="Пол"
+                        :items="genders"
+                        item-value="id"
+                        item-text="value"
+                        v-model="genderId"
+                    />
                 </div>
                 <v-btn color="success" @click="exportModal = true;">
                     Экспорт клиентов <v-icon>mdi-file-excel-box</v-icon>
@@ -70,24 +78,112 @@
                                     {{ item.is_partner ? 'mdi-check' : 'mdi-close' }}
                                 </v-icon>
                             </template>
+                            <template v-slot:item.extra="{item}">
+                                <v-list>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.gender_name }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Пол
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.city }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Город
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-icon :color="item.is_partner ? 'success' : 'error'">
+                                                    {{ item.is_partner ? 'mdi-check' : 'mdi-close' }}
+                                                </v-icon>
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Партнер
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                               {{ item.birth_date_formatted }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Дата рождения
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.loyalty.name }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Тип лояльности
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </template>
                             <template v-slot:item.actions="{ item }">
-                                <v-btn icon @click="userId = item.id; clientModal = true;">
-                                    <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
-                                <v-btn icon @click="confirmationModal = true; userId = item.id;">
-                                    <v-icon>mdi-delete</v-icon>
-                                </v-btn>
-                                <v-btn icon @click="balanceModal = true; userId = item.id;">
-                                    <v-icon>mdi-cash</v-icon>
-                                </v-btn>
-                                <v-btn icon @click="$router.push(`/clients/${item.id}`)">
-                                    <v-icon>
-                                        mdi-eye
-                                    </v-icon>
-                                </v-btn>
-                                <v-btn icon @click="sendWhatsapp(item)" color="success">
-                                    <v-icon>mdi-whatsapp</v-icon>
-                                </v-btn>
+                                <v-list>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-btn icon @click="userId = item.id; clientModal = true;">
+                                                    <v-icon>mdi-pencil</v-icon>
+                                                </v-btn>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-btn icon @click="confirmationModal = true; userId = item.id;">
+                                                    <v-icon>mdi-delete</v-icon>
+                                                </v-btn>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-btn icon @click="balanceModal = true; userId = item.id;">
+                                                    <v-icon>mdi-cash</v-icon>
+                                                </v-btn>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-btn icon @click="$router.push(`/clients/${item.id}`)">
+                                                    <v-icon>
+                                                        mdi-eye
+                                                    </v-icon>
+                                                </v-btn>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-btn icon @click="sendWhatsapp(item)" color="success">
+                                                    <v-icon>mdi-whatsapp</v-icon>
+                                                </v-btn>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
                             </template>
                             <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                                 {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -133,6 +229,7 @@
     import ClientModal from "@/components/Modal/ClientModal";
     import BalanceModal from "@/components/Modal/BalanceModal";
     import ExportClientsModal from "@/components/Modal/Export/ExportClientsModal";
+    import GENDERS from "@/common/enums/genders";
 
     export default {
         components: {
@@ -171,6 +268,14 @@
                     name: 'Тренер'
                 }
             ],
+            genderId: -1,
+            genders: [
+                {
+                    id: -1,
+                    value: 'Все'
+                },
+                ...GENDERS
+            ],
             clientTypeFilter: -1,
             loyaltyFilter: -1,
             pageCount: 1,
@@ -199,16 +304,8 @@
                     text: 'Процент скидки'
                 },
                 {
-                    value: 'is_partner',
-                    text: 'Тренер'
-                },
-                {
-                    value: 'city',
-                    text: 'Город'
-                },
-                {
-                    value: 'loyalty.name',
-                    text: 'Тип лояльности'
+                    value: 'extra',
+                    text: 'Доп. информация'
                 },
                 {
                     value: 'actions',
@@ -246,6 +343,12 @@
                             return !client.is_partner;
                         }
                         return client.is_partner;
+                    }).filter(c => {
+                        if (this.genderId === -1) {
+                            return true;
+                        } else {
+                            return c.gender === this.genderId;
+                        }
                     })
             },
             shops() {
