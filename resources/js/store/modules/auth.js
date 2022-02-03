@@ -99,6 +99,27 @@ const authModule = {
                 axios.defaults.headers.Authorization = token;
                 axios.defaults.headers.store_id = user.store_id;
                 axios.defaults.headers.user_id = user.id;
+                axios.interceptors.response.use((response) => {
+                    const start = response.config.metadata['request-startTime']
+                    const end = new Date().getTime()
+                    const duration = end - start
+                    response.metadata = {
+                        requestStartTime: start,
+                        requestEndTime: end,
+                        requestDuration: duration
+                    }
+                    if (
+                        process.env.DEBUG_MODE !== undefined &&
+                        process.env.DEBUG_MODE &&
+                        process.client
+                    ) {
+                        console.groupCollapsed('API response url:' + response.config.url)
+                        console.log(response)
+                        console.trace()
+                        console.groupEnd()
+                    }
+                    return response
+                })
                 dispatch(ACTIONS.OPEN_SHIFT, user);
             }
         },
