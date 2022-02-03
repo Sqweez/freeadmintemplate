@@ -20,7 +20,6 @@ const modalModule = {
     },
     mutations: {
         showProductModal(state, {id = null, action = PRODUCT_MODAL_EVENTS.ADD_PRODUCT}) {
-            console.log(action);
             state.productModal = true;
             state.productModalId = id;
             state.productModalAction = action;

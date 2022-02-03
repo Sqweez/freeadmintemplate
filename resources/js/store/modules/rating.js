@@ -73,7 +73,6 @@ const ratingModule = {
             commit(MUTATIONS.CREATE_CRITERIA, data);
         },
         async [ACTIONS.EDIT_CRITERIA] ({commit}, payload) {
-            console.log(payload);
             const { data } = await axios.patch(`/api/rating/criteria/${payload.id}`, payload);
             commit(MUTATIONS.EDIT_CRITERIA, data);
         },

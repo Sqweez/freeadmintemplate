@@ -140,7 +140,6 @@ const productsModule = {
         },
         async [ACTIONS.EDIT_PRODUCT]({commit}, payload) {
             const product = await editProduct(payload);
-            console.log(product);
             commit(MUTATIONS.EDIT_PRODUCT, product);
         },
         async [ACTIONS.DELETE_PRODUCT]({commit}, payload) {

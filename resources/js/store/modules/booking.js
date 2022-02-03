@@ -41,8 +41,7 @@ const bookingModule = {
         async [ACTIONS.CREATE_BOOKING]({commit}, booking) {
             try {
                 this.$loading.enable();
-                const { data } = await createBooking(booking);
-                console.log(data);
+                await createBooking(booking);
             } catch (e) {
                 throw e;
             } finally {
@@ -52,8 +51,7 @@ const bookingModule = {
         async MAKE_BOOKING_SALE_v2({commit}, sale) {
             try {
                 this.$loading.enable();
-                const { data } = await createBookingSale(sale);
-                console.log(data);
+                await createBookingSale(sale);
             } catch (e) {
                 throw e;
             } finally {

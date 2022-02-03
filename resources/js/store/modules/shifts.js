@@ -43,12 +43,10 @@ const shiftModule = {
     },
     actions: {
         async [ACTIONS.OPEN_SHIFT]({commit, getters}, user) {
-            console.log(getters);
             if (!getters.IS_SELLER && !getters.IS_SENIOR_SELLER) {
-                console.log('not seller');
                 return;
             }
-            const response = await openShift({
+            await openShift({
                 store_id: user.store_id,
                 user_id: user.id
             })

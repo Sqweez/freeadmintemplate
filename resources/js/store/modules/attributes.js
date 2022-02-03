@@ -21,7 +21,6 @@ const attributeModule = {
             state.attributes = state.attributes.map(a => {
                 if (a.id === payload.id) {
                     a = payload;
-                    console.log('evrika!');
                 }
                 return a;
             })
@@ -41,7 +40,6 @@ const attributeModule = {
         },
         async [ACTIONS.EDIT_ATTRIBUTE] ({commit}, payload) {
             const attribute = await editAttribute(payload);
-            console.log(attribute);
             commit(MUTATIONS.EDIT_ATTRIBUTE, attribute);
         },
         async [ACTIONS.DELETE_ATTRIBUTE] ({commit}, payload) {

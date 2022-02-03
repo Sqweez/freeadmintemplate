@@ -79,7 +79,6 @@ const reportsModule = {
         },
         async [ACTIONS.CANCEL_SALE] ({commit}, payload) {
             const { data } = await cancelSale(payload.canceled, payload.id);
-            console.log(data);
             if (!data) {
                 commit('cancelSale', payload.id);
             } else {
