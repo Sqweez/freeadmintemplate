@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\v2;
 
+use App\Category;
 use App\Http\Controllers\Controller;
 use App\Sale;
 use App\SaleProduct;
@@ -13,18 +14,28 @@ use Illuminate\Http\Request;
 
 class KaspiController extends Controller {
 
-    public function getKaspiProductsXML() {
+    public function getKaspiProductsXML(): Response {
         $xmlContent = $this->getProductsXML();
         return $this->storeXML($xmlContent, 'kaspi\xml\kaspi_products.xml');
     }
 
+    public function getForteProducts() {
+        $xmlContent = $this->getForteProductsXML();
+        return $this->storeXML($xmlContent, 'forte\xml\forte_products.xml');
+    }
+
+    public function getForteProductsXML() {
+        $products = $this->getProducts();
+        return $this->getForteXML($products);
+    }
+
     public function getProductsXML() {
-        $xmlContent =  $this->getXML($this->getProducts());
+        $xmlContent =  $this->getKaspiXML($this->getProducts());
         $xmlContent = str_replace('&', '&amp;', $xmlContent);
         return $xmlContent;
     }
 
-    private function storeXML($xmlContent, $path = 'kaspi\xml\kaspi_products.xml') {
+    private function storeXML($xmlContent, $path = 'kaspi\xml\kaspi_products.xml'): Response {
         \Storage::disk('public')->put($path, $xmlContent);
         return (new Response('success', 200))
             ->header('Last-Modified', now()->toRfc822String());
@@ -35,9 +46,10 @@ class KaspiController extends Controller {
             ->whereHas('product', function ($q) {
                 return $q->where('is_kaspi_visible', true);
             })
-            ->with(['attributes'])
-            ->with(['product', 'product.attributes'])
+            ->with(['attributes', 'attributes.attribute_name'])
+            ->with(['product', 'product.attributes', 'product.attributes.attribute_name'])
             ->with('product.manufacturer')
+            ->with('product.product_images')
             ->with(['batches' => function ($q) {
                 return $q->where('quantity', '>', 0);
             }])
@@ -59,8 +71,13 @@ class KaspiController extends Controller {
             return [
                 'sku' => $product['id'],
                 'product_name' => $product['manufacturer']['manufacturer_name'] . ' ' . $product['product_name'] . ' ' . collect($product['attributes'])->pluck('attribute_value')->join(' ') . ' ' . collect($product['product']['attributes'])->pluck('attribute_value')->join(' '),
+                'forte_product_name' => $product['product_name'] . ' ' . $product['manufacturer']['manufacturer_name'] . ' ' . collect($product['attributes'])->pluck('attribute_value')->join(' ') . ' ' . collect($product['product']['attributes'])->pluck('attribute_value')->join(' '),
                 'brand' => $product['manufacturer']['manufacturer_name'],
+                'base_name' => $product['product_name'],
                 'price' => $product['product']['kaspi_product_price'],//['kaspi_produce_price'],
+                'category_id' => $product['product']['category_id'],
+                'attributes' => collect($product['attributes'])->mergeRecursive($product['product']['attributes']),
+                'images' => $product['product']['product_images'],
                 'availabilities' => collect($stores)->map(function ($store) use ($product) {
                     return ['available' => collect($product['batches'])->filter(function ($item) use ($store) {
                         return $item['store_id'] === $store['id'];
@@ -69,7 +86,7 @@ class KaspiController extends Controller {
         });
     }
 
-    private function getXML($products) {
+    private function getKaspiXML($products) {
         $content = '<?xml version="1.0" encoding="utf-8"?>
                         <kaspi_catalog date="string"
                                       xmlns="kaspiShopping"
@@ -95,6 +112,50 @@ class KaspiController extends Controller {
 
         $content .= '</offers></kaspi_catalog>';
         return $content;
+    }
+
+    private function getForteXML($products) {
+        $categories = Category::with('subcategories')->get();
+        $content = sprintf('<?xml version="1.0" encoding="UTF-8"?><yml_catalog date="%s">', now()->toRfc3339String());
+        $content .= '<shop><name>IRON-ADDICTS</name>
+        <company>IRON-ADDICTS</company>
+        <url>https://iron-addicts.kz</url>
+        <categories>';
+        $content .= $categories->map(function ($category) {
+            $subContent = sprintf('<category id="%s">%s</category>', $category->id, $category->category_name);
+            foreach ($category['subcategories'] as $subcategory) {
+                $subContent .= sprintf('<category id="%s" parentId="%s">%s</category>',
+                    $subcategory['id'],
+                    $category->id,
+                    $subcategory['subcategory_name']
+                );
+            }
+            return $subContent;
+        })->join('');
+        $content .= "</categories>";
+        $content .= "<offers>";
+        $content .= collect($products)->map(function ($product) {
+            $subContent = sprintf('<offer id="%s">', $product['sku']);
+            $preparedName = preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $product['forte_product_name']);
+            $subContent .= sprintf('<name>%s</name>', $preparedName);
+            $subContent .= sprintf('<vendor>%s</vendor>', $product['brand']);
+            $subContent .= sprintf('<price>%s</price>', $product['price']);
+            foreach ($product['attributes'] as $attribute) {
+                $subContent .= sprintf('<param name="%s">%s</param>', $attribute['attribute_name']['attribute_name'], $attribute['attribute_value']);
+            }
+            $subContent .= sprintf('<categoryId>%s</categoryId>', $product['category_id']);
+            foreach ($product['images'] as $image) {
+                $preparedURL = url('/') . \Storage::url($image['image']);
+                $subContent .= sprintf('<picture>%s</picture>', $preparedURL);
+            }
+            $subContent .= '</offer>';
+            return $subContent;
+        })->join('');
+        $content .= "</offers>";
+        $content .= "</shop>";
+        $content .= "</yml_catalog>";
+        return $content;
+
     }
 
     public function getOrders() {

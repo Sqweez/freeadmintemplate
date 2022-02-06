@@ -265,6 +265,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('products', [KaspiController::class, 'getProducts']);
             Route::get('vlife/products/xml', [KaspiController::class, 'getProductsXML']);
             Route::get('products/xml', [KaspiController::class, 'getKaspiProductsXML']);
+            Route::get('forte/products/xml', [KaspiController::class, 'getForteProducts']);
             Route::get('orders', [KaspiController::class, 'getOrders']);
             Route::get('analytics', [KaspiController::class, 'getAnalytics']);
             Route::get('products', [KaspiController::class, 'getProducts']);

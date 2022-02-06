@@ -392,6 +392,8 @@ class AnalyticsController extends Controller
         $products = $request->get('products', null);
         $sales = Sale::query()
             ->with('products')
+            ->with('products.product.attributes')
+            ->with('products.product.product')
             ->with('user:id,name')
             ->whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<=', $finishDate)
@@ -415,10 +417,36 @@ class AnalyticsController extends Controller
             ->map(function ($sale, $key) use ($saleService) {
                 return [
                     'amount' => $saleService->calculateSaleFinalAmount($sale),
-                    'user' => $sale[0]['user']
+                    'user' => $sale[0]['user'],
+                    'products' => $this->getProductsList($sale)
                 ];
             })
             ->values()->all();
+    }
+
+    private function getProductsList($sale): array {
+        $products = [];
+        foreach ($sale as $item) {
+            foreach ($item['products'] as $product) {
+                $productsIds = array_map(function ($i) {
+                    return $i['product_id'];
+                }, $products);
+                $key = array_search($product['product_id'], $productsIds);
+                if ($key !== false) {
+                    $products[$key]['count'] += 1;
+                    $products[$key]['product_price'] += $product['product_price'] * ((100 - $product['discount']) / 100);
+                } else {
+                    $products[] = [
+                        'product_id' => $product['product_id'],
+                        'count' => 1,
+                        'product_name' => $product['product']['product']['product_name'],
+                        'product_price' => $product['product_price'] * ((100 - $product['discount']) / 100),
+                        'attributes' => collect($product['product']['attributes'])->pluck('attribute_value')->join(' '),
+                    ];
+                }
+            }
+        }
+        return $products;
     }
 
     public function getSaleAnalytics(Request $request, SaleService $saleService) {

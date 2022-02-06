@@ -104,6 +104,7 @@
                             <th>#</th>
                             <th>Продавец</th>
                             <th>Сумма продаж</th>
+                            <th>Товары</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -111,6 +112,25 @@
                             <td>{{ key + 1 }}</td>
                             <td>{{ item.user.name }}</td>
                             <td>{{ item.amount | priceFilters }}</td>
+                            <td>
+                                <ul>
+                                    <li v-for="(product, key) of item.products">
+                                        {{ key + 1 }}. {{ product.product_name }} | {{ product.attributes }} - {{ product.count }} шт. | <b>{{ product.product_price | priceFilters }}</b>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{ SALE_ANALYTICS_SELLERS.length }}</td>
+                            <td>Итого</td>
+                            <td>{{ totalCost | priceFilters }}</td>
+                            <td>
+                                <ul>
+                                    <li v-for="(product, key) of totalProducts">
+                                        {{ key + 1 }}. {{ product.product_name }} | {{ product.attributes }} - {{ product.count }} шт. | <b>{{ product.product_price | priceFilters }}</b>
+                                    </li>
+                                </ul>
+                            </td>
                         </tr>
                         </tbody>
                     </template>
@@ -348,6 +368,26 @@ export default {
                     name: 'Все'
                 }, ...this.$store.getters.categories
             ];
+        },
+        totalCost () {
+            return this.SALE_ANALYTICS_SELLERS.reduce((a, c) => {
+                return a + c.amount;
+            }, 0);
+        },
+        totalProducts() {
+            let products = [];
+            this.SALE_ANALYTICS_SELLERS.forEach(s => {
+                s.products.forEach(p => {
+                    const findIndex = products.findIndex(_p => _p.product_id === p.product_id);
+                    if (findIndex === -1) {
+                        products.push(p);
+                    } else {
+                        products[p].count += p.count;
+                        products[p].product_price += p.product_price;
+                    }
+                });
+            })
+            return products;
         },
 
     },

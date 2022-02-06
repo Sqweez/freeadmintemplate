@@ -875,6 +875,7 @@
                     this.isDelivery = false;
                     this.isOpt = false;
                     this.isSendTelegram = false;
+                    this.is_paid = false;
                 } catch (e) {
                     throw e;
                 }
