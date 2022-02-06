@@ -382,8 +382,8 @@ export default {
                     if (findIndex === -1) {
                         products.push(p);
                     } else {
-                        products[p].count += p.count;
-                        products[p].product_price += p.product_price;
+                        products[findIndex].count += p.count;
+                        products[findIndex].product_price += p.product_price;
                     }
                 });
             })
