@@ -37,47 +37,260 @@
                 </v-simple-table>
             </v-card-text>
         </v-card>
+        <v-card>
+            <v-card-title>
+                Неактивные тренера
+            </v-card-title>
+            <v-card-text>
+                <v-row>
+                    <v-col md="12" xl="6">
+                        <v-menu
+                            ref="startMenu"
+                            v-model="startMenu"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            :return-value.sync="start"
+                            transition="scale-transition"
+                            min-width="290px"
+                            offset-y
+                        >
+                            <template v-slot:activator="{ on }">
+                                <v-text-field
+                                    v-model="start"
+                                    label="Дата начала"
+                                    prepend-icon="event"
+                                    readonly
+                                    v-on="on"
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker
+                                v-model="start"
+                                locale="ru"
+                                no-title
+                                scrollable
+                                :max="maxDate"
+                            >
+                                <div class="flex-grow-1"></div>
+                                <v-btn
+                                    text
+                                    outlined
+                                    color="primary"
+                                    @click="startMenu = false"
+                                >
+                                    Отмена
+                                </v-btn>
+                                <v-btn
+                                    text
+                                    outlined
+                                    color="primary"
+                                    @click="changeCustomDate(startMenu, start)"
+                                >
+                                    OK
+                                </v-btn>
+                            </v-date-picker>
+                        </v-menu>
+                    </v-col>
+                    <v-col md="12" xl="6">
+                        <v-menu
+                            ref="finishMenu"
+                            v-model="finishMenu"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            :return-value.sync="finish"
+                            transition="scale-transition"
+                            min-width="290px"
+                            offset-y
+                        >
+                            <template v-slot:activator="{ on }">
+                                <v-text-field
+                                    v-model="finish"
+                                    label="Дата окончания"
+                                    prepend-icon="event"
+                                    readonly
+                                    v-on="on"
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker
+                                v-model="finish"
+                                locale="ru"
+                                no-title
+                                scrollable
+                                :max="maxDate"
+                            >
+                                <div class="flex-grow-1"></div>
+                                <v-btn
+                                    text
+                                    outlined
+                                    color="primary"
+                                    @click="finishMenu = false"
+                                >
+                                    Отмена
+                                </v-btn>
+                                <v-btn
+                                    text
+                                    outlined
+                                    color="primary"
+                                    @click="changeCustomDate(finishMenu, finish) "
+                                >
+                                    OK
+                                </v-btn>
+                            </v-date-picker>
+                        </v-menu>
+                    </v-col>
+                </v-row>
+                <div class="d-flex">
+                    <v-btn color="success" @click="getTrainerReport" class="mr-3">Получить отчет</v-btn>
+                    <download-excel
+                        v-if="inactiveTrainers.length > 0"
+                        :data="jsonData"
+                        :fields="jsonFields"
+                        :exportFields="jsonFields"
+                        name="Неактивные_тренера.xls"
+                        :stringifyLongNum="true"
+                        type="xls"
+                    >
+                        <v-btn text color="success">
+                            Экспортировать
+                        </v-btn>
+                    </download-excel>
+                </div>
+                <v-data-table
+                    :items="inactiveTrainers"
+                    :headers="headers"
+                    no-results-text="Нет результатов"
+                    no-data-text="Нет данных"
+                    :footer-props="{
+                            'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
+                            'items-per-page-text': 'Записей на странице',
+                    }">
+                    <template v-slot:item.without_own_sales="{item}">
+                        <v-icon color="success" v-if="!item.without_own_sales">
+                            mdi-check
+                        </v-icon>
+                        <v-icon color="error" v-else>
+                            mdi-close
+                        </v-icon>
+                    </template>
+                    <template v-slot:item.without_partner_sales="{item}">
+                        <v-icon color="success" v-if="!item.without_partner_sales">
+                            mdi-check
+                        </v-icon>
+                        <v-icon color="error" v-else>
+                            mdi-close
+                        </v-icon>
+                    </template>
+                    <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
+                        {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
+                    </template>
+                </v-data-table>
+            </v-card-text>
+        </v-card>
     </div>
 </template>
 
 <script>
     import axios from "axios";
     import moment from 'moment';
+    import MonthsRu from "@/common/enums/months.ru";
+    import axiosClient from "@/utils/axiosClient";
     export default {
         data: () => ({
             months: [],
-            monthNames: [
-                'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-            ],
             date: null,
             trainers: [],
+            maxDate: moment().format('YYYY-MM-DD'),
+            start: null,
+            startMenu: null,
+            finish: null,
+            finishMenu: null,
+            inactiveTrainers: [],
+            headers: [
+                {
+                    text: 'Имя',
+                    value: 'client_name'
+                },
+                {
+                    text: 'Телефон',
+                    value: 'client_phone'
+                },
+                {
+                    text: 'Есть покупки',
+                    value: 'without_own_sales'
+                },
+                {
+                    text: 'Есть продажи',
+                    value: 'without_partner_sales'
+                }
+            ],
+            fields: [
+                {
+                    value: 'client_name',
+                    title: 'ФИО',
+                },
+                {
+                    value: 'phone',
+                    title: 'Телефон',
+                },
+                {
+                    value: 'without_own_sales',
+                    title: 'Есть покупки'
+                },
+                {
+                    value: 'without_partner_sales',
+                    title: 'Есть продажи'
+                }
+            ],
+            selectedFields: [
+                "ФИО", "Телефон", "Есть покупки", "Есть продажи"
+            ],
         }),
         methods: {
-            parseMonths() {
-                let dateEnd = moment();
-                let dateStart = moment().subtract(5, 'months');
-                let interim = dateStart.clone();
-                let timeValues = [];
+            async changeCustomDate() {
+                this.$refs.startMenu.save(this.start);
+                this.$refs.finishMenu.save(this.finish);
+            },
+            async getTrainerReport () {
+                if (!(this.start || this.finish)) {
+                    return this.$toast.error('Выберите обе даты!');
+                }
+                this.$loading.enable();
+                const { data } = await axios.get(`/api/analytics/trainers/inactive?start=${this.start}&finish=${this.finish}`)
+                this.inactiveTrainers = data;
+                this.$loading.disable();
+            }
+        },
+        computed: {
+            jsonData() {
+                return this.inactiveTrainers.map((client, key) => {
+                    return {
+                        key: client.id,
+                        client_name: client.client_name,
+                        phone: client.client_phone,
+                        without_own_sales: !client.without_own_sales ? 'Да' : 'Нет',
+                        without_partner_sales: !client.without_partner_sales ? 'Да' : 'Нет',
+                    };
+                });
+            },
+            jsonFields() {
+                const fields = this.selectedFields.map((field) => {
+                    return {
+                        [field]: this.fields.find(s => s.title === field).value
+                    };
+                })
 
-                while (dateEnd > interim || interim.format('M') === dateEnd.format('M')) {
-                    timeValues.push(interim.format('YYYY-MM'));
-                    interim.add(1,'month');
+                const object = {
+                    '#': 'key'
+                };
+
+                for (let i = 0; i < this.selectedFields.length; i++) {
+                    object[this.selectedFields[i]] = this.fields.find(s => s.title === this.selectedFields[i]).value
                 }
 
-                return timeValues.map((m) => {
-                    const dates = m.split('-');
-                    const year = dates[0];
-                    const month = this.monthNames[parseInt(dates[1]) - 1];
-                    return {
-                        name: `${month}, ${year} г.`,
-                        value: m + '-01',
-                    };
-                }).reverse();
+                return object;
             },
         },
-        computed: {},
         async mounted() {
-            this.months = this.parseMonths();
+            this.months = this.$date.parseMonthsDiff(6);
             this.date = this.months[0].value;
             console.log(this.date);
         },

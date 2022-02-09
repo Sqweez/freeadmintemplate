@@ -610,4 +610,35 @@ class AnalyticsController extends Controller
 
         return $sales->values()->sortByDesc('amount')->values();
     }
+
+    public function getInactiveTrainers(Request $request) {
+        $start = Carbon::parse($request->get('start'));
+        $finish = Carbon::parse($request->get('finish'));
+        $clients =  Client::query()
+            ->where('is_partner', 1)
+            ->select(['client_name', 'client_phone', 'id', 'is_partner'])
+            ->get();
+
+        $ownSales = Sale::query()
+            ->whereIn('client_id', $clients->pluck('id'))
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $finish)
+            ->select(['id', 'created_at', 'client_id'])
+            ->get();
+
+        $partnerSales = Sale::query()
+            ->whereIn('partner_id', $clients->pluck('id'))
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $finish)
+            ->select(['id', 'created_at', 'partner_id'])
+            ->get();
+
+        return $clients->map(function ($client) use ($ownSales, $partnerSales){
+            $client['without_own_sales'] = $ownSales->where('client_id', $client['id'])->count() === 0;
+            $client['without_partner_sales'] = $partnerSales->where('partner_id', $client['id'])->count() === 0;
+            return $client;
+        })->filter(function ($client) {
+            return $client['without_own_sales'] || $client['without_partner_sales'];
+        })->values();
+    }
 }

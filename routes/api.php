@@ -41,8 +41,6 @@ Route::get('set-tags', 'api\ProductController@setTags'); */
 // HelpController
 Route::get('set-partner-expired-at', 'HelpController@setPartnerExpiredAt');
 Route::get('backup', 'Services\BackupController@backup');
-Route::get('parse-client-genders', 'Services\ExcelService@parseClientsGender');
-
 
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('shop')->group(function () {
@@ -207,6 +205,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('sales/schedule', [AnalyticsController::class, 'getSalesSchedule']);
         Route::post('sales', [AnalyticsController::class, 'getSaleAnalytics']);
         Route::get('arrivals', [AnalyticsController::class, 'getArrivalAnalytics']);
+        Route::get('trainers/inactive', [AnalyticsController::class, 'getInactiveTrainers']);
     });
 
     // Promocode
