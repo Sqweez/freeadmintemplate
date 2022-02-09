@@ -4,7 +4,7 @@
         <v-card-text>
             <v-container>
                 <div class="d-flex justify-space-between align-center">
-                    <v-btn color="error" @click="clientModal = true">Добавить клиента <v-icon>mdi-plus</v-icon></v-btn>
+                    <v-btn color="error" @click="clientModal = true" v-if="!IS_MARKETOLOG">Добавить клиента <v-icon>mdi-plus</v-icon></v-btn>
                     <v-select
                         style="max-width: 270px;"
                         label="Тип лояльности"
@@ -38,7 +38,7 @@
                         v-model="genderId"
                     />
                 </div>
-                <v-btn color="success" @click="exportModal = true;">
+                <v-btn color="success" @click="exportModal = true;" v-if="!IS_MARKETOLOG">
                     Экспорт клиентов <v-icon>mdi-file-excel-box</v-icon>
                 </v-btn>
                 <v-row>
@@ -134,7 +134,31 @@
                                     </v-list-item>
                                 </v-list>
                             </template>
-                            <template v-slot:item.actions="{ item }">
+                            <template v-slot:item.actions="{ item }" v-if="IS_MARKETOLOG">
+                                <v-list>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-btn icon @click="$router.push(`/clients/${item.id}`)">
+                                                    <v-icon>
+                                                        mdi-eye
+                                                    </v-icon>
+                                                </v-btn>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-btn icon @click="sendWhatsapp(item)" color="success">
+                                                    <v-icon>mdi-whatsapp</v-icon>
+                                                </v-btn>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </template>
+                            <template v-slot:item.actions="{ item }" v-else>
                                 <v-list>
                                     <v-list-item>
                                         <v-list-item-content>

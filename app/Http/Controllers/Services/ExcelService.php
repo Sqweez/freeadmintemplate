@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Services;
 
 
+use App\Client;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -154,6 +155,39 @@ class ExcelService {
         $path = 'app/public/excel/' . $filename . '.' . $ext;
         $file = storage_path($path);
         return IOFactory::load($file);
+    }
+
+    public function parseClientsGender() {
+        $excel = $this->loadFile('client_genders');
+        $sheet = $excel->getActiveSheet();
+        $rows = $sheet->getRowIterator();
+        $clients = [];
+        foreach ($rows as $key => $row) {
+            if ($key > 1) {
+                $clients[] = [
+                    'id' => $sheet->getCell('A' . $key)->getValue(),
+                    'name' => $sheet->getCell('B' . $key)->getValue(),
+                    'gender' => $this->getGender($sheet->getCell('C' . $key)->getValue())
+                ];
+            }
+        }
+
+        collect($clients)->each(function ($client) {
+            Client::whereId($client['id'])->update(['gender' => $client['gender']]);
+        });
+
+        return $clients;
+    }
+
+    private function getGender($value): string {
+        switch ($value) {
+            case 1:
+                return 'M';
+            case 2:
+                return 'F';
+            default:
+                return 'U';
+        }
     }
 
 }

@@ -55,7 +55,7 @@
                         font-size: 12px;
                         font-style: italic;
                         text-transform: uppercase;">
-                    <span class="product-name">{{ $product['product_name']  }} {{ collect($product['attributes'])->join(' | ') }}</span>
+                    <span class="product-name">{{ $product['product_name']  }} | {{ $product['manufacturer']['manufacturer_name'] }} | {{ collect($product['attributes'])->join(' | ') }}</span>
                     <span class="product-footer"
                           style="display: flex;
                              justify-content: space-between;
@@ -147,17 +147,17 @@
     </div>
     <div class="check-footer" style="width: 58mm;">
         @if($report->certificate)
-        <div class="total"
-             style="display: flex;
+            <div class="total"
+                 style="display: flex;
                     justify-content: space-between;
                     text-transform: uppercase;">
             <span class="footer-label" style="font-size: 12px; white-space: nowrap; overflow: hidden;">
                 <span class="label-red" style="font-size: 12px;">Сертификат</span>
                 ..........................................................................................................................................................................................................................
             </span>
-            <span class="span-total"
-                  style="font-size: 12px; white-space: nowrap; margin-left: 5px;">{{ $report->certificate['amount'] }}</span>
-        </div>
+                <span class="span-total"
+                      style="font-size: 12px; white-space: nowrap; margin-left: 5px;">{{ $report->certificate['amount'] }}</span>
+            </div>
         @endif
         <div class="total"
              style="display: flex;
@@ -172,14 +172,14 @@
         </div>
         <h5 style="text-align: center; text-transform: uppercase; font-style: italic; font-size: 12px; margin-top: 15px;">
             www.iron-addicts.kz</h5>
-            <h5 style="text-align: center;text-transform: uppercase;font-style: italic;font-size: 11px;margin-top: -17px;">БИН: 950420350949</h5>
+        <h5 style="text-align: center;text-transform: uppercase;font-style: italic;font-size: 11px;margin-top: -17px;">БИН: 950420350949</h5>
         <h4 style="text-align: center; text-transform: uppercase; font-size: 15px; margin-top: 10px; margin-bottom: 40px; font-weight: bold;">
             Спасибо за покупку!</h4>
     </div>
     <div class="empty-space"></div>
 </div>
 <script>
-   window.print();
+    window.print();
 
     window.addEventListener('afterprint', (event) => {
         window.close();

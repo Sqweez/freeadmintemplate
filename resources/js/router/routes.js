@@ -108,6 +108,7 @@ const routes = [
                 IS_SELLER: true,
                 IS_SENIORSELLER: true,
                 IS_BOSS: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -120,6 +121,7 @@ const routes = [
                 IS_SELLER: true,
                 IS_SENIORSELLER: true,
                 IS_BOSS: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -130,6 +132,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -185,6 +188,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true,
+                IS_MARKETOLOG: true
             },
         }
     },
@@ -196,6 +200,7 @@ const routes = [
                 IS_ADMIN: true,
                 IS_MODERATOR: true,
                 IS_BOSS: true,
+                IS_MARKETOLOG: true
             },
         }
     },
@@ -210,6 +215,8 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true,
+                IS_MARKETOLOG: true,
+                IS_MODERATOR: true
             }
         }
     },
@@ -258,6 +265,7 @@ const routes = [
                 IS_SELLER: true,
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
+                IS_MARKETOLOG: true
             },
         },
         component: Promocodes
@@ -473,7 +481,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true
+                IS_BOSS: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -483,7 +492,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true
+                IS_BOSS: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -493,7 +503,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true
+                IS_BOSS: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -513,7 +524,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true
+                IS_BOSS: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -583,7 +595,8 @@ const routes = [
             CAN_ENTER: {
                 IS_BOSS: true,
                 IS_ADMIN: true,
-                IS_MODERATOR: true
+                IS_MODERATOR: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -594,6 +607,7 @@ const routes = [
             CAN_ENTER: {
                 IS_BOSS: true,
                 IS_ADMIN: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -604,6 +618,7 @@ const routes = [
             CAN_ENTER: {
                 IS_BOSS: true,
                 IS_ADMIN: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -613,7 +628,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_BOSS: true,
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_MARKETOLOG: true
             }
         }
     },
@@ -623,7 +639,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_BOSS: true,
-                IS_ADMIN: true
+                IS_ADMIN: true,
+                IS_MARKETOLOG: true
             }
         }
     }

@@ -40,7 +40,10 @@ export default {
                     return this.$store.getters.IS_BOSS;
                 },
                 IS_SUPERUSER() {
-                    return this.IS_BOSS || this.isAdmin;
+                    return this.IS_BOSS || this.isAdmin || this.IS_MARKETOLOG;
+                },
+                IS_MARKETOLOG () {
+                    return this.$store.getters.IS_MARKETOLOG;
                 },
                 IS_SENIOR_SELLER() {
                     return this.$store.getters.IS_SENIOR_SELLER;

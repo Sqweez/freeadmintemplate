@@ -775,7 +775,123 @@ const navigationModule = {
                 url: '/products/balance',
                 icon: 'analytics'
             },
+        ],
+        marketologMenu: [
+    {
+        title: 'Главная страница',
+        url: '/',
+        icon: 'dashboard',
+    },
+    {
+        title: 'Клиенты',
+        url: '/clients',
+        icon: 'person'
+    },
+    {
+        title: 'Продавцы',
+        url: '#',
+        hasDropdown: true,
+        icon: 'persons',
+        children: [
+            {
+                title: 'Задания',
+                url: '/tasks/index',
+            },
+            {
+                title: 'Обучение',
+                url: '/education/index'
+            }
+        ],
+    },
+    {
+        title: 'Статистика',
+        icon: 'analytics',
+        url: '#',
+        hasDropdown: true,
+        children: [
+            {
+                title: 'Аналитика продаж',
+                url: '/analytics/sales'
+            },
+            {
+                title: 'Аналитика поступлений',
+                url: '/analytics/arrivals'
+            },
+            {
+                title: 'Аналитика продаж бренды',
+                url: '/analytics/sales/brands'
+            },
+            {
+                url: '/analytics/sales/brands/sellers',
+                title: 'Аналитика продаж продавцы'
+            },
+            {
+                url: '/analytics/sales/schedule',
+                title: 'График продаж'
+            }
         ]
+    },
+    {
+        title: 'Отчеты по продажам',
+        url: '/reports',
+        icon: 'report',
+    },
+    {
+        title: 'Отчеты по тренерам',
+        url: '/analytics/trainer/rating',
+        icon: 'report',
+    },
+    {
+        title: 'Отчеты по партнерам',
+        url: '/analytics/partners/rating',
+        icon: 'report',
+    },
+    {
+        title: 'Отчеты по клиентам',
+        url: '/analytics/clients/sales',
+        icon: 'report',
+    },
+    {
+        title: 'Интернет-магазин',
+        url: '#',
+        icon: 'home',
+        hasDropdown: true,
+        children: [
+            {
+                title: 'Акции',
+                url: '/stocks/index'
+            },
+            {
+                title: 'Цели',
+                url: '/shop/goals'
+            },
+            {
+                title: 'Атлеты',
+                url: '/shop/sportsmen'
+            },
+            {
+                title: 'Рейтинг продавцов',
+                url: '/shop/rating'
+            },
+            {
+                title: 'Промокоды',
+                url: '/promocode'
+            },
+            {
+                title: 'Баннеры',
+                url: '/shop/banners'
+            },
+            {
+                title: "Связанные товары",
+                url: '/shop/related'
+            },
+            {
+                title: 'Футер',
+                url: '/site/footer'
+            }
+        ]
+    }
+],
     },
     getters: {
         navigations: (state, getters) => {
