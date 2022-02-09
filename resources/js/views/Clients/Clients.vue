@@ -37,6 +37,10 @@
                         item-text="value"
                         v-model="genderId"
                     />
+                    <v-checkbox
+                        label="Без карт"
+                        v-model="withoutBarcode"
+                    />
                 </div>
                 <v-btn color="success" @click="exportModal = true;" v-if="!IS_MARKETOLOG">
                     Экспорт клиентов <v-icon>mdi-file-excel-box</v-icon>
@@ -267,6 +271,7 @@
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         data: () => ({
+            withoutBarcode: false,
             exportModal: false,
             confirmationModal: false,
             clientModal: false,
@@ -373,6 +378,11 @@
                         } else {
                             return c.gender === this.genderId;
                         }
+                    }).filter(c => {
+                        if (!this.withoutBarcode) {
+                            return true;
+                        }
+                        return c.client_card.length === 0 || c.client_card.length < 5;
                     })
             },
             shops() {
