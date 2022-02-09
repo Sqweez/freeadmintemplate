@@ -51,6 +51,12 @@
                             v-model="genderId"
                         />
                     </v-col>
+                    <v-col>
+                        <v-checkbox
+                            label="Без карт"
+                            v-model="withoutBarcode"
+                        />
+                    </v-col>
                 </v-row>
                 <v-select
                     label="Поля"
@@ -154,6 +160,7 @@
                 ]
             ],
             genderId: -1,
+            withoutBarcode: false,
             genders: [
                 {
                     id: -1,
@@ -251,6 +258,11 @@
                         } else {
                             return c.gender === this.genderId;
                         }
+                    }).filter(c => {
+                        if (!this.withoutBarcode) {
+                            return true;
+                        }
+                        return c.client_card.length === 0 || c.client_card.length < 5;
                     })
             },
             shops() {
