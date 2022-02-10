@@ -27,7 +27,10 @@
                         <td>{{ key + 1 }}</td>
                         <td>{{ trainer.name }}</td>
                         <td>{{ trainer.trainer_job }}</td>
-                        <td>{{ trainer.trainer_instagram }}</td>
+                        <td>
+                            <a :href="`https://instagram.com/${trainer.instagram}`" v-if="trainer.trainer_instagram">{{ trainer.instagram }}</a>
+                            <span v-else>-</span>
+                        </td>
                         <td>
                             <img :src="trainer.trainer_image" height="150">
                         </td>
