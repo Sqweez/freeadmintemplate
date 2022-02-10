@@ -28,7 +28,7 @@
                         <td>{{ trainer.name }}</td>
                         <td>{{ trainer.trainer_job }}</td>
                         <td>
-                            <a :href="`https://instagram.com/${trainer.instagram}`" v-if="trainer.trainer_instagram">{{ trainer.instagram }}</a>
+                            <a :href="`https://instagram.com/${trainer.trainer_instagram}`" v-if="trainer.trainer_instagram">{{ trainer.trainer_instagram }}</a>
                             <span v-else>-</span>
                         </td>
                         <td>
