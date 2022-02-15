@@ -248,6 +248,9 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::post('{product}/sku', [ProductController::class, 'createProductSku']);
             Route::patch('{sku}/sku', [ProductController::class, 'updateProductSku']);
             Route::get('stock/out', [ProductController::class, 'outOfStockProducts']);
+            // Типы маржинальности товара
+            Route::get('margin/types', [ProductController::class, 'getMarginTypes']);
+            Route::post('margin/types', [ProductController::class, 'setMarginTypes']);
         });
 
         Route::prefix('certificates')->group(function () {

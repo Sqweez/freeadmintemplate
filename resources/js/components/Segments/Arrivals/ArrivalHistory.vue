@@ -36,7 +36,7 @@
                         <v-btn icon color="success" @click="printWaybill(item.id)">
                             <v-icon>mdi-file-excel</v-icon>
                         </v-btn>
-                        <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;" v-if="IS_SUPERUSER">
+                        <v-btn icon color="error" @click="current_arrival = item; confirmationModal = true;" v-if="IS_SUPERUSER && !IS_MARKETOLOG">
                             <v-icon>mdi-cancel</v-icon>
                         </v-btn>
                     </template>

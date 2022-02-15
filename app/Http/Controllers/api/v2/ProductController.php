@@ -9,6 +9,7 @@ use App\Http\Resources\RelatedProductsResource;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\Http\Resources\v2\Product\ModeratorProducts;
 use App\Http\Resources\v2\Product\ProductResource;
+use App\MarginType;
 use App\Store;
 use App\v2\Models\Product;
 use App\ProductBatch;
@@ -279,6 +280,23 @@ class ProductController extends Controller
                     'store_id' => $store['id']
                 ]);
             });
+        });
+    }
+
+    public function getMarginTypes() {
+        return MarginType::all();
+    }
+
+    public function setMarginTypes(Request $request) {
+        $products = $request->get('products');
+        $type = $request->get('margin_type');
+        ProductSku::whereIn('id', $products)->update(['margin_type_id' => $type]);
+        $marginType = MarginType::find($type)->only(['id', 'title']);
+        return collect($products)->map(function ($product) use ($marginType) {
+            return [
+                'id' => $product,
+                'margin_type' => $marginType
+            ];
         });
     }
 }

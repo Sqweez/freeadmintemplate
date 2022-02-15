@@ -110,6 +110,30 @@
                         <template v-slot:item.manufacturer="{ item }">
                             <span>{{ item.manufacturer.manufacturer_name }}</span>
                         </template>
+                        <template v-slot:item.additional_data="{ item }">
+                            <v-list>
+                                <v-list-item v-if="item.product_name_web">
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            {{ item.product_name_web }}
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            Название интернет-магазина
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            {{ item.margin_type.title }}
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            Тип маржинальности
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                        </template>
                         <template v-slot:item.quantity="{item}">
                             <span v-if="storeFilter === -1">
                                 <v-list v-if="quantities[item.id]">
@@ -379,11 +403,6 @@
                         sortable: true,
                     },
                     {
-                        value: 'product_name_web',
-                        text: 'Наименование интернет-магазина',
-                        sortable: true,
-                    },
-                    {
                         value: 'quantity',
                         text: 'Остаток'
                     },
@@ -412,6 +431,10 @@
                     {
                         value: 'category',
                         text: 'Категория'
+                    },
+                    {
+                        value: 'additional_data',
+                        text: 'Доп данные'
                     }
                 ];
 

@@ -62,6 +62,7 @@ import ClientSalesDate from "@/views/Clients/ClientSalesDate";
 import SaleAnalyticsByBrand from "@/views/Analytics/SaleAnalyticsByBrand";
 import SaleAnalyticsBySellerAndProducts from "@/views/Analytics/SaleAnalyticsBySellerAndProducts";
 import SalesSchedule from "@/views/Analytics/SalesSchedule";
+import ProductMarginTypes from "@/views/Economy/ProductMarginTypes";
 
 const routes = [
     {
@@ -242,6 +243,7 @@ const routes = [
                 IS_STOREKEEPER: true,
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
+                IS_MARKETOLOG: true,
             },
         }
     },
@@ -573,6 +575,16 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_BOSS: true
+            }
+        }
+    },
+    {
+        path: '/economy/margin/types',
+        component: ProductMarginTypes,
+        meta: {
+            CAN_ENTER: {
+                IS_BOSS: true,
+                IS_MARKETOLOG: true,
             }
         }
     },

@@ -105,6 +105,10 @@ const navigationModule = {
                     {
                         title: 'Проценты от продаж',
                         url: '/economy/seller/earnings'
+                    },
+                    {
+                        title: 'Типы маржинальности',
+                        url: '/economy/margin/types'
                     }
                 ]
             },
@@ -850,6 +854,16 @@ const navigationModule = {
         title: 'Отчеты по клиентам',
         url: '/analytics/clients/sales',
         icon: 'report',
+    },
+    {
+        title: 'Типы маржинальности',
+        url: '/economy/margin/types',
+        icon: 'article'
+    },
+    {
+        title: 'Поступления',
+        url: '/arrivals',
+        icon: 'moped'
     },
     {
         title: 'Интернет-магазин',

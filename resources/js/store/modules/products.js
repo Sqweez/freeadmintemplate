@@ -7,9 +7,10 @@ import {
     deleteProduct,
     editProduct,
     getProducts,
-    getMainProducts, getProductsBySearch, changeProductCount
+    getMainProducts, getProductsBySearch, changeProductCount, getMarginTypes, setMarginTypes
 } from "@/api/products";
 import {getSaleTypes, makeSale} from "@/api/sale";
+import axiosClient from "@/utils/axiosClient";
 
 const productsModule = {
     state: {
@@ -28,7 +29,7 @@ const productsModule = {
             {id: 5, name: 'Раздельная оплата'},
             {id: 6, name: 'Онлайн оплата'},
             {id: 7, name: 'Почта'}*/
-        ]
+        ],
     },
     getters: {
         products: state => state.products,
@@ -48,7 +49,7 @@ const productsModule = {
                 return p;
             }
         }),
-        PRODUCTS_SEARCH: state => state.productsSearch
+        PRODUCTS_SEARCH: state => state.productsSearch,
     },
     mutations: {
         [MUTATIONS.CREATE_PRODUCT](state, payload) {
@@ -126,7 +127,7 @@ const productsModule = {
         },
         [MUTATIONS.SET_PAYMENT_TYPES] (state, payload) {
             state.payment_types = payload;
-        }
+        },
     },
     actions: {
         async [ACTIONS.GET_PRODUCT]({commit}, store_id) {

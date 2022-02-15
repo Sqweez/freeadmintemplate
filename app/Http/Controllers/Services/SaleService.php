@@ -10,6 +10,7 @@ use App\CompanionTransaction;
 use App\ProductBatch;
 use App\Sale;
 use App\Transfer;
+use App\v2\Models\ProductSku;
 
 class SaleService {
 
@@ -84,8 +85,14 @@ class SaleService {
             $partner->update([
                 'partner_expired_at' => now()->addDays(60),
             ]);
+
+            $partnerSalesAmount = $this->getPartnerSalesAmount($partner, $sale_id);
+            \Log::info('PARTNER SALES AMOUNT: ' . $partnerSalesAmount);
+            $partnerCashback = $this->calculatePartnerCashback($cart, $partnerSalesAmount, $discount);
+            \Log::info('PARTNER CASHBACK: ' . $partnerCashback);
+
             $partner->transactions()->create([
-                'amount' => $amount * Sale::PARTNER_CASHBACK_PERCENT,
+                'amount' => $partnerCashback,
                 'sale_id' => $sale_id,
                 'user_id' => $user_id
             ]);
@@ -143,5 +150,40 @@ class SaleService {
             }
             return $a + $productCost;
         }, 0);
+    }
+
+    private function getPartnerSalesAmount(Client $client, $sale_id): int {
+        $sales = Sale::query()
+            ->wherePartnerId($client->id)
+            ->whereDate('created_at', '>=', now()->subDays(30))
+            ->with('products')
+            ->where('id', '!=', $sale_id)
+            ->get();
+
+        return $this->calculateSaleFinalAmount($sales);
+    }
+
+    private function calculatePartnerCashback($cart, $amount, $discount): int {
+        $sku = ProductSku::query()
+            ->with('margin_type')
+            ->whereIn('id', collect($cart)->pluck('id'))
+            ->get();
+        return floor(collect($cart)->map(function ($item) use ($sku) {
+            $needle = collect($sku)->where('id', $item['id'])->first();
+            $item['margin_type'] = $needle['margin_type'];
+            return $item;
+        })->reduce(function ($a, $c) use ($amount, $discount) {
+            $price = $c['product_price'] * $c['count'];
+            $finalPrice = $price - ($price * max($discount, $c['discount']) / 100);
+            $cashbackRule = collect($c['margin_type']['partner_cashback_rules'])
+                    ->sortByDesc('threshold')
+                    ->values()
+                    ->filter(function ($rule) use ($amount) {
+                        return $rule['threshold'] <= $amount;
+                    })
+                    ->first()['value'] ?? 0;
+            $cashbackPercent = $cashbackRule / 100;
+            return $a + ($finalPrice * $cashbackPercent);
+        }, 0));
     }
 }

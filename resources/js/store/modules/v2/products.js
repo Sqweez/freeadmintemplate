@@ -15,11 +15,12 @@ import {
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
 import axios from 'axios';
-import {changeProductCount} from "@/api/products";
+import {changeProductCount, getMarginTypes, setMarginTypes} from "@/api/products";
 import ACTIONS from "@/store/actions";
 import {getArrivals} from "@/api/arrivals";
 import store from "@/store";
 import {getTransfers} from "@/api/transfers";
+import MUTATIONS from "@/store/mutations";
 
 const state = {
     products_v2: [],
@@ -29,6 +30,7 @@ const state = {
     moderator_products: [],
     product_balance: [],
     product_earnings: [],
+    margin_types: [],
 };
 
 const getters = {
@@ -49,6 +51,7 @@ const getters = {
     MODERATOR_PRODUCTS: s => s.moderator_products,
     PRODUCT_BALANCE: s => s.product_balance,
     PRODUCT_EARNINGS: s => s.product_earnings,
+    MARGIN_TYPES: s => s.margin_types,
 };
 
 const mutations = {
@@ -167,7 +170,19 @@ const mutations = {
     },
     [MUTATATIONS.SET_PRODUCT_SALE_EARNINGS](state, payload) {
         state.product_earnings = payload;
-    }
+    },
+    [MUTATIONS.SET_MARGIN_TYPES] (state, payload) {
+        state.margin_types = payload;
+    },
+    [MUTATIONS.UPDATE_PRODUCT_MARGIN_TYPES] (state, payload) {
+        state.products_v2 = state.products_v2.map(s => {
+            const product = payload.find(p => p.id === s.id);
+            if (product) {
+                s.margin_type = product.margin_type;
+            }
+            return s;
+        })
+    },
 };
 
 const actions = {
@@ -404,7 +419,17 @@ const actions = {
         } finally {
             this.$loading.disable();
         }
-    }
+    },
+    async [ACTIONS.GET_MARGIN_TYPES] ({commit}) {
+        const data = await getMarginTypes();
+        commit(MUTATIONS.SET_MARGIN_TYPES, data);
+    },
+    async [ACTIONS.SET_MARGIN_TYPES] ({ commit }, payload) {
+        this.$loading.enable();
+        const data = await setMarginTypes(payload);
+        commit(MUTATIONS.UPDATE_PRODUCT_MARGIN_TYPES, data);
+        this.$loading.disable();
+    },
 };
 
 

@@ -44,7 +44,8 @@ class ProductsResource extends JsonResource
             'grouping_attribute_id' => $this->grouping_attribute_id,
             'product_id' => $this->product_id,
             'prices' => $this->prices,
-            'product_name_web' => $this->product_name_web
+            'product_name_web' => $this->product_name_web,
+            'margin_type' => $this->margin_type->only(['id', 'title'])
         ];
     }
 }

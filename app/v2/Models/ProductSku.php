@@ -71,19 +71,19 @@ class ProductSku extends Model
     const PRODUCT_SKU_WITH_ADMIN_LIST =  [
         'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_name_web',
         'product.category', 'product.manufacturer', 'product.attributes', 'product.price',
-        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name'
+        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'margin_type'
     ];
 
     const PRODUCT_SKU_MODERATOR_LIST = [
         'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_description,product_name_web',
         'product.category', 'product.manufacturer', 'product.attributes',
-        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'product.product_images'
+        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'product.product_images', 'margin_type'
     ];
 
     const PRODUCT_SKU_WITH_CART_LIST = [
         'product:id,product_name,product_price,manufacturer_id,grouping_attribute_id',
         'product.manufacturer', 'product.attributes',
-        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name'
+        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'margin_type'
     ];
 
     const PRODUCT_SKU_IMAGES = 'product_sku_images';
@@ -123,6 +123,10 @@ class ProductSku extends Model
 
     public function relativeSku() {
         return $this->hasMany('App\v2\Models\ProductSku', 'product_id', 'product_id');
+    }
+
+    public function margin_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+        return $this->belongsTo('App\MarginType');
     }
 
 

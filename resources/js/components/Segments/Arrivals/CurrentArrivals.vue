@@ -53,13 +53,22 @@
                             v-model="storeId"
                             v-else/>
                     </template>
+                    <template v-slot:item.arrived_at="{item}">
+                        <span v-if="!editMode">{{ item.arrived_at }}</span>
+                        <v-text-field
+                            v-else
+                            label="Ожидаемое поступление"
+                            v-model="arrivedAt"
+                            type="date"
+                        />
+                    </template>
                     <template v-slot:item.actions="{item}">
                         <v-flex v-if="!editMode">
                             <v-btn
                                 icon
                                 color="primary"
                                 @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;"
-                                v-if="IS_SUPERUSER"
+                                v-if="IS_SUPERUSER && !IS_MARKETOLOG"
                             >
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
@@ -74,7 +83,7 @@
                                 icon
                                 color="error"
                                 @click="current_arrival = item; confirmationModal = true;"
-                                v-if="IS_SUPERUSER"
+                                v-if="IS_SUPERUSER && !IS_MARKETOLOG"
                             >
                                 <v-icon>mdi-cancel</v-icon>
                             </v-btn>
@@ -82,19 +91,20 @@
                                 icon
                                 color="success"
                                 @click="printWaybill(item.id)"
-                                v-if="IS_SUPERUSER"
+                                v-if="IS_SUPERUSER && !IS_MARKETOLOG"
                             >
                                 <v-icon>mdi-file-excel</v-icon>
                             </v-btn>
                             <v-btn
                                 icon
                                 color="primary"
-                                @click="editMode = true; arrivalId = item.id; storeId = item.store_id; paymentCost = item.payment_cost;"
-                                v-if="IS_SUPERUSER"
+                                @click="editMode = true; arrivalId = item.id; storeId = item.store_id; paymentCost = item.payment_cost; comment = item.comment; arrivedAt = item.arrived_at"
+                                v-if="IS_SUPERUSER && !IS_MARKETOLOG"
                             >
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                             <v-btn
+                                v-if="!IS_MARKETOLOG"
                                 icon
                                 color="primary"
                                 @click="current_arrival = {...item}; bookingModal = true;"
@@ -121,6 +131,16 @@
                             label="Стоимость доставки"
                             type="number"
                             v-model="paymentCost"
+                        />
+                    </template>
+                    <template v-slot:item.comment="{item}">
+                        <span v-if="!editMode">
+                            {{ item.comment }}
+                        </span>
+                        <v-text-field
+                            v-else
+                            label="Комментарий"
+                            v-model="comment"
                         />
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
@@ -178,6 +198,8 @@
             arrivalId: null,
             bookingModal: false,
             paymentCost: 0,
+            arrivedAt: null,
+            comment: '',
         }),
         methods: {
             async getArrivals() {
@@ -238,6 +260,8 @@
                         id: this.arrivalId,
                         store_id: this.storeId,
                         payment_cost: this.paymentCost,
+                        arrived_at: this.arrivedAt,
+                        comment: this.comment,
                     });
                     this.arrivals = this.arrivals.map(s => {
                         if (s.id === data.data.id) {
@@ -248,6 +272,7 @@
                     this.editMode = false;
                     this.arrivalId = null;
                     this.storeId = null;
+                    this.arrivedAt = null;
                     this.$toast.success('Поступление отредактировано!')
                 } catch (e) {
                     this.$toast.error('Произошла ошибка', TOAST_TYPE.ERROR)

@@ -53,7 +53,7 @@
         },
         computed: {
             segments() {
-                return this.IS_SUPERUSER ? [
+                return (this.IS_SUPERUSER && !this.IS_MARKETOLOG) ? [
                     {
                         name: 'Текущие поступления',
                         component: 'CurrentArrivals'
