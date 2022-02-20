@@ -15,7 +15,7 @@ import {
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
 import axios from 'axios';
-import {changeProductCount, getMarginTypes, setMarginTypes} from "@/api/products";
+import {changeProductCount, getMarginTypes, setMarginTypes, updateMarginTypes} from "@/api/products";
 import ACTIONS from "@/store/actions";
 import {getArrivals} from "@/api/arrivals";
 import store from "@/store";
@@ -430,6 +430,12 @@ const actions = {
         commit(MUTATIONS.UPDATE_PRODUCT_MARGIN_TYPES, data);
         this.$loading.disable();
     },
+    async [ACTIONS.UPDATE_MARGIN_TYPES] ({commit, dispatch}, payload) {
+        this.$loading.enable();
+        await updateMarginTypes(payload);
+        this.$loading.disable();
+        dispatch(ACTIONS.GET_MARGIN_TYPES);
+    }
 };
 
 

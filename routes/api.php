@@ -249,6 +249,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::patch('{sku}/sku', [ProductController::class, 'updateProductSku']);
             Route::get('stock/out', [ProductController::class, 'outOfStockProducts']);
             // Типы маржинальности товара
+            Route::post('margin/types/set', [ProductController::class, 'editMarginTypes']);
             Route::get('margin/types', [ProductController::class, 'getMarginTypes']);
             Route::post('margin/types', [ProductController::class, 'setMarginTypes']);
         });

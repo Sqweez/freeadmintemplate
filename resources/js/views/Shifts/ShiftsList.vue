@@ -21,6 +21,7 @@
                         <th>Продавец</th>
                         <th>Количество смен / Заработок</th>
                         <th>Сумма продаж / Заработок</th>
+                        <th>Подробно</th>
                         <th>Штрафы / Премии</th>
                         <th>Итого</th>
                     </tr>
@@ -35,6 +36,23 @@
                         </td>
                         <td>
                             {{ item.sale_amount | priceFilters }} / {{ item.sale_amount_salary | priceFilters }}
+                        </td>
+                        <td>
+                            <v-list v-if="item.calculations && item.calculations.length > 0">
+                                <v-list-item v-for="(i, key) of item.calculations" :key="`calc-${key}`">
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            Общая сумма: <span class="color-text--green font-weight-bold">{{ i.amount | priceFilters }}</span> <br>
+                                            Зарплата: <span class="color-text--green font-weight-bold">{{ i.salary | priceFilters }}</span> <br>
+                                            Текущий процент: <span class="color-text--green font-weight-bold">{{ i.percent }}%</span>
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            Тип маржинальности: {{ i.margin_type }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                            <p v-else>Нет данных</p>
                         </td>
                         <td>
                             {{ item.shift_penalties_amount | priceFilters }}

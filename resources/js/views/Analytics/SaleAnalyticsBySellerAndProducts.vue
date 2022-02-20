@@ -138,45 +138,45 @@
                 <v-btn block color="primary" class="my-2" @click="loadReports()" :disabled="!cart.length">
                     Загрузить отчет
                 </v-btn>
-                <v-simple-table v-slot:default>
-                    <template>
-                        <thead class="fz-18">
-                        <tr>
-                            <th>#</th>
-                            <th>Товар</th>
-                            <th>Цена</th>
-                            <th>Удалить</th>
-                        </tr>
-                        </thead>
-                        <tbody class="background-iron-grey">
-                        <tr v-for="(item, index) of cart">
-                            <td>{{ index + 1 }}</td>
-                            <td>
-                                <v-list class="product__list" flat>
-                                    <v-list-item>
-                                        <v-list-item-content>
-                                            <v-list-item-title>
-                                                {{ item.product_name }}
-                                            </v-list-item-title>
-                                            <v-list-item-subtitle>
-                                                {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} | {{ item.attributes.map(a => a.attribute_value).join(', ') }}
-                                            </v-list-item-subtitle>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                </v-list>
-                            </td>
-                            <td>
-                                {{ item.product_price | priceFilters }}
-                            </td>
-                            <td>
-                                <v-btn icon color="error" @click="deleteList(index)">
-                                    <v-icon>mdi-close</v-icon>
-                                </v-btn>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </template>
-                </v-simple-table>
+                <v-card v-if="cart.length > 0">
+                    <v-card-title class="justify-space-between">
+                        <span>Корзина</span>
+                    </v-card-title>
+                    <v-card-text style="padding: 0;">
+                        <v-divider></v-divider>
+                        <v-expansion-panels>
+                            <v-expansion-panel>
+                                <v-expansion-panel-header>
+                                    Товары ({{ cart.length }})
+                                </v-expansion-panel-header>
+                                <v-expansion-panel-content>
+                                    <v-virtual-scroll :items="cart" height="400" item-height="60">
+                                        <template v-slot:default="{ item, index }">
+                                            <v-list-item style="border-bottom: 1px solid mintcream">
+                                                <v-list-item-content>
+                                                    <v-list-item-title>
+                                                        {{ item.product_name }}
+                                                    </v-list-item-title>
+                                                    <v-list-item-subtitle>
+                                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{
+                                                            item.manufacturer.manufacturer_name }}
+                                                    </v-list-item-subtitle>
+                                                </v-list-item-content>
+                                                <v-list-item-action>
+                                                    <v-btn color="error" icon @click="deleteFromCart(index)">
+                                                        <v-icon>
+                                                            mdi-close
+                                                        </v-icon>
+                                                    </v-btn>
+                                                </v-list-item-action>
+                                            </v-list-item>
+                                        </template>
+                                    </v-virtual-scroll>
+                                </v-expansion-panel-content>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                    </v-card-text>
+                </v-card>
                 <v-text-field
                     class="mt-2"
                     v-on:input="searchInput"
@@ -213,6 +213,7 @@
                     </v-col>
                 </v-row>
                 <v-data-table
+                    v-show="!addingToCart"
                     class="background-iron-grey fz-18"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
@@ -220,10 +221,8 @@
                     :search="searchQuery"
                     loading-text="Идет загрузка товаров..."
                     :items="products"
-                    :footer-props="{
-                            'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
-                            'items-per-page-text': 'Записей на странице',
-                        }"
+                    @current-items="getFiltered"
+                    :items-per-page="itemsPerPage"
                 >
                     <template v-slot:item.product_name="{item}">
                         <v-list flat>
@@ -262,6 +261,9 @@ import product_search from "@/mixins/product_search";
 
 export default {
     data: () => ({
+        filtered: [],
+        itemsPerPage: 10,
+        addingToCart: false,
         saleAnalyticsLoaded: false,
         startMenu: null,
         start: null,
@@ -311,6 +313,9 @@ export default {
             this.$refs.startMenu.save(this.start);
             this.$refs.finishMenu.save(this.finish);
         },
+        getFiltered (e) {
+            return this.filtered = [...e];
+        },
         async loadReports() {
             if (!(this.start && this.finish)) {
                 return this.$toast.error('Выберите обе даты!');
@@ -336,10 +341,18 @@ export default {
         deleteList(key) {
             this.cart.splice(key, 1);
         },
-        async chooseAllProduct() {
-            this.products.forEach(item => {
-                this.addToList(item);
-            })
+        chooseAllProduct() {
+            this.addingToCart = true;
+            this.$loading.enable();
+            this.itemsPerPage = -1;
+            setTimeout(() => {
+                this.filtered.forEach(item => {
+                    this.addToList(item);
+                });
+                this.itemsPerPage = 10;
+                this.$loading.disable();
+                this.addingToCart = false;
+            }, 3000);
         },
     },
     computed: {

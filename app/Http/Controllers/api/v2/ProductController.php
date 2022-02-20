@@ -299,4 +299,11 @@ class ProductController extends Controller
             ];
         });
     }
+
+    public function editMarginTypes(Request $request) {
+        $types = $request->get('types');
+        collect($types)->each(function ($type) {
+            MarginType::whereKey($type['id'])->update($type);
+        });
+    }
 }

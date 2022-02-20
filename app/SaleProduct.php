@@ -65,6 +65,30 @@ class SaleProduct extends Model
         return $this->product_price - ($this->discount /  100) * $this->product_price;
     }
 
+    public function getKaspiRedAttribute() {
+        return $this->sale->kaspi_red;
+    }
+
+    public function getCertificateAttribute() {
+        return $this->sale->certificate;
+    }
+
+    public function getBookingAttribute() {
+        return $this->sale->booking;
+    }
+
+    public function getBalanceAttribute() {
+        return $this->sale->balance;
+    }
+
+    public function getFinalSalePriceAttribute() {
+        $price = $this->final_price;
+        if ($this->kaspi_red) {
+            $price -= $price * Sale::KASPI_RED_PERCENT;
+        }
+        return $price;
+    }
+
     public function getMarginAttribute() {
         return ceil($this->discount === 100 ? 0 : $this->final_price - $this->purchase_price);
     }

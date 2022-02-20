@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Services;
 
 
 use App\Http\Resources\Shifts\ShiftPenaltyResource;
+use App\MarginType;
 use App\Sale;
 use App\User;
 use App\v2\Models\ProductSaleEarning;
@@ -22,7 +23,7 @@ class PayrollService {
     private $shifts;
     private $taxes;
     private $penalties;
-    private $productSellerEarning;
+    private $productMarginTypes;
 
     public function __construct($date) {
         $this->start = Carbon::parse($date)->startOfMonth();
@@ -39,7 +40,7 @@ class PayrollService {
     private function getNeedleData() {
         $this->sellers = $this->getSellers();
         $this->sellersIds = $this->sellers->pluck('id')->all();
-        $this->productSellerEarning = ProductSaleEarning::all();
+        $this->productMarginTypes = MarginType::all();
         $this->taxes = $this->getShiftTaxes();
         $this->sales = $this->getSales();
         $this->shifts = $this->getShifts();
@@ -53,8 +54,9 @@ class PayrollService {
         $shiftTax = $this->taxes[$storeId]['shift_tax'] ?? 0;
         $shiftCount = count($this->shifts[$sellerId] ?? []);
         $currentPenalties = collect($this->penalties[$sellerId] ?? []);
-        $saleAmount =  $this->sales[$sellerId]['amount'] ?? 0;
-        $saleAmountSalary = ceil($this->sales[$sellerId]['salary'] ?? 0);//ceil($saleAmount * $salePercent / 100);
+        $saleAmount =  $this->sales[$sellerId]['total_amount'] ?? 0;
+        $saleAmountSalary = ceil($this->sales[$sellerId]['total_salary'] ?? 0);//ceil($saleAmount * $salePercent / 100);
+        $calculations = $this->sales[$sellerId]['calculations'] ?? [];
         $shiftPenaltiesAmount = $currentPenalties->reduce(function ($a, $c) {
             return $a + $c['amount'];
         }, 0);
@@ -69,7 +71,8 @@ class PayrollService {
             'shift_salary' => $shiftTax * $shiftCount,
             'shift_penalties_amount' => $shiftPenaltiesAmount,
             'shift_penalties_list' => ShiftPenaltyResource::collection($currentPenalties),
-            'total_salary' => $saleAmountSalary + $shiftPenaltiesAmount + $shiftTax * $shiftCount
+            'total_salary' => $saleAmountSalary + $shiftPenaltiesAmount + $shiftTax * $shiftCount,
+            'calculations' => $calculations,
         ];
     }
 
@@ -84,22 +87,21 @@ class PayrollService {
             ->whereDate('created_at', '<=', $this->finish)
             ->whereIn('user_id', $this->sellersIds)
             ->with('products')
-            ->with('products.product:id,product_id')
+            ->with('products.product:id,product_id,margin_type_id')
             ->get()
             ->groupBy('user_id')
             ->map(function ($item, $key) {
+                $productsArray = $this->getGroupProductsArray($item);
+                $calculations = $this->getAmountByType($productsArray);
                 return [
-                    'amount' => collect($item)->reduce(function ($a, $c) {
-                        return $a + collect($c['products'])->reduce(function ($_a, $_c) {
-                            return $_a + $_c['product_price'];
-                        }, 0);
+                    'calculations' => $calculations,
+                    'total_amount' => $calculations->reduce(function ($a, $c) {
+                        return $a + $c['amount'];
                     }, 0),
-                    'salary' => collect($item)->reduce(function ($a, $c) {
-                        $store_id = $c['store_id'];
-                        return $a + collect($c['products'])->reduce(function ($_a, $_c) use ($store_id) {
-                                return $_a + $this->getProductEarning($_c, $store_id);
-                            }, 0);
+                    'total_salary' => $calculations->reduce(function ($a, $c) {
+                        return $a + $c['salary'];
                     }, 0),
+                    'salary' => 0,
                     'user_id' => $key,
                 ];
             });
@@ -128,12 +130,49 @@ class PayrollService {
             ->groupBy('user_id');
     }
 
-    private function getProductEarning($product, $store_id) {
-        $price = $product['product_price'];
-        $earningPercent = $this->productSellerEarning->filter(function ($item) use ($product, $store_id) {
-            return $item['store_id'] === $store_id && $item['product_id'] === $product['product']['product_id'];
-        });
-        $percent = (count($earningPercent) > 0) ? $earningPercent->first() : ($this->taxes[$store_id]['sale_percent']);
-        return $price * ($percent / 100);
+    private function getGroupProductsArray($sales): array {
+        $products = [];
+        foreach ($sales as $sale) {
+            foreach ($sale['products'] as $product) {
+                $products[] = [
+                    'product_id' => $product['product_id'],
+                    'price' => $product['final_sale_price'],
+                    'margin_type_id' => $product['product']['margin_type_id']
+                ];
+            }
+        }
+        return $products;
+    }
+
+    private function getAmountByType($products): \Illuminate\Support\Collection {
+        return collect($products)
+            ->groupBy('margin_type_id')
+            ->map(function ($product, $key) {
+                $totalAmount = ceil(collect($product)->reduce(function ($a, $c) {
+                    return $a + $c['price'];
+                }, 0));
+                $currentMarginType = $this->productMarginTypes->where('id', $key)->first();
+                $salaryPercent = (collect($currentMarginType['salary_rules'])
+                        ->sortByDesc('threshold')
+                        ->values()
+                        ->filter(function ($rule) use ($totalAmount) {
+                            return $rule['threshold'] <= $totalAmount;
+                        })
+                        ->first()['value'] ?? 0) / 100;
+                $salary = ceil($totalAmount * $salaryPercent);
+                return [
+                    'margin_type' => $currentMarginType['title'],
+                    'amount' => $totalAmount,
+                    'salary' => $salary,
+                    'percent' => $salaryPercent * 100,
+                ];
+            })
+            ->values()
+            ->sortBy('margin_type')
+            ->values();
+    }
+
+    private function getOwnFinalPrice() {
+
     }
 }

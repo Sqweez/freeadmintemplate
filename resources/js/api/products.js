@@ -55,6 +55,10 @@ export async function setMarginTypes(payload) {
     return data;
 }
 
+export async function updateMarginTypes (types) {
+    await axios.post('/api/v2/products/margin/types/set', { types })
+}
+
 export async function changeProductCount({product_id, store_id, increment}) {
     return await axios.get(`/api/v2/products/${product_id}/count?store_id=${store_id}&increment=${increment}`)
 }
