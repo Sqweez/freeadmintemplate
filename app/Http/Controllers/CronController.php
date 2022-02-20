@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use App\Http\Controllers\api\WaybillController;
+use App\Http\Controllers\Services\TelegramService;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\ProductBatch;
 use App\Promocode;
@@ -37,6 +38,36 @@ class CronController extends Controller
         return $users->each(function (User $user) {
             return $user->update(['token' => Str::random(60)]);
         });
+    }
+
+    public function getBirthdayClients(TelegramService $telegramService) {
+        $clientsWithBirthday = Client::query()
+            ->whereNotNull('birth_date')
+            ->whereMonth('birth_date', now()->month)
+            ->whereDay('birth_date', now()->day)
+            ->with('city')
+            ->get();
+
+
+        if (!$clientsWithBirthday || $clientsWithBirthday->count() === 0) {
+            $message = "Сегодня нет дней рождения";
+        } else {
+            $message = $this->getBirthDayMessage($clientsWithBirthday);
+        }
+        $chatId = config('telegram.BIRTHDAY_CHAT');
+        return $telegramService->sendMessage($chatId, $message);
+        return response([], 200);
+    }
+
+    private function getBirthDayMessage($clients) {
+        $message = "Сегодня день рождения у 🎂🥳🎁🎉" . "\n";
+        collect($clients)->each(function ($client, $key) use (&$message){
+            $message .= sprintf("%s. %s", ($key + 1), $client->client_name);
+            $message .= "\n";
+            $message .= "Телефон: " . $client->client_phone . "\n";
+            $message .= "Город: " . $client->city->name . "\n";
+        });
+        return urlencode($message);
     }
 
     public function storePriceList(Request $request) {

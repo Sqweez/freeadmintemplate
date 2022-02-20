@@ -281,6 +281,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('loyalty', [LoyaltyController::class, 'checkLoyalties']);
             Route::get('token/revoke', [CronController::class, 'revokeSellerToken']);
             Route::get('/price/list', [CronController::class, 'storePriceList']);
+            Route::get('birthday', [CronController::class, 'getBirthdayClients']);
         });
 
         Route::prefix('orders')->group(function () {

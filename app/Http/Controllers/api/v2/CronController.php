@@ -38,6 +38,7 @@ class CronController extends Controller
         });
     }
 
+
     public function cancelOrders() {
         $orders = Order::whereDate('created_at', '<=', now()->subDays(2))
             ->whereDate('created_at', '>=', now()->subDays(7))
