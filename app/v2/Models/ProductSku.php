@@ -3,6 +3,7 @@
 namespace App\v2\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -125,7 +126,7 @@ class ProductSku extends Model
         return $this->hasMany('App\v2\Models\ProductSku', 'product_id', 'product_id');
     }
 
-    public function margin_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+    public function margin_type(): BelongsTo {
         return $this->belongsTo('App\MarginType');
     }
 

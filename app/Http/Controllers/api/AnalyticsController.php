@@ -620,6 +620,7 @@ class AnalyticsController extends Controller
             ->get();
 
         $ownSales = Sale::query()
+            ->with('products')
             ->whereIn('client_id', $clients->pluck('id'))
             ->whereDate('created_at', '>=', $start)
             ->whereDate('created_at', '<=', $finish)
@@ -627,6 +628,7 @@ class AnalyticsController extends Controller
             ->get();
 
         $partnerSales = Sale::query()
+            ->with('products')
             ->whereIn('partner_id', $clients->pluck('id'))
             ->whereDate('created_at', '>=', $start)
             ->whereDate('created_at', '<=', $finish)
@@ -634,8 +636,20 @@ class AnalyticsController extends Controller
             ->get();
 
         return $clients->map(function ($client) use ($ownSales, $partnerSales){
-            $client['without_own_sales'] = $ownSales->where('client_id', $client['id'])->count() === 0;
-            $client['without_partner_sales'] = $partnerSales->where('partner_id', $client['id'])->count() === 0;
+            $_ownSales = $ownSales->where('client_id', $client['id']);
+            $_partnerSales = $partnerSales->where('partner_id', $client['id']);
+            $client['own_sales'] = $_ownSales->reduce(function ($a, $c) {
+                return $a + collect($c['products'])->reduce(function ($_a, $_c) {
+                    return $_a + $_c['product_price'] * (1 - $_c['discount'] / 100);
+                    }, 0);
+            }, 0);
+            $client['partner_sales'] = $_partnerSales->reduce(function ($a, $c) {
+                return $a + collect($c['products'])->reduce(function ($_a, $_c) {
+                        return $_a + $_c['product_price'] * (1 - $_c['discount'] / 100);
+                    }, 0);
+            }, 0);
+            $client['without_own_sales'] = $_ownSales->count() === 0;
+            $client['without_partner_sales'] = $_partnerSales->count() === 0;
             return $client;
         })->filter(function ($client) {
             return $client['without_own_sales'] || $client['without_partner_sales'];

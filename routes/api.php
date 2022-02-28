@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\TransferController;
 use App\Http\Controllers\api\v2\ProductController;
 use App\Http\Controllers\api\v2\CertificateController;
 use App\Http\Controllers\api\v2\CompanionController;
@@ -139,8 +140,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     // END UserController
 
-
     Route::resource('transfers', 'api\TransferController');
+    Route::any('transfers/products/update', [TransferController::class, 'updateTransfer']);
 
     //SaleController
     Route::prefix('sales')->group(function () {

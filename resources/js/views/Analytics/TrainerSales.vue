@@ -173,6 +173,7 @@
                         <v-icon color="error" v-else>
                             mdi-close
                         </v-icon>
+                        <span>({{ item.own_sales | priceFilters }})</span>
                     </template>
                     <template v-slot:item.without_partner_sales="{item}">
                         <v-icon color="success" v-if="!item.without_partner_sales">
@@ -181,6 +182,7 @@
                         <v-icon color="error" v-else>
                             mdi-close
                         </v-icon>
+                        <span>({{ item.partner_sales | priceFilters }})</span>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}

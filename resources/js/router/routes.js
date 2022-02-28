@@ -63,6 +63,7 @@ import SaleAnalyticsByBrand from "@/views/Analytics/SaleAnalyticsByBrand";
 import SaleAnalyticsBySellerAndProducts from "@/views/Analytics/SaleAnalyticsBySellerAndProducts";
 import SalesSchedule from "@/views/Analytics/SalesSchedule";
 import ProductMarginTypes from "@/views/Economy/ProductMarginTypes";
+import TransferUpdate from "@/views/Transfers/TransferUpdate";
 
 const routes = [
     {
@@ -149,6 +150,10 @@ const routes = [
     {
         path: '/transfer',
         component: Transfers
+    },
+    {
+        path: '/transfers/update/:id',
+        component: TransferUpdate
     },
     {
         path: '/shop/products',

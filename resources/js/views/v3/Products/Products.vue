@@ -79,6 +79,15 @@
                                 item-text="subcategory_name"
                             />
                         </v-col>
+                        <v-col cols="12" xl="4">
+                            <v-autocomplete
+                                :items="marginTypes"
+                                label="Тип маржинальности"
+                                item-value="id"
+                                item-text="title"
+                                v-model="currentMarginType"
+                            />
+                        </v-col>
                     </v-row>
                     <v-data-table
                         :search="searchQuery"
@@ -332,8 +341,12 @@
             manufacturerId: -1,
             categoryId: -1,
             subcategoryId: -1,
+            currentMarginType: -1,
         }),
         computed: {
+            marginTypes () {
+                return [{id: -1, title: 'Все'}, ...this.$store.getters.MARGIN_TYPES];
+            },
             manufacturers() {
                 return [
                     {
@@ -363,6 +376,11 @@
                 if (this.subcategoryId !== -1) {
                     products = products.filter(p => p.subcategory_id === this.subcategoryId);
                 }
+
+                if (this.currentMarginType !== -1) {
+                    products = products.filter(p => p.margin_type.id === this.currentMarginType);
+                }
+
                 return products;
             },
             stores() {

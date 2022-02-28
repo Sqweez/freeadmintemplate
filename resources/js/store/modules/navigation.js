@@ -317,7 +317,11 @@ const navigationModule = {
             {
                 title: 'Футер',
                 url: '/site/footer'
-            }
+            },
+            {
+                title: 'Цели',
+                url: '/shop/goals'
+            },
         ],
         supplierMenu: [
             {

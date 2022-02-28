@@ -285,6 +285,13 @@ class TransferController extends Controller {
         return $result;
     }
 
+    public function updateTransfer(Request $request) {
+        $cart = $request->get('cart');
+        $transfer = Transfer::find($request->get('id'));
+        $this->parseCart($transfer, $transfer->parent_store_id, 0, $cart);
+        return \response([], 200);
+    }
+
     private function createBatch() {
 
     }

@@ -184,6 +184,11 @@
                     <v-btn icon color="primary" @click="toggleEditTransfer(item)">
                         <v-icon>mdi-pencil</v-icon>
                     </v-btn>
+                    <v-btn icon color="success" @click="$router.push(`/transfers/update/${item.id}`)">
+                        <v-icon>
+                            mdi-plus
+                        </v-icon>
+                    </v-btn>
                 </v-flex>
                 <v-flex v-else>
                     <v-btn icon color="danger" @click="transferId = null; editMode = false;">

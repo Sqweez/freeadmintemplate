@@ -108,6 +108,15 @@
                             />
                         </v-col>
                         <v-col cols="12" xl="4">
+                            <v-autocomplete
+                                :items="marginTypesAll"
+                                label="Тип маржинальности"
+                                item-value="id"
+                                item-text="title"
+                                v-model="marginTypeFilter"
+                            />
+                        </v-col>
+                        <v-col cols="12" xl="4">
                             <v-btn color="success" @click="addToCartAll">
                                 Добавить все <v-icon>mdi-plus</v-icon>
                             </v-btn>
@@ -202,6 +211,7 @@ export default {
         overlay: false,
         currentItems: [],
         currentMarginType: 1,
+        marginTypeFilter: -1,
         filtered: [],
         headers: [
             {
@@ -294,6 +304,9 @@ export default {
         marginTypes () {
             return this.$store.getters.MARGIN_TYPES;
         },
+        marginTypesAll () {
+            return [{id: -1, title: 'Все'}, ...this.$store.getters.MARGIN_TYPES];
+        },
         products() {
             let products = this.$store.getters.PRODUCTS_v2;
             if (this.manufacturerId !== -1) {
@@ -304,6 +317,9 @@ export default {
             }
             if (this.categoryId !== -1) {
                 products = products.filter(product => product.category.id === this.categoryId);
+            }
+            if (this.marginTypeFilter !== -1) {
+                products = products.filter(p => p.margin_type.id === this.marginTypeFilter);
             }
             return products.map(p => {
                 p.quantity = 10000;
