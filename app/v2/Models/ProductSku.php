@@ -70,7 +70,7 @@ class ProductSku extends Model
     protected $table = 'product_sku';
 
     const PRODUCT_SKU_WITH_ADMIN_LIST =  [
-        'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_name_web',
+        'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_name_web,is_kaspi_visible',
         'product.category', 'product.manufacturer', 'product.attributes', 'product.price',
         'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'margin_type'
     ];

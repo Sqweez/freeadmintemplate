@@ -154,6 +154,20 @@ class Client extends Model
         return intval($this->transactions()->sum('amount'));
     }
 
+    public function getTotalSalesAmountAttribute() {
+        return $this->sales->sum('amount');
+    }
+
+    public function getCurrentMonthSalesAmountAttribute() {
+        $startDate = now()->startOfMonth();
+        $endDate = now()->endOfMonth();
+        $sales = $this->sales->filter(function ($sale) use ($startDate, $endDate) {
+           $date = Carbon::parse($sale['created_at']);
+           return $date->lessThanOrEqualTo($endDate) && $date->greaterThanOrEqualTo($startDate);
+        });
+        return $sales->sum('amount');
+    }
+
     public function purchases() {
         return $this->hasMany('App\Sale', 'client_id');
     }
@@ -171,7 +185,7 @@ class Client extends Model
     }
 
     public function calculateDiscountPercent() {
-        $total = $this->sales->sum('amount');
+        $total = $this->getTotalSalesAmountAttribute();
         $discountByAmount = collect(self::TOTAL_DISCOUNT)->filter(function ($item) use ($total) {
             return $total >= $item['amount'];
         })->first()['discount'] ?? 0;

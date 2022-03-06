@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -43,6 +44,12 @@ class ArrivalProducts extends Model
 
     public function bookingProducts() {
         return $this->hasMany('App\v2\Models\BookingProduct', 'arrival_product_id');
+    }
+
+    public function getIsNewProductAttribute() {
+        $selfDate = Carbon::parse($this->product->created_at)->startOfDay();
+        $arrivalDate = Carbon::parse($this->arrival->created_at)->startOfDay();
+        return $selfDate->eq($arrivalDate);
     }
 
     public function getAvailableBookingCountAttribute() {

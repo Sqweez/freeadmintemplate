@@ -88,6 +88,21 @@
                                 v-model="currentMarginType"
                             />
                         </v-col>
+                        <v-col cols="12" xl="4">
+                            <v-autocomplete
+                                :items="kaspiVisibleFilters"
+                                label="Виден на каспи"
+                                item-value="id"
+                                item-text="text"
+                                v-model="isKaspiVisibleFilter"
+                            />
+                        </v-col>
+                        <v-col cols="12" xl="4">
+                            <v-checkbox
+                                label="Показать только главные товары"
+                                v-model="showMainProducts"
+                            />
+                        </v-col>
                     </v-row>
                     <v-data-table
                         :search="searchQuery"
@@ -138,6 +153,17 @@
                                         </v-list-item-title>
                                         <v-list-item-subtitle>
                                             Тип маржинальности
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            <v-icon color="success" v-if="item.is_kaspi_visible">mdi-check</v-icon>
+                                            <v-icon color="error" v-else>mdi-close</v-icon>
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            Виден в каспи
                                         </v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
@@ -342,6 +368,22 @@
             categoryId: -1,
             subcategoryId: -1,
             currentMarginType: -1,
+            kaspiVisibleFilters: [
+                {
+                    id: -1,
+                    text: 'Не важно'
+                },
+                {
+                    id: true,
+                    text: 'Да'
+                },
+                {
+                    id: false,
+                    text: 'Нет'
+                },
+            ],
+            isKaspiVisibleFilter: -1,
+            showMainProducts: false,
         }),
         computed: {
             marginTypes () {
@@ -360,7 +402,7 @@
                 return this.$store.getters.QUANTITIES_v2;
             },
             products() {
-                let products = this.$store.getters.PRODUCTS_v2;
+                let products = this.showMainProducts ? this.$store.getters.MAIN_PRODUCTS_v2 : this.$store.getters.PRODUCTS_v2;
                 if (this.hideNotInStock) {
                     products = products.filter(product => product.quantity > 0);
                 }
@@ -379,6 +421,10 @@
 
                 if (this.currentMarginType !== -1) {
                     products = products.filter(p => p.margin_type.id === this.currentMarginType);
+                }
+
+                if (this.isKaspiVisibleFilter !== -1) {
+                    products = products.filter(p => p.is_kaspi_visible === this.isKaspiVisibleFilter);
                 }
 
                 return products;

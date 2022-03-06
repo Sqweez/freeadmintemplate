@@ -136,6 +136,36 @@
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.total_sum | priceFilters }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Сумма покупок за все время
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.current_month_sum | priceFilters }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Сумма покупок за текущий месяц
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item v-if="item.loyalty_id == 2">
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.until_platinum | priceFilters }} | {{ item.until_platinum_percent }}%
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Платиновый остаток
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
                                 </v-list>
                             </template>
                             <template v-slot:item.actions="{ item }" v-if="IS_MARKETOLOG">

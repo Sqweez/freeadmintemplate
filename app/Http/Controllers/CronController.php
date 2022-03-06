@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\Services\TelegramService;
+use App\Http\Resources\ClientResource;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\ProductBatch;
 use App\Promocode;
@@ -40,6 +41,19 @@ class CronController extends Controller
         });
     }
 
+    public function getPlatinumClientsRemainder(TelegramService $telegramService) {
+        $clients = ClientResource::collection(
+            Client::with(['sales', 'transactions', 'city', 'loyalty'])
+                ->platinumClients()
+                ->get()
+        )->toArray(\request());
+        $clients = collect($clients)->filter(function ($client) { return $client['until_platinum'] > 0; })->values();
+        $message = ($this->getPlatinumRemainderMessage($clients));
+        $chatId = config('telegram.BIRTHDAY_CHAT');
+        $telegramService->sendMessage($chatId, $message);
+        return response([], 200);
+    }
+
     public function getBirthdayClients(TelegramService $telegramService) {
         $clientsWithBirthday = Client::query()
             ->whereNotNull('birth_date')
@@ -55,7 +69,7 @@ class CronController extends Controller
             $message = $this->getBirthDayMessage($clientsWithBirthday);
         }
         $chatId = config('telegram.BIRTHDAY_CHAT');
-        return $telegramService->sendMessage($chatId, $message);
+        $telegramService->sendMessage($chatId, $message);
         return response([], 200);
     }
 
@@ -66,6 +80,19 @@ class CronController extends Controller
             $message .= "\n";
             $message .= "Телефон: " . $client->client_phone . "\n";
             $message .= "Город: " . $client->city->name . "\n";
+        });
+        return urlencode($message);
+    }
+
+    private function getPlatinumRemainderMessage($clients) {
+        $message = "Платиновые клиенты, у которых не хватает покупок:" . "\n";
+        collect($clients)->each(function ($client, $key) use (&$message){
+            $message .= sprintf("%s. %s", ($key + 1), $client['client_name']);
+            $message .= "\n";
+            $message .= "Телефон: " . $client['client_phone'] . "\n";
+            $message .= "Город: " . $client['city'] . "\n";
+            $message .= "Остаток:" . $client['until_platinum'] . "₸" . "\n";
+            $message .= "<a href='https://api.whatsapp.com/send?phone=" . $client['client_phone'] . "'>Открыть Whatsapp</a>" . "\n";
         });
         return urlencode($message);
     }

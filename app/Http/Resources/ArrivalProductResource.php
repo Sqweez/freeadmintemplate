@@ -20,6 +20,11 @@ class ArrivalProductResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $image = ($this->product->general_images->map(function($image) {
+                return collect($image)->only('image');
+            })->first()['image'])  ?? null;
+
         return [
             'attributes' => collect($this->product->attributes)->map(function ($attribute) {
                 return [
@@ -41,7 +46,9 @@ class ArrivalProductResource extends JsonResource
             'purchase_price' => $this->purchase_price,
             'manufacturer' => $this->product->manufacturer,
             'arrival_product_id' => $this->id,
-            'bookingProducts' => $this->bookingProducts
+            'bookingProducts' => $this->bookingProducts,
+            'is_new' => $this->is_new_product,
+            'product_image' => $image ? (url('/') . \Storage::url($image)) : 'https://iron-addicts.kz/images/wholesales/section_7_content.png',
         ];
     }
 }

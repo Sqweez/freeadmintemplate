@@ -21,7 +21,6 @@ class ClientResource extends JsonResource
     public function toArray($request)
     {
 
-        $total = $this->sales->sum('amount');
         $last_sale = $this->sales->sortByDesc('created_at')->first();
         $last_sale_date = null;
         if ($last_sale) {
@@ -35,7 +34,10 @@ class ClientResource extends JsonResource
             'client_discount' => max($this->calculateDiscountPercent(), $this->loyalty->discount),
             'client_initial_discount' => $this->calculateDiscountPercent(),
             'client_balance' => $this->transactions->sum('amount'),
-            'total_sum' => $total,
+            'total_sum' => $this->total_sales_amount,
+            'current_month_sum' => $this->current_month_sales_amount,
+            'until_platinum' => max(0, Client::PLATINUM_CLIENT_MONTHLY_THRESHOLD - $this->current_month_sales_amount),
+            'until_platinum_percent' => max(0, (100 - (100 * $this->current_month_sales_amount / Client::PLATINUM_CLIENT_MONTHLY_THRESHOLD))),
             'is_partner' => !!$this->is_partner,
             'city' => $this->city->name,
             'client_city' => $this->client_city,

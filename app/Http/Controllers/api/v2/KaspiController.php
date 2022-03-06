@@ -58,9 +58,6 @@ class KaspiController extends Controller {
             ->values()
             ->map(function ($product) {
                 $product['batches'] = collect($product['batches'])->map(function ($_product) {
-                    if ($_product['store_id'] === 6) {
-                        $_product['store_id'] = 1;
-                    }
                     return $_product;
                 });
                 return $product;

@@ -19,6 +19,7 @@ class ArrivalController extends Controller
                     'products', 'products.product',
                     'products.product.product',
                     'products.product.product.manufacturer',
+                    'products.product.product_images',
                     'products.product.attributes',
                     'products.product.attributes.attribute_name',
                     'products.product.product.attributes',

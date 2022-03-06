@@ -283,6 +283,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('token/revoke', [CronController::class, 'revokeSellerToken']);
             Route::get('/price/list', [CronController::class, 'storePriceList']);
             Route::get('birthday', [CronController::class, 'getBirthdayClients']);
+            Route::get('platinum', [CronController::class, 'getPlatinumClientsRemainder']);
         });
 
         Route::prefix('orders')->group(function () {

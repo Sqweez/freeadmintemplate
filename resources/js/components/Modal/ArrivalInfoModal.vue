@@ -24,6 +24,7 @@
                         <tr>
                             <th v-if="confirmMode">Действие</th>
                             <th>Наименование</th>
+                            <th>Изображение</th>
                             <th v-if="IS_SUPERUSER">Закуп</th>
                             <th>Количество</th>
                         </tr>
@@ -40,7 +41,7 @@
                                     <v-list-item>
                                         <v-list-item-content>
                                             <v-list-item-title>
-                                                {{ item.product_name }}
+                                                {{ item.product_name }} <v-badge v-if="item.is_new" content="Новинка" color="error" />
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
                                                 {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
@@ -48,6 +49,9 @@
                                         </v-list-item-content>
                                     </v-list-item>
                                 </v-list>
+                            </td>
+                            <td>
+                                <img :src="item.product_image" height="200" alt="">
                             </td>
                             <td v-if="IS_SUPERUSER">
                                 <v-text-field
