@@ -48,7 +48,7 @@ class ArrivalProductResource extends JsonResource
             'arrival_product_id' => $this->id,
             'bookingProducts' => $this->bookingProducts,
             'is_new' => $this->is_new_product,
-            'product_image' => $image ? (url('/') . \Storage::url($image)) : 'https://iron-addicts.kz/images/wholesales/section_7_content.png',
+            'product_image' => $image ? (url('/') . \Storage::url($image)) : 'https://iron-addicts.kz/images/logo_new.png',
         ];
     }
 }
