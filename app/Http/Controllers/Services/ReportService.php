@@ -10,7 +10,7 @@ use App\User;
 use App\v2\Models\Supplier;
 
 class ReportService {
-    public static function getReports($start, $finish, $user_id, $is_supplier = false, $store_id = null) {
+    public static function getReports($start, $finish, $user_id, $is_supplier = false, $store_id = null, $manufacturer_id = null) {
         $saleQuery = Sale::query();
         $sales = null;
         $user = null;
@@ -37,11 +37,24 @@ class ReportService {
                 });
                 $sale['products'] = $products;
                 return $sale;
-
             });
         }
 
+        // TODO 2022-03-28T22:08:31 уродливо, но работает
 
+        if ($manufacturer_id) {
+            $sales = $sales->map(function ($sale) use ($manufacturer_id) {
+                $products = $sale['products'];
+                unset($sale['products']);
+                $products = collect($products)->filter(function ($p) use ($manufacturer_id) {
+                    return $p['product']['product']['manufacturer_id'] === intval($manufacturer_id);
+                });
+                $sale['products'] = $products;
+                return $sale;
+            })->filter(function ($sale) {
+                return count($sale['products']) > 0;
+            })->values();
+        }
         return ReportsResource::collection(
             $sales
         );

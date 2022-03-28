@@ -310,17 +310,14 @@ const navigationModule = {
                 icon: 'dashboard',
             },
             {
-                title: 'Баннеры',
-                url: '/shop/banners',
+                title: 'Товары',
+                url: '/products',
                 icon: 'dashboard',
             },
             {
-                title: 'Футер',
-                url: '/site/footer'
-            },
-            {
-                title: 'Цели',
-                url: '/shop/goals'
+                title: 'Баннеры',
+                url: '/shop/banners',
+                icon: 'dashboard',
             },
         ],
         supplierMenu: [

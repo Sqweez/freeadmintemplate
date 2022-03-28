@@ -784,7 +784,9 @@
                 this.client = client;
             },
             async createKaspiResponse() {
-                const url = `http://${this.currentStore.kaspi_terminal_ip}:8080/payment`;
+                const kaspiTerminalIp = localStorage.getItem('kaspi_terminal_ip') ? localStorage.getItem('kaspi_terminal_ip') : this.currentStore.kaspi_terminal_ip;
+                console.log(kaspiTerminalIp);
+                const url = `http://${kaspiTerminalIp}:8080/payment`;
                 const amount = this.isSplitPayment ? this.splitPayment
                     .filter(s => (s.payment_type === 1 || s.payment_type === 2))
                     .reduce((a, c) => {
@@ -970,7 +972,7 @@
                 return this.stores.find(s => s.id === this.storeFilter)
             },
             isKaspiTerminalEnabled() {
-                return this.currentStore.has_kaspi_terminal
+                return (this.currentStore.has_kaspi_terminal || localStorage.getItem('kaspi_terminal_ip'))
                     && (this.payment_type === 1
                         || this.payment_type === 2
                         || this.splitPayment.filter(s => (s.payment_type === 1 || s.payment_type === 2) && s.amount > 0).length > 0);

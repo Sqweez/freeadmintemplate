@@ -27,7 +27,7 @@
                         use-custom-image-handler
                         @image-added="handleImageAdded"
                         :editor-options="editorSettings"
-                        v-model="product_description" v-if="IS_SUPERUSER"
+                        v-model="product_description" v-if="IS_SUPERUSER || IS_MODERATOR"
                     ></vue-editor>
                     <div v-if="IS_SUPERUSER">
                         <div v-if="product_images.length">
@@ -156,6 +156,29 @@
                         :append-outer-icon="'mdi-plus'"
                         @click:append-outer="manufacturerModal = true"
                     />
+                    <div v-if="IS_SUPERUSER || IS_MODERATOR">
+                        <h5>Теги:</h5>
+                        <div class="d-flex">
+                            <div>
+                                <v-chip
+                                    v-for="(tag, key) of tags"
+                                    :key="key"
+                                    class="mr-2 mb-2"
+                                    close
+                                    link
+                                    pill
+                                    @click:close="removeTag(key)"
+                                >{{ tag.name }}
+                                </v-chip>
+                                <v-text-field
+                                    label="Новый тег"
+                                    v-model="newTag"
+                                    :append-outer-icon="'mdi-plus'"
+                                    @click:append-outer="createTag"
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <div v-if="IS_SUPERUSER">
                         <v-checkbox
                             label="Хит продаж"
@@ -184,27 +207,6 @@
                             v-model="supplier_id"
                         />
                         <v-divider></v-divider>
-                        <h5>Теги:</h5>
-                        <div class="d-flex">
-                            <div>
-                                <v-chip
-                                    v-for="(tag, key) of tags"
-                                    :key="key"
-                                    class="mr-2 mb-2"
-                                    close
-                                    link
-                                    pill
-                                    @click:close="removeTag(key)"
-                                >{{ tag.name }}
-                                </v-chip>
-                                <v-text-field
-                                    label="Новый тег"
-                                    v-model="newTag"
-                                    :append-outer-icon="'mdi-plus'"
-                                    @click:append-outer="createTag"
-                                />
-                            </div>
-                        </div>
                         <v-divider></v-divider>
                         <h5>Мета-теги</h5>
                         <v-text-field
@@ -367,7 +369,6 @@
                             Отправить комментарий <v-icon>mdi-send</v-icon>
                         </v-btn>
                     </div>
-
                 </v-form>
             </v-card-text>
             <v-divider/>

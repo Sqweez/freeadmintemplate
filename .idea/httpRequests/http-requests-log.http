@@ -1,0 +1,6 @@
+GET https://kaspi.kz/shop/api/v2/orders
+Content-Type: application/vnd.api+json
+X-Auth-Token: ULDaKPxr8fZzzxHBSj8HLc9YZ0x+VKhYdAd6vQ1NgnI=
+
+###
+

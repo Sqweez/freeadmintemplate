@@ -158,7 +158,11 @@ class PayrollService {
                         ->filter(function ($rule) use ($totalAmount) {
                             return $rule['threshold'] <= $totalAmount;
                         })
-                        ->first()['value'] ?? 0) / 100;
+                        ->first()['value']) ?? 0;
+                if ($salaryPercent !== 0) {
+                    $salaryPercent = str_replace(',', '.', $salaryPercent);
+                }
+                $salaryPercent = floatval($salaryPercent) / 100;
                 $salary = ceil($totalAmount * $salaryPercent);
                 return [
                     'margin_type' => $currentMarginType['title'],

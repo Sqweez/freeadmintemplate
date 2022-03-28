@@ -209,6 +209,12 @@
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
                             </div>
+                            <div class="actions-products__container" v-if="IS_MODERATOR">
+                                <v-btn color="warning" @click="showProductModal(item.id, 'editProduct')">
+                                    Товар
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                            </div>
                             <div class="actions-products__container" v-if="IS_SUPERUSER">
                                 <v-btn color="success" @click="showProductSkuModal(item.id)"
                                        v-if="item.sku_can_be_created">
@@ -311,6 +317,7 @@
             ProductRangeModal
         },
         async created() {
+            this.showMainProducts = !!this.IS_MODERATOR;
             const store_id = (this.is_admin || this.IS_BOSS) ? null : this.user.store_id;
             try {
                 await this.$store.dispatch('GET_PRODUCTS_v2');
@@ -502,7 +509,7 @@
                     }
                 ];
 
-                if (this.is_admin || this.IS_BOSS || this.IS_SENIOR_SELLER) {
+                if (this.is_admin || this.IS_BOSS || this.IS_SENIOR_SELLER || this.IS_MODERATOR) {
                     headers.unshift({
                         value: 'actions',
                         text: 'Действие',
@@ -514,6 +521,10 @@
                         text: 'ID',
                         sortable: true
                     })
+                }
+
+                if (this.IS_MODERATOR) {
+                    headers = headers.filter(h => !['quantity', 'additional_data'].includes(h.value));
                 }
 
                 if (!this.IS_SUPERUSER) {

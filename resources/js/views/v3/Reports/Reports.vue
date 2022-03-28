@@ -177,6 +177,13 @@
                         item-value="id"
                         item-text="name">
                     </v-select>
+                    <v-autocomplete
+                        :items="manufacturers"
+                        item-text="manufacturer_name"
+                        v-model="manufacturerId"
+                        item-value="id"
+                        label="Бренд"
+                    />
                     <v-row>
                         <v-col>
                             <v-text-field
@@ -473,6 +480,7 @@ const DATE_FILTERS = {
     export default {
         components: {SaleEditModal, ReportCancelModal, ConfirmationModal},
         data: () => ({
+            manufacturerId: -1,
             discountFrom: 0,
             discountTo: 100,
             editModal: false,
@@ -582,6 +590,11 @@ const DATE_FILTERS = {
                         this.discountTo = 0;
                     }
                 })
+            },
+            async manufacturerId (value) {
+                this.$loading.enable();
+                await this.loadReport();
+                this.$loading.disable();
             }
         },
         methods: {
@@ -630,8 +643,11 @@ const DATE_FILTERS = {
                 this.loading = true;
                 const dateObject = {
                     start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
-                    finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1]
+                    finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1],
                 };
+                if (this.manufacturerId !== -1) {
+                    dateObject.manufacturer_id = this.manufacturerId;
+                }
                 await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
                 await this.$store.dispatch('GET_PREORDERS_REPORT', dateObject);
                 const { data } = await axios.get(`/api/v2/booking?start=${dateObject.start}&finish=${dateObject.finish}`);
@@ -696,6 +712,13 @@ const DATE_FILTERS = {
             }
         },
         computed: {
+            manufacturers() {
+                return [
+                    {
+                        id: -1,
+                        manufacturer_name: 'Все'
+                    }, ...this.$store.getters.manufacturers];
+            },
             is_admin() {
                 return this.$store.getters.CURRENT_ROLE === 'admin';
             },

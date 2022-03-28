@@ -53,6 +53,9 @@ export default {
                 },
                 IS_LOADING() {
                     return this.$store.getters.IS_LOADING;
+                },
+                IS_MODERATOR () {
+                    return this.$store.getters.IS_MODERATOR;
                 }
             }
         })

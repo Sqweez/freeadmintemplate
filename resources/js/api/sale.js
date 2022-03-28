@@ -11,7 +11,7 @@ export async function makeSale(payload) {
     return response.data;
 }
 
-export async function getReports({start, finish, user_id = null, is_supplier = null, store_id = null}) {
+export async function getReports({start, finish, user_id = null, is_supplier = null, store_id = null, manufacturer_id = null}) {
     let query = `?start=${start}&finish=${finish}`;
     if (user_id) {
         query += `&user_id=${user_id}`
@@ -21,6 +21,9 @@ export async function getReports({start, finish, user_id = null, is_supplier = n
     }
     if (store_id) {
         query += `&store_id=${store_id}`
+    }
+    if (manufacturer_id) {
+        query += `&manufacturer_id=${manufacturer_id}`;
     }
     const response = await axios.get(`/api/reports${query}`);
     return response.data.data;

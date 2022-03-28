@@ -168,7 +168,7 @@ class KaspiController extends Controller {
                     'filter' => [
                         'orders' => [
                             'creationDate' => [
-                                '$ge' => 1611770400000
+                                '$ge' => now()->subHour()->getPreciseTimestamp(3)
                             ],
                             'signatureRequired' => false,
                             'state' => 'PICKUP'
@@ -180,7 +180,7 @@ class KaspiController extends Controller {
                     'X-Auth-Token' => 'ULDaKPxr8fZzzxHBSj8HLc9YZ0x+VKhYdAd6vQ1NgnI='
                 ]]
         );
-        return $response->getBody();
+        return $response->getStatusCode();
     }
 
     public function getAnalytics(Request $request) {

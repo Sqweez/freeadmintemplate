@@ -306,7 +306,8 @@ const routes = [
                 IS_STOREKEEPER: true,
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
-                IS_SELLER: true
+                IS_SELLER: true,
+                IS_MODERATOR: true
             },
         },
         component: ProductsV3
