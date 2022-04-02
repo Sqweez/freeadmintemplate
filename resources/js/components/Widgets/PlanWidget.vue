@@ -269,7 +269,7 @@
                     week_fact: this.planReports.week[s.id] ? this.planReports.week[s.id].amount : 0,
                     month_fact: this.planReports.month[s.id] ? this.planReports.month[s.id].amount : 0,
                     day_fact: this.planReports.today[s.id] ? this.planReports.today[s.id].amount : 0,
-                    prize: _plan.prize,
+                    prize: _plan?.prize ?? 0,
                 };
 
                 plan.week_percent = plan.week_plan !== 0 ? Math.floor(100 * plan.week_fact / plan.week_plan) : 0;
