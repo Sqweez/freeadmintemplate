@@ -263,8 +263,8 @@
                 const _plan = this._plans.find(p => p.store_id == s.id);
                 const plan = {
                     store_id: s.id,
-                    week_plan: _plan.week_plan || 0,
-                    month_plan: _plan.month_plan || 0,
+                    week_plan: _plan?.week_plan ?? 0,
+                    month_plan: _plan?.month_plan ?? 0,
                     name: s.name,
                     week_fact: this.planReports.week[s.id] ? this.planReports.week[s.id].amount : 0,
                     month_fact: this.planReports.month[s.id] ? this.planReports.month[s.id].amount : 0,
