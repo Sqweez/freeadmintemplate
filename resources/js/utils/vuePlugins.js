@@ -56,6 +56,9 @@ export default {
                 },
                 IS_MODERATOR () {
                     return this.$store.getters.IS_MODERATOR;
+                },
+                IS_FRANCHISE () {
+                    return this.$store.getters.IS_FRANCHISE;
                 }
             }
         })

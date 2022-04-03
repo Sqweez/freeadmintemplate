@@ -25,7 +25,8 @@ const authModule = {
         IS_SENIOR_SELLER: state => state.user && +state.user.role_id === 9,
         IS_GUEST: state => !!!state.user,
         IS_MARKETOLOG: state => state.user && +state.user.role_id === 10,
-        CAN_SALE: (state, getters) => (getters.IS_ADMIN || getters.IS_SELLER || getters.IS_BOSS || getters.IS_SENIOR_SELLER || getters.IS_MARKETOLOG),
+        IS_FRANCHISE: (state) => (state.user && +state.user.role_id === 11),
+        CAN_SALE: (state, getters) => (getters.IS_ADMIN || getters.IS_SELLER || getters.IS_BOSS || getters.IS_SENIOR_SELLER || getters.IS_MARKETOLOG || getters.IS_FRANCHISE),
         IS_MALOY: (state, getters) => !!(getters.IS_MODERATOR && state.user.login === 'maloy'),
         CURRENT_ROLE: (state, getters) => {
             const roles = {
@@ -40,6 +41,7 @@ const authModule = {
                 boss: getters.IS_BOSS,
                 seniorSeller: getters.IS_SENIOR_SELLER,
                 marketolog: getters.IS_MARKETOLOG,
+                franchise: getters.IS_FRANCHISE
             };
 
             return getKeyByValue(roles, true);

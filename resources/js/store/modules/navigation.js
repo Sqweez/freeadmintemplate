@@ -239,6 +239,10 @@ const navigationModule = {
                         title: 'Новости',
                         url: '/moderator/news'
                     },
+                    {
+                        title: 'Теги',
+                        url: '/products/tags',
+                    }
                 ]
             },
             {
@@ -319,6 +323,11 @@ const navigationModule = {
                 url: '/shop/banners',
                 icon: 'dashboard',
             },
+            {
+                icon: 'dashboard',
+                title: 'Теги',
+                url: '/products/tags',
+            }
         ],
         supplierMenu: [
             {
@@ -533,6 +542,11 @@ const navigationModule = {
                         title: 'Новости',
                         url: '/moderator/news'
                     },
+                    {
+                        icon: 'dashboard',
+                        title: 'Теги',
+                        url: '/products/tags',
+                    }
                 ]
             },
             {
@@ -580,66 +594,66 @@ const navigationModule = {
                     }
                 ]
             },
-   /*         {
-                title: 'Статистика',
-                url: '#',
-                icon: 'dashboard',
-                hasDropdown: true,
-                isAdmin: true,
-                children: [
-                    {
-                        title: 'Товары',
-                        url: '/stats/mvp_products',
-                    },
-                    {
-                        title: 'Партнеры',
-                        url: '/stats/partners'
-                    }
-                ]
-            },
-            {
-                title: 'v2/Склад',
-                url: '#',
-                icon: 'dashboard',
-                hasDropdown: true,
-                isAdmin: true,
-                children: [
-                    {
-                        title: 'Товары',
-                        url: '/v2/products'
-                    },
-                ]
-            },*/
-           /* {
-                title: 'v3/Склад',
-                url: '#',
-                icon: 'dashboard',
-                hasDropdown: true,
-                isAdmin: true,
-                children: [
-                    {
-                        title: 'Товары',
-                        url: '/v3/products'
-                    },
-                    {
-                        title: 'Корзина',
-                        url: '/v3/cart'
-                    },
-                    {
-                        title: 'Отчеты',
-                        url: '/v3/reports'
-                    },
-                    {
-                        title: 'Перемещения',
-                        url: '/transfer',
-                    },
-                    {
-                        title: 'Поступления',
-                        url: '/arrivals',
-                        isAdmin: true,
-                    },
-                ]
-            },*/
+            /*         {
+                         title: 'Статистика',
+                         url: '#',
+                         icon: 'dashboard',
+                         hasDropdown: true,
+                         isAdmin: true,
+                         children: [
+                             {
+                                 title: 'Товары',
+                                 url: '/stats/mvp_products',
+                             },
+                             {
+                                 title: 'Партнеры',
+                                 url: '/stats/partners'
+                             }
+                         ]
+                     },
+                     {
+                         title: 'v2/Склад',
+                         url: '#',
+                         icon: 'dashboard',
+                         hasDropdown: true,
+                         isAdmin: true,
+                         children: [
+                             {
+                                 title: 'Товары',
+                                 url: '/v2/products'
+                             },
+                         ]
+                     },*/
+            /* {
+                 title: 'v3/Склад',
+                 url: '#',
+                 icon: 'dashboard',
+                 hasDropdown: true,
+                 isAdmin: true,
+                 children: [
+                     {
+                         title: 'Товары',
+                         url: '/v3/products'
+                     },
+                     {
+                         title: 'Корзина',
+                         url: '/v3/cart'
+                     },
+                     {
+                         title: 'Отчеты',
+                         url: '/v3/reports'
+                     },
+                     {
+                         title: 'Перемещения',
+                         url: '/transfer',
+                     },
+                     {
+                         title: 'Поступления',
+                         url: '/arrivals',
+                         isAdmin: true,
+                     },
+                 ]
+             },*/
         ],
         seniorSellerMenu: [
             {
@@ -782,131 +796,208 @@ const navigationModule = {
             },
         ],
         marketologMenu: [
-    {
-        title: 'Главная страница',
-        url: '/',
-        icon: 'dashboard',
-    },
-    {
-        title: 'Клиенты',
-        url: '/clients',
-        icon: 'person'
-    },
-    {
-        title: 'Продавцы',
-        url: '#',
-        hasDropdown: true,
-        icon: 'persons',
-        children: [
             {
-                title: 'Задания',
-                url: '/tasks/index',
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: 'Обучение',
-                url: '/education/index'
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person'
+            },
+            {
+                title: 'Продавцы',
+                url: '#',
+                hasDropdown: true,
+                icon: 'persons',
+                children: [
+                    {
+                        title: 'Задания',
+                        url: '/tasks/index',
+                    },
+                    {
+                        title: 'Обучение',
+                        url: '/education/index'
+                    }
+                ],
+            },
+            {
+                title: 'Статистика',
+                icon: 'analytics',
+                url: '#',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Аналитика продаж',
+                        url: '/analytics/sales'
+                    },
+                    {
+                        title: 'Аналитика поступлений',
+                        url: '/analytics/arrivals'
+                    },
+                    {
+                        title: 'Аналитика продаж бренды',
+                        url: '/analytics/sales/brands'
+                    },
+                    {
+                        url: '/analytics/sales/brands/sellers',
+                        title: 'Аналитика продаж продавцы'
+                    },
+                    {
+                        url: '/analytics/sales/schedule',
+                        title: 'График продаж'
+                    }
+                ]
+            },
+            {
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по тренерам',
+                url: '/analytics/trainer/rating',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по партнерам',
+                url: '/analytics/partners/rating',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по клиентам',
+                url: '/analytics/clients/sales',
+                icon: 'report',
+            },
+            {
+                title: 'Типы маржинальности',
+                url: '/economy/margin/types',
+                icon: 'article'
+            },
+            {
+                title: 'Поступления',
+                url: '/arrivals',
+                icon: 'moped'
+            },
+
+            {
+                icon: 'dashboard',
+                title: 'Теги',
+                url: '/products/tags',
+            },
+            {
+                title: 'Интернет-магазин',
+                url: '#',
+                icon: 'home',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Акции',
+                        url: '/stocks/index'
+                    },
+                    {
+                        title: 'Цели',
+                        url: '/shop/goals'
+                    },
+                    {
+                        title: 'Атлеты',
+                        url: '/shop/sportsmen'
+                    },
+                    {
+                        title: 'Рейтинг продавцов',
+                        url: '/shop/rating'
+                    },
+                    {
+                        title: 'Промокоды',
+                        url: '/promocode'
+                    },
+                    {
+                        title: 'Баннеры',
+                        url: '/shop/banners'
+                    },
+                    {
+                        title: "Связанные товары",
+                        url: '/shop/related'
+                    },
+                    {
+                        title: 'Футер',
+                        url: '/site/footer'
+                    }
+                ]
             }
         ],
-    },
-    {
-        title: 'Статистика',
-        icon: 'analytics',
-        url: '#',
-        hasDropdown: true,
-        children: [
+        franchiseMenu: [
             {
-                title: 'Аналитика продаж',
-                url: '/analytics/sales'
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: 'Аналитика поступлений',
-                url: '/analytics/arrivals'
+                title: 'Пользователи',
+                url: '/users',
+                icon: 'person',
+                isAdmin: true
             },
             {
-                title: 'Аналитика продаж бренды',
-                url: '/analytics/sales/brands'
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person'
             },
             {
-                url: '/analytics/sales/brands/sellers',
-                title: 'Аналитика продаж продавцы'
+                title: 'Склад',
+                url: '#',
+                icon: 'work',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Все склады',
+                        url: '/stores',
+                        isAdmin: true
+                    },
+                    {
+                        title: 'Категории',
+                        url: '/categories',
+                        isAdmin: true
+                    },
+                    {
+                        title: 'Товары',
+                        url: '/products'
+                    },
+                    {
+                        title: 'Корзина',
+                        url: '/cart'
+                    },
+                    {
+                        title: 'Бронирование товара',
+                        url: '/booking'
+                    },
+                    {
+                        title: 'Перемещения',
+                        url: '/transfer',
+                    },
+                    {
+                        title: 'Поступления',
+                        url: '/arrivals',
+                        isAdmin: true,
+                    },
+                    {
+                        title: 'Заканчивающиеся товары',
+                        url: '/products/stock/out',
+                        isAdmin: true
+                    },
+                    {
+                        title: 'Предзаказы',
+                        url: '/preorders/index'
+                    }
+                ],
             },
             {
-                url: '/analytics/sales/schedule',
-                title: 'График продаж'
-            }
-        ]
-    },
-    {
-        title: 'Отчеты по продажам',
-        url: '/reports',
-        icon: 'report',
-    },
-    {
-        title: 'Отчеты по тренерам',
-        url: '/analytics/trainer/rating',
-        icon: 'report',
-    },
-    {
-        title: 'Отчеты по партнерам',
-        url: '/analytics/partners/rating',
-        icon: 'report',
-    },
-    {
-        title: 'Отчеты по клиентам',
-        url: '/analytics/clients/sales',
-        icon: 'report',
-    },
-    {
-        title: 'Типы маржинальности',
-        url: '/economy/margin/types',
-        icon: 'article'
-    },
-    {
-        title: 'Поступления',
-        url: '/arrivals',
-        icon: 'moped'
-    },
-    {
-        title: 'Интернет-магазин',
-        url: '#',
-        icon: 'home',
-        hasDropdown: true,
-        children: [
-            {
-                title: 'Акции',
-                url: '/stocks/index'
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
             },
-            {
-                title: 'Цели',
-                url: '/shop/goals'
-            },
-            {
-                title: 'Атлеты',
-                url: '/shop/sportsmen'
-            },
-            {
-                title: 'Рейтинг продавцов',
-                url: '/shop/rating'
-            },
-            {
-                title: 'Промокоды',
-                url: '/promocode'
-            },
-            {
-                title: 'Баннеры',
-                url: '/shop/banners'
-            },
-            {
-                title: "Связанные товары",
-                url: '/shop/related'
-            },
-            {
-                title: 'Футер',
-                url: '/site/footer'
-            }
-        ]
-    }
-],
+        ],
     },
     getters: {
         navigations: (state, getters) => {

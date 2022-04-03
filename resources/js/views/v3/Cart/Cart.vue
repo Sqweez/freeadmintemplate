@@ -408,13 +408,14 @@
                             label="Бренд"
                         />
                     </v-col>
-                    <v-col cols="12" xl="4" v-if="is_admin || IS_BOSS">
+                    <v-col cols="12" xl="4">
                         <v-select
                             :items="stores"
                             item-text="name"
                             v-model="storeFilter"
                             item-value="id"
                             label="Склад"
+                            :disabled="!(is_admin || IS_BOSS)"
                         />
                     </v-col>
                 </v-row>

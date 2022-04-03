@@ -63,14 +63,14 @@ const reportsModule = {
             commit('setStoresReport', data);
         },
         async [ACTIONS.GET_REPORTS] ({commit, getters}, payload) {
-            if (!(getters.IS_ADMIN || getters.IS_BOSS || getters.IS_SENIOR_SELLER || getters.IS_MARKETOLOG)) {
+            if (!(getters.IS_ADMIN || getters.IS_BOSS || getters.IS_SENIOR_SELLER || getters.IS_MARKETOLOG || getters.IS_FRANCHISE)) {
                 payload.user_id = getters.USER.id;
             }
             if (getters.IS_SUPPLIER) {
                 payload.is_supplier = 1;
             }
 
-            if (getters.IS_SENIOR_SELLER) {
+            if (getters.IS_SENIOR_SELLER || getters.IS_FRANCHISE) {
                 payload.store_id = getters.USER.store_id;
             }
 

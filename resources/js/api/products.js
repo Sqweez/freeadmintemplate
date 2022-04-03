@@ -66,3 +66,7 @@ export async function changeProductCount({product_id, store_id, increment}) {
 export async function getKaspiProductAnalytics(start, finish) {
     return await axios.get(`/api/v2/kaspi/analytics?start=${start}&finish=${finish}`)
 }
+
+export async function setProductTags (payload) {
+    return await axios.post(`/api/v2/products/tags`, payload);
+}

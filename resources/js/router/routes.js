@@ -64,6 +64,7 @@ import SaleAnalyticsBySellerAndProducts from "@/views/Analytics/SaleAnalyticsByS
 import SalesSchedule from "@/views/Analytics/SalesSchedule";
 import ProductMarginTypes from "@/views/Economy/ProductMarginTypes";
 import TransferUpdate from "@/views/Transfers/TransferUpdate";
+import ProductTags from "@/views/Moderator/ProductTags";
 
 const routes = [
     {
@@ -110,7 +111,8 @@ const routes = [
                 IS_SELLER: true,
                 IS_SENIORSELLER: true,
                 IS_BOSS: true,
-                IS_MARKETOLOG: true
+                IS_MARKETOLOG: true,
+                IS_FRANCHISE: true,
             }
         }
     },
@@ -123,7 +125,8 @@ const routes = [
                 IS_SELLER: true,
                 IS_SENIORSELLER: true,
                 IS_BOSS: true,
-                IS_MARKETOLOG: true
+                IS_MARKETOLOG: true,
+                IS_FRANCHISE: true
             }
         }
     },
@@ -307,7 +310,8 @@ const routes = [
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
                 IS_SELLER: true,
-                IS_MODERATOR: true
+                IS_MODERATOR: true,
+                IS_FRANCHISE: true,
             },
         },
         component: ProductsV3
@@ -332,6 +336,7 @@ const routes = [
                 IS_SELLER: true,
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
+                IS_FRANCHISE: true
             }
         }
     },
@@ -593,6 +598,10 @@ const routes = [
                 IS_MARKETOLOG: true,
             }
         }
+    },
+    {
+        path: '/products/tags',
+        component: ProductTags,
     },
     {
         path: '/booking',

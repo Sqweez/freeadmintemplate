@@ -35,13 +35,14 @@
                                 hide-details
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12" xl="4" v-if="is_admin || IS_BOSS">
+                        <v-col cols="12" xl="4">
                             <v-select
                                 :items="stores"
                                 item-text="name"
                                 v-model="storeFilter"
                                 item-value="id"
                                 label="Склад"
+                                :disabled="!(is_admin || IS_BOSS)"
                             />
                         </v-col>
                         <v-col cols="12" xl="2">
@@ -194,6 +195,24 @@
                             </span>
                         </template>
                         <template v-slot:item.actions="{ item }">
+                            <div class="actions-products__container" v-if="IS_FRANCHISE">
+                                <v-btn color="success" @click="changeCount(item.id, 1)">
+                                    Количество
+                                    <v-icon>mdi-plus</v-icon>
+                                </v-btn>
+                                <v-btn v-if="!item.sku_can_be_created" color="warning" @click="showProductModal(item.id, 'editProduct')">
+                                    Ассортимент
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <div class="mb-2 d-flex justify-space-between" v-if="storeFilter !== -1">
+                                    <v-btn color="error" class="mr-2" @click="changeCount(item.id, -1)">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                    <v-btn color="success" class="ml-2" @click="changeCount(item.id, 1)">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </div>
+                            </div>
                             <div class="actions-products__container" v-if="IS_SENIOR_SELLER">
                                 <v-btn color="warning" @click="showProductSkuModal(item.id, true)"
                                        v-if="item.sku_can_be_created">
@@ -319,6 +338,7 @@
         async created() {
             this.showMainProducts = !!this.IS_MODERATOR;
             const store_id = (this.is_admin || this.IS_BOSS) ? null : this.user.store_id;
+            console.log(store_id);
             try {
                 await this.$store.dispatch('GET_PRODUCTS_v2');
             } catch (e) {
@@ -330,6 +350,11 @@
             } else {
                 this.storeFilter = -1;
             }
+
+            if (this.IS_FRANCHISE) {
+                this.storeFilter = this.user.store_id;
+            }
+
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
@@ -509,7 +534,7 @@
                     }
                 ];
 
-                if (this.is_admin || this.IS_BOSS || this.IS_SENIOR_SELLER || this.IS_MODERATOR) {
+                if (this.is_admin || this.IS_BOSS || this.IS_SENIOR_SELLER || this.IS_MODERATOR || this.IS_FRANCHISE) {
                     headers.unshift({
                         value: 'actions',
                         text: 'Действие',

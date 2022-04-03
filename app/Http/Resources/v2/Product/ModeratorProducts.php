@@ -38,7 +38,8 @@ class ModeratorProducts extends JsonResource
             'grouping_attribute_id' => $this->grouping_attribute_id,
             'product_id' => $this->product_id,
             'product_description' => $this->product_description,
-            'product_images' => $this->product->product_images
+            'product_images' => $this->product->product_images,
+            'tags' => $this->product->tags,
         ];
     }
 }

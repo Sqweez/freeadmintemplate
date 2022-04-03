@@ -48,6 +48,16 @@ class ProductService {
         }
     }
 
+    public function attachTags($products, $tags) {
+        $_tags = collect($tags)->map(function ($i) {
+            unset($i['id']);
+            return Tag::whereName($i['name'])->firstOrCreate($i)->id;
+        })->values()->all();
+        collect($products)->each(function (Product $product) use ($_tags) {
+            $product->tags()->syncWithoutDetaching($_tags);
+        });
+    }
+
     private function createTags(Product $product) {
         $tags = [];
         array_push($tags, ['name' => $product->product_name]);

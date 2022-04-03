@@ -410,7 +410,7 @@
         computed: {
             transfers() {
                 return this.$store.getters.transfers.filter(s => {
-                    if (this.isSeller) {
+                    if (this.isSeller || this.IS_FRANCHISE) {
                         return +s.child_store_id === +this.user.store_id || +s.parent_store_id === +this.user.store_id;
                     }
                     return s;

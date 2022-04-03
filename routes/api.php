@@ -230,6 +230,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::prefix('products')->group(function () {
+            Route::post('tags', [ProductController::class, 'setProductTags']);
             Route::get('seller/earning', [ProductController::class, 'getProductSellerEarning']);
             Route::post('seller/earning', [ProductController::class, 'setProductSellerEarning']);
             Route::get('search', [ProductController::class, 'search']);

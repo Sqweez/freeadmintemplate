@@ -72,12 +72,12 @@ class ProductSku extends Model
     const PRODUCT_SKU_WITH_ADMIN_LIST =  [
         'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_name_web,is_kaspi_visible',
         'product.category', 'product.manufacturer', 'product.attributes', 'product.price',
-        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'margin_type'
+        'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'margin_type',
     ];
 
     const PRODUCT_SKU_MODERATOR_LIST = [
         'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_description,product_name_web',
-        'product.category', 'product.manufacturer', 'product.attributes',
+        'product.category', 'product.manufacturer', 'product.attributes', 'product.tags',
         'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'product.product_images', 'margin_type'
     ];
 

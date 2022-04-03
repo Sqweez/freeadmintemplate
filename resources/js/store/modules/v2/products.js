@@ -15,7 +15,7 @@ import {
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
 import axios from 'axios';
-import {changeProductCount, getMarginTypes, setMarginTypes, updateMarginTypes} from "@/api/products";
+import {changeProductCount, getMarginTypes, setMarginTypes, setProductTags, updateMarginTypes} from "@/api/products";
 import ACTIONS from "@/store/actions";
 import {getArrivals} from "@/api/arrivals";
 import store from "@/store";
@@ -49,6 +49,16 @@ const getters = {
     PRODUCT_v2: state => state.product_v2,
     CERTIFICATES: s => s.certificates,
     MODERATOR_PRODUCTS: s => s.moderator_products,
+    MAIN_MODERATOR_PRODUCTS: state => {
+        const array = [];
+        return state.moderator_products.filter(product => {
+            if (array.findIndex(a => a.product_id === product.product_id) === -1) {
+                array.push(product);
+                return true;
+            }
+            return false;
+        });
+    },
     PRODUCT_BALANCE: s => s.product_balance,
     PRODUCT_EARNINGS: s => s.product_earnings,
     MARGIN_TYPES: s => s.margin_types,
@@ -435,6 +445,12 @@ const actions = {
         await updateMarginTypes(payload);
         this.$loading.disable();
         dispatch(ACTIONS.GET_MARGIN_TYPES);
+    },
+    async [ACTIONS.SET_TAGS] ({commit, dispatch}, payload) {
+        this.$loading.enable();
+        await setProductTags(payload);
+        await dispatch('GET_MODERATOR_PRODUCTS');
+        this.$loading.disable();
     }
 };
 

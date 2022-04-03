@@ -30,7 +30,7 @@ class ProductController extends Controller
      * Получение всех товаров
      * */
 
-    public function index() {
+    public function index(Request $request) {
         return ProductsResource::collection(ProductService::all());
     }
 
@@ -305,5 +305,12 @@ class ProductController extends Controller
         collect($types)->each(function ($type) {
             MarginType::whereKey($type['id'])->update($type);
         });
+    }
+
+    public function setProductTags(Request $request) {
+        $tags = $request->get('tags');
+        $products = Product::find($request->get('products'));
+        ProductService::attachTags($products, $tags);
+        return response([], 200);
     }
 }

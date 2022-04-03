@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'login' => $this->login,
             'role_id' => $this->role_id,
             'role' => $this->role->role_name,
-            'store_slug' => Str::slug($this->store->city),
+            'store_slug' => Str::slug($this->store->city_name->name),
             'token' => $this->token,
             'store' => $this->store,
         ];

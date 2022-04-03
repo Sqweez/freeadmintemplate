@@ -7,16 +7,16 @@
             <v-col sm="3" lg="3" md="3" v-if="!IS_PARTNER_SELLER">
                 <Weather/>
             </v-col>
-            <v-col sm="9" lg="9" md="9" v-if="CAN_SALE || IS_OBSERVER">
+            <v-col sm="9" lg="9" md="9" v-if="CAN_SALE || IS_OBSERVER || !IS_FRANCHISE">
                 <SalesRating/>
             </v-col>
-            <v-col sm="12" v-if="CAN_SALE">
+            <v-col sm="12" v-if="CAN_SALE && !IS_FRANCHISE">
                 <TasksWidget />
             </v-col>
             <v-col sm="12" lg="12" md="12" v-if="CAN_SALE">
                 <PlanWidget/>
             </v-col>
-            <v-col sm="12" lg="12" md="12" v-if="CAN_SALE">
+            <v-col sm="12" lg="12" md="12" v-if="CAN_SALE && !IS_FRANCHISE">
                 <BrandsWidget/>
             </v-col>
             <!--<v-col sm="9" lg="9" md="9">
