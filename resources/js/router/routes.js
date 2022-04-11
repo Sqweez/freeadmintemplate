@@ -275,7 +275,8 @@ const routes = [
                 IS_SELLER: true,
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
-                IS_MARKETOLOG: true
+                IS_MARKETOLOG: true,
+                IS_FRANCHISE: true
             },
         },
         component: Promocodes

@@ -157,8 +157,18 @@
                         </v-btn>
                     </download-excel>
                 </div>
+                <v-select
+                    :items="cities"
+                    item-text="name"
+                    item-value="id"
+                    v-model="cityId"
+                />
+                <v-checkbox
+                    label="Полностью неактивные тренера"
+                    v-model="fullyInactive"
+                />
                 <v-data-table
-                    :items="inactiveTrainers"
+                    :items="inactiveTrainersList"
                     :headers="headers"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
@@ -200,6 +210,7 @@
     import axiosClient from "@/utils/axiosClient";
     export default {
         data: () => ({
+            fullyInactive: false,
             months: [],
             date: null,
             trainers: [],
@@ -209,6 +220,7 @@
             finish: null,
             finishMenu: null,
             inactiveTrainers: [],
+            cityId: -1,
             headers: [
                 {
                     text: 'Имя',
@@ -225,6 +237,10 @@
                 {
                     text: 'Есть продажи',
                     value: 'without_partner_sales'
+                },
+                {
+                    text: 'Город',
+                    value: 'city.name'
                 }
             ],
             fields: [
@@ -265,8 +281,20 @@
             }
         },
         computed: {
+            inactiveTrainersList () {
+                let trainers = this.inactiveTrainers;
+                if (this.fullyInactive) {
+                    trainers = trainers.filter(i => i.without_own_sales && i.without_partner_sales);
+                }
+
+                if (this.cityId !== -1) {
+                    trainers = trainers.filter(i => i.client_city == this.cityId);
+                }
+
+                return trainers;
+            },
             jsonData() {
-                return this.inactiveTrainers.map((client, key) => {
+                return this.inactiveTrainersList.map((client, key) => {
                     return {
                         key: client.id,
                         client_name: client.client_name,
@@ -275,6 +303,9 @@
                         without_partner_sales: !client.without_partner_sales ? 'Да' : 'Нет',
                     };
                 });
+            },
+            cities () {
+                return [{id: -1, name: 'Все'}, ...this.$store.getters.cities];
             },
             jsonFields() {
                 const fields = this.selectedFields.map((field) => {

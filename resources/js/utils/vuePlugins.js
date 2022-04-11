@@ -27,6 +27,9 @@ export default {
                 $file() {
                     return new FileService();
                 },
+                $user () {
+                    return this.$store.getters.USER;
+                },
                 isSeller() {
                     return this.$store.getters.IS_SELLER;
                 },

@@ -78,7 +78,7 @@ class KaspiController extends Controller {
                 'availabilities' => collect($stores)->map(function ($store) use ($product) {
                     return ['available' => collect($product['batches'])->filter(function ($item) use ($store) {
                         return $item['store_id'] === $store['id'];
-                    })->count() > 0 ? 'yes' : 'no', 'storeId' => 'PP' . $store['id']];
+                    })->count() > 0 ? 'yes' : 'no', 'storeId' => 'PP' . $store['id'] == 14 ? '6' : $store['id']];
                 })];
         });
     }

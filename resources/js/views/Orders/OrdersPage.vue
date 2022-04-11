@@ -308,10 +308,14 @@
         },
         computed: {
             orders() {
+                let orders = this.$store.getters.ORDERS;
+                if (this.IS_FRANCHISE) {
+                   orders = orders.filter(o => o.city == this.$user.store.city_id);
+                }
                 if (this.statusFilter === -2) {
-                    return this.$store.getters.ORDERS;
+                    return orders;
                 } else {
-                    return this.$store.getters.ORDERS.filter(order => order.status === this.statusFilter);
+                    return orders.filter(order => order.status === this.statusFilter);
                 }
             }
         },

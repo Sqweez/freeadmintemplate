@@ -616,7 +616,8 @@ class AnalyticsController extends Controller
         $finish = Carbon::parse($request->get('finish'));
         $clients =  Client::query()
             ->where('is_partner', 1)
-            ->select(['client_name', 'client_phone', 'id', 'is_partner'])
+            ->with('city')
+            ->select(['client_name', 'client_phone', 'id', 'is_partner', 'client_city'])
             ->get();
 
         $ownSales = Sale::query()
@@ -650,9 +651,10 @@ class AnalyticsController extends Controller
             }, 0);
             $client['without_own_sales'] = $_ownSales->count() === 0;
             $client['without_partner_sales'] = $_partnerSales->count() === 0;
+            $client['total'] = $client['own_sales'] + $client['partner_sales'];
             return $client;
         })->filter(function ($client) {
             return $client['without_own_sales'] || $client['without_partner_sales'];
-        })->values();
+        })->values()->sortByDesc('sum')->values();
     }
 }

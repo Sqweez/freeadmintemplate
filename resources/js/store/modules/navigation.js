@@ -997,6 +997,16 @@ const navigationModule = {
                 url: '/reports',
                 icon: 'report',
             },
+            {
+                title: 'Интернет-магазин',
+                url: '/shop/orders',
+                icon: 'report'
+            },
+            {
+                title: 'Промокоды',
+                url: '/promocode',
+                icon: 'report'
+            }
         ],
     },
     getters: {
