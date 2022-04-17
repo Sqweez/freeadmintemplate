@@ -131,7 +131,10 @@
                         :items-per-page.sync="itemsPerPage"
                     >
                         <template v-slot:item.tags="{item}">
-                            <v-chip class="ml-2" v-for="tag of item.tags" :key="`${item.id}-${tag.name}${tag.id}`">
+                            <v-chip class="ml-2" v-for="tag of item.tags" :key="`${item.id}-${tag.name}${tag.id}`"  close
+                                    link
+                                    pill
+                                    @click:close="removeTagProduct(item.product_id, tag)">
                                 {{ tag.name }}
                             </v-chip>
                         </template>
@@ -257,6 +260,10 @@ export default {
     methods: {
         removeTag (idx) {
             this.tags.splice(idx, 1);
+        },
+        async removeTagProduct (product_id, tag) {
+            await this.$store.dispatch(ACTIONS.REMOVE_TAG, { product_id, tag_id: tag.id });
+            this.$toast.success('Тег удален!');
         },
         createTag () {
             if (!this.newTag.length) {

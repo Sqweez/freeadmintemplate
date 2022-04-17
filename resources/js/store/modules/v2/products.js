@@ -10,7 +10,7 @@ import {
     updateProductSku,
     getModeratorProducts,
     getProductBalance,
-    createProductSaleEarnings, getProductSaleEarnings
+    createProductSaleEarnings, getProductSaleEarnings, removeTagFromProduct
 } from "@/api/v2/products";
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
@@ -193,6 +193,14 @@ const mutations = {
             return s;
         })
     },
+    SET_PRODUCT_TAGS (state, {product_id, tag_id}) {
+        state.moderator_products = state.moderator_products.map(product => {
+            if (product.product_id === product_id) {
+                product.tags = product.tags.filter(t => t.id !== tag_id);
+            }
+            return product;
+        })
+    }
 };
 
 const actions = {
@@ -451,6 +459,17 @@ const actions = {
         await setProductTags(payload);
         await dispatch('GET_MODERATOR_PRODUCTS');
         this.$loading.disable();
+    },
+    async [ACTIONS.REMOVE_TAG] ({ commit, dispatch }, payload) {
+        try {
+            this.$loading.enable();
+            await removeTagFromProduct(payload);
+            commit('SET_PRODUCT_TAGS', payload);
+        } catch (e) {
+            console.log(e);
+        } finally {
+            this.$loading.disable();
+        }
     }
 };
 

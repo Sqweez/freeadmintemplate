@@ -313,4 +313,10 @@ class ProductController extends Controller
         ProductService::attachTags($products, $tags);
         return response([], 200);
     }
+
+    public function deleteProductTag(Request $request) {
+        $product = Product::find($request->get('product_id'));
+        $product->tags()->detach($request->get('tag_id'));
+        return response([]);
+    }
 }

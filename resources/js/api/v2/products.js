@@ -57,3 +57,7 @@ export async function getProductSaleEarnings() {
 export async function createProductSaleEarnings(payload) {
     return await axios.post(`/api/v2/products/seller/earning`, payload);
 }
+
+export async function removeTagFromProduct (payload) {
+    return await axios.delete(`/api/v2/products/tags?${new URLSearchParams(payload).toString()}`);
+}
