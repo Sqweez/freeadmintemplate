@@ -21,6 +21,7 @@ use App\Sale;
 use App\SaleProduct;
 use App\Store;
 use App\User;
+use App\UserRole;
 use App\v2\Models\Booking;
 use App\v2\Models\BrandMotivation;
 use App\v2\Models\Certificate;
@@ -107,10 +108,20 @@ class SaleController extends Controller {
 
     public function getTotal(Request $request) {
         $dateFilter = $request->get('date_filter');
-        $sales = Sale::whereDate('created_at', '>=', $dateFilter)
+        $role = $request->get('role');
+        $store_id = $request->get('store_id');
+
+        $salesQuery = Sale::query()
+            ->whereDate('created_at', '>=', $dateFilter)
             ->with(['products'])
-            ->with(['certificate'])
-            ->get();
+            ->with(['certificate']);
+
+        if ($role === UserRole::ROLE_FRANCHISE) {
+            $salesQuery = $salesQuery
+                ->where('store_id', $store_id);
+        }
+
+        $sales = $salesQuery->get();
 
         $bookingSales = collect([
             9999 => [

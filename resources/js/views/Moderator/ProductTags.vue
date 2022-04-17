@@ -93,6 +93,15 @@
                                 label="Категория"
                             />
                         </v-col>
+                        <v-col cols="12" xl="4" v-if="categoryId !== -1 && subcategories.length > 0">
+                            <v-autocomplete
+                                :items="subcategories"
+                                item-text="subcategory_name"
+                                v-model="subcategoryId"
+                                item-value="id"
+                                label="Подкатегория"
+                            />
+                        </v-col>
                         <v-col cols="12" xl="4">
                             <v-autocomplete
                                 :items="manufacturers"
@@ -185,6 +194,12 @@ export default {
         storeFilter() {
             this.cart = [];
         },
+        categoryId: {
+            immediate: true,
+            handler: function (value) {
+                this.subcategoryId = -1;
+            }
+        }
     },
     mixins: [product, product_search, cart],
     data: () => ({
@@ -325,6 +340,9 @@ export default {
             }
             if (this.marginTypeFilter !== -1) {
                 products = products.filter(p => p.margin_type.id === this.marginTypeFilter);
+            }
+            if (this.subcategoryId !== -1) {
+                products = products.filter(product => product.subcategory_id === this.subcategoryId);
             }
             return products.map(p => {
                 p.quantity = 10000;

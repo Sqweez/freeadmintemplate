@@ -58,8 +58,13 @@ const reportsModule = {
         }
     },
     actions: {
-        async getStoresReport({commit}, payload = moment().format('YYYY-MM-DD')) {
-            const {data} = await getStoreReports(payload);
+        async getStoresReport({commit, getters}, payload = moment().format('YYYY-MM-DD')) {
+            const _payload = {
+                date_filter: payload,
+                role: getters.CURRENT_ROLE,
+                store_id: getters.USER.store_id
+            };
+            const {data} = await getStoreReports(_payload);
             commit('setStoresReport', data);
         },
         async [ACTIONS.GET_REPORTS] ({commit, getters}, payload) {

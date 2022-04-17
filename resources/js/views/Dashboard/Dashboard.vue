@@ -19,35 +19,6 @@
             <v-col sm="12" lg="12" md="12" v-if="CAN_SALE && !IS_FRANCHISE">
                 <BrandsWidget/>
             </v-col>
-            <!--<v-col sm="9" lg="9" md="9">
-                <v-card>
-                    <v-card-title>Баланс</v-card-title>
-                    <v-card-text>
-                        <v-list>
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title>
-                                        {{ store.balance | priceFilters }}
-                                    </v-list-item-title>
-                                    <v-list-item-subtitle>
-                                        Собственный баланс
-                                    </v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title>
-                                        {{ store.iron_balance | priceFilters }}
-                                    </v-list-item-title>
-                                    <v-list-item-subtitle>
-                                        Баланс IRON-ADDICTS
-                                    </v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-list>
-                    </v-card-text>
-                </v-card>
-            </v-col>-->
         </v-row>
     </div>
 

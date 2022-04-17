@@ -22,7 +22,7 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS || IS_OBSERVER || IS_MARKETOLOG">
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS || IS_OBSERVER || IS_MARKETOLOG || IS_FRANCHISE">
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
@@ -132,13 +132,13 @@
                 'USER',
                 'IS_OBSERVER'
             ]),
-            totalSum() {
+            totalSum () {
                 const values = Object.values(this.STORES_REPORTS);
                 return values.reduce((a, c) => {
                     return c.amount + a;
                 }, 0);
             },
-            stores() {
+            stores () {
                 return [
                     ...this.$store.getters.shops,
                     ...this.$store.getters.warehouses

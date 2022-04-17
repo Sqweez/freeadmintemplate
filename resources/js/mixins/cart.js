@@ -3,6 +3,7 @@ export default {
         storeFilter: null,
         manufacturerId: -1,
         categoryId: -1,
+        subcategoryId: -1,
         hideNotInStock: true,
     }),
     watch: {
@@ -105,6 +106,24 @@ export default {
                     name: 'Все'
                 }, ...this.$store.getters.categories
             ];
+        },
+        subcategories () {
+            if (this.categoryId !== -1) {
+                const category = this.categories.find(c => c.id === this.categoryId);
+                if (category) {
+                    return [
+                        {
+                            subcategory_name: 'Все',
+                            id: -1,
+                        },
+                        ...category.subcategories
+                    ];
+                } else {
+                    return [];
+                }
+            } else {
+                return [];
+            }
         },
         emptyCart() {
             return !!!this.cart.length;

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from "@/store";
 
 axios.defaults.headers = {
     'Cache-Control': 'no-cache',
@@ -33,8 +34,8 @@ export async function cancelSale(payload, id) {
     return await axios.post(`/api/sales/${id}/cancel`, payload);
 }
 
-export async function getStoreReports(date_filter) {
-    return await axios.get(`/api/reports/total?date_filter=${date_filter}`)
+export async function getStoreReports({date_filter, store_id, role}) {
+    return await axios.get(`/api/reports/total?date_filter=${date_filter}&store_id=${store_id}&role=${role}`)
 }
 
 export async function getPlanReports() {

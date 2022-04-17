@@ -19,4 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserRole extends Model
 {
     protected  $guarded = [];
+
+    const ROLE_FRANCHISE = 'franchise';
+    const ROLE_ADMIN = 'admin';
 }
