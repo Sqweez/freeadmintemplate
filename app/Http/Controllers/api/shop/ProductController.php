@@ -21,9 +21,7 @@ class ProductController extends Controller {
         $user_token = $request->get('user_token');
         $all_products = $request->has('all_products');
         if ($all_products) {
-            return ProductsResource::collection(
-                $this->getAllProducts($request->get('category'))
-            );
+            return $this->getAllProducts($request->get('category'));
         } else {
             return $this->getFilteredProducts($query, $store_id, $user_token);
         }

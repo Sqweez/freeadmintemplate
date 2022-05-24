@@ -180,6 +180,7 @@ return [
         App\Providers\ProductServiceProvider::class,
         App\Providers\CartServiceProvider::class,
         App\Providers\TelegramServiceProvider::class,
+        Spatie\Backup\BackupServiceProvider::class,
     ],
 
     /*
