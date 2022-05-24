@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Services;
 use Illuminate\Http\Request;
 use Storage;
 use Intervention\Image\Facades\Image;
+
 class ImageService {
 
     public function generateThumb(Request $request) {

@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Http\Controllers\Services\YandexDiskService;
+use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\StreamInterface;
 use Spatie\Backup\Events\BackupZipWasCreated;
 
 class BackupCreatedListener
@@ -21,10 +23,10 @@ class BackupCreatedListener
      * Handle the event.
      *
      * @param BackupZipWasCreated $event
-     * @return \Psr\Http\Message\StreamInterface
+     * @return StreamInterface
+     * @throws GuzzleException
      */
-    public function handle(BackupZipWasCreated $event)
-    {
+    public function handle(BackupZipWasCreated $event): StreamInterface {
         $pathToZip = $event->pathToZip;
         $filename = explode("/", $pathToZip);
         $path = 'iron_backups/' . "backup-" . collect($filename)->last();
