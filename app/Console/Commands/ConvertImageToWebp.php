@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\ProductImage;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class ConvertImageToWebp extends Command
 {
@@ -37,12 +39,36 @@ class ConvertImageToWebp extends Command
      */
     public function handle()
     {
-        $files = $this->retrieveNonWebpImages();
+        $images = $this->retrieveNonWebpImages();
+        $images->each(function ($image, $k) {
+            $this->convertImage($image, $k);
+        });
     }
 
-    public function retrieveNonWebpImages(): array {
+    private function retrieveNonWebpImages(): Collection {
         $files = \Storage::disk('public')->files('products');
-        print_r($files);
-        return $files;
+        return collect($files)
+            ->filter(function ($file) {
+                $ext = \Arr::last(explode('.', $file));
+                return $ext === 'png';
+            });
+    }
+
+    private function convertImage(string $file, $key) {
+        $image = \Storage::get('public/' . $file);
+        try {
+            $image = \Image::make(imagecreatefrompng($image))->encode('webp');
+            $path = public_path('storage/products/');
+            $fileName = \File::name($file);
+            $image->save($path . $fileName . '.webp');
+            ProductImage::whereProductImage($file)
+                ->update(
+                    [
+                        'product_image' => 'products/' . $fileName . '.webp'
+                    ]
+                );
+        } catch (\Exception $exception) {
+            $this->error("Exception at " . $key);
+        }
     }
 }
