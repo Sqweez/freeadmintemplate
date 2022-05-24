@@ -9,6 +9,7 @@ use App\Http\Resources\shop\ProductsResource;
 use App\Manufacturer;
 use App\v2\Models\ProductSku;
 use App\v2\Models\Product;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,7 @@ class ProductController extends Controller {
                 $this->getAllProducts($request->get('category'))
             );
         } else {
-            return $this->getFilteredProducts($query, $store_id, $user_token, $all_products);
+            return $this->getFilteredProducts($query, $store_id, $user_token);
         }
     }
 
@@ -155,19 +156,21 @@ class ProductController extends Controller {
         $productQuery->whereHas('subcategory', function ($q) {
             return $q->where('is_site_visible', true);
         });
-        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
         $productQuery->orderBy('product_name');
-        return $productQuery->get();
+        return $productQuery
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product['id'],
+                    'slug' => \Str::slug($product['product_name'])
+                ];
+            });
     }
 
-    private function getFilteredProducts($query, $store_id, $user_token, $all_products = false) {
+    private function getFilteredProducts($query, $store_id, $user_token): AnonymousResourceCollection {
         $filters = $this->getFilterParametrs($query, $store_id);
-        if ($all_products) {
-            $products = $this->getAllProducts();
-        } else {
-            $products = $this->getProductWithFilter($filters, $store_id, $user_token)
-                ->paginate(36);
-        }
+        $products = $this->getProductWithFilter($filters, $store_id, $user_token)
+            ->paginate(36);
         return ProductsResource::collection(
             $products
         );
