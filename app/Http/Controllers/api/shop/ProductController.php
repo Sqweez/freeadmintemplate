@@ -18,7 +18,14 @@ class ProductController extends Controller {
         $query = $request->except('store_id');
         $store_id = intval($request->get('store_id', 1));
         $user_token = $request->get('user_token');
-        return $this->getFilteredProducts($query, $store_id, $user_token);
+        $all_products = $request->has('all_products');
+        if ($all_products) {
+            return ProductsResource::collection(
+                $this->getAllProducts($request->get('category'))
+            );
+        } else {
+            return $this->getFilteredProducts($query, $store_id, $user_token, $all_products);
+        }
     }
 
     public function filters(Request $request) {
@@ -74,7 +81,7 @@ class ProductController extends Controller {
             Product::FILTER_BRANDS => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_BRANDS] ?? '')), 'strlen')),
             Product::FILTER_PRICES => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_PRICES] ?? '')), 'strlen')),
             Product::FILTER_IS_HIT => isset($query[Product::FILTER_IS_HIT]) ? ($query[Product::FILTER_IS_HIT] === 'true' ? 'true' : 'false') : 'false',
-           // Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? $this->prepareSearchString($query[Product::FILTER_SEARCH]) : ''
+            // Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? $this->prepareSearchString($query[Product::FILTER_SEARCH]) : ''
             // @TODO 2022-04-17T22:12:44 maybe rework it
             Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? str_replace(' ', '%', $query[Product::FILTER_SEARCH]) . "%" : ''
         ];
@@ -139,11 +146,30 @@ class ProductController extends Controller {
         return $productQuery;
     }
 
-    private function getFilteredProducts($query, $store_id, $user_token) {
+    private function getAllProducts($category_id) {
+        $productQuery = Product::query()->whereIsSiteVisible(true);
+        $productQuery->whereCategoryId($category_id);
+        $productQuery->whereHas('category', function ($q) {
+            return $q->where('is_site_visible', true);
+        });
+        $productQuery->whereHas('subcategory', function ($q) {
+            return $q->where('is_site_visible', true);
+        });
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
+        $productQuery->orderBy('product_name');
+        return $productQuery->get();
+    }
+
+    private function getFilteredProducts($query, $store_id, $user_token, $all_products = false) {
         $filters = $this->getFilterParametrs($query, $store_id);
+        if ($all_products) {
+            $products = $this->getAllProducts();
+        } else {
+            $products = $this->getProductWithFilter($filters, $store_id, $user_token)
+                ->paginate(36);
+        }
         return ProductsResource::collection(
-            $this->getProductWithFilter($filters, $store_id, $user_token)
-                ->paginate(36)
+            $products
         );
     }
 
@@ -204,18 +230,8 @@ class ProductController extends Controller {
             return $query->where('user_token', $user_token);
         }]);
 
-        $productQuery->whereHas('batches', function ($q) use ($store_id) {
-            if ($store_id === -1) {
-                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
-            } else {
-                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
-            }
-        })->with(['batches' => function ($q) use ($store_id) {
-            if ($store_id === -1) {
-                return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
-            } else {
-                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
-            }
+        $productQuery->with(['sku.batches' => function ($q) {
+            return $q->where('quantity', '>', 0);
         }]);
 
         $products = $productQuery->get();
@@ -224,7 +240,30 @@ class ProductController extends Controller {
             $_products = $products->filter(function ($p) use ($category) {
                 return $category['id'] === $p['category_id'];
             });
-            $category['products'] = ProductsResource::collection($_products);
+            $category['products'] = collect(ProductsResource::collection($_products))
+                ->map(function ($i) use ($_products) {
+                    $needle = $_products->where('id', $i['product_id'])->first();
+                    // @TODO 2022-05-24T22:05:44 ugly rework
+                    $batches = [];
+                    foreach ($needle['sku'] as $item) {
+                        foreach ($item['batches'] as $batch) {
+                            $batches[] = $batch;
+                        }
+                    }
+                    $batches = collect($batches)
+                        ->groupBy('store_id')
+                        ->map(function ($v, $k) {
+                            return [
+                                'store_id' => $k,
+                                'quantity' => collect($v)->reduce(function ($a, $c) {
+                                    return $a + $c['quantity'];
+                                }, 0)
+                            ];
+                        })
+                        ->values();
+                    $i['batches'] = $batches;
+                    return $i;
+                });
             return $category;
         })->filter(function ($category) {
             return count($category['products']) > 0;
