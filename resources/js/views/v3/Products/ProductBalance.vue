@@ -65,7 +65,7 @@
             stores() {
                 return this.$store.getters.stores.filter(s => {
                     if (this.IS_FRANCHISE) {
-                        return s.store_id == this.$user.store_id;
+                        return s.id == this.$user.store_id;
                     }
                     return true;
                 })

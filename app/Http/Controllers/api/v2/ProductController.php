@@ -187,10 +187,10 @@ class ProductController extends Controller
         ])->whereKey($category)->first());
     }
 
-    public function getProductBalance(): array {
+    public function getProductBalance() {
 
         $userRole = auth()->user()->role ?? null;
-        $isFranchise = $userRole && $userRole->name === 'Франшиза';
+        $isFranchise = $userRole && $userRole->role_name === 'Франшиза';
         $batches = ProductBatch::query()
             ->when($isFranchise, function ($builder) {
                 return $builder->where('store_id', auth()->user()->store_id);
@@ -234,11 +234,11 @@ class ProductController extends Controller
     public function moderatorProducts() {
         return ModeratorProducts::collection(
             ProductSku::query()
-            ->with(ProductSku::PRODUCT_SKU_MODERATOR_LIST)
-            ->orderBy('product_id')
-            ->orderBy('id')
-            ->get()
-            ->sortBy('product_name')
+                ->with(ProductSku::PRODUCT_SKU_MODERATOR_LIST)
+                ->orderBy('product_id')
+                ->orderBy('id')
+                ->get()
+                ->sortBy('product_name')
         );
     }
 
