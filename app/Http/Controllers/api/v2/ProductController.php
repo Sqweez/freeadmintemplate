@@ -16,7 +16,9 @@ use App\ProductBatch;
 use App\v2\Models\ProductSaleEarning;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Validator;
 use ProductService;
 
@@ -161,7 +163,7 @@ class ProductController extends Controller
             ->first();
     }
 
-    public function related(Request $request) {
+    public function related(Request $request): AnonymousResourceCollection {
         return RelatedProductsResource::collection(Category::with(
             [
                 'relatedProducts', 'relatedProducts.product', 'relatedProducts.product.manufacturer', 'relatedProducts.product.category'
@@ -185,8 +187,14 @@ class ProductController extends Controller
         ])->whereKey($category)->first());
     }
 
-    public function getProductBalance() {
+    public function getProductBalance(): array {
+
+        $userRole = auth()->user()->role ?? null;
+        $isFranchise = $userRole && $userRole->name === 'Франшиза';
         $batches = ProductBatch::query()
+            ->when($isFranchise, function ($builder) {
+                return $builder->where('store_id', auth()->user()->store_id);
+            })
             ->where('quantity', '>', 0)
             ->with('product', 'product.product:id,product_price,product_name')
             ->get();
@@ -210,12 +218,12 @@ class ProductController extends Controller
             return collect($items)->reduce(function ($a, $c) {
                 return $a + $c['purchase_price'] * $c['quantity'];
             }, 0);
-        });
+        })->toArray();
         $productPrices = $batches->map(function ($items, $key) {
             return collect($items)->reduce(function ($a, $c) {
                 return $a + $c['product_price'] * $c['quantity'];
             }, 0);
-        });
+        })->toArray();
 
         return [
             'purchase_prices' => $purchasePrices,

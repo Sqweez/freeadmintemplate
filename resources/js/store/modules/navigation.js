@@ -998,6 +998,11 @@ const navigationModule = {
                 icon: 'report',
             },
             {
+                title: 'Баланс товаров',
+                url: '/products/balance',
+                icon: 'report',
+            },
+            {
                 title: 'Интернет-магазин',
                 url: '/shop/orders',
                 icon: 'report'

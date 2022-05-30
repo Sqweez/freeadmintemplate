@@ -17,6 +17,13 @@ class AuthorizationMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $header = $request->header('Authorization', null);
+        if ($header && auth()->guest()) {
+            $user = User::whereToken($header)->first();
+            if ($user) {
+                \Auth::login($user);
+            }
+        }
         return $next($request);
         if (!$request->hasHeader('Authorization')) {
             return response()->json(['error' => 'Access denied'], 403);

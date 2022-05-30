@@ -55,9 +55,9 @@ class ConvertImageToWebp extends Command
     }
 
     private function convertImage(string $file, $key) {
-        $image = \Storage::get('public/' . $file);
+        $image = \Storage::disk('public')->get($file);
         try {
-            $image = \Image::make(imagecreatefrompng($image))->encode('webp');
+            $image = \Image::make($image)->stream('webp', 100);
             $path = public_path('storage/products/');
             $fileName = \File::name($file);
             $image->save($path . $fileName . '.webp');
@@ -68,6 +68,7 @@ class ConvertImageToWebp extends Command
                     ]
                 );
         } catch (\Exception $exception) {
+            print_r($exception->getMessage());
             $this->error("Exception at " . $key);
         }
     }

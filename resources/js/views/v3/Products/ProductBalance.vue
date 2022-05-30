@@ -17,10 +17,10 @@
                         <tbody>
                             <tr v-for="store of stores" :key="`store-id-${store.id}`">
                                 <td>{{ store.name }}</td>
-                                <td>{{ purchasePrices[store.id] | priceFilters }}</td>
-                                <td>{{ productPrices[store.id] | priceFilters }}</td>
+                                <td>{{ (purchasePrices[store.id] || 0) | priceFilters }}</td>
+                                <td>{{ (productPrices[store.id] || 0) | priceFilters }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG">
                                 <td>
                                     Поступления:
                                 </td>
@@ -31,7 +31,7 @@
                                     {{ arrivalProductPrice | priceFilters }}
                                 </td>
                             </tr>
-                            <tr>
+                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG">
                                 <td>
                                     Перемещения:
                                 </td>
@@ -42,7 +42,7 @@
                                     {{ transferProductPrice | priceFilters }}
                                 </td>
                             </tr>
-                            <tr>
+                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG">
                                 <td>
                                     <b>Итого:</b>
                                 </td>
@@ -63,7 +63,12 @@
         methods: {},
         computed: {
             stores() {
-                return this.$store.getters.stores;
+                return this.$store.getters.stores.filter(s => {
+                    if (this.IS_FRANCHISE) {
+                        return s.store_id == this.$user.store_id;
+                    }
+                    return true;
+                })
             },
             purchasePrices() {
                 return this.$store.getters.PRODUCT_BALANCE.purchase_prices;

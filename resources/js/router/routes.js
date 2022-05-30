@@ -323,7 +323,8 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true,
-                IS_OBSERVER: true
+                IS_OBSERVER: true,
+                IS_FRANCHISE: true
             }
         },
         component: ProductBalance
