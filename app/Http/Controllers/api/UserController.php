@@ -78,6 +78,7 @@ class UserController extends Controller
         return response()->json([
             'status' => 'success',
             'user' => new UserResource($user),
+            'token' => $user->token,
         ], 200);
     }
 
@@ -88,6 +89,7 @@ class UserController extends Controller
             return response()->json([
                 'status' => 'success',
                 'user' => new UserResource($user),
+                'token' => $user->token,
             ], 200);
         } else {
             return response()->json(['message' => 'Неверные логин и пароль!'], 500);

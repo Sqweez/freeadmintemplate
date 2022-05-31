@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\v2\Models\SeoText;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -39,5 +41,9 @@ class Subcategory extends Model
 
     public function scopeSite($q) {
         return $q->where('is_site_visible', true);
+    }
+
+    public function seoText(): MorphOne {
+        return $this->morphOne(SeoText::class, 'entity');
     }
 }

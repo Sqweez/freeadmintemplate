@@ -25,6 +25,7 @@ class CategoryResource extends JsonResource
             'subcategories' => $subcategories,
             'category_img' => $this->category_img,
             'category_slug' => $this->category_slug,
+            'seo_text' => $this->seoText
         ];
     }
 }

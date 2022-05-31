@@ -68,7 +68,7 @@ const authModule = {
             this.$loading.enable();
             try {
                 const response = await login(payload);
-                localStorage.setItem('token', response.data.user.token);
+                localStorage.setItem('token', response.data.token);
                 window.location = '/';
             }
             catch (e) {
@@ -96,7 +96,7 @@ const authModule = {
         },
         async SET_AUTH_DATA({commit, dispatch}, response) {
             if (response.data.status === 'success') {
-                const token = response.data.user.token;
+                const token = response.data.token;
                 const user = response.data.user;
                 commit('SET_TOKEN', token);
                 commit('SET_USER', user);

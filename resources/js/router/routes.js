@@ -65,6 +65,7 @@ import SalesSchedule from "@/views/Analytics/SalesSchedule";
 import ProductMarginTypes from "@/views/Economy/ProductMarginTypes";
 import TransferUpdate from "@/views/Transfers/TransferUpdate";
 import ProductTags from "@/views/Moderator/ProductTags";
+import SeoCategory from "@/views/SEO/SeoCategory";
 
 const routes = [
     {
@@ -672,6 +673,10 @@ const routes = [
                 IS_MARKETOLOG: true
             }
         }
+    },
+    {
+        path: '/seo/category',
+        component: SeoCategory
     }
 ];
 

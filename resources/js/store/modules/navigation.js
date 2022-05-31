@@ -242,6 +242,10 @@ const navigationModule = {
                     {
                         title: 'Теги',
                         url: '/products/tags',
+                    },
+                    {
+                        title: 'SEO-категории',
+                        url: '/seo/category'
                     }
                 ]
             },
@@ -327,6 +331,11 @@ const navigationModule = {
                 icon: 'dashboard',
                 title: 'Теги',
                 url: '/products/tags',
+            },
+            {
+                icon: 'dashboard',
+                title: 'SEO-категории',
+                url: '/seo/category'
             }
         ],
         supplierMenu: [
@@ -546,6 +555,10 @@ const navigationModule = {
                         icon: 'dashboard',
                         title: 'Теги',
                         url: '/products/tags',
+                    },
+                    {
+                        title: 'SEO-категории',
+                        url: '/seo/category'
                     }
                 ]
             },

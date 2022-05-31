@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\v2\Models\SeoText;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Cache;
 use function foo\func;
 
@@ -68,6 +71,10 @@ class Category extends Model
 
     public function relatedProducts() {
         return $this->hasMany('App\v2\Models\RelatedProduct', 'category_id');
+    }
+
+    public function seoText(): MorphOne {
+        return $this->morphOne(SeoText::class, 'entity');
     }
 
     private function clearCache() {

@@ -30,7 +30,7 @@ const categoryModule = {
         }
     },
     actions: {
-        async [ACTIONS.GET_CATEGORIES] ({commit}, payload) {
+        async [ACTIONS.GET_CATEGORIES] ({commit}) {
             const categories = await getCategories();
             commit('setCategories', categories);
         },

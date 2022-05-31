@@ -51,6 +51,10 @@ class User extends Authenticatable
     use SoftDeletes;
     protected $guarded = [];
 
+    protected $hidden = [
+        'token'
+    ];
+
     const IRON_WEB_STORE = 2;
 
     public function setPasswordAttribute($password)

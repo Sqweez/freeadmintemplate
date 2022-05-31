@@ -4,6 +4,7 @@ use App\Http\Controllers\api\TransferController;
 use App\Http\Controllers\api\v2\ProductController;
 use App\Http\Controllers\api\v2\CertificateController;
 use App\Http\Controllers\api\v2\CompanionController;
+use App\Http\Controllers\api\v2\SeoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthorizationMiddleware;
 use App\Http\Controllers\api\v2\FavoriteController;
@@ -115,7 +116,6 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
     });
-
 
     Route::resource('category', 'api\CategoryController');
     Route::resource('attributes', 'api\AttributeController');
@@ -381,6 +381,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             // Route::get('/{product_id}', [ProductCo])
             Route::post('/', [CommentController::class, 'createComment']);
             Route::delete('/{id}', [CommentController::class, 'delete']);
+        });
+
+        Route::prefix('seo')->group(function () {
+            Route::post('text/{type}/{id}', [SeoController::class, 'storeText']);
         });
     });
 });

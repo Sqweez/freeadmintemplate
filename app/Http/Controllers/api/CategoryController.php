@@ -20,9 +20,18 @@ class CategoryController extends Controller {
      */
     public function index(Request $request) {
         if ($request->has('site')) {
-            return CategoryResource::collection(Category::where('is_site_visible', true)->with('subcategories')->get());
+            return CategoryResource::collection(
+                Category::where('is_site_visible', true)
+                    ->with('seoText')
+                    ->with('subcategories.seoText')
+                    ->get());
         }
-        return CategoryResource::collection(Category::with('subcategories')->get());
+        return CategoryResource::collection(
+            Category::query()
+                ->with('seoText')
+                ->with('subcategories.seoText')
+                ->get()
+        );
     }
 
 
@@ -98,6 +107,10 @@ class CategoryController extends Controller {
             $category->update(['subcategory_slug' => $category_slug]);
         }
         return $categories;
+    }
+
+    public function storeSeo(Request $request, $type, $id) {
+
     }
 
 }
