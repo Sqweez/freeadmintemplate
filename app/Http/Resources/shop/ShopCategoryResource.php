@@ -20,7 +20,8 @@ class ShopCategoryResource extends JsonResource
             'name' => $this->category_name,
             'subcategories' => $this->subcategories->where('is_site_visible', true)->toArray(),
             'category_img' => url('/') . Storage::url($this->category_img),
-            'category_slug' => $this->category_slug
+            'category_slug' => $this->category_slug,
+            'seo_text' => $this->seoText
         ];
     }
 }
