@@ -246,6 +246,10 @@ const navigationModule = {
                     {
                         title: 'SEO-категории',
                         url: '/seo/category'
+                    },
+                    {
+                        title: 'Доп категории',
+                        url: '/products/subcategories'
                     }
                 ]
             },
@@ -336,6 +340,11 @@ const navigationModule = {
                 icon: 'dashboard',
                 title: 'SEO-категории',
                 url: '/seo/category'
+            },
+            {
+                icon: 'dashboard',
+                title: 'Доп категории',
+                url: '/products/subcategories'
             }
         ],
         supplierMenu: [
@@ -559,6 +568,10 @@ const navigationModule = {
                     {
                         title: 'SEO-категории',
                         url: '/seo/category'
+                    },
+                    {
+                        title: 'Доп категории',
+                        url: '/products/subcategories'
                     }
                 ]
             },
@@ -898,6 +911,11 @@ const navigationModule = {
                 icon: 'dashboard',
                 title: 'Теги',
                 url: '/products/tags',
+            },
+            {
+                icon: 'dashboard',
+                title: 'Доп категории',
+                url: '/products/subcategories'
             },
             {
                 title: 'Интернет-магазин',

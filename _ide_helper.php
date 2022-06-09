@@ -14311,6 +14311,16 @@
          *
          * @static 
          */ 
+        public static function attachTags($products, $tags)
+        {
+                        /** @var \App\Http\Controllers\Services\ProductService $instance */
+                        return $instance->attachTags($products, $tags);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function updateProduct($product, $_attributes, $fields)
         {
                         /** @var \App\Http\Controllers\Services\ProductService $instance */
@@ -14433,6 +14443,7 @@
                     /**
          * 
          *
+         * @throws GuzzleException
          * @static 
          */ 
         public static function sendMessage($chat_id, $message)

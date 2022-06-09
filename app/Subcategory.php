@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property int $is_site_visible
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory site()
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereIsSiteVisible($value)
+ * @property-read SeoText|null $seoText
  */
 class Subcategory extends Model
 {

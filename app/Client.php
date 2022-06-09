@@ -74,6 +74,14 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereJob($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereLoyaltyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePhoto($value)
+ * @property string|null $birth_date
+ * @property string $gender
+ * @property-read mixed $current_month_sales_amount
+ * @property-read mixed $total_sales_amount
+ * @property-read Collection|\App\Sale[] $real_sales
+ * @property-read int|null $real_sales_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereBirthDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereGender($value)
  */
 class Client extends Model
 {

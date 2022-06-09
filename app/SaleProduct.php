@@ -33,6 +33,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $margin
  * @method static \Illuminate\Database\Eloquent\Builder|SaleProduct whereDiscount($value)
  * @property-read \App\ProductBatch $batch
+ * @property-read mixed $balance
+ * @property-read mixed $booking
+ * @property-read mixed $certificate
+ * @property-read mixed $final_sale_price
+ * @property-read mixed $kaspi_red
  */
 class SaleProduct extends Model
 {

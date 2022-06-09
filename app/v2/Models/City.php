@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $delivery_threshold
  * @method static \Illuminate\Database\Eloquent\Builder|City whereDeliveryCost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|City whereDeliveryThreshold($value)
+ * @property string $kaspi_city_id
+ * @method static \Illuminate\Database\Eloquent\Builder|City whereKaspiCityId($value)
  */
 class City extends Model
 {

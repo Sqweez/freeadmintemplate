@@ -66,6 +66,7 @@ import ProductMarginTypes from "@/views/Economy/ProductMarginTypes";
 import TransferUpdate from "@/views/Transfers/TransferUpdate";
 import ProductTags from "@/views/Moderator/ProductTags";
 import SeoCategory from "@/views/SEO/SeoCategory";
+import ProductSubcategories from "@/views/Moderator/ProductSubcategories";
 
 const routes = [
     {
@@ -677,6 +678,10 @@ const routes = [
     {
         path: '/seo/category',
         component: SeoCategory
+    },
+    {
+        path: '/products/subcategories',
+        component: ProductSubcategories
     }
 ];
 

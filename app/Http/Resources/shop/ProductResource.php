@@ -49,7 +49,8 @@ class ProductResource extends JsonResource
             'related_products' => ProductsResource::collection(Product::whereIn('id',
                 RelatedProduct::whereCategoryId($this->category_id)->get()->pluck('product_id')
             )->get()),
-            'comments' => CommentController::parseComments($this->comments)
+            'comments' => CommentController::parseComments($this->comments),
+            'manufacturer' => $this->manufacturer
         ];
     }
 }

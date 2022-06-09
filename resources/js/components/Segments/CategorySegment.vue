@@ -154,6 +154,7 @@
     import ACTIONS from '@/store/actions'
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import uploadFile from "@/api/upload";
+    import {VTextField} from "vuetify/lib";
 
     export default {
         components: {ConfirmationModal},

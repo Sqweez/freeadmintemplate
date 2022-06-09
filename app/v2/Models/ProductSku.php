@@ -60,6 +60,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read mixed $is_kaspi_visible
  * @property-read mixed $kaspi_product_price
  * @property-read mixed $product_name_web
+ * @property int $margin_type_id
+ * @property-read mixed $additional_subcategories
+ * @property-read \App\MarginType $margin_type
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSku whereMarginTypeId($value)
  */
 class ProductSku extends Model
 {
@@ -153,6 +157,10 @@ class ProductSku extends Model
 
     public function getSubcategoryAttribute() {
         return $this->product->subcategory;
+    }
+
+    public function getAdditionalSubcategoriesAttribute() {
+        return $this->product->additionalSubcategories;
     }
 
     public function getManufacturerAttribute() {

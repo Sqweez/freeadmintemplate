@@ -20,6 +20,7 @@ use App\Tag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -121,6 +122,14 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|\App\v2\Models\ProductSaleEarning[] $seller_earning
  * @property-read int|null $seller_earning_count
  * @method static Builder|Product whereProductNameWeb($value)
+ * @property-read Collection|Subcategory[] $additionalSubcategories
+ * @property-read int|null $additional_subcategories_count
+ * @property-read Collection|\App\v2\Models\ProductComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read mixed $stock_price
+ * @property-read Collection|\App\v2\Models\StockProducts[] $stocks
+ * @property-read int|null $stocks_count
+ * @method static Builder|Product ofStocks()
  */
 class Product extends Model
 {
@@ -228,6 +237,10 @@ class Product extends Model
                 'subcategory_name' => 'Неизвестно',
                 'id' => -1
             ]);
+    }
+
+    public function additionalSubcategories(): BelongsToMany {
+        return $this->belongsToMany(Subcategory::class, 'subcategory_product');
     }
 
     public function supplier() {

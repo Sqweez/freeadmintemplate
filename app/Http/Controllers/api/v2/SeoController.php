@@ -27,7 +27,11 @@ class SeoController extends Controller
             return response(['message' => 'Произошла ошибка'], 500);
         }
 
-        $model->whereKey($id)->first()->seoText()->create([
+        $model = $model->whereKey($id)->first();
+
+        $model->seoText()->delete();
+
+        $model->seoText()->create([
             'content' => $content
         ]);
 

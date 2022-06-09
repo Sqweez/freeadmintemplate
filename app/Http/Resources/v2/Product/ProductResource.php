@@ -35,6 +35,7 @@ class ProductResource extends JsonResource
             'is_site_visible' => $this->is_site_visible,
             'category' => $this->category->id,
             'subcategory' => $this->subcategory->id,
+            'additional_subcategories' => $this->additionalSubcategories->pluck('id'),
             'manufacturer' => $this->manufacturer->id,
             'attributes' => collect($this->attributes)->map(function ($i) {
                 return [

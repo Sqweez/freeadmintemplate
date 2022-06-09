@@ -38,6 +38,7 @@ use function foo\func;
  * @property int $is_site_visible
  * @method static \Illuminate\Database\Eloquent\Builder|Category site()
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereIsSiteVisible($value)
+ * @property-read SeoText|null $seoText
  */
 class Category extends Model
 {

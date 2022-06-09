@@ -35,6 +35,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $bookings_count
  * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereArrivedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereComment($value)
+ * @property int $payment_cost
+ * @method static \Illuminate\Database\Eloquent\Builder|Arrival wherePaymentCost($value)
  */
 class Arrival extends Model
 {

@@ -121,15 +121,33 @@
                         label="Категория"
                         :disabled="!IS_SUPERUSER"
                     />
-                    <v-autocomplete
-                        :items="subcategories"
-                        item-text="subcategory_name"
-                        item-value="id"
-                        v-model="subcategory"
-                        label="Подкатегория"
-                        no-data-text="Нет данных"
-                        :disabled="!IS_SUPERUSER"
-                    />
+                    <div class="d-flex align-center">
+                        <div style="flex-grow: 1">
+                            <v-autocomplete
+                                style="flex: 1;"
+                                :items="subcategories"
+                                item-text="subcategory_name"
+                                item-value="id"
+                                v-model="subcategory"
+                                label="Подкатегория"
+                                no-data-text="Нет данных"
+                                :disabled="!IS_SUPERUSER"
+                            />
+                        </div>
+                    </div>
+                    <!-- доп подкатегории -->
+                    <div v-if="category">
+                        <v-autocomplete
+                            multiple
+                            style="flex: 1;"
+                            :items="subcategories"
+                            item-text="subcategory_name"
+                            item-value="id"
+                            v-model="additionalSubcategories"
+                            label="Доп подкатегории"
+                            no-data-text="Нет данных"
+                        />
+                    </div>
                     <v-text-field
                         label="Стоимость"
                         :disabled="!IS_SUPERUSER"
@@ -572,8 +590,10 @@ export default {
         comments: [],
         commentText: '',
         commentId: null,
+        additionalSubcategories: [],
     }),
     methods: {
+        addSubcategoriesSelect () {},
         async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
             const response = await this.$file.upload(file, 'uploads', 'file');
             const photo = `${window.location.protocol}//${window.location.hostname}/storage/${response.data}`;
@@ -633,6 +653,7 @@ export default {
             this.supplier_id = null;
             this.meta_title = '';
             this.meta_description = '';
+            this.additionalSubcategories = [];
         },
         assignFields() {
             this.product_name = this.product.product_name;
@@ -654,6 +675,7 @@ export default {
             this.is_kaspi_visible = this.product.is_kaspi_visible;
             this.supplier_id = this.product.supplier_id;
             this.comments = this.product.comments;
+            this.additionalSubcategories = this.product.additional_subcategories ? this.product.additional_subcategories : [];
             if (this.grouping_attribute_id === null) {
                 this.withoutAnotherSku = true;
             }
@@ -761,6 +783,7 @@ export default {
             if (!this.validate(product)) {
                 throw new Error();
             }
+            console.log(product);
             await this.$store.dispatch('EDIT_PRODUCT_v2', {
                 product,
                 id: this.product.product_id,
@@ -778,6 +801,7 @@ export default {
         },
         getProductObject() {
             return {
+                additional_subcategories: this.additionalSubcategories,
                 product_name: this.product_name,
                 product_name_web: this.product_name_web,
                 product_description: this.product_description,

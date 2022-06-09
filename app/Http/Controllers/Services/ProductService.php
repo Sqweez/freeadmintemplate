@@ -126,7 +126,12 @@ class ProductService {
         $this->syncProductThumbs($product, $fields[Product::PRODUCT_THUMBS]);
         $this->syncProductPrices($product, $fields[Product::PRICE]);
         $this->syncAttributes($product, $this->getProductAttributes($product->grouping_attribute_id, $fields[Product::ATTRIBUTES]));
+        $this->syncAdditionalSubcategories($product, $fields['additional_subcategories']);
         $product->push();
+    }
+
+    private function syncAdditionalSubcategories(Product $product, array $subcategories) {
+        $product->additionalSubcategories()->sync($subcategories);
     }
 
     private function updateProductSkuRelations(ProductSku $productSku, array $fields, $attribute_id) {
@@ -238,6 +243,7 @@ class ProductService {
             Product::PRODUCT_THUMBS,
             Product::PRICE,
             Product::PRODUCT_BARCODE,
+            'additional_subcategories'
 
          /*   ProductSku::PRODUCT_SKU_IMAGES,
             ProductSku::PRODUCT_SKU_THUMBS*/

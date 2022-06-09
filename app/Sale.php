@@ -69,6 +69,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereIsDelivery($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereKaspiTransactionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereOrderId($value)
+ * @property bool $is_paid
+ * @property bool $is_opt
+ * @property-read mixed $final_price_without_red
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereIsOpt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereIsPaid($value)
  */
 class Sale extends Model
 {

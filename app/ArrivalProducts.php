@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $booking_products_count
  * @property-read mixed $available_booking_count
  * @property-read mixed $booking_count
+ * @property-read mixed $is_new_product
  */
 class ArrivalProducts extends Model
 {
