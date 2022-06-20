@@ -10,7 +10,7 @@ import {
     updateProductSku,
     getModeratorProducts,
     getProductBalance,
-    createProductSaleEarnings, getProductSaleEarnings, removeTagFromProduct
+    createProductSaleEarnings, getProductSaleEarnings, removeTagFromProduct, getIherbProducts
 } from "@/api/v2/products";
 import {makeSale} from "@/api/sale";
 import MUTATATIONS from "@/store/mutations";
@@ -31,6 +31,7 @@ const state = {
     product_balance: [],
     product_earnings: [],
     margin_types: [],
+    iherb_products: [],
 };
 
 const getters = {
@@ -62,6 +63,7 @@ const getters = {
     PRODUCT_BALANCE: s => s.product_balance,
     PRODUCT_EARNINGS: s => s.product_earnings,
     MARGIN_TYPES: s => s.margin_types,
+    IHERB_PRODUCTS: s => s.iherb_products,
 };
 
 const mutations = {
@@ -200,6 +202,9 @@ const mutations = {
             }
             return product;
         })
+    },
+    SET_IHERB_PRODUCTS (state, products) {
+        state.iherb_products = products;
     }
 };
 
@@ -212,6 +217,17 @@ const actions = {
             console.log(e.response);
         } finally {
 
+        }
+    },
+    async GET_IHERB_PRODUCTS ({commit}) {
+        try {
+            this.$loading.enable();
+            const { data } = await getIherbProducts();
+            commit('SET_IHERB_PRODUCTS', data.data);
+        } catch (e) {
+            console.log(e.response);
+        } finally {
+            this.$loading.disable();
         }
     },
     async GET_PRODUCTS_QUANTITIES({commit, dispatch, getters}, store_id) {

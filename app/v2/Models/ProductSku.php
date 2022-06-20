@@ -5,6 +5,7 @@ namespace App\v2\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 /**
  * App\v2\Models\ProductSku
@@ -74,7 +75,7 @@ class ProductSku extends Model
     protected $table = 'product_sku';
 
     const PRODUCT_SKU_WITH_ADMIN_LIST =  [
-        'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_name_web,is_kaspi_visible',
+        'product:id,product_name,product_price,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_name_web,is_kaspi_visible,is_iherb',
         'product.category', 'product.manufacturer', 'product.attributes', 'product.price',
         'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'margin_type',
     ];
@@ -151,6 +152,10 @@ class ProductSku extends Model
         return $this->product->product_description;
     }
 
+    public function getIsIherbAttribute() {
+        return $this->product->is_iherb;
+    }
+
     public function getCategoryAttribute() {
         return $this->product->category;
     }
@@ -217,5 +222,32 @@ class ProductSku extends Model
 
     public function getIsKaspiVisibleAttribute() {
         return $this->product->is_kaspi_visible;
+    }
+
+    public function mergeAttributes($attributes, $productAttributes): Collection {
+        return collect($attributes)->map(function ($attribute) {
+            return [
+                'attribute_value' => $attribute['attribute_value'],
+                'attribute_name' => $attribute['attribute_name']['attribute_name'],
+            ];
+        })->merge(collect($productAttributes)->map(function ($attribute) {
+            return [
+                'attribute_value' => $attribute['attribute_value'],
+                'attribute_name' => $attribute['attribute_name']['attribute_name'],
+            ];
+        }));
+    }
+
+    public function getExcelNameAttribute() {
+        $attributes = $this
+            ->mergeAttributes($this['attributes'], $this->product['attributes'])
+            ->pluck('attribute_value')
+            ->join(' | ');
+        return sprintf(
+            '%s %s %s',
+            $this['manufacturer']['manufacturer_name'],
+            $this['product_name'],
+            $attributes
+        );
     }
 }

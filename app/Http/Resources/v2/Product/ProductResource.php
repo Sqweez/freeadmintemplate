@@ -63,6 +63,7 @@ class ProductResource extends JsonResource
             'product_sku_thumbs' => $this->product_thumbs,
             'kaspi_product_price' => $this->kaspi_product_price,
             'is_kaspi_visible' => $this->is_kaspi_visible,
+            'is_iherb' => $this->is_iherb,
             'supplier' => $this->product->supplier,
             'supplier_id' => $this->product->supplier_id,
             'meta_title' => $this->product->meta_title,

@@ -164,6 +164,7 @@ class Product extends Model
     const PRODUCT_THUMBS = 'product_thumbs';
     const KASPI_PRODUCT_PRICE = 'kaspi_product_price';
     const IS_KASPI_VISIBLE = 'is_kaspi_visible';
+    const IS_IHERB = 'is_iherb';
     const SUPPLIER_ID = 'supplier_id';
     const PRODUCT_NAME_WEB = 'product_name_web';
 
@@ -198,7 +199,8 @@ class Product extends Model
         'is_kaspi_visible' => 'boolean',
         'category_id' => 'integer',
         'subcategory_id' => 'integer',
-        'manufacturer_id' => 'integer'
+        'manufacturer_id' => 'integer',
+        'is_iherb' => 'boolean'
     ];
 
     public $timestamps = true;
@@ -309,7 +311,11 @@ class Product extends Model
     }
 
     public function scopeOfSubcategory($query, $subcategories) {
-        return $query->whereIn('subcategory_id', $subcategories);
+        return $query
+            ->whereIn('subcategory_id', $subcategories)
+            ->orWhereHas('additionalSubcategories', function ($query) use ($subcategories) {
+                return $query->whereIn('id', $subcategories);
+            });
     }
 
     public function scopeOfBrand($query, $brands) {

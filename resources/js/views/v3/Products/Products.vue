@@ -168,6 +168,17 @@
                                         </v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            <v-icon color="success" v-if="item.is_iherb">mdi-check</v-icon>
+                                            <v-icon color="error" v-else>mdi-close</v-icon>
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                           Товар IHerb
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
                             </v-list>
                         </template>
                         <template v-slot:item.quantity="{item}">

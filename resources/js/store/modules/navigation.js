@@ -77,7 +77,11 @@ const navigationModule = {
                     {
                         title: 'Предзаказы',
                         url: '/preorders/index'
-                    }
+                    },
+                    {
+                        title: 'Товары IHerb',
+                        url: '/products/iherb'
+                    },
                 ],
             },
             {
@@ -455,7 +459,11 @@ const navigationModule = {
                     {
                         title: 'Предзаказы',
                         url: '/preorders/index'
-                    }
+                    },
+                    {
+                        title: 'Товары IHerb',
+                        url: '/products/iherb'
+                    },
                 ],
             },
             {
