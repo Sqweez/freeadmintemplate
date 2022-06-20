@@ -366,6 +366,9 @@ export default {
                 const { data } = await axios.post(`/api/v2/documents/iherb`, {
                     cart: this.cart,
                 });
+                const link = document.createElement('a');
+                link.href = `${window.location.origin}/${data.path}`;
+                link.click();
             } catch (e) {
                 console.log(e);
                 this.$toast.error('Произошла ошибка при создании прайса')
