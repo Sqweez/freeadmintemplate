@@ -48,6 +48,7 @@ class ProductsResource extends JsonResource
             'product_name_web' => $this->product_name_web,
             'margin_type' => $this->margin_type ? $this->margin_type->only(['id', 'title']) : MarginType::find($this->margin_type_id),
             'is_kaspi_visible' => $this->is_kaspi_visible,
+            'is_iherb' => $this->is_iherb,
         ];
     }
 }

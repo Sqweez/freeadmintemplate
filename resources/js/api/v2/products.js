@@ -10,6 +10,10 @@ export async function getProducts() {
     return await axios.get('/api/v2/products');
 }
 
+export async function getIherbProducts () {
+    return await axios.get('/api/v2/products/iherb');
+}
+
 export async function getProductsQuantity(store_id =  1) {
     return await axios.get(`/api/v2/products/quantity/${store_id}`);
 }

@@ -25,16 +25,5 @@ class AuthorizationMiddleware
             }
         }
         return $next($request);
-        if (!$request->hasHeader('Authorization')) {
-            return response()->json(['error' => 'Access denied'], 403);
-        }
-        $authToken = $request->header('Authorization');
-        $user = User::where('token', $authToken)->first();
-
-        if (!$user) {
-            return response()->json(['error' => 'Access denied'], 403);
-        }
-
-        return $next($request);
     }
 }

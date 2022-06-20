@@ -221,6 +221,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('index', [WaybillController::class, 'getDocuments']);
             Route::post('waybill', [WaybillController::class, 'createWaybill']);
             Route::post('invoice', [WaybillController::class, 'createInvoice']);
+            Route::post('iherb', [WaybillController::class, 'createIherbPriceList']);
             Route::post('invoice-payment', [WaybillController::class, 'createPaymentInvoice']);
             Route::get('batches/purchases', [WaybillController::class, 'getPurchasePrices']);
             Route::get('report/products', [WaybillController::class, 'getProductReport']);
@@ -230,6 +231,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::prefix('products')->group(function () {
+            Route::get('iherb', [ProductController::class, 'getIherbProducts']);
             Route::delete('tags', [ProductController::class, 'deleteProductTag']);
             Route::post('tags', [ProductController::class, 'setProductTags']);
             Route::get('seller/earning', [ProductController::class, 'getProductSellerEarning']);
