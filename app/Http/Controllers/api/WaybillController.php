@@ -20,6 +20,8 @@ use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\Exception;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class WaybillController extends Controller
@@ -193,7 +195,7 @@ class WaybillController extends Controller
                 $excelSheet->setCellValue('F' . $currentIndex, $this->calculateDiscount($item['product_price'], 0.22));
                 $excelSheet->getStyle('G' . $currentIndex)
                     ->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                    ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()
                     ->setARGB('92D050');
                 $excelSheet->setCellValue('H' . $currentIndex, $item['quantity']);
@@ -524,9 +526,13 @@ class WaybillController extends Controller
                 $excelSheet->mergeCells("W" . $currentIndex . ":Z" . $currentIndex);
                 $excelSheet->mergeCells("AA" . $currentIndex . ":AF" . $currentIndex);
                 $excelSheet->mergeCells("AG" . $currentIndex . ":AL" . $currentIndex);
+                $excelSheet->getStyle('A' . $currentIndex . ':AL' . $currentIndex)
+                    ->getFill()
+                    ->setFillType(Fill::FILL_NONE);
             } catch (\Exception $e) {
                 //
             }
+
 
             $excelSheet->setCellValue('A' . ($currentIndex), $key + 1);
             $excelSheet->setCellValue('B' . ($currentIndex), $item['excel_name']);
@@ -553,6 +559,12 @@ class WaybillController extends Controller
             $excelSheet->setCellValue('AG' . ($currentIndex), $formula);
         }
 
+        $TOTAL_INDEX = $INITIAL_ROW + count($cart);
+        $LAST_INDEX = $TOTAL_INDEX - 1;
+        $formula = "=SUM(W$INITIAL_ROW:W$LAST_INDEX)";
+        $excelSheet->setCellValue('T' . $TOTAL_INDEX, $formula);
+        $formula = "=SUM(AG$INITIAL_ROW:AG$LAST_INDEX)";
+        $excelSheet->setCellValue('AC' . $TOTAL_INDEX, $formula);
         $excelWriter = new Xlsx($excelFile);
 
         $fileName =  'ПРАЙС-IHERB' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
