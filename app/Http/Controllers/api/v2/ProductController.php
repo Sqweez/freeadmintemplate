@@ -6,6 +6,7 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductCreateRequest;
 use App\Http\Resources\RelatedProductsResource;
+use App\Http\Resources\v2\Product\IHerbProductsResource;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\Http\Resources\v2\Product\ModeratorProducts;
 use App\Http\Resources\v2\Product\ProductResource;
@@ -326,5 +327,17 @@ class ProductController extends Controller
         $product = Product::find($request->get('product_id'));
         $product->tags()->detach($request->get('tag_id'));
         return response([]);
+    }
+
+    public function getIherbProducts(): AnonymousResourceCollection {
+        $sku = ProductSku::query()
+            ->whereHas('product', function ($q) {
+                return $q->where('is_iherb', true);
+            })
+            ->with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)
+            ->with('batches')
+            ->get();
+
+        return IHerbProductsResource::collection($sku);
     }
 }

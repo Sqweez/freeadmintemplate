@@ -48,10 +48,14 @@ class CategoryController extends Controller {
         $category_id = $category['id'];
         $subcategories = $request->input('subcategories');
         foreach ($subcategories as $subcategory) {
-            Subcategory::create([
+            $item = Subcategory::create([
                 'subcategory_name' => $subcategory,
                 'category_id' => $category_id,
-                'subcategory_slug' => Str::slug($subcategory)
+                'subcategory_slug' => ''
+            ]);
+
+            $item->update([
+                'subcategory_slug' => Str::slug($item->subcategory_name . ' ' . $item->id)
             ]);
         }
 
@@ -81,13 +85,18 @@ class CategoryController extends Controller {
         $category->update(['category_name' => $category_name, 'category_img' => $request->get('category_img')]);
         foreach ($subcategories as $subcategory) {
             if (gettype($subcategory) === 'string' && strlen($subcategory) > 0) {
-                Subcategory::create(['subcategory_name' => $subcategory, 'category_id' => $category['id']]);
+                $i = Subcategory::create(['subcategory_name' => $subcategory, 'category_id' => $category['id']]);
+                $i = $i->update(['subcategory_slug' => Str::slug($i->subcategory_name . ' ' . $i->id)]);
             } else {
                 $_subcategory = Subcategory::find($subcategory['id']);
                 if (strlen($subcategory['subcategory_name']) === 0) {
                     $_subcategory->delete();
                 } else {
-                    $_subcategory->update(['subcategory_name' => $subcategory['subcategory_name']]);
+                    $_subcategory->update(
+                        [
+                            'subcategory_name' => $subcategory['subcategory_name'],
+                            'subcategory_slug' => Str::slug($subcategory['subcategory_name'] . ' '. $subcategory['id'])
+                        ]);
                 }
             }
         }

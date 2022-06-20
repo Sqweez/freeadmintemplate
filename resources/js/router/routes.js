@@ -67,6 +67,7 @@ import TransferUpdate from "@/views/Transfers/TransferUpdate";
 import ProductTags from "@/views/Moderator/ProductTags";
 import SeoCategory from "@/views/SEO/SeoCategory";
 import ProductSubcategories from "@/views/Moderator/ProductSubcategories";
+import IherbIndexPage from "@/views/IHerb/IherbIndexPage";
 
 const routes = [
     {
@@ -682,6 +683,10 @@ const routes = [
     {
         path: '/products/subcategories',
         component: ProductSubcategories
+    },
+    {
+        path: '/products/iherb',
+        component: IherbIndexPage
     }
 ];
 

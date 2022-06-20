@@ -203,6 +203,10 @@
                             v-model="is_hit"
                         />
                         <v-checkbox
+                            label="IHerb"
+                            v-model="is_iherb"
+                        />
+                        <v-checkbox
                             label="Виден на сайте"
                             v-model="is_site_visible"
                         />
@@ -571,6 +575,7 @@ export default {
         product_images: [],
         product_thumbs: [],
         is_hit: false,
+        is_iherb: false,
         is_site_visible: true,
         is_kaspi_visible: false,
         supplier_id: null,
@@ -664,6 +669,7 @@ export default {
             this.subcategory = this.product.subcategory;
             this.manufacturer = this.product.manufacturer;
             this.is_hit = this.product.is_hit;
+            this.is_iherb = this.product.is_iherb;
             this.is_site_visible = this.product.is_site_visible;
             this.tags = this.product.tags;
             this.product_images = this.product.product_images;
@@ -808,6 +814,7 @@ export default {
                 product_price: this.product_price,
                 kaspi_product_price: this.kaspi_product_price,
                 product_barcode: this.product_barcode,
+                is_iherb: this.is_iherb,
                 is_hit: this.is_hit,
                 is_site_visible: this.is_site_visible,
                 is_kaspi_visible: this.is_kaspi_visible,

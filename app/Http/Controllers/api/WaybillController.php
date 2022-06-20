@@ -14,13 +14,13 @@ use App\Store;
 use App\Transfer;
 use App\v2\Models\Product;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
+use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Worksheet\Row;
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class WaybillController extends Controller
 {
@@ -495,6 +495,71 @@ class WaybillController extends Controller
         $fullPath = 'storage/excel/batches/' . $fileName;
         $excelWriter->save($fullPath);
 
+        return response()->json([
+            'path' => $fullPath
+        ]);
+    }
+
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function createIherbPriceList(Request $request, ExcelService $excelService): JsonResponse {
+        $cart = $request->get('cart');
+        $excelFile = $excelService->loadFile('iherb_price_template');
+        $excelSheet = $excelFile->getActiveSheet();
+        $documentName = 'Прайс-лист IHERB от ' . now_format();
+        $INITIAL_ROW = 4;
+        foreach ($cart as $key => $item) {
+            $currentIndex = $key + $INITIAL_ROW;
+            try {
+                $excelSheet->insertNewRowBefore($currentIndex, 1);
+            } catch (Exception $e) {
+                //
+            }
+
+            try {
+                $excelSheet->mergeCells("B" . $currentIndex . ":N" . $currentIndex);
+                $excelSheet->mergeCells("O" . $currentIndex . ":Q" . $currentIndex);
+                $excelSheet->mergeCells("R" . $currentIndex . ":V" . $currentIndex);
+                $excelSheet->mergeCells("W" . $currentIndex . ":Z" . $currentIndex);
+                $excelSheet->mergeCells("AA" . $currentIndex . ":AF" . $currentIndex);
+                $excelSheet->mergeCells("AG" . $currentIndex . ":AL" . $currentIndex);
+            } catch (\Exception $e) {
+                //
+            }
+
+            $excelSheet->setCellValue('A' . ($currentIndex), $key + 1);
+            $excelSheet->setCellValue('B' . ($currentIndex), $item['excel_name']);
+            $excelSheet->setCellValue('O' . ($currentIndex), 'шт.');
+            $excelSheet->setCellValue('R' . ($currentIndex), $item['total_quantity']);
+            // Ячейка клиента
+            $excelSheet->setCellValue('W' . ($currentIndex), 0);
+            $validation = $excelSheet->getCell('W' . $currentIndex)->getDataValidation();
+            $validation->setType( DataValidation::TYPE_WHOLE );
+            $validation->setErrorStyle( DataValidation::STYLE_STOP );
+            $validation->setAllowBlank(true);
+            $validation->setShowInputMessage(true);
+            $validation->setShowErrorMessage(true);
+            $validation->setErrorTitle('Ошибка ввода');
+            $validation->setError('Недопустимое значения');
+            $validation->setPromptTitle('Допустимый ввод');
+            $validation->setPrompt('Допускаются числа от 0 до ' . $item['total_quantity']);
+            $validation->setFormula1(0);
+            $validation->setFormula2($item['total_quantity']);
+            $excelSheet->setCellValue('AA' . ($currentIndex), intval($item['final_price']));
+
+            $formula = "=PRODUCT(AA$currentIndex * W$currentIndex)";
+            //$internalFormula = Calculation::getInstance()->_translateFormulaToEnglish($formula);
+            $excelSheet->setCellValue('AG' . ($currentIndex), $formula);
+        }
+
+        $excelWriter = new Xlsx($excelFile);
+
+        $fileName =  'ПРАЙС-IHERB' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $path = 'storage/excel/iherb/';
+        $fullPath = $path . $fileName;
+        \File::ensureDirectoryExists($path);
+        $excelWriter->save($fullPath);
         return response()->json([
             'path' => $fullPath
         ]);
