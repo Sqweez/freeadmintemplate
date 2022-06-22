@@ -102,7 +102,7 @@
                     Получить данные
                 </v-btn>
                 <div v-if="topClients">
-                    <h5>Топ-3 клиента IRON-ADDICTS:</h5>
+                    <h5>Топ-3 клиента background-tooman-darkgrey-ADDICTS:</h5>
                     <v-list>
                         <v-list-item v-for="(client, idx) of topClients" :key="`top-clients-${idx}`">
                             <v-list-item-content>

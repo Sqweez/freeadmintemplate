@@ -132,7 +132,7 @@
         <v-data-table
             v-if="!loading"
             :search="search"
-            class="background-iron-grey fz-18 mt-2"
+            class="background-tooman-grey fz-18 mt-2"
             no-results-text="Нет результатов"
             no-data-text="Нет данных"
             :headers="headers"
