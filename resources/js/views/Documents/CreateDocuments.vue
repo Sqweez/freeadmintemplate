@@ -50,7 +50,7 @@
                             <th>Удалить</th>
                         </tr>
                         </thead>
-                        <tbody class="background-tooman-grey">
+                        <tbody class="background-iron-grey">
                         <tr v-for="(item, index) of cart" :key="`product-id-${item.uuid}`">
                             <td>{{ index + 1 }}</td>
                             <td>
@@ -116,7 +116,7 @@
                             <th class="green--text darken-1 text-center">Итого к оплате</th>
                         </tr>
                         </thead>
-                        <tbody class="background-tooman-grey fz-18">
+                        <tbody class="background-iron-grey fz-18">
                         <tr class="pt-5">
                             <td class="text-center">{{ cartCount }} шт.</td>
                             <td class="text-center">{{ subtotal | priceFilters}}</td>
@@ -129,7 +129,7 @@
                 </v-simple-table>
             </v-card-text>
         </v-card>
-        <v-card class="background-tooman-darkgrey">
+        <v-card class="background-iron-darkgrey">
             <v-card-title>
                 Товары
             </v-card-title>
@@ -185,7 +185,7 @@
                     <v-icon>mdi-refresh</v-icon>
                 </v-btn>
                 <v-data-table
-                    class="background-tooman-grey fz-18"
+                    class="background-iron-grey fz-18"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     @current-items="getFiltered"
@@ -608,11 +608,11 @@
 </script>
 
 <style lang="scss">
-    .background-tooman-grey {
+    .background-iron-grey {
         background-color: #444444;
     }
 
-    .background-tooman-darkgrey {
+    .background-iron-darkgrey {
         background-color: #333333;
     }
 

@@ -137,7 +137,7 @@
 
             <div class="avatar-dropdown" id="icon" v-if="LOGGED_IN" @click="showDropdown = !showDropdown">
                 <span>{{ USER.name}}</span>
-                <img src="../../../assets/images/login_icon.png">
+                <img src="../../../assets/images/iron-logo.png">
 
             </div>
 

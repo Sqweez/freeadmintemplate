@@ -132,7 +132,7 @@
                             <th>Стоимость</th>
                         </tr>
                         </thead>
-                        <tbody class="background-tooman-grey">
+                        <tbody class="background-iron-grey">
                         <tr v-for="(item, index) of booking.products" :key="`product-id-${item.id}`">
                             <td>{{ index + 1 }}</td>
                             <td>
@@ -173,7 +173,7 @@
                             <th class="green--text darken-1 text-center">Итого к оплате</th>
                         </tr>
                         </thead>
-                        <tbody class="background-tooman-grey fz-18">
+                        <tbody class="background-iron-grey fz-18">
                         <tr class="pt-5">
                             <td class="text-center">{{ cartCount }} шт.</td>
                             <td class="text-center">{{ subtotal | priceFilters}}</td>

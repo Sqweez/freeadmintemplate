@@ -2,7 +2,7 @@
     <v-card>
         <v-card-title>Обновление перемещения</v-card-title>
         <v-card-text>
-            <v-card class="background-tooman-darkgrey mb-5 mt-5" v-if="!emptyCart">
+            <v-card class="background-iron-darkgrey mb-5 mt-5" v-if="!emptyCart">
                 <v-card-title class="justify-end">
                     <div>
                         <v-btn color="error" class="top-button mr-3" @click="$refs.fileInput.click()">
@@ -29,7 +29,7 @@
                 <v-card-text style="padding: 0;">
                     <v-simple-table v-slot:default class="mt-5">
                         <template>
-                            <thead class="background-tooman-darkgrey fz-18">
+                            <thead class="background-iron-darkgrey fz-18">
                             <tr>
                                 <th>#</th>
                                 <th>Наименование</th>
@@ -38,7 +38,7 @@
                                 <th>Удалить</th>
                             </tr>
                             </thead>
-                            <tbody class="background-tooman-grey">
+                            <tbody class="background-iron-grey">
                             <tr v-for="(item, index) of cart" :key="item.id * 85">
                                 <td>{{ index + 1 }}</td>
                                 <td><v-list class="product__list" flat>
@@ -80,13 +80,13 @@
                     </v-simple-table>
                     <v-simple-table v-slot:default>
                         <template>
-                            <thead class="background-tooman-darkgrey fz-18">
+                            <thead class="background-iron-darkgrey fz-18">
                             <tr>
                                 <th class="text-center">Общее количество</th>
                                 <th class="text-center">Общая сумма</th>
                             </tr>
                             </thead>
-                            <tbody class="background-tooman-grey fz-18">
+                            <tbody class="background-iron-grey fz-18">
                             <tr>
                                 <td class="text-center">{{ cartCount }} шт.</td>
                                 <td class="text-center">{{ subtotal }} ₸</td>
@@ -94,7 +94,7 @@
                             </tbody>
                         </template>
                     </v-simple-table>
-                    <div class="background-tooman-grey pa-10">
+                    <div class="background-iron-grey pa-10">
                         <v-btn color="error" block style="font-size: 16px" @click="onTransfer">
                             Обновить перемещение
                         </v-btn>
@@ -111,7 +111,7 @@
                 :items="arrivals"
                 v-model="currentArrival"
             />
-            <v-card class="background-tooman-darkgrey">
+            <v-card class="background-iron-darkgrey">
                 <v-card-title>
                     Товары
                 </v-card-title>
@@ -176,7 +176,7 @@
                         </v-col>
                     </v-row>
                     <v-data-table
-                        class="background-tooman-grey fz-18"
+                        class="background-iron-grey fz-18"
                         :search="searchQuery"
                         no-results-text="Нет результатов"
                         no-data-text="Нет данных"
@@ -421,11 +421,11 @@ h5 {
     width: 340px;
 }
 
-.background-tooman-grey {
+.background-iron-grey {
     background-color: #444444;
 }
 
-.background-tooman-darkgrey {
+.background-iron-darkgrey {
     background-color: #333333;
 }
 

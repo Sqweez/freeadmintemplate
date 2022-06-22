@@ -15,7 +15,7 @@
                 />
                 <v-data-table
                     :search="search"
-                    class="background-tooman-grey fz-18 mt-2"
+                    class="background-iron-grey fz-18 mt-2"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     :headers="headers"

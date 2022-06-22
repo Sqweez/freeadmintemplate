@@ -214,7 +214,7 @@
                 </v-row>
                 <v-data-table
                     v-show="!addingToCart"
-                    class="background-tooman-grey fz-18"
+                    class="background-iron-grey fz-18"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     :headers="product_headers"

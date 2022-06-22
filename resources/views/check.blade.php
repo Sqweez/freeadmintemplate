@@ -13,6 +13,11 @@
          style="display: flex;
                 align-items: center;
                 flex-direction: column;">
+        <img src="{{ asset('images/logo-check.png') }}" alt=""
+             style="width: 65px;
+                    filter: grayscale(1);
+                    height: auto;
+                    margin-bottom: 10px;">
         <h1
             style="display:block;
                     color: #000;
@@ -23,7 +28,7 @@
                     font-size: 15px;
                     text-align: center;
                     margin: 0;">
-            Tooman
+            Сеть магазинов спортивного питания "ironaddicts"
         </h1>
         <div class="check-divider"
              style="margin: 10px 0;
@@ -165,6 +170,9 @@
             <span class="span-total"
                   style="font-size: 12px; white-space: nowrap; margin-left: 5px;">{{ $report->final_price - ($report->certificate['amount'] ?? 0) }}</span>
         </div>
+        <h5 style="text-align: center; text-transform: uppercase; font-style: italic; font-size: 12px; margin-top: 15px;">
+            www.iron-addicts.kz</h5>
+        <h5 style="text-align: center;text-transform: uppercase;font-style: italic;font-size: 11px;margin-top: -17px;">БИН: 950420350949</h5>
         <h4 style="text-align: center; text-transform: uppercase; font-size: 15px; margin-top: 10px; margin-bottom: 40px; font-weight: bold;">
             Спасибо за покупку!</h4>
     </div>
