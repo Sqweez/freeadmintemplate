@@ -9,7 +9,7 @@
             message="Вы действительно хотите удалить выбранную цель?"
             :on-confirm="deleteGoal"
             :state="deleteModal" />
-        <v-card class="background-iron-darkgrey mb-5">
+        <v-card class="background-tooman-darkgrey mb-5">
             <v-card-title class="justify-space-between">
                 <span>Раздел "Наши цели"</span>
             </v-card-title>

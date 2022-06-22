@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card class="background-iron-darkgrey mb-5" v-if="!emptyCart || certificate">
+        <v-card class="background-tooman-darkgrey mb-5" v-if="!emptyCart || certificate">
             <v-card-title class="justify-space-between">
                 <span>Корзина</span>
                 <div>
@@ -182,7 +182,7 @@
                             <th>Отменить</th>
                         </tr>
                         </thead>
-                        <tbody class="background-iron-grey fz-18">
+                        <tbody class="background-tooman-grey fz-18">
                         <tr>
                             <td>{{ client.client_name }}</td>
                             <td>{{ client.client_phone }}</td>
@@ -249,7 +249,7 @@
                             <th>Удалить</th>
                         </tr>
                         </thead>
-                        <tbody class="background-iron-grey">
+                        <tbody class="background-tooman-grey">
                         <tr v-if="certificate">
                             <td>#</td>
                             <td>
@@ -344,7 +344,7 @@
                             <th class="green--text darken-1 text-center">Итого к оплате</th>
                         </tr>
                         </thead>
-                        <tbody class="background-iron-grey fz-18">
+                        <tbody class="background-tooman-grey fz-18">
                         <tr class="pt-5">
                             <td class="text-center">{{ cartCount }} шт.</td>
                             <td class="text-center">{{ subtotal | priceFilters}}</td>
@@ -356,7 +356,7 @@
                         </tbody>
                     </template>
                 </v-simple-table>
-                <div class="background-iron-grey pa-10">
+                <div class="background-tooman-grey pa-10">
                     <v-btn depressed color="error" block style="font-size: 16px" @click="clientCartModal = true" v-if="!client">
                         Выбрать клиента
                     </v-btn>
@@ -366,7 +366,7 @@
                 </div>
             </v-card-text>
         </v-card>
-        <v-card class="background-iron-darkgrey">
+        <v-card class="background-tooman-darkgrey">
             <v-card-title>
                 Товары
             </v-card-title>
@@ -433,7 +433,7 @@
                     </v-btn>
                 </v-row>
                 <v-data-table
-                    class="background-iron-grey fz-18"
+                    class="background-tooman-grey fz-18"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"
                     @current-items="getFiltered"
@@ -983,10 +983,10 @@
 </script>
 
 <style lang="scss">
-    .background-iron-grey {
+    .background-tooman-grey {
         background-color: #444444;
     }
-    .background-iron-darkgrey {
+    .background-tooman-darkgrey {
         background-color: #333333;
     }
     .fz-18 > tr > td, th {

@@ -40,7 +40,7 @@
                 <v-data-table
                     :headers="headers"
                     :items="clients"
-                    class="background-iron-grey fz-18"
+                    class="background-tooman-grey fz-18"
                     :search="search"
                     no-results-text="Нет результатов"
                     no-data-text="Нет данных"

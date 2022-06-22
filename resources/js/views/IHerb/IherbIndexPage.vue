@@ -39,7 +39,7 @@
                         <th>Удалить</th>
                     </tr>
                     </thead>
-                    <tbody class="background-iron-grey">
+                    <tbody class="background-tooman-grey">
                     <tr v-for="(item, index) of cart">
                         <td>{{ index + 1 }}</td>
                         <td>
@@ -124,7 +124,7 @@
                 </v-col>
             </v-row>
             <v-data-table
-                class="background-iron-grey fz-18"
+                class="background-tooman-grey fz-18"
                 no-results-text="Нет результатов"
                 no-data-text="Нет данных"
                 :headers="product_headers"
