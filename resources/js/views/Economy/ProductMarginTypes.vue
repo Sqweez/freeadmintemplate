@@ -71,7 +71,7 @@
                     </div>
                 </v-card-text>
             </v-card>
-            <v-card class="background-tooman-darkgrey">
+            <v-card class="background-iron-darkgrey">
                 <v-card-title>
                     Товары
                 </v-card-title>
@@ -124,7 +124,7 @@
                     </v-row>
                     <v-data-table
                         v-show="!addingToCart"
-                        class="background-tooman-grey fz-18"
+                        class="background-iron-grey fz-18"
                         no-results-text="Нет результатов"
                         no-data-text="Нет данных"
                         @current-items="getFiltered"
@@ -339,11 +339,11 @@ export default {
 </script>
 
 <style lang="scss">
-.background-tooman-grey {
+.background-iron-grey {
     background-color: #444444;
 }
 
-.background-tooman-darkgrey {
+.background-iron-darkgrey {
     background-color: #333333;
 }
 
