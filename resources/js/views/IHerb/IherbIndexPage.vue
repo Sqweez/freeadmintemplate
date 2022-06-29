@@ -459,7 +459,7 @@ export default {
                 products = products.filter(product => product.category.id === this.categoryId);
             }
             if (this.hideNotInStock) {
-                products = products.filter(p => p.quantity > 0);
+                products = products.filter(p => p.total_quantity > 0);
             }
             return products;
         },
