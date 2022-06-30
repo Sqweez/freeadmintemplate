@@ -64,7 +64,7 @@ class CategoryController extends Controller {
 
     public function indexShop() {
         return ShopCategoryResource::collection(
-            Category::where('is_site_visible', true)
+            Category::query()
                 ->with('seoText')
                 ->with('subcategories.seoText')
                 ->get()
