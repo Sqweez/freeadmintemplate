@@ -20,7 +20,7 @@
                                 <td>{{ (purchasePrices[store.id] || 0) | priceFilters }}</td>
                                 <td>{{ (productPrices[store.id] || 0) | priceFilters }}</td>
                             </tr>
-                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG">
+                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG || IS_OBSERVER">
                                 <td>
                                     Поступления:
                                 </td>
@@ -31,7 +31,7 @@
                                     {{ arrivalProductPrice | priceFilters }}
                                 </td>
                             </tr>
-                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG">
+                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG || IS_OBSERVER">
                                 <td>
                                     Перемещения:
                                 </td>
@@ -42,7 +42,7 @@
                                     {{ transferProductPrice | priceFilters }}
                                 </td>
                             </tr>
-                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG">
+                            <tr v-if="isAdmin || IS_BOSS || IS_MARKETOLOG || IS_OBSERVER">
                                 <td>
                                     <b>Итого:</b>
                                 </td>
