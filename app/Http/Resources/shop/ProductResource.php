@@ -26,6 +26,9 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $skus = collect(ProductSkuResource::collection($this->sku))->toArray();
+
         return [
             'product_id' => $this->id,
             'product_price' => $this->product_price,
@@ -38,7 +41,7 @@ class ProductResource extends JsonResource
             })->first() : url('/') . Storage::url('products/product_image_default.jpg'),
             'is_hit' => $this->is_hit,
             'is_site_visible' => $this->is_site_visible,
-            'skus' => collect(ProductSkuResource::collection($this->sku))->toArray(),
+            'skus' => $skus,
             'category_id' => $this->category_id,
             'subcategory_id' => $this->subcategory_id,
             'has_group' => intval($this->grouping_attribute_id) > 0,
@@ -50,7 +53,10 @@ class ProductResource extends JsonResource
                 RelatedProduct::whereCategoryId($this->category_id)->get()->pluck('product_id')
             )->get()),
             'comments' => CommentController::parseComments($this->comments),
-            'manufacturer' => $this->manufacturer
+            'manufacturer' => $this->manufacturer,
+            'in_stock' => collect($skus)->reduce(function ($a, $c) {
+                return $a + $c['quantity'];
+            }, 0) > 0
         ];
     }
 }
