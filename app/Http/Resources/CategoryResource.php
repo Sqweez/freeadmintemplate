@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
     public function toArray($request)
     {
 
-        $subcategories = $request->has('site') ? $this->subcategories->where('is_site_visible', true) : $this->subcategories;
+        $subcategories = $this->subcategories;
 
         return [
             'id' => $this->id,
@@ -25,7 +25,8 @@ class CategoryResource extends JsonResource
             'subcategories' => $subcategories,
             'category_img' => $this->category_img,
             'category_slug' => $this->category_slug,
-            'seo_text' => $this->seoText
+            'seo_text' => $this->seoText,
+            'is_site_visible' => !!$this->is_site_visible,
         ];
     }
 }
