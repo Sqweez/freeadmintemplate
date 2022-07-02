@@ -146,3 +146,9 @@ if (!function_exists('number2string')) {
 
     }
 }
+
+if (!function_exists('__hardcoded')) {
+    function __hardcoded($value) {
+        return $value;
+    }
+}
