@@ -23,6 +23,34 @@
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
                         }">
+                    <template v-slot:item.id="{item}">
+                        <v-list>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>№{{ item.id }}</v-list-item-title>
+                                    <v-list-item-subtitle>Номер заказа</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ item.client_name }}</v-list-item-title>
+                                    <v-list-item-subtitle>Клиент</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ item.store.name }}</v-list-item-title>
+                                    <v-list-item-subtitle>Магазин</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ item.date }}</v-list-item-title>
+                                    <v-list-item-subtitle>Дата</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </template>
                     <template v-slot:item.total_price="{ item }">
                         <span style="white-space: nowrap">{{ item.total_price | priceFilters }}</span>
                     </template>
@@ -58,23 +86,6 @@
                                     <v-list-item-subtitle>Статус заказа</v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
-                        </v-list>
-                    </template>
-                    <template v-slot:item.products="{item}">
-                        <v-list>
-                            <v-list-item v-for="(product, index) of item.products" :key="index">
-                                <v-list-item-content>
-                                    <v-list-item-title>{{ product.product_name }}</v-list-item-title>
-                                    <v-list-item-subtitle>{{ product.attributes.map(a => a.attribute_value).join(", ") }}<span v-if="product.manufacturer">,</span> {{ product.manufacturer }}</v-list-item-subtitle>
-                                </v-list-item-content>
-                                <v-list-item-action>
-                                    <span>{{ product.count }} шт.</span>
-                                </v-list-item-action>
-                            </v-list-item>
-                        </v-list>
-                    </template>
-                    <template v-slot:item.information="{ item }">
-                        <v-list>
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>{{ item.city_text }}</v-list-item-title>
@@ -125,6 +136,24 @@
                                     <v-list-item-subtitle>Изображение</v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
+                        </v-list>
+                    </template>
+                    <template v-slot:item.products="{item}">
+                        <v-list>
+                            <v-list-item v-for="(product, index) of item.products" :key="index">
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ product.product_name }}</v-list-item-title>
+                                    <v-list-item-subtitle>{{ product.attributes.map(a => a.attribute_value).join(", ") }}<span v-if="product.manufacturer">,</span> {{ product.manufacturer }}</v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-list-item-action>
+                                    <span>{{ product.count }} шт.</span>
+                                </v-list-item-action>
+                            </v-list-item>
+                        </v-list>
+                    </template>
+                    <template v-slot:item.information="{ item }">
+                        <v-list>
+
                         </v-list>
                     </template>
                     <template v-slot:item.actions="{item}">
@@ -224,22 +253,24 @@
                 {
                     value: 'id',
                     text: 'Номер заказа',
-                    sortable: true
                 },
                 {
                     value: 'client_name',
                     text: 'Клиент',
                     sortable: true,
+                    align: ' d-none'
                 },
                 {
                     value: 'store.name',
                     text: 'Магазин',
                     sortable: true,
+                    align: ' d-none'
                 },
                 {
                     value: 'date',
                     text: 'Дата',
                     sortable: false,
+                    align: ' d-none'
                 },
                 {
                     value: 'products',
@@ -249,18 +280,13 @@
                 {
                     value: 'total_price',
                     text: 'Общая сумма',
-                    sortable: false
+                    sortable: false,
+                    align: ' d-none'
                 },
                 {
                     value: 'delivery',
                     text: 'Данные доставки',
                     sortable: false,
-                },
-                {
-                    value: 'information',
-                    text: 'Дополнительная информация',
-                    sortable: false,
-                    align: ' max-width-200'
                 },
                 {
                     value: 'actions',

@@ -93,6 +93,8 @@ class ProductService {
             $product_sku = $this->createProductSku($product, $_attributes);
             $this->updateProductSkuRelations($product_sku, $_attributes, $product->grouping_attribute_id);
             DB::commit();
+            $product_sku = ProductSku::find($product_sku->id);
+            $product_sku->load('product');
             return new ProductsResource($product_sku);
         } catch (\Exception $e) {
             DB::rollBack();
