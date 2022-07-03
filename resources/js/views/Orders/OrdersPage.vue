@@ -58,6 +58,12 @@
                         <v-list>
                             <v-list-item>
                                 <v-list-item-content>
+                                    <v-list-item-title>{{ item.total_price | priceFilters }}</v-list-item-title>
+                                    <v-list-item-subtitle>Итого к оплате</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-list-item-content>
                                     <v-list-item-title>{{ item.payment_text }}</v-list-item-title>
                                     <v-list-item-subtitle>Способ оплаты</v-list-item-subtitle>
                                 </v-list-item-content>
