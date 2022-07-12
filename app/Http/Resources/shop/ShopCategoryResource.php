@@ -23,6 +23,8 @@ class ShopCategoryResource extends JsonResource
             'category_slug' => $this->category_slug,
             'seo_text' => $this->seoText,
             'is_site_visible' => !!$this->is_site_visible,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description
         ];
     }
 }
