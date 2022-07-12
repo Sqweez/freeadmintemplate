@@ -16,6 +16,7 @@ class AlterTableSubcategoryMetaTitleDescription extends Migration
         Schema::table('subcategories', function (Blueprint $table) {
             $table->text('meta_title')->nullable();
             $table->text('meta_description')->nullable();
+            $table->text('meta_h1')->nullable();
         });
     }
 
@@ -27,7 +28,7 @@ class AlterTableSubcategoryMetaTitleDescription extends Migration
     public function down()
     {
         Schema::table('subcategories', function (Blueprint $table) {
-            $table->dropColumn(['meta_title', 'meta_description']);
+            $table->dropColumn(['meta_title', 'meta_description', 'meta_h1']);
         });
     }
 }
