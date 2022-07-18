@@ -29,7 +29,7 @@ class IHerbProductsResource extends JsonResource
             'product_name' => $this->product_name,
             'excel_name' => $this->excel_name,
             'attributes' => $this->mergeAttributes($this->attributes, $this->product->attributes),
-            'total_quantity' => $this->batches->sum('quantity'),
+            'total_quantity' => $this->batches->where('store_id', 1)->sum('quantity'),
             'purchase_price' => $this->batches->last()->purchase_price ?? 0,
             'product_price' => $this->product_price,
             'final_price' => 0
