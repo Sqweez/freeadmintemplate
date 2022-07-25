@@ -17,7 +17,10 @@ class ProductController extends Controller {
 
     public function getProducts(Request $request) {
         $query = $request->except('store_id');
-        $store_id = intval($request->get('store_id', 1));
+        $store_id = intval($request->get('store_id', 16));
+        if ($store_id === 0) {
+            $store_id = 16;
+        }
         $user_token = $request->get('user_token');
         $all_products = $request->has('all_products');
         if ($all_products) {
