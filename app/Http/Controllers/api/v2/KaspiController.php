@@ -76,9 +76,16 @@ class KaspiController extends Controller {
                 'attributes' => collect($product['attributes'])->mergeRecursive($product['product']['attributes']),
                 'images' => $product['product']['product_images'],
                 'availabilities' => collect($stores)->map(function ($store) use ($product) {
+                    $kaspiStoreId = $store['id'];
+                    if ($kaspiStoreId === 14) {
+                        $kaspiStoreId = '6';
+                    }
+                    if ($kaspiStoreId === 16) {
+                        $kaspiStoreId = '7';
+                    }
                     return ['available' => collect($product['batches'])->filter(function ($item) use ($store) {
                         return $item['store_id'] === $store['id'];
-                    })->count() > 0 ? 'yes' : 'no', 'storeId' => 'PP' . ($store['id'] == 14 ? '6' : $store['id'])];
+                    })->count() > 0 ? 'yes' : 'no', 'storeId' => 'PP' . ($kaspiStoreId)];
                 })];
         });
     }
