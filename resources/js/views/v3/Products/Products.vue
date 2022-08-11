@@ -207,7 +207,7 @@
                         </template>
                         <template v-slot:item.actions="{ item }">
                             <div class="actions-products__container" v-if="IS_FRANCHISE">
-                                <v-btn color="success" @click="changeCount(item.id, 1)">
+                                <v-btn color="success" @click="productId = item.id; productQuantityModal = true;">
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
