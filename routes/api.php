@@ -5,6 +5,7 @@ use App\Http\Controllers\api\v2\ProductController;
 use App\Http\Controllers\api\v2\CertificateController;
 use App\Http\Controllers\api\v2\CompanionController;
 use App\Http\Controllers\api\v2\SeoController;
+use App\Http\Controllers\api\v2\WithDrawalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthorizationMiddleware;
 use App\Http\Controllers\api\v2\FavoriteController;
@@ -257,7 +258,12 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::post('margin/types/set', [ProductController::class, 'editMarginTypes']);
             Route::get('margin/types', [ProductController::class, 'getMarginTypes']);
             Route::post('margin/types', [ProductController::class, 'setMarginTypes']);
+            // Сроки годности
+            Route::post('best-before', [ProductController::class, 'createBestBeforeProducts']);
+            Route::get('best-before/get', [ProductController::class, 'getBestBeforeProducts']);
         });
+
+        Route::apiResource('with-drawal', 'api\v2\WithDrawalController');
 
         Route::prefix('certificates')->group(function () {
             Route::post('/', [CertificateController::class, 'create']);

@@ -68,6 +68,8 @@ import ProductTags from "@/views/Moderator/ProductTags";
 import SeoCategory from "@/views/SEO/SeoCategory";
 import ProductSubcategories from "@/views/Moderator/ProductSubcategories";
 import IherbIndexPage from "@/views/IHerb/IherbIndexPage";
+import BestBeforeIndex from "@/views/BestBefore/BestBeforeIndex";
+import WithDrawalIndex from "@/views/WithDrawal/WithDrawalIndex";
 
 const routes = [
     {
@@ -687,6 +689,14 @@ const routes = [
     {
         path: '/products/iherb',
         component: IherbIndexPage
+    },
+    {
+        path: '/products/best-before',
+        component: BestBeforeIndex
+    },
+    {
+        path: '/with-drawal',
+        component: WithDrawalIndex
     }
 ];
 
