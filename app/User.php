@@ -70,6 +70,10 @@ class User extends Authenticatable
         return $this->belongsTo('App\UserRole', 'role_id');
     }
 
+    public function getIsSuperUserAttribute() {
+        return in_array($this->role_id, [1, 8]);
+    }
+
     public function scopeLogin($q, $login) {
         $q->where('login', $login);
     }

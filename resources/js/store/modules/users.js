@@ -5,10 +5,17 @@ import {createUser, deleteUser, editUser, getUserRoles, getUsers} from "@/api/us
 const userModule = {
     state: {
         users: [],
-        user_roles: []
+        user_roles: [],
     },
     getters: {
         users: state => state.users,
+        user_filters: state => ([
+            {
+                id: -1,
+                name: 'Все'
+            },
+            ...state.users,
+        ]),
         user: state => id => state.users.find(u => u.id === id),
         user_roles: state => state.user_roles,
         USERS_SUPPLIERS: state => state.users.filter(user => user.role_id === 5),

@@ -18,6 +18,13 @@ const storeModule = {
     },
     getters: {
         stores: state => state.stores,
+        store_filters: state => ([
+            {
+                id: -1,
+                name: 'Все'
+            },
+            ...state.stores,
+        ]),
         store: state => id => state.stores.find(s => s.id === id),
         store_types: state => state.store_types,
         shops: state => state.stores.filter(s => s.type_id == 1),

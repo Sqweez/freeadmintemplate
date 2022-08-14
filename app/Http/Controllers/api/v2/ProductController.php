@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v2;
 use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductCreateRequest;
+use App\Http\Resources\BestBeforeResource;
 use App\Http\Resources\RelatedProductsResource;
 use App\Http\Resources\v2\Product\IHerbProductsResource;
 use App\Http\Resources\v2\Product\ProductsResource;
@@ -12,12 +13,14 @@ use App\Http\Resources\v2\Product\ModeratorProducts;
 use App\Http\Resources\v2\Product\ProductResource;
 use App\MarginType;
 use App\Store;
+use App\v2\Models\BestBefore;
 use App\v2\Models\Product;
 use App\ProductBatch;
 use App\v2\Models\ProductSaleEarning;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Validator;
@@ -339,5 +342,39 @@ class ProductController extends Controller
             ->get();
 
         return IHerbProductsResource::collection($sku);
+    }
+
+    public function createBestBeforeProducts(Request $request): JsonResponse {
+        $products = $request->get('products');
+        foreach ($products as $product) {
+            BestBefore::query()->create($product);
+        }
+        return response()->json(['message' => 'Успех']);
+    }
+
+    public function getBestBeforeProducts(Request $request) {
+        // @TODO 2022-08-13T19:35:58 обернуть в ресурс
+        $start = $request->get('start', null);
+        $finish = $request->get('finish', null);
+        $with = array_map(function ($item) {
+            return 'sku.' . $item;
+        }, ProductSku::PRODUCT_SKU_WITH_CART_LIST);
+
+        $user = auth()->user();
+        $products = BestBefore::query()
+            ->with($with)
+            ->with('store')
+            ->when(!$user->is_super_user, function ($q) use ($user) {
+                return $q->where('store_id', $user->store_id);
+            })
+            ->when(!is_null($start), function ($q) use ($start) {
+                return $q->whereDate('best_before', '>=', Carbon::parse($start));
+            })
+            ->when(!is_null($finish), function ($q) use ($finish) {
+                return $q->whereDate('best_before', '<=', Carbon::parse($finish));
+            })
+            ->get();
+
+        return BestBeforeResource::collection($products);
     }
 }

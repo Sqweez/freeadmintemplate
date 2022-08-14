@@ -17,6 +17,11 @@ const navigationModule = {
                 icon: 'person'
             },
             {
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report'
+            },
+            {
                 title: 'Документооборот',
                 url: '#',
                 icon: 'article',
@@ -82,6 +87,10 @@ const navigationModule = {
                         title: 'Товары IHerb',
                         url: '/products/iherb'
                     },
+                    {
+                        title: 'Сроки годности',
+                        url: '/products/best-before'
+                    }
                 ],
             },
             {
@@ -393,6 +402,11 @@ const navigationModule = {
                 icon: 'person'
             },
             {
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report'
+            },
+            {
                 title: 'Документооборот',
                 url: '#',
                 icon: 'article',
@@ -464,6 +478,10 @@ const navigationModule = {
                         title: 'Товары IHerb',
                         url: '/products/iherb'
                     },
+                    {
+                        title: 'Сроки годности',
+                        url: '/products/best-before'
+                    }
                 ],
             },
             {
@@ -701,6 +719,11 @@ const navigationModule = {
                 icon: 'person'
             },
             {
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report'
+            },
+            {
                 title: 'Склад',
                 url: '#',
                 icon: 'home',
@@ -730,6 +753,10 @@ const navigationModule = {
                         title: 'Поступления',
                         url: '/arrivals',
                     },
+                    {
+                        title: 'Сроки годности',
+                        url: '/products/best-before'
+                    }
                 ],
             },
             {
@@ -758,6 +785,11 @@ const navigationModule = {
                 title: 'Главная страница',
                 url: '/',
                 icon: 'dashboard',
+            },
+            {
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report'
             },
             {
                 title: 'Клиенты',
@@ -794,6 +826,10 @@ const navigationModule = {
                         title: 'Поступления',
                         url: '/arrivals',
                     },
+                    {
+                        title: 'Сроки годности',
+                        url: '/products/best-before'
+                    }
                 ],
             },
             {
@@ -979,6 +1015,11 @@ const navigationModule = {
                 isAdmin: true
             },
             {
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report'
+            },
+            {
                 title: 'Клиенты',
                 url: '/clients',
                 icon: 'person'
@@ -1028,6 +1069,10 @@ const navigationModule = {
                     {
                         title: 'Предзаказы',
                         url: '/preorders/index'
+                    },
+                    {
+                        title: 'Сроки годности',
+                        url: '/products/best-before'
                     }
                 ],
             },
@@ -1050,7 +1095,7 @@ const navigationModule = {
                 title: 'Промокоды',
                 url: '/promocode',
                 icon: 'report'
-            }
+            },
         ],
     },
     getters: {

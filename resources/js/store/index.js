@@ -35,6 +35,7 @@ import motivationModule from "@/store/modules/motivation";
 import vuexPlugins from "@/store/plugins/vuexPlugins";
 import analyticsModule from "@/store/modules/v2/analytics";
 import bookingModule from "@/store/modules/booking";
+import withDrawalsModule from "@/store/modules/with_drawals";
 
 Vue.use(Vuex);
 
@@ -89,7 +90,8 @@ const store = new Store({
         shiftModule,
         motivationModule,
         analyticsModule,
-        bookingModule
+        bookingModule,
+        withDrawalsModule
     },
     plugins: [
         createPersistedState({
