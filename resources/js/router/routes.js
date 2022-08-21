@@ -70,6 +70,8 @@ import ProductSubcategories from "@/views/Moderator/ProductSubcategories";
 import IherbIndexPage from "@/views/IHerb/IherbIndexPage";
 import BestBeforeIndex from "@/views/BestBefore/BestBeforeIndex";
 import WithDrawalIndex from "@/views/WithDrawal/WithDrawalIndex";
+import TerminalIndex from "@/views/Terminal/TerminalIndex";
+import SettingsIndex from "@/views/Settings/SettingsIndex";
 
 const routes = [
     {
@@ -697,6 +699,10 @@ const routes = [
     {
         path: '/with-drawal',
         component: WithDrawalIndex
+    },
+    {
+        path: '/settings',
+        component: SettingsIndex
     }
 ];
 

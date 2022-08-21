@@ -785,8 +785,10 @@
                 this.client = client;
             },
             async createKaspiResponse() {
-                const kaspiTerminalIp = localStorage.getItem('kaspi_terminal_ip') ? localStorage.getItem('kaspi_terminal_ip') : this.currentStore.kaspi_terminal_ip;
-                console.log(kaspiTerminalIp);
+                const kaspiTerminalIp = localStorage.getItem('kaspi_terminal_ip');
+                if (!kaspiTerminalIp) {
+                    return false;
+                }
                 const url = `http://${kaspiTerminalIp}:8080/payment`;
                 const amount = this.isSplitPayment ? this.splitPayment
                     .filter(s => (s.payment_type === 1 || s.payment_type === 2))

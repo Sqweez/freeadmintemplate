@@ -182,6 +182,11 @@ const navigationModule = {
                 ]
             },
             {
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings'
+            },
+            {
                 title: 'Отчеты по продажам',
                 url: '/reports',
                 icon: 'report',
@@ -501,6 +506,11 @@ const navigationModule = {
                 ],
             },
             {
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings'
+            },
+            {
                 title: 'Отчеты по продажам',
                 url: '/reports',
                 icon: 'report',
@@ -760,6 +770,11 @@ const navigationModule = {
                 ],
             },
             {
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings'
+            },
+            {
                 title: 'Отчеты по продажам',
                 url: '/reports',
                 icon: 'report',
@@ -831,6 +846,11 @@ const navigationModule = {
                         url: '/products/best-before'
                     }
                 ],
+            },
+            {
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings'
             },
             {
                 title: 'Отчеты по продажам',
@@ -1075,6 +1095,11 @@ const navigationModule = {
                         url: '/products/best-before'
                     }
                 ],
+            },
+            {
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings'
             },
             {
                 title: 'Отчеты по продажам',

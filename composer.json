@@ -23,7 +23,7 @@
         "ext-gd": "*"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.4",
+        "barryvdh/laravel-debugbar": "*",
         "barryvdh/laravel-ide-helper": "^2.8",
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.4",

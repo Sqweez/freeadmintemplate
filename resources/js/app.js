@@ -14,6 +14,7 @@ import './filters/filters';
 import loadingPlugin from "./utils/loadingPlugin";
 import JsonExcel from "vue-json-excel";
 axios.defaults.withCredentials = true;
+import Rollbar from 'rollbar';
 
 import VueFroala from 'vue-froala-wysiwyg'
 import { VueEditor } from "vue2-editor";
@@ -27,6 +28,23 @@ Vue.component('downloadExcel', JsonExcel);
 
 
 Vue.config.productionTip = false;
+
+Vue.prototype.$rollbar = new Rollbar({
+    accessToken: 'cc9fe5c1a6814e59a5496e5263396c12',
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+    payload: {
+        // Track your events to a specific version of code for better visibility into version health
+        code_version: '1.0.0',
+        // Add custom data to your events by adding custom key/value pairs like the one below
+        custom_data: 'foo'
+    }
+});
+
+Vue.config.errorHandler = (err, vm, info) => {
+    vm.$rollbar.error(err);
+    throw err; // rethrow
+};
 
 const app = new Vue({
     el: '#app',
