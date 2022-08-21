@@ -190,6 +190,10 @@ export default {
                 text: 'Изображение'
             },
             {
+                value: 'description',
+                text: 'Комментарий'
+            },
+            {
                 value: 'date',
                 text: 'Дата'
             },

@@ -55,7 +55,7 @@ class TransferController extends Controller {
                     'batches.product.product.attributes', 'batches.product.attributes',
                     'batches.product.product.attributes.attribute_name'
                 ])
-            ->select('id', 'parent_store_id', 'child_store_id', 'user_id', 'photos', 'created_at', 'updated_at')
+            ->select(['id', 'parent_store_id', 'child_store_id', 'user_id', 'photos', 'created_at', 'updated_at'])
             ->orderByDesc('created_at');
 
         if ($request->has('partners')) {

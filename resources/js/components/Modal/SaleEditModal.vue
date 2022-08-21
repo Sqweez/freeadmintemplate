@@ -342,11 +342,13 @@
                         this.client = this.clients.find(c => c.id === this.report.client.id);
                     }
                     let productIds = this.report.products.map(p => p.product_id);
-                    let products = JSON.parse(JSON.stringify(this.productsWithoutFilters))
-                        .filter(p => productIds.includes(p.id))
-                        .map((p, idx) => {
-                            p.quantity += this.report.products[idx].count;
-                            return p;
+                    let products = productIds
+                        .map(id => {
+                            const product = this.productsWithoutFilters.find(p => p.id === id);
+                            return {
+                                ...product,
+                                quantity: this.report.products.find(p => p.product_id === id).count
+                            };
                         });
                     products.forEach((product, idx) => {
                         this.cart.push({

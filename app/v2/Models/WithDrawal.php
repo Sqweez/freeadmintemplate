@@ -24,6 +24,6 @@ class WithDrawal extends Model
     }
 
     public function getCanDeleteAttribute(): bool {
-        return auth()->user()->is_super_user || $this->user_id === auth()->id();
+        return auth()->user()->is_super_user;
     }
 }
