@@ -171,7 +171,7 @@ class ProductController extends Controller {
     private function getFilteredProducts($query, $store_id, $user_token): AnonymousResourceCollection {
         $filters = $this->getFilterParametrs($query, $store_id);
         $products = $this->getProductWithFilter($filters, $store_id, $user_token)
-            ->paginate(36);
+            ->paginate(24);
         return ProductsResource::collection(
             $products
         );
