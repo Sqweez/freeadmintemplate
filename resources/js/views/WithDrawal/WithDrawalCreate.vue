@@ -23,7 +23,7 @@
                     <v-select
                         v-if="IS_SUPERUSER"
                         label="Пользователь"
-                        v-model="store_id"
+                        v-model="user_id"
                         :items="$users"
                         item-text="name"
                         item-value="id"
