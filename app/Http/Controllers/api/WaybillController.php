@@ -540,7 +540,7 @@ class WaybillController extends Controller
             $excelSheet->setCellValue('R' . ($currentIndex), $item['total_quantity']);
             // Ячейка клиента
             $excelSheet->setCellValue('W' . ($currentIndex), 0);
-            $validation = $excelSheet->getCell('W' . $currentIndex)->getDataValidation();
+            /*$validation = $excelSheet->getCell('W' . $currentIndex)->getDataValidation();
             $validation->setType( DataValidation::TYPE_WHOLE );
             $validation->setErrorStyle( DataValidation::STYLE_STOP );
             $validation->setAllowBlank(true);
@@ -551,7 +551,7 @@ class WaybillController extends Controller
             $validation->setPromptTitle('Допустимый ввод');
             $validation->setPrompt('Допускаются числа от 0 до ' . $item['total_quantity']);
             $validation->setFormula1(0);
-            $validation->setFormula2($item['total_quantity']);
+            $validation->setFormula2($item['total_quantity']);*/
             $excelSheet->setCellValue('AA' . ($currentIndex), intval($item['final_price']));
 
             $formula = "=PRODUCT(AA$currentIndex * W$currentIndex)";
