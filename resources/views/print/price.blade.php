@@ -37,7 +37,7 @@
 
         .name {
             font-size: 12px;
-            font-family: Name, sans-serif;
+            font-family: Price, sans-serif;
             text-align: center;
         }
 
