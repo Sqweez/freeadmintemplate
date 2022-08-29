@@ -158,11 +158,16 @@
                         :disabled="!IS_SUPERUSER"
                         v-model.number="kaspi_product_price"
                         type="number"/>
-                    <v-text-field
-                        v-if="!isEditing || (grouping_attribute_id === 0 || grouping_attribute_id === null)"
-                        label="Штрихкод"
-                        v-model.number="product_barcode"
-                        type="text"/>
+                    <div class="d-flex align-center"  v-if="!isEditing || (grouping_attribute_id === 0 || grouping_attribute_id === null)">
+                        <v-text-field
+
+                            label="Штрихкод"
+                            v-model.number="product_barcode"
+                            type="text"/>
+                        <v-btn icon @click="generateBarcode">
+                            <v-icon>mdi-barcode</v-icon>
+                        </v-btn>
+                    </div>
                     <v-autocomplete
                         label="Производитель"
                         :disabled="!IS_SUPERUSER"
@@ -598,6 +603,9 @@ export default {
         additionalSubcategories: [],
     }),
     methods: {
+        async generateBarcode () {
+            this.product_barcode =await this.$barcode.generate();
+        },
         addSubcategoriesSelect () {},
         async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
             const response = await this.$file.upload(file, 'uploads', 'file');

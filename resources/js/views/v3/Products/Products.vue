@@ -265,10 +265,6 @@
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <!--  <v-btn color="primary" @click="priceTag = item; priceTagModal = true;">
-                                      Печать ценника
-                                      <v-icon>mdi-plus</v-icon>
-                                  </v-btn>-->
                                 <v-btn color="warning" @click="showProductModal(item.id, 'editProduct')">
                                     Товар
                                     <v-icon>mdi-pencil</v-icon>
@@ -285,6 +281,10 @@
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
                                 </div>
+                                <v-btn color="primary" @click="currentProduct = {...item}; showProductPrintModal = true;">
+                                    Печать этикеток
+                                    <v-icon>mdi-print</v-icon>
+                                </v-btn>
                             </div>
                         </template>
                         <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
@@ -316,6 +316,11 @@
         <SkuModal
             @cancel="$store.commit('modals/closeProductSkuModal')"
         />
+        <ProductPrintModal
+            :state="showProductPrintModal"
+            :product="currentProduct"
+            @cancel="showProductPrintModal = false; currentProduct = {}"
+        />
         <!-- <PriceTagModal
              :state="priceTagModal"
              :priceTag="priceTag"
@@ -336,9 +341,11 @@
     import product_search from "@/mixins/product_search";
     import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
     import SkuModal from "@/components/v2/Modal/SkuModal";
+    import ProductPrintModal from '@/components/Modal/ProductPrintModal';
 
     export default {
         components: {
+            ProductPrintModal,
             SkuModal,
             PriceTagModal,
             ProductModal,
@@ -372,6 +379,8 @@
             await this.$store.dispatch(ACTIONS.GET_SUPPLIERS);
         },
         data: () => ({
+            showProductPrintModal: false,
+            currentProduct: {},
             priceTagModal: false,
             waitingQuantities: false,
             loading: false,

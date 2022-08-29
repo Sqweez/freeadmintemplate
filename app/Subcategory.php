@@ -31,6 +31,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory site()
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereIsSiteVisible($value)
  * @property-read SeoText|null $seoText
+ * @property string|null $meta_title
+ * @property string|null $meta_description
+ * @property string|null $meta_h1
+ * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereMetaDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereMetaH1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereMetaTitle($value)
  */
 class Subcategory extends Model
 {

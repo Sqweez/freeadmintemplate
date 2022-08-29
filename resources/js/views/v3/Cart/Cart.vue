@@ -887,7 +887,7 @@
             },
             printCheck() {
                 this.confirmationModal = false;
-                window.open(`/check/${this.sale_id}`, '_blank');
+                window.open(`/print/check/${this.sale_id}`, '_blank');
             },
             async getWayBill() {
                 this.waybillModal = false;

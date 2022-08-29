@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.2",
+        "php": "*",
         "barryvdh/laravel-cors": "^1.0",
         "barryvdh/laravel-dompdf": "^0.8.6",
         "fideloper/proxy": "^4.0",
@@ -20,6 +20,7 @@
         "laravel/tinker": "^2.0",
         "phpoffice/phpspreadsheet": "^1.13",
         "spatie/laravel-backup": "^6.16",
+        "milon/barcode": "^6.0",
         "ext-gd": "*"
     },
     "require-dev": {

@@ -61,10 +61,15 @@
                     v-model="self_price"
                 />
                 <p>Оставьте 0, если товар не имеет отдельной стоимости</p>
-                <v-text-field
-                    label="Штрих-код"
-                    v-model="product_barcode"
-                />
+                <div class="d-flex align-center">
+                    <v-text-field
+                        label="Штрих-код"
+                        v-model="product_barcode"
+                    />
+                    <v-btn icon @click="generateBarcode">
+                        <v-icon>mdi-barcode</v-icon>
+                    </v-btn>
+                </div>
                 <div class="d-flex">
                     <v-select
                         style="max-width: 300px;"
@@ -138,6 +143,9 @@
             }
         },
         methods: {
+            async generateBarcode () {
+                this.product_barcode = await this.$barcode.generate();
+            },
             async onSubmit() {
                 const product = this.getProduct();
                 if (!this.validate(product)) {

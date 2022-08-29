@@ -379,7 +379,7 @@
                         <v-btn color="primary" icon @click="report = item; editMode = true;">
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
-                        <v-btn color="primary" :href="'/check/' + item.id" target="_blank">
+                        <v-btn color="primary" :href="'/print/check/' + item.id" target="_blank">
                             печать чека
                         </v-btn>
                     </div>

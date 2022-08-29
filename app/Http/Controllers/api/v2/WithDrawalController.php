@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\FileService;
 use App\Http\Requests\WithDrawal\WithDrawalStoreRequest;
 use App\Http\Resources\WithDrawal\WithDrawalListResource;
+use App\User;
 use App\v2\Models\WithDrawal;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,7 @@ class WithDrawalController extends Controller
                 return $q->where('user_id', $user->id);
             })
             ->with(['user:id,name', 'store:id,name'])
+            ->latest()
             ->get();
 
         return WithDrawalListResource::collection($withDrawals);

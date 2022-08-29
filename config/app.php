@@ -1,5 +1,7 @@
 <?php
 
+use Milon\Barcode\BarcodeServiceProvider;
+
 return [
 
     /*
@@ -181,6 +183,7 @@ return [
         App\Providers\CartServiceProvider::class,
         App\Providers\TelegramServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
+        BarcodeServiceProvider::class,
     ],
 
     /*
@@ -235,7 +238,9 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'ProductService' => App\Facades\ProductServiceFacade::class,
         'CartService' => App\Facades\CartServiceFacade::class,
-        'TelegramService' => App\Facades\TelegramServiceFacade::class
+        'TelegramService' => App\Facades\TelegramServiceFacade::class,
+        'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
     ],
 
 ];
