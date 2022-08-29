@@ -39,6 +39,12 @@ use function foo\func;
  * @method static \Illuminate\Database\Eloquent\Builder|Category site()
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereIsSiteVisible($value)
  * @property-read SeoText|null $seoText
+ * @property string|null $meta_title
+ * @property string|null $meta_description
+ * @property string|null $meta_h1
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereMetaDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereMetaH1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereMetaTitle($value)
  */
 class Category extends Model
 {

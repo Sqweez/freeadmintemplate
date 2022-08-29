@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -44,6 +45,7 @@ use Illuminate\Support\Facades\Hash;
  * @method static \Illuminate\Database\Query\Builder|User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
  * @mixin \Eloquent
+ * @property-read mixed $is_super_user
  */
 class User extends Authenticatable
 {
@@ -62,15 +64,15 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($password);
     }
 
-    public function store() {
+    public function store(): BelongsTo {
         return $this->belongsTo('App\Store', 'store_id');
     }
 
-    public function role() {
+    public function role(): BelongsTo {
         return $this->belongsTo('App\UserRole', 'role_id');
     }
 
-    public function getIsSuperUserAttribute() {
+    public function getIsSuperUserAttribute(): bool {
         return in_array($this->role_id, [1, 8]);
     }
 

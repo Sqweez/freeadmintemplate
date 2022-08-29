@@ -65,6 +65,8 @@ use Illuminate\Support\Collection;
  * @property-read mixed $additional_subcategories
  * @property-read \App\MarginType $margin_type
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSku whereMarginTypeId($value)
+ * @property-read mixed $excel_name
+ * @property-read mixed $is_iherb
  */
 class ProductSku extends Model
 {

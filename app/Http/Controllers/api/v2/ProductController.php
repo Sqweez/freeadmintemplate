@@ -352,8 +352,7 @@ class ProductController extends Controller
         return response()->json(['message' => 'Успех']);
     }
 
-    public function getBestBeforeProducts(Request $request) {
-        // @TODO 2022-08-13T19:35:58 обернуть в ресурс
+    public function getBestBeforeProducts(Request $request): AnonymousResourceCollection {
         $start = $request->get('start', null);
         $finish = $request->get('finish', null);
         $with = array_map(function ($item) {
@@ -376,5 +375,14 @@ class ProductController extends Controller
             ->get();
 
         return BestBeforeResource::collection($products);
+    }
+
+    public function generateBarcode(): string {
+        $BARCODE_LENGTH = 13;
+        $barcode = generate_number($BARCODE_LENGTH);
+        if (ProductSku::whereProductBarcode($barcode)->count() > 0) {
+            return $this->generateBarcode();
+        }
+        return $barcode;
     }
 }

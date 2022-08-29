@@ -1,9 +1,10 @@
 import ToastService from "@/utils/toastService";
 import LoadingService from "@/utils/loadingService";
 import ColorService from "@/utils/colorService";
-import store from "@/store";
 import FileService from "@/utils/fileService";
 import DatePlugin from "@/utils/datePlugin";
+import BarcodeService from '@/utils/barcodeService';
+import store from "@/store";
 import {mapGetters} from "vuex";
 
 export default {
@@ -19,6 +20,9 @@ export default {
                     $users: 'users',
                     $userFilters: 'user_filters'
                 }),
+                $barcode () {
+                    return new BarcodeService();
+                },
                 $toast() {
                     return new ToastService();
                 },

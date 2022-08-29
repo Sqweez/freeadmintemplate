@@ -93,6 +93,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Product whereSupplierId($value)
  * @property string $product_name_web
  * @method static Builder|Product whereProductNameWeb($value)
+ * @property int $is_iherb
+ * @method static Builder|Product whereIsIherb($value)
  */
 class Product extends Model {
 

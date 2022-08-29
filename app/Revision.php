@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Revision whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Revision whereUserId($value)
  * @mixin \Eloquent
+ * @property string|null $finished_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Revision whereFinishedAt($value)
  */
 class Revision extends Model
 {

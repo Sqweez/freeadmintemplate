@@ -130,6 +130,8 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|\App\v2\Models\StockProducts[] $stocks
  * @property-read int|null $stocks_count
  * @method static Builder|Product ofStocks()
+ * @property bool $is_iherb
+ * @method static Builder|Product whereIsIherb($value)
  */
 class Product extends Model
 {
