@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuetify from "vuetify";
+import ru from 'vuetify/lib/locale/ru';
 import 'vuetify/dist/vuetify.min.css'
 import colors from 'vuetify/lib/util/colors'
 
@@ -17,5 +18,9 @@ export default new Vuetify({
         },
         dark: true,
     },
+    lang: {
+        current: 'ru',
+        locales: { ru }
+    }
 })
 
