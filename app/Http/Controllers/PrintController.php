@@ -6,6 +6,7 @@ use App\Http\Resources\v2\Report\ReportsResource;
 use App\Sale;
 use App\v2\Models\ProductSku;
 use DNS1D;
+use DNS2D;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,7 @@ class PrintController extends Controller
         $barcodes = [];
         for ($i = 0; $i < $count; $i++) {
             $barcodes[] = [
-                'html' => DNS1D::getBarcodeSVG($productSku->product_barcode, 'EAN13', 2, 35, 'black', false),
+                'html' => DNS1D::getBarcodeSVG($productSku->product_barcode, 'C128', 2, 35, 'black', false),
                 'barcode' => $productSku->product_barcode,
             ];
         }
