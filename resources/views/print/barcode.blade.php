@@ -44,5 +44,12 @@
         </div>
     @endforeach
 </div>
+<script>
+    window.print();
+
+    window.addEventListener('afterprint', (event) => {
+        window.close();
+    });
+</script>
 </body>
 </html>
