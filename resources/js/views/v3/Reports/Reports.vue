@@ -410,7 +410,7 @@
                             </v-btn>
                         </v-list-item>
                         <v-list-item>
-                            <v-btn small depressed color="success" text :href="'/check/' + item.id" target="_blank">
+                            <v-btn small depressed color="success" text :href="'/print/check/' + item.id" target="_blank">
                                 Чек <v-icon class="ml-2">mdi-printer</v-icon>
                             </v-btn>
                         </v-list-item>
