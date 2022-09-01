@@ -144,7 +144,9 @@
         },
         methods: {
             async generateBarcode () {
-                this.product_barcode = await this.$barcode.generate();
+                this.$nextTick(async () => {
+                    this.product_barcode = await this.$barcode.generate(this.id);
+                })
             },
             async onSubmit() {
                 const product = this.getProduct();

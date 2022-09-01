@@ -604,7 +604,9 @@ export default {
     }),
     methods: {
         async generateBarcode () {
-            this.product_barcode =await this.$barcode.generate();
+            this.$nextTick(async () => {
+                this.product_barcode = await this.$barcode.generate(this.id);
+            });
         },
         addSubcategoriesSelect () {},
         async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
