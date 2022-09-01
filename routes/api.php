@@ -232,7 +232,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::prefix('products')->group(function () {
-            Route::get('generate-barcode', [ProductController::class, 'generateBarcode']);
+            Route::get('generate-barcode/{id}', [ProductController::class, 'generateBarcode']);
             Route::get('iherb', [ProductController::class, 'getIherbProducts']);
             Route::delete('tags', [ProductController::class, 'deleteProductTag']);
             Route::post('tags', [ProductController::class, 'setProductTags']);

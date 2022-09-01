@@ -378,8 +378,8 @@ class ProductController extends Controller
     }
 
     public function generateBarcode(): string {
-        $BARCODE_LENGTH = 13;
-        $barcode = generate_number($BARCODE_LENGTH);
+        $BARCODE_LENGTH = 12;
+        $barcode = generate_number($BARCODE_LENGTH) . '6';
         if (ProductSku::whereProductBarcode($barcode)->count() > 0) {
             return $this->generateBarcode();
         }
