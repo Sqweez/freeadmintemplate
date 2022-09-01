@@ -377,12 +377,32 @@ class ProductController extends Controller
         return BestBeforeResource::collection($products);
     }
 
-    public function generateBarcode(): string {
+    public function generateBarcode($id): string {
         $BARCODE_LENGTH = 12;
-        $barcode = generate_number($BARCODE_LENGTH) . '6';
+        $id = intval($id);
+        $number = !is_nan($id) ? $id : ProductSku::latest()->first()->id + 1;
+        $barcode = $this->generateEAN($number);
         if (ProductSku::whereProductBarcode($barcode)->count() > 0) {
-            return $this->generateBarcode();
+            return $this->generateBarcode($id);
         }
         return $barcode;
+    }
+
+
+    private function generateEAN($number)
+    {
+        $code = '200' . str_pad($number, 9, '0');
+        $weightflag = true;
+        $sum = 0;
+        // Weight for a digit in the checksum is 3, 1, 3.. starting from the last digit.
+        // loop backwards to make the loop length-agnostic. The same basic functionality
+        // will work for codes of different lengths.
+        for ($i = strlen($code) - 1; $i >= 0; $i--)
+        {
+            $sum += (int)$code[$i] * ($weightflag?3:1);
+            $weightflag = !$weightflag;
+        }
+        $code .= (10 - ($sum % 10)) % 10;
+        return $code;
     }
 }
