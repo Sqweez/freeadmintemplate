@@ -29,6 +29,12 @@ class SeoController extends Controller
 
         $model = $model->whereKey($id)->first();
 
+        $model->update([
+            'meta_h1' => $request->get('meta_h1', null),
+            'meta_title' => $request->get('meta_title', null),
+            'meta_description' => $request->get('meta_description', null),
+        ]);
+
         $model->seoText()->delete();
 
         $model->seoText()->create([
