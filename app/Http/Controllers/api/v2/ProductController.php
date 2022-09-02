@@ -378,9 +378,7 @@ class ProductController extends Controller
     }
 
     public function generateBarcode($id): string {
-        $BARCODE_LENGTH = 12;
-        $id = intval($id);
-        $number = !is_nan($id) ? $id : ProductSku::latest()->first()->id + 1;
+        $number = $id !== 'null' ? $id : ProductSku::latest()->first()->id + 1;
         $barcode = $this->generateEAN($number);
         if (ProductSku::whereProductBarcode($barcode)->count() > 0) {
             return $this->generateBarcode($id);
@@ -391,7 +389,7 @@ class ProductController extends Controller
 
     private function generateEAN($number)
     {
-        $code = '200' . str_pad($number, 9, '0');
+        $code = '487' . str_pad($number, 9, '0');
         $weightflag = true;
         $sum = 0;
         // Weight for a digit in the checksum is 3, 1, 3.. starting from the last digit.
