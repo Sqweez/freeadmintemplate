@@ -39,9 +39,9 @@ class PrintController extends Controller
 
     public function printCheck($sale, Request $request) {
         $report = ReportsResource::make(Sale::report()->whereKey($sale)->first())->toArray($request);
-        if ($report['payment_type'] === 2) {
+        /*if ($report['payment_type'] === 2) {
             $report['final_price'] += $report['final_price'] * Sale::KASPI_RED_PERCENT;
-        }
+        }*/
         return view('print.check', [
             'report' => (object) $report,
         ]);

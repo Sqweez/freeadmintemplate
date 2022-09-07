@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::with(['store', 'role'])->get());
+        return UserResource::collection(User::with(['store.city_name', 'role'])->get());
     }
 
     public function indexRoles() {

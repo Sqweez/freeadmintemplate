@@ -4,6 +4,8 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Sale
@@ -152,13 +154,13 @@ class Sale extends Model
         ]);
     }
 
-    public function certificate() {
+    public function certificate(): HasOne {
         return $this->hasOne('App\v2\Models\Certificate', 'sale_id')->withDefault([
             'amount' => 0
         ]);
     }
 
-    public function used_certificate() {
+    public function used_certificate(): HasOne {
         return $this->hasOne('App\v2\Models\Certificate', 'used_sale_id');
     }
 
@@ -171,8 +173,8 @@ class Sale extends Model
             ->withTrashed();
     }
 
-    public function products() {
-        return $this->hasMany('App\SaleProduct', 'sale_id');
+    public function products(): HasMany {
+        return $this->hasMany(SaleProduct::class, 'sale_id');
     }
 
 
@@ -241,9 +243,6 @@ class Sale extends Model
         $price = ($this->products->reduce(function ($a, $c) {
             return $a + $c->final_price;
         }, 0));
-        if ($this->kaspi_red) {
-            $price -= $price * self::KASPI_RED_PERCENT;
-        }
 
         $price += $this->certificate->final_amount;
         if ($this->booking) {
@@ -251,6 +250,10 @@ class Sale extends Model
         }
 
         return ceil($price - $this->balance);
+    }
+
+    public function getKaspiRedCommissionAttribute(): int {
+        return $this->kaspi_red ? ceil($this->getFinalPriceAttribute() * self::KASPI_RED_PERCENT) : 0;
     }
 
     public function getFinalPriceWithoutRedAttribute() {
@@ -267,9 +270,10 @@ class Sale extends Model
     }
 
     public function getMarginAttribute() {
-        return intval($this->products->reduce(function ($a, $c) {
+        $productsMargin = intval($this->products->reduce(function ($a, $c) {
             return $a + $c->margin;
         }, 0));
+        return $productsMargin + $this->certificate->final_amount + $this->certificate_margin - $this->getKaspiRedCommissionAttribute();
     }
 
     public function getDateAttribute() {

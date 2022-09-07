@@ -4,6 +4,7 @@ namespace App;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\SaleProduct
@@ -62,7 +63,7 @@ class SaleProduct extends Model
         return $this->belongsTo('App\Sale', 'sale_id');
     }
 
-    public function brothers() {
+    public function brothers(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany('App\SaleProduct', 'id', 'id');
     }
 
@@ -70,39 +71,31 @@ class SaleProduct extends Model
         return $this->product_price - ($this->discount /  100) * $this->product_price;
     }
 
-    public function getKaspiRedAttribute() {
-        return $this->sale->kaspi_red;
+    public function getKaspiRedAttribute(): bool {
+        return !!$this->sale->kaspi_red;
     }
 
-    public function getCertificateAttribute() {
+    public function getCertificateAttribute(): v2\Models\Certificate {
         return $this->sale->certificate;
     }
 
-    public function getBookingAttribute() {
+    public function getBookingAttribute(): ?v2\Models\Booking {
         return $this->sale->booking;
     }
 
-    public function getBalanceAttribute() {
+    public function getBalanceAttribute(): int {
         return $this->sale->balance;
     }
 
     public function getFinalSalePriceAttribute() {
-        $price = $this->final_price;
-        if ($this->kaspi_red) {
-            $price -= $price * Sale::KASPI_RED_PERCENT;
-        }
-        return $price;
+        return $this->getFinalPriceAttribute();
     }
 
     public function getMarginAttribute() {
         return ceil($this->discount === 100 ? 0 : $this->final_price - $this->purchase_price);
     }
 
-    public function batch() {
+    public function batch(): BelongsTo {
         return $this->belongsTo('App\ProductBatch', 'product_batch_id');
     }
-
-    /*public function getCountAttribute() {
-        return static::query()->where('sale_id', $this->sale_id)->where('product_id', $this->product_id)->count();
-    }*/
 }
