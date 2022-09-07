@@ -37,6 +37,12 @@
                                 <v-list-item-title>{{ averageCheck | priceFilters }}</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-list-item v-if="IS_SUPERUSER">
+                            <v-list-item-content>
+                                <v-list-item-title class="font-weight-black">Комиссия RED:</v-list-item-title>
+                                <v-list-item-title>{{ totalRedCommission | priceFilters }}</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
                     </v-list>
                 </v-col>
                 <v-col cols="12" xl="3">
@@ -287,6 +293,12 @@
                             <v-list-item-content>
                                 <v-list-item-title>{{ item.final_price | priceFilters}}</v-list-item-title>
                                 <v-list-item-subtitle>Финальная стоимость</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="item.is_kaspi_red">
+                            <v-list-item-content>
+                                <v-list-item-title>{{ item.kaspi_red_commission | priceFilters }}</v-list-item-title>
+                                <v-list-item-subtitle>Комиссия RED</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item v-if="IS_BOSS">
@@ -793,6 +805,11 @@ const DATE_FILTERS = {
             },
             averageCheck() {
                 return this.totalSaleCount === 0 ? 0 : this.totalSales / this.totalSaleCount;
+            },
+            totalRedCommission () {
+                return this._salesReport.reduce((a, c) => {
+                    return a + c.kaspi_red_commission;
+                }, 0)
             },
             salesReport() {
                 return [...this.$store.getters.REPORTS, ...this.$store.getters.PREORDERS] || [];

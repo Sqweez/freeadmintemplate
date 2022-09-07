@@ -18,6 +18,7 @@
                                 v-model="isFree"
                                 class="ml-2 margin-28"
                                 color="white darken-2"
+                                :disabled="isDiscountDisabled"
                             />
                         </div>
                         <div v-if="!isFree">
@@ -81,6 +82,7 @@
                                 color="white darken-2"
                                 label="Скидка"
                                 outlined
+                                :disabled="isDiscountDisabled"
                             />
                         </div>
                         <div class="cart__payment-type" v-if="!isFree">
@@ -314,6 +316,7 @@
                             </td>
                             <td>
                                 <v-text-field
+                                    :disabled="isDiscountDisabled"
                                     type="number"
                                     v-model="item.discount"
                                     @input="updateDiscount(item)"
@@ -322,7 +325,7 @@
                                 />
                             </td>
                             <td>{{ item.product_price | priceFilters}}</td>
-                            <td>{{ item.product_price * item.count - (Math.max(discountPercent, item.discount) / 100 * item.product_price * item.count) | priceFilters }}</td>
+                            <td>{{ calculateProductFinalPrice(item) | priceFilters }}</td>
                             <td>
                                 <v-btn icon color="error" @click="deleteFromCart(index)">
                                     <v-icon>mdi-close</v-icon>
@@ -338,8 +341,8 @@
                         <tr>
                             <th class="text-center">Общее количество</th>
                             <th class="text-center">Общая сумма</th>
-                            <th class="text-center">Процент скидки</th>
-                            <th class="text-center">Скидка</th>
+                            <th class="text-center" v-if="!isDiscountDisabled">Процент скидки</th>
+                            <th class="text-center" v-if="!isDiscountDisabled">Скидка</th>
                             <th class="text-center" v-if="preorder">Предоплата</th>
                             <th class="green--text darken-1 text-center">Итого к оплате</th>
                         </tr>
@@ -348,8 +351,8 @@
                         <tr class="pt-5">
                             <td class="text-center">{{ cartCount }} шт.</td>
                             <td class="text-center">{{ subtotal | priceFilters}}</td>
-                            <td class="text-center">{{ discount }}%</td>
-                            <td class="text-center">{{ discountTotal | priceFilters}}</td>
+                            <td class="text-center" v-if="!isDiscountDisabled">{{ discount }}%</td>
+                            <td class="text-center" v-if="!isDiscountDisabled">{{ discountTotal | priceFilters}}</td>
                             <td class="text-center" v-if="preorder">{{ preorder.amount | priceFilters}}</td>
                             <td class="text-center green--text darken-1">{{ finalPrice | priceFilters }}</td>
                         </tr>
@@ -499,6 +502,7 @@
             :state="waybillModal"
             message="Сформировать накладную?"
             :on-confirm="getWayBill"
+            @cancel="wayBillModal = false;"
         />
         <CertificateModal
             @cancel="certificateModal = false"
@@ -585,6 +589,9 @@
             isRed(value) {
                 if (value) {
                     this.payment_type = 2;
+                    this.discountPercent = 0;
+                    this.isFree = false;
+                    this.cart = this.cart.map(c => ({...c, discount: 0}))
                 } else {
                     this.payment_type = 0;
                 }
@@ -600,6 +607,10 @@
                 if (value.toString().length > 4 && /^\d+$/.test(value)) {
                     this.categoryId = this.manufacturerId = -1;
                 }
+            },
+            payment_type(value) {
+                this.isRed = value === 2;
+                this.isSplitPayment = value === 5;
             }
         },
         mixins: [product, product_search, cart],
@@ -680,6 +691,11 @@
                 ACTIONS.GET_CLIENTS,
                 ACTIONS.GET_STORES,
             ]),
+            calculateProductFinalPrice (product) {
+                const priceWithoutDiscount = product.product_price * product.count;
+                const discountPercent = !this.isRed ? (Math.max(this.discountPercent, product.discount) / 100) : 0;
+                return priceWithoutDiscount - discountPercent * priceWithoutDiscount;
+            },
             onPreorderChosen(preorder) {
                 this.preorderModal = false;
                 const preorderProducts = preorder.products.map(p => p.product_id);
@@ -911,6 +927,9 @@
             },
         },
         computed: {
+            isDiscountDisabled () {
+                return this.isRed;
+            },
             partners() {
                 return this.$store.getters.PARTNERS;
             },
@@ -929,6 +948,9 @@
                 return this.subtotal - this.discountTotal;
             },
             discount() {
+                if (this.isRed) {
+                    return 0;
+                }
                 if (this.isFree) {
                     return 100;
                 }

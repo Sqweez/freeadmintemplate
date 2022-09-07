@@ -52,9 +52,8 @@ class ReportsResource extends JsonResource
             'store_type' => intval($this->store->type_id),
             'purchase_price' => $user_id ? $this->purchase_price : 0,
             'fact_price' => $this->product_price + $this->certificate->final_amount,
-            /*'final_price' => $this->final_price + $this->certificate->final_amount - $this->preorder->amount,*/
             'final_price' => $this->final_price - $this->preorder->amount,
-            'margin' => $user_id ? $this->margin + $this->certificate->final_amount + $this->certificate_margin : 0,
+            'margin' => $this->margin,
             'certificate' => $this->used_certificate,
             'split_payment' => $this->split_payment !== null ?
                 collect($this->split_payment)->map(function ($split) {
@@ -69,6 +68,8 @@ class ReportsResource extends JsonResource
             'is_booking' => $this->booking ? true : false,
             'booking_paid_sum' => $this->booking ? $this->booking->paid_sum : 0,
             'is_paid' => $this->is_paid,
+            'kaspi_red_commission' => $this->kaspi_red_commission,
+            'is_kaspi_red' => $this->kaspi_red,
         ];
     }
 }

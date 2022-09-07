@@ -8,7 +8,7 @@
                 <v-card-title class="headline d-flex justify-space-between">
                     <span class="white--text">{{ title }}</span>
                     <v-btn icon text class="float-right">
-                        <v-icon color="white" @click="onCancel">
+                        <v-icon color="white" @click="$emit('cancel')">
                             mdi-close
                         </v-icon>
                     </v-btn>
@@ -18,7 +18,7 @@
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
-                    <v-btn text @click="onCancel">
+                    <v-btn text @click="$emit('cancel')">
                         {{ cancelMessage }}
                     </v-btn>
                     <v-spacer/>
