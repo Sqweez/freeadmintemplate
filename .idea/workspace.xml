@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/js/utils/economyService/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ArrivalController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ArrivalController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/NewArrival.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/NewArrival.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/utils/vuePlugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/vuePlugins.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,12 +178,17 @@
     "WebServerToolWindowPanel.toolwindow.show.date": "false",
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "last_opened_file_path": "C:/Code/Laravel/iron-crm",
+    "last_opened_file_path": "C:/Code/Laravel/iron-crm/resources/js/utils",
     "nodejs_package_manager_path": "yarn",
     "settings.editor.selected.configurable": "Laravel.SettingsForm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Code\Laravel\iron-crm\resources\js\utils" />
+    </key>
+  </component>
   <component name="RunManager" selected="npm.hot">
     <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner scope="XML" />
@@ -230,7 +238,7 @@
       <workItem from="1662659980662" duration="1000" />
       <workItem from="1662727927590" duration="105000" />
       <workItem from="1662906177388" duration="14155000" />
-      <workItem from="1662923112655" duration="2721000" />
+      <workItem from="1662923112655" duration="3544000" />
     </task>
     <servers />
   </component>
