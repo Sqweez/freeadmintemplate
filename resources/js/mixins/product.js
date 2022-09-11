@@ -5,8 +5,9 @@ export default {
         waitingQuantities: false,
     }),
     methods: {
-        getPrice(product) {
-            const item = product.prices.find(p => p.store_id == this.storeFilter);
+        getPrice(product, store_id = null) {
+            const storeId = store_id === null ? this.storeFilter : store_id;
+            const item = product.prices.find(p => p.store_id === storeId);
             return item ? item.price : product.product_price;
         },
         async getProductQuantities(value) {
