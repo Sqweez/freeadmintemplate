@@ -8,13 +8,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ArrivalResource;
 use App\ProductBatch;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ArrivalController extends Controller
 {
-    public function index(Request $request) {
-        $is_completed = $request->has('is_completed') ? $request->get('is_completed') : 0;
+    public function index(Request $request): AnonymousResourceCollection {
+        $is_completed = !!$request->get('is_completed', 0);
         return ArrivalResource::collection(
             Arrival::where('is_completed', $is_completed)
+                ->when($is_completed, function ($query) {
+                    return $query->whereDate('created_at', now()->subMonths(2));
+                })
                 ->with([
                     'products', 'products.product',
                     'products.product.product',
