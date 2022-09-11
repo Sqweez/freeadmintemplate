@@ -18,6 +18,10 @@
                     item-text="name"
                     v-model="loyaltyFilter"
                 />
+                <v-checkbox
+                    v-model="isWholesaleBuyer"
+                    label="Оптовый покупатель"
+                />
                 <v-row justify="space-between">
                     <v-col>
                         <v-text-field
@@ -56,6 +60,14 @@
                     </template>
                     <template v-slot:item.discount_percent="{item}">
                         <span class="text-center">{{ item.discountPercent }}%</span>
+                    </template>
+                    <template v-slot:item.is_wholesale_buyer="{item}">
+                        <v-icon color="success" v-if="item.is_wholesale_buyer">
+                            mdi-check
+                        </v-icon>
+                        <v-icon color="error" v-else>
+                            mdi-close
+                        </v-icon>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -97,10 +109,15 @@
                     value: 'client_discount'
                 },
                 {
+                    text: 'Оптовый покупатель',
+                    value: 'is_wholesale_buyer'
+                },
+                {
                     text: 'Выбрать',
                     value: 'actions'
                 }
-            ]
+            ],
+            isWholesaleBuyer: false,
         }),
         methods: {
             chooseClient(client) {
@@ -130,6 +147,11 @@
                         return client;
                     }
                     return client.loyalty_id === this.loyaltyFilter;
+                }).filter(client => {
+                    if (!this.isWholesaleBuyer) {
+                        return true;
+                    }
+                    return client.is_wholesale_buyer;
                 });
             },
             loyalties() {

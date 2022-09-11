@@ -38,7 +38,7 @@ export default {
 
             const index = this.cart.findIndex(c => c.id === item.id);
             if (index === -1 || merge) {
-                this.cart.push({...item, count: 1, product_price: item.product_price, discount: 0, uuid: Math.random()});
+                this.cart.push({...item, count: 1, product_price: item.product_price, discount: 0, uuid: Math.random(), initial_price: item.product_price});
             } else {
                 this.increaseCartCount(index);
             }

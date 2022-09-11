@@ -2,16 +2,40 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/Actions/Sale/UpdateSaleAction.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/components/Modal/WholeSaleConfirmation.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Client.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Client.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Controller.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PrintController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PrintController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/SaleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/SaleService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/VueController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/VueController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ClientController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/StoreController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/StoreController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ClientResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ClientResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/StoreResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/StoreResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportsResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/SaleProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/SaleProduct.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/UserRole.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/UserRole.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/app.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/debugbar.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/debugbar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/ConfirmationModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/ConfirmationModal.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/ClientCart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/ClientCart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/ClientModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/ClientModal.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/StoreModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/StoreModal.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/mixins/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/mixins/cart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Clients/Clients.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Clients/Clients.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Users/Users.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Users/Users.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Products/Products.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Products/Products.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/print/check.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/print/check.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +45,13 @@
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTTP Public Environment File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -166,21 +197,22 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Code/Laravel/iron-crm&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "last_opened_file_path": "C:/Code/Laravel/tooman_crm",
+    "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "Laravel.SettingsForm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="npm.hot">
     <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner scope="XML" />
@@ -225,7 +257,11 @@
       <workItem from="1662122365563" duration="1703000" />
       <workItem from="1662396597886" duration="574000" />
       <workItem from="1662455480649" duration="980000" />
-      <workItem from="1662561559540" duration="3755000" />
+      <workItem from="1662561559540" duration="5637000" />
+      <workItem from="1662642168638" duration="90000" />
+      <workItem from="1662659980662" duration="1000" />
+      <workItem from="1662727927590" duration="105000" />
+      <workItem from="1662906177388" duration="11199000" />
     </task>
     <servers />
   </component>

@@ -8,12 +8,15 @@ use App\Http\Resources\v2\Report\ReportsResource;
 use App\Sale;
 use App\User;
 use App\v2\Models\Supplier;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ReportService {
-    public static function getReports($start, $finish, $user_id, $is_supplier = false, $store_id = null, $manufacturer_id = null) {
+    public static function getReports($start, $finish, $user_id, $is_supplier = false, $store_id = null, $manufacturer_id = null): AnonymousResourceCollection {
         $saleQuery = Sale::query();
         $sales = null;
         $user = null;
+        /* @var User $authUser */
+        $authUser = auth()->user();
         if (!$is_supplier) {
             $saleQuery = $saleQuery->report()->reportDate([$start, $finish]);
             if ($user_id) {
@@ -23,6 +26,11 @@ class ReportService {
             if ($store_id) {
                 $saleQuery->whereStoreId($store_id);
             }
+
+            if (!$authUser->is_super_user) {
+                $saleQuery->where('is_confirmed', true);
+            }
+
             $sales = $saleQuery->get();
         } else {
             $_supplier = Supplier::where('user_id', $user_id)->first();
@@ -60,7 +68,7 @@ class ReportService {
         );
     }
 
-    public static function getClientReports($client_id) {
+    public static function getClientReports($client_id): AnonymousResourceCollection {
         $saleQuery = Sale::query();
         $saleQuery = $saleQuery->report()->whereClientId($client_id);
 

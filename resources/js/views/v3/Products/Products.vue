@@ -456,7 +456,20 @@
             products() {
                 let products = this.showMainProducts ? this.$store.getters.MAIN_PRODUCTS_v2 : this.$store.getters.PRODUCTS_v2;
                 if (this.hideNotInStock) {
-                    products = products.filter(product => product.quantity > 0);
+                    if (this.storeFilter !== -1) {
+                        products = products.filter(product => product.quantity > 0);
+                    } else {
+                        products = products.filter(product => {
+                            const qnts = this.quantities[product.id];
+                            if (!qnts) {
+                                return false;
+                            }
+                            const total = qnts.reduce((a, c) => {
+                                return a + c.quantity;
+                            }, 0);
+                            return total > 0;
+                        })
+                    }
                 }
 
                 if (this.manufacturerId !== -1) {

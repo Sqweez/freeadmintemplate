@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\v2\Report\ReportsResource;
 use App\Sale;
+use App\Store;
 use App\v2\Models\ProductSku;
 use DNS1D;
 use DNS2D;
@@ -39,11 +40,10 @@ class PrintController extends Controller
 
     public function printCheck($sale, Request $request) {
         $report = ReportsResource::make(Sale::report()->whereKey($sale)->first())->toArray($request);
-        /*if ($report['payment_type'] === 2) {
-            $report['final_price'] += $report['final_price'] * Sale::KASPI_RED_PERCENT;
-        }*/
+        $store = Store::query()->select(['id', 'iin'])->whereKey($report['store']['id'])->first();
         return view('print.check', [
             'report' => (object) $report,
+            'iin' => $store->iin ?: config('app.default_store_iin'),
         ]);
     }
 }

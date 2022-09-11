@@ -26,10 +26,10 @@ class ReportsResource extends JsonResource
         $user_id = $request->get('user_id', null) === null;
         return [
             'id' => $this->id,
-            'client' => $this->client->only(['id', 'client_name']),
+            'client' => $this->client,
             'date' => $this->date,
-            'user' => $this->user->only(['id', 'name']),
-            'store' => $this->store->only(['id', 'name']),
+            'user' => $this->user,
+            'store' => $this->store,
             'payment_type_text' => Sale::PAYMENT_TYPES[$this->payment_type]['name'],
             'payment_type' => $this->payment_type,
             'discount' => $this->discount,
@@ -70,6 +70,8 @@ class ReportsResource extends JsonResource
             'is_paid' => $this->is_paid,
             'kaspi_red_commission' => $this->kaspi_red_commission,
             'is_kaspi_red' => $this->kaspi_red,
+            'is_confirmed' => $this->is_confirmed,
+            'is_full_wholesale_purchase' => $this->is_opt && optional($this->client)->is_wholesale_buyer
         ];
     }
 }

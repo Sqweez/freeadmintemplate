@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -89,7 +90,8 @@ class Client extends Model
     use SoftDeletes;
 
     protected $casts = [
-        'client_city' => 'integer'
+        'client_city' => 'integer',
+        'is_wholesale_buyer' => 'boolean'
     ];
 
     protected $guarded = [];
@@ -176,7 +178,7 @@ class Client extends Model
         return $sales->sum('amount');
     }
 
-    public function purchases() {
+    public function purchases(): HasMany {
         return $this->hasMany('App\Sale', 'client_id');
     }
 

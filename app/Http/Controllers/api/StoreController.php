@@ -8,16 +8,17 @@ use App\Store;
 use App\StoreType;
 use App\v2\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class StoreController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request): AnonymousResourceCollection {
         $storeQuery = Store::query()->with('type')->with('city_name');
         if ($request->has('store_id')) {
             $storeQuery->where('id', $request->get('store_id'));
@@ -28,11 +29,10 @@ class StoreController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return StoreResource
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request): StoreResource {
         return new StoreResource(Store::create($request->all()));
     }
 
@@ -44,7 +44,7 @@ class StoreController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Store $store
      * @return StoreResource
      */

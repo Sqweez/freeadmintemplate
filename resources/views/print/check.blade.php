@@ -172,7 +172,7 @@
         </div>
         <h5 style="text-align: center; text-transform: uppercase; font-style: italic; font-size: 12px; margin-top: 15px;">
             www.iron-addicts.kz</h5>
-        <h5 style="text-align: center;text-transform: uppercase;font-style: italic;font-size: 11px;margin-top: -17px;">БИН: 950420350949</h5>
+        <h5 style="text-align: center;text-transform: uppercase;font-style: italic;font-size: 11px;margin-top: -17px;">БИН: {{ $iin }}</h5>
         <h4 style="text-align: center; text-transform: uppercase; font-size: 15px; margin-top: 10px; margin-bottom: 40px; font-weight: bold;">
             Спасибо за покупку!</h4>
     </div>

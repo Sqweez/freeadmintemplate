@@ -95,7 +95,8 @@ class Sale extends Model
         'kaspi_transaction_id' => 'array',
         'is_delivery' => 'boolean',
         'is_paid' => 'boolean',
-        'is_opt' => 'boolean'
+        'is_opt' => 'boolean',
+        'is_confirmed' => 'boolean'
     ];
 
     protected $appends = [
@@ -200,7 +201,7 @@ class Sale extends Model
     }
 
     public function scopeReport($q) {
-        return $q->with(['client', 'user', 'store','products.product', 'products'])
+        return $q->with(['client:id,client_name,is_wholesale_buyer', 'user:id,name,store_id', 'store:id,name,type_id','products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate', 'preorder'])
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);

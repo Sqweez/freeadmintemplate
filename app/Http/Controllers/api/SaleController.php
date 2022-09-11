@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Actions\Sale\UpdateSaleAction;
 use App\Client;
 use App\ClientSale;
 use App\ClientTransaction;
@@ -113,6 +114,7 @@ class SaleController extends Controller {
 
         $salesQuery = Sale::query()
             ->whereDate('created_at', '>=', $dateFilter)
+            ->where('is_confirmed', true)
             ->with(['products'])
             ->with(['certificate']);
 
@@ -301,35 +303,8 @@ class SaleController extends Controller {
         }, 0));
     }
 
-    public function editSaleList(Sale $sale, Request $request, SaleService $saleService) {
-        \DB::beginTransaction();
-        $saleProducts = $sale->products;
-        // 1. Удаляем старый состав заказа и возвращаем на склад
-        $saleProducts->each(function ($product) use ($sale) {
-            ProductBatch::query()
-                ->whereId($product['product_batch_id'])
-                ->increment('quantity');
-        });
-        SaleProduct::query()
-            ->whereSaleId($sale->id)
-            ->delete();
-        // 2. Удаляем клиентскую транзакцию, если она была
-        if ($sale->client_id !== -1) {
-            ClientTransaction::whereSaleId(($sale->id))->delete();
-        }
-        // 3. Обновляем поля продажи
-        $sale->update([
-            'client_id' => $request->get('client_id', -1),
-            'discount' => $request->get('discount', 0)
-        ]);
-        $sale->fresh();
-        // 4. Заново создаем список продуктов
-        $cart = $request->get('cart');
-        //return $request->all();
-        $saleService->createSaleProducts($sale, $sale->store_id, $cart);
-        $saleService->createClientSale($sale->client_id, $sale->discount, $cart, $sale->balance, $sale->user, $sale->id, $sale->partner_id);
-        $sale->fresh();
-        \DB::commit();
+    public function editSaleList(Sale $sale, Request $request, UpdateSaleAction $action) {
+        $action->handle($sale, $request);
         return new ReportsResource(Sale::find($sale->id));
     }
 
