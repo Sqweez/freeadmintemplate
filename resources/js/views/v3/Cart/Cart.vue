@@ -574,8 +574,8 @@
         async created() {
             this.loading = this.products.length === 0 || false;
             await this.$store.dispatch('GET_PRODUCTS_v2');
-            const store_id = (this.IS_SUPERUSER) ? null : this.user.store_id;
-            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+            this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.id;
+            await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch('GET_CERTIFICATES');

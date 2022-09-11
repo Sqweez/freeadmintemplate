@@ -616,6 +616,7 @@
                         return q;
                     })
                 }
+
                 return qnt;
             },
             async exportProductBatches() {
