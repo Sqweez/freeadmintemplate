@@ -44,6 +44,14 @@ const getters = {
                 return true;
             }
             return false;
+        }).map(function (product) {
+            return {
+                ...product,
+                attributes: product.attributes.filter(a => a.is_main),
+                quantity: state.products_v2.filter(p => p.product_id === product.product_id).reduce((a, c) => {
+                    return a + c.quantity;
+                }, 0)
+            }
         });
     },
     QUANTITIES_v2: state => state.quantities,

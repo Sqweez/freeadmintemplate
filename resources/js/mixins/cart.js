@@ -8,7 +8,7 @@ export default {
     }),
     watch: {
         stores() {
-            this.storeFilter = this.stores[0].id;
+            // this.storeFilter = this.stores[0].id;
             console.log('store filter is:' + this.storeFilter);
         },
     },
