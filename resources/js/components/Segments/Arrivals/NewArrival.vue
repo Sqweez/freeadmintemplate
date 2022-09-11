@@ -341,6 +341,7 @@ import product_search from "@/mixins/product_search";
 import cart from "@/mixins/cart";
 import SkuModal from "@/components/v2/Modal/SkuModal";
 import { db } from '@/db';
+import product from '@/mixins/product';
 
 export default {
     components: {
@@ -349,7 +350,7 @@ export default {
         WayBillModal,
         ProductModal
     },
-    mixins: [product_search, cart],
+    mixins: [product_search, cart, product],
     data: () => ({
         comment: '',
         arrivedAt: null,

@@ -6,6 +6,7 @@ import DatePlugin from "@/utils/datePlugin";
 import BarcodeService from '@/utils/barcodeService';
 import store from "@/store";
 import {mapGetters} from "vuex";
+import EconomyService from '@/utils/economyService';
 
 export default {
     install(Vue, options) {
@@ -31,6 +32,9 @@ export default {
                 },
                 $loading() {
                     return new LoadingService(store)
+                },
+                $economy () {
+                    return new EconomyService();
                 },
                 $color() {
                     return new ColorService();

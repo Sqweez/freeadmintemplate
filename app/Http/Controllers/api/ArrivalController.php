@@ -17,7 +17,7 @@ class ArrivalController extends Controller
         return ArrivalResource::collection(
             Arrival::where('is_completed', $is_completed)
                 ->when($is_completed, function ($query) {
-                    return $query->whereDate('created_at', now()->subMonths(2));
+                    return $query->whereDate('created_at', '>=', now()->subMonths(2));
                 })
                 ->with([
                     'products', 'products.product',
