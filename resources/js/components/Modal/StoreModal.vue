@@ -33,6 +33,10 @@
                         no-data-text="Нет данных"
                         :items="cities"
                     />
+                    <v-text-field
+                        label="ИИН/БИН"
+                        v-model="store.iin"
+                    />
                     <v-divider />
                     <div v-if="store.type_id === 1">
                         <v-textarea

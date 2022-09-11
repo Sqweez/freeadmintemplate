@@ -150,6 +150,10 @@
                 </v-col>
                 <v-col>
                     <label>Прочие фильтры:</label>
+                    <v-checkbox
+                        label="Неподтвержденные продажи"
+                        v-model="showOnlyUnconfirmed"
+                    />
                     <v-select
                         v-if="IS_SUPERUSER"
                         :items="store_types"
@@ -251,7 +255,12 @@
                     <v-list>
                         <v-list-item>
                             <v-list-item-content>
-                                <v-list-item-title>{{ item.client.client_name }}</v-list-item-title>
+                                <v-list-item-title>
+                                    {{ item.client.client_name }}
+                                    <v-btn :to="`/clients/${item.client.id}`" icon text target="_blank" v-if="item.client.id !== -1">
+                                        <v-icon>mdi-eye</v-icon>
+                                    </v-btn>
+                                </v-list-item-title>
                                 <v-list-item-subtitle>Клиент</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
@@ -311,6 +320,16 @@
                 </template>
                 <template v-slot:item.additional_data="{item}">
                     <v-list>
+                        <v-list-item v-if="!item.is_confirmed">
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    <v-icon color="success">
+                                        mdi-check
+                                    </v-icon>
+                                </v-list-item-title>
+                                <v-list-item-subtitle>Ждет подтверждения</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
                         <v-list-item>
                             <v-list-item-content>
                                 <v-list-item-title>
@@ -405,49 +424,63 @@
                     </div>
                 </template>
                 <template v-slot:item.action="{item}">
-                    <v-list v-if="report.id !== item.id && !item.sale_type">
-                        <v-list-item v-if="IS_SUPERUSER">
+                    <div v-if="item.is_confirmed">
+                        <v-list v-if="report.id !== item.id && !item.sale_type">
+                            <v-list-item v-if="IS_SUPERUSER">
+                                <v-btn small depressed color="error" text @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
+                                    Отмена <v-icon class="ml-2">mdi-cancel</v-icon>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-btn small depressed color="primary" text @click="report = item; editMode = true;">
+                                    Способ оплаты <v-icon class="ml-2">mdi-pencil</v-icon>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item v-if="IS_SUPERUSER">
+                                <v-btn small depressed color="primary" text @click="report = {...item}; editModal = true;">
+                                    Заказ <v-icon class="ml-2">mdi-pencil</v-icon>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-btn small depressed color="success" text :href="'/print/check/' + item.id" target="_blank">
+                                    Чек <v-icon class="ml-2">mdi-printer</v-icon>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-btn small depressed color="success" text @click="createWaybill(item)">
+                                    Накладная <v-icon class="ml-2">mdi-printer</v-icon>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-btn small depressed color="success" text @click="createInvoice(item)">
+                                    Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item v-if="IS_SUPERUSER">
+                                <v-btn small depressed color="success" text @click="sendTelegram(item.id)">
+                                    Отправить в телегу <v-icon class="ml-2">mdi-email</v-icon>
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                        <v-list v-if="editMode && report.id === item.id">
+                            <v-list-item>
+                                <v-btn depressed color="error" text @click="report = {}; editMode = false">Отмена</v-btn>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-btn depressed color="success" text @click="changeSale">Подтвердить</v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </div>
+                    <v-list v-else>
+                        <v-list-item>
                             <v-btn small depressed color="error" text @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
                                 Отмена <v-icon class="ml-2">mdi-cancel</v-icon>
                             </v-btn>
                         </v-list-item>
                         <v-list-item>
-                            <v-btn small depressed color="primary" text @click="report = item; editMode = true;">
-                                Способ оплаты <v-icon class="ml-2">mdi-pencil</v-icon>
+                            <v-btn small depressed color="success" text @click="report = {...item}; wholeSaleConfirmationModal = true;">
+                                Подтвердить <v-icon class="ml-2">mdi-check</v-icon>
                             </v-btn>
-                        </v-list-item>
-                        <v-list-item v-if="IS_SUPERUSER">
-                            <v-btn small depressed color="primary" text @click="report = {...item}; editModal = true;">
-                                Заказ <v-icon class="ml-2">mdi-pencil</v-icon>
-                            </v-btn>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-btn small depressed color="success" text :href="'/print/check/' + item.id" target="_blank">
-                                Чек <v-icon class="ml-2">mdi-printer</v-icon>
-                            </v-btn>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-btn small depressed color="success" text @click="createWaybill(item)">
-                                Накладная <v-icon class="ml-2">mdi-printer</v-icon>
-                            </v-btn>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-btn small depressed color="success" text @click="createInvoice(item)">
-                                Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
-                            </v-btn>
-                        </v-list-item>
-                        <v-list-item v-if="IS_SUPERUSER">
-                            <v-btn small depressed color="success" text @click="sendTelegram(item.id)">
-                                Отправить в телегу <v-icon class="ml-2">mdi-email</v-icon>
-                            </v-btn>
-                        </v-list-item>
-                    </v-list>
-                    <v-list v-if="editMode && report.id === item.id">
-                        <v-list-item>
-                            <v-btn depressed color="error" text @click="report = {}; editMode = false">Отмена</v-btn>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-btn depressed color="success" text @click="changeSale">Подтвердить</v-btn>
                         </v-list-item>
                     </v-list>
                 </template>
@@ -468,6 +501,11 @@
             :report="report"
             @cancel="editModal = false; report = {}"
         />
+        <WholeSaleConfirmation
+            :state="wholeSaleConfirmationModal"
+            :report="report"
+            @cancel="wholeSaleConfirmationModal = false; report = {}"
+        />
     </v-card>
 </template>
 
@@ -478,6 +516,7 @@ import ReportCancelModal from "@/components/Modal/ReportCancelModal";
 import ACTIONS from '@/store/actions/index';
 import axios from 'axios';
 import SaleEditModal from "@/components/Modal/SaleEditModal";
+import WholeSaleConfirmation from '@/components/Modal/WholeSaleConfirmation';
 
 const DATE_FILTERS = {
         ALL_TIME: 1,
@@ -490,8 +529,10 @@ const DATE_FILTERS = {
     const DATE_FORMAT = 'YYYY-MM-DD';
 
     export default {
-        components: {SaleEditModal, ReportCancelModal, ConfirmationModal},
+        components: {WholeSaleConfirmation, SaleEditModal, ReportCancelModal, ConfirmationModal},
         data: () => ({
+            showOnlyUnconfirmed: false,
+            wholeSaleConfirmationModal: false,
             manufacturerId: -1,
             discountFrom: 0,
             discountTo: 100,
@@ -773,7 +814,7 @@ const DATE_FILTERS = {
                 }, 0)
             },
             totalSales() {
-                return this._salesReport
+                return this.confirmedSalesReport
                     .reduce((a, c) => {
                         if (this.currentType === -2) {
                             return a + c.certificate.amount;
@@ -795,19 +836,19 @@ const DATE_FILTERS = {
                     }, 0) + this.bookingTotal;
             },
             totalMargin() {
-                return this._salesReport
+                return this.confirmedSalesReport
                     .reduce((a, c) => {
                         return a + c.margin
                     }, 0);
             },
             totalSaleCount() {
-                return this._salesReport.length;
+                return this.confirmedSalesReport.length;
             },
             averageCheck() {
                 return this.totalSaleCount === 0 ? 0 : this.totalSales / this.totalSaleCount;
             },
             totalRedCommission () {
-                return this._salesReport.reduce((a, c) => {
+                return this.confirmedSalesReport.reduce((a, c) => {
                     return a + c.kaspi_red_commission;
                 }, 0)
             },
@@ -877,12 +918,21 @@ const DATE_FILTERS = {
                                     return i.discount >= this.discountFrom && i.discount <= this.discountTo;
                                 });
                             }
+                        })
+                        .filter(s => {
+                            if (!this.showOnlyUnconfirmed) {
+                                return true;
+                            }
+                            return !s.is_confirmed;
                         });
                 } catch (e) {
                     console.log(e)
                     return [];
                 }
 
+            },
+            confirmedSalesReport () {
+                return this._salesReport.filter(s => s.is_confirmed);
             }
         }
     }

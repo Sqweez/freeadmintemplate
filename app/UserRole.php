@@ -22,4 +22,7 @@ class UserRole extends Model
 
     const ROLE_FRANCHISE = 'franchise';
     const ROLE_ADMIN = 'admin';
+
+    const ADMIN_ROLE_ID = 1;
+    const BOSS_ROLE_ID = 8;
 }

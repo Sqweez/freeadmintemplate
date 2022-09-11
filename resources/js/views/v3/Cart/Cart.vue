@@ -96,7 +96,7 @@
                                 class="w-150px"
                                 item-value="id"></v-select>
                         </div>
-                        <div v-if="!isFree">
+                        <div v-if="!isFree && !isFullWholesalePurchase">
                             <v-autocomplete
                                 :items="certificates"
                                 :item-text="function(item) {
@@ -122,7 +122,7 @@
                                 outlined
                             />
                         </div>
-                        <div v-if="!isFree">
+                        <div v-if="!isFree && !isFullWholesalePurchase">
                             <v-autocomplete
                                 label="Партнер"
                                 outlined
@@ -135,7 +135,7 @@
                                 @click:append-outer="partner_id = null"
                             ></v-autocomplete>
                         </div>
-                        <div v-if="!isFree">
+                        <div v-if="!isFree && !isFullWholesalePurchase">
                             <v-text-field
                                 label="Промокод"
                                 :disabled="!!partner_id"
@@ -246,6 +246,7 @@
                             <th>Товар</th>
                             <th>Количество</th>
                             <th>Скидка</th>
+                            <th v-if="isFullWholesalePurchase">Исходная цена</th>
                             <th>Цена</th>
                             <th>Стоимость</th>
                             <th>Удалить</th>
@@ -324,7 +325,23 @@
                                     @change="updateDiscount(item)"
                                 />
                             </td>
-                            <td>{{ item.product_price | priceFilters}}</td>
+                            <td v-if="isFullWholesalePurchase">
+                                {{ item.initial_price | priceFilters }}
+                            </td>
+                            <td>
+                                <span v-if="!isFullWholesalePurchase">
+                                    {{ item.product_price | priceFilters}}
+                                </span>
+                                <div v-else class="d-flex align-center">
+                                    <v-btn icon @click.prevent="item.product_price = item.initial_price">
+                                        <v-icon>mdi-undo</v-icon>
+                                    </v-btn>
+                                    <v-text-field
+                                        style="min-width: 150px;"
+                                        v-model="item.product_price"
+                                    />
+                                </div>
+                            </td>
                             <td>{{ calculateProductFinalPrice(item) | priceFilters }}</td>
                             <td>
                                 <v-btn icon color="error" @click="deleteFromCart(index)">
@@ -345,6 +362,9 @@
                             <th class="text-center" v-if="!isDiscountDisabled">Скидка</th>
                             <th class="text-center" v-if="preorder">Предоплата</th>
                             <th class="green--text darken-1 text-center">Итого к оплате</th>
+                            <th class="green-text darken-1 text-center" v-if="isCashPayment">
+                                Расчет сдачи
+                            </th>
                         </tr>
                         </thead>
                         <tbody class="background-iron-grey fz-18">
@@ -355,6 +375,15 @@
                             <td class="text-center" v-if="!isDiscountDisabled">{{ discountTotal | priceFilters}}</td>
                             <td class="text-center" v-if="preorder">{{ preorder.amount | priceFilters}}</td>
                             <td class="text-center green--text darken-1">{{ finalPrice | priceFilters }}</td>
+                            <td class="green-text darken-1 text-center" v-if="isCashPayment">
+                                <v-text-field
+                                    label="Внесенная купюра"
+                                    v-model.number="banknoteNominal"
+                                />
+                                <p :class="{'red--text': amountOfChange < 0}">
+                                    <b>Сдача:</b> {{ amountOfChange | priceFilters }}
+                                </p>
+                            </td>
                         </tr>
                         </tbody>
                     </template>
@@ -364,7 +393,10 @@
                         Выбрать клиента
                     </v-btn>
                     <v-btn depressed color="error" block style="font-size: 16px" @click="onSale" v-else>
-                        Оформить заказ
+                        <span v-if="isFullWholesalePurchase">
+                            Отправить на одобрение
+                        </span>
+                        <span v-else>Оформить заказ</span>
                     </v-btn>
                 </div>
             </v-card-text>
@@ -492,11 +524,11 @@
             v-on:onClientChosen="onClientChosen"
             :state="clientCartModal"/>
         <ConfirmationModal
-            :state="confirmationModal"
+            :state="printCheckModal"
             message="Напечатать чек?"
             :cancel-message="'нет'"
             :on-confirm="printCheck"
-            @cancel="confirmationModal = false"
+            @cancel="printCheckModal = false"
         />
         <ConfirmationModal
             :state="waybillModal"
@@ -611,10 +643,14 @@
             payment_type(value) {
                 this.isRed = value === 2;
                 this.isSplitPayment = value === 5;
+            },
+            isFullWholesalePurchase (value) {
+                this.cart = this.cart.map(c => ({ ...c, product_price: c.initial_price }));
             }
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            banknoteNominal: 0,
             isSendTelegram: false,
             isOpt: false,
             isDelivery: false,
@@ -638,7 +674,7 @@
             discountPercent: 0,
             promocode: "",
             clientCartModal: false,
-            confirmationModal: false,
+            printCheckModal: false,
             wayBillModal: false,
             client: null,
             overlay: false,
@@ -693,6 +729,9 @@
             ]),
             calculateProductFinalPrice (product) {
                 const priceWithoutDiscount = product.product_price * product.count;
+                if (this.isRed || this.isProductPriceChangedManually) {
+                    return priceWithoutDiscount;
+                }
                 const discountPercent = !this.isRed ? (Math.max(this.discountPercent, product.discount) / 100) : 0;
                 return priceWithoutDiscount - discountPercent * priceWithoutDiscount;
             },
@@ -878,8 +917,12 @@
                     if (this.isSendTelegram) {
                         await this.sendTelegram(this.sale_id);
                     }
-                    this.$toast.success('Продажа совершена успешно!');
-                    this.confirmationModal = true;
+                    if (this.isFullWholesalePurchase) {
+                        this.$toast.success('Продажа отправлена на одобрение!');
+                    } else {
+                        this.$toast.success('Продажа совершена успешно!');
+                        this.printCheckModal = true;
+                    }
                     this.cart = [];
                     this.client = null;
                     this.discountPercent = '';
@@ -897,6 +940,7 @@
                     this.isOpt = false;
                     this.isSendTelegram = false;
                     this.is_paid = false;
+                    this.banknoteNominal = 0;
                 } catch (e) {
                     throw e;
                 }
@@ -927,8 +971,26 @@
             },
         },
         computed: {
+            isProductPriceChangedManually () {
+                return this.cart.some(c => c.product_price !== c.initial_price);
+            },
+            isFullWholesalePurchase () {
+                return this.client && this.client.is_wholesale_buyer && this.isOpt;
+            },
+            amountOfChange () {
+                if (!this.isCashPayment) {
+                    return 0;
+                }
+                if (this.payment_type === 0) {
+                    return this.banknoteNominal - this.finalPrice;
+                }
+                return this.banknoteNominal - this.splitPayment[0].amount;
+            },
+            isCashPayment () {
+                return this.payment_type === 0 || (this.isSplitPayment && this.splitPayment[0].amount > 0);
+            },
             isDiscountDisabled () {
-                return this.isRed;
+                return this.isRed || this.isProductPriceChangedManually;
             },
             partners() {
                 return this.$store.getters.PARTNERS;
@@ -948,7 +1010,7 @@
                 return this.subtotal - this.discountTotal;
             },
             discount() {
-                if (this.isRed) {
+                if (this.isRed || this.isProductPriceChangedManually) {
                     return 0;
                 }
                 if (this.isFree) {

@@ -19,6 +19,9 @@ class SaleService {
         if ($sale['payment_type'] == __hardcoded(4)) {
             $sale['user_id'] = __hardcoded(32);
         }
+        if ($sale['is_opt']) {
+            $sale['is_confirmed'] = false;
+        }
         return Sale::create($sale);
     }
 
@@ -91,9 +94,7 @@ class SaleService {
             ]);
 
             $partnerSalesAmount = $this->getPartnerSalesAmount($partner, $sale_id);
-            \Log::info('PARTNER SALES AMOUNT: ' . $partnerSalesAmount);
             $partnerCashback = $this->calculatePartnerCashback($cart, $partnerSalesAmount, $discount);
-            \Log::info('PARTNER CASHBACK: ' . $partnerCashback);
 
             $partner->transactions()->create([
                 'amount' => $partnerCashback,

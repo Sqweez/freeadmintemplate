@@ -18,14 +18,14 @@ class ClientResource extends JsonResource
      * @param  Request  $request
      * @return array
      */
-    public function toArray($request)
-    {
+    public function toArray($request): array {
 
         $last_sale = $this->sales->sortByDesc('created_at')->first();
         $last_sale_date = null;
         if ($last_sale) {
             $last_sale_date = Carbon::parse($last_sale['created_at'])->format('d.m.Y H:i:s');
         }
+
         return [
             'id' => $this->id,
             'client_name' => $this->client_name,
@@ -51,6 +51,7 @@ class ClientResource extends JsonResource
             'gender' => $this->gender,
             'birth_date_formatted' => $this->birth_date ? Carbon::parse($this->birth_date)->format('d.m.Y') : 'Не указана',
             'birth_date' => $this->birth_date,
+            'is_wholesale_buyer' => $this->is_wholesale_buyer
         ];
     }
 }

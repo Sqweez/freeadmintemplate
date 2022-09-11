@@ -73,7 +73,7 @@ class User extends Authenticatable
     }
 
     public function getIsSuperUserAttribute(): bool {
-        return in_array($this->role_id, [1, 8]);
+        return in_array($this->role_id, [UserRole::ADMIN_ROLE_ID, UserRole::BOSS_ROLE_ID]);
     }
 
     public function scopeLogin($q, $login) {

@@ -4,47 +4,63 @@
         <v-card-text>
             <v-container>
                 <div class="d-flex justify-space-between align-center">
-                    <v-btn color="error" @click="clientModal = true" v-if="!IS_MARKETOLOG">Добавить клиента <v-icon>mdi-plus</v-icon></v-btn>
-                    <v-select
-                        style="max-width: 270px;"
-                        label="Тип лояльности"
-                        :items="loyalties"
-                        item-value="id"
-                        item-text="name"
-                        v-model="loyaltyFilter"
-                    />
-                    <v-select
-                        style="max-width: 270px;"
-                        label="Тип клиента"
-                        :items="clientTypes"
-                        item-value="id"
-                        item-text="name"
-                        v-model="clientTypeFilter"
-                    />
-                    <v-select
-                        style="max-width: 270px;"
-                        label="Города"
-                        :items="cities"
-                        item-value="id"
-                        item-text="name"
-                        v-model="cityFilter"
-                    />
-                    <v-select
-                        style="max-width: 270px;"
-                        label="Пол"
-                        :items="genders"
-                        item-value="id"
-                        item-text="value"
-                        v-model="genderId"
-                    />
-                    <v-checkbox
-                        label="Без карт"
-                        v-model="withoutBarcode"
-                    />
+                    <v-row>
+                        <v-col>
+                            <v-btn color="error" @click="clientModal = true" v-if="!IS_MARKETOLOG">
+                                Добавить клиента <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                            <v-btn class="mt-2" color="success" @click="exportModal = true;" v-if="!IS_MARKETOLOG">
+                                Экспорт клиентов <v-icon>mdi-file-excel-box</v-icon>
+                            </v-btn>
+                        </v-col>
+                        <v-col>
+                            <v-select
+                                style="max-width: 270px;"
+                                label="Тип лояльности"
+                                :items="loyalties"
+                                item-value="id"
+                                item-text="name"
+                                v-model="loyaltyFilter"
+                            />
+                            <v-select
+                                style="max-width: 270px;"
+                                label="Тип клиента"
+                                :items="clientTypes"
+                                item-value="id"
+                                item-text="name"
+                                v-model="clientTypeFilter"
+                            />
+                        </v-col>
+                        <v-col>
+                            <v-select
+                                style="max-width: 270px;"
+                                label="Города"
+                                :items="cities"
+                                item-value="id"
+                                item-text="name"
+                                v-model="cityFilter"
+                            />
+                            <v-select
+                                style="max-width: 270px;"
+                                label="Пол"
+                                :items="genders"
+                                item-value="id"
+                                item-text="value"
+                                v-model="genderId"
+                            />
+                        </v-col>
+                        <v-col>
+                            <v-checkbox
+                                label="Без карт"
+                                v-model="withoutBarcode"
+                            />
+                            <v-checkbox
+                                label="Оптовик"
+                                v-model="isWholesaleBuyer"
+                            />
+                        </v-col>
+                    </v-row>
                 </div>
-                <v-btn color="success" @click="exportModal = true;" v-if="!IS_MARKETOLOG">
-                    Экспорт клиентов <v-icon>mdi-file-excel-box</v-icon>
-                </v-btn>
                 <v-row>
                     <v-col>
                         <v-text-field
@@ -104,7 +120,7 @@
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
-                                    <v-list-item>
+                                    <v-list-item v-if="item.is_partner">
                                         <v-list-item-content>
                                             <v-list-item-title>
                                                 <v-icon :color="item.is_partner ? 'success' : 'error'">
@@ -113,6 +129,18 @@
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
                                                 Партнер
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item v-if="item.is_wholesale_buyer">
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-icon :color="item.is_wholesale_buyer ? 'success' : 'error'">
+                                                    {{ item.is_wholesale_buyer ? 'mdi-check' : 'mdi-close' }}
+                                                </v-icon>
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Оптовый покупатель
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
@@ -301,6 +329,7 @@
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         data: () => ({
+            isWholesaleBuyer: false,
             withoutBarcode: false,
             exportModal: false,
             confirmationModal: false,
@@ -413,6 +442,11 @@
                             return true;
                         }
                         return c.client_card.length === 0 || c.client_card.length < 5;
+                    }).filter(c => {
+                        if (!this.isWholesaleBuyer) {
+                            return true;
+                        }
+                        return c.is_wholesale_buyer;
                     })
             },
             shops() {

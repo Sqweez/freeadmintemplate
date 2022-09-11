@@ -125,6 +125,9 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'default_store_iin' => env('DEFAULT_STORE_IIN', '990101987452'),
+    'default_legal_name' => env('DEFAULT_LEGAL_NAME', 'ТОО Рога и Копыта'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

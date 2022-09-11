@@ -33,6 +33,7 @@ class StoreResource extends JsonResource
             'kaspi_terminal_ip' => $this->kaspi_terminal_ip,
             'has_kaspi_terminal' => !!strlen($this->kaspi_terminal_ip),
             'etc' => $this->etc,
+            'iin' => $this->iin,
         ];
     }
 }

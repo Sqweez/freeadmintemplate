@@ -61,6 +61,10 @@
                        type="date"
                    />
                    <v-checkbox
+                       v-model="client.is_wholesale_buyer"
+                       label="Оптовый покупатель"
+                   ></v-checkbox>
+                   <v-checkbox
                        v-model="client.is_partner"
                        :label="`Тренер`"
                    ></v-checkbox>
@@ -163,9 +167,15 @@
                 this.loading = false;
             },
             async createClient() {
-                await this.$store.dispatch(ACTIONS.CREATE_CLIENT, this.client);
-                this.$toast.success('Клиент успешно добавлен');
-                return this.client;
+                try {
+                    await this.$store.dispatch(ACTIONS.CREATE_CLIENT, this.client);
+                    this.$toast.success('Клиент успешно добавлен');
+                    return this.client;
+                } catch (e) {
+                    console.log(e);
+                } finally {
+                    this.loading = false;
+                }
             },
             async editClient() {
                 await this.$store.dispatch(ACTIONS.EDIT_CLIENT, this.client);

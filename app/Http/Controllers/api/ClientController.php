@@ -15,6 +15,7 @@ use App\Http\Resources\shop\OrderResource;
 use App\Http\Resources\shop\SaleResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -24,15 +25,15 @@ class ClientController extends Controller {
      *
      * @return AnonymousResourceCollection
      */
-    public function index() {
-        //return ClientResource::collection(Client::with(['sales', 'transactions', 'city'])->get());
+    public function index(): AnonymousResourceCollection {
         return ClientResource::collection(
             Client::with(['sales', 'transactions', 'city', 'loyalty'])
                 ->get()
         );
     }
 
-    public function show(Client $client) {
+    public function show($id) {
+        $client = Client::find($id);
         $client->load('sales');
         $client->load('transactions');
         $client->load('city');
@@ -46,7 +47,7 @@ class ClientController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return ClientResource
      */
     public function store(Request $request) {
@@ -58,14 +59,28 @@ class ClientController extends Controller {
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Client $client
-     * @return \Illuminate\Support\Collection
+     * @return ClientResource
      */
     public function update(Request $request, Client $client) {
         if (!$request->has('site')) {
             $_client = $request->only(
-                ['client_name', 'client_card', 'client_phone', 'client_discount', 'is_partner', 'client_city', 'loyalty_id', 'job', 'instagram', 'photo', 'birth_date', 'gender']
+                [
+                    'client_name',
+                    'client_card',
+                    'client_phone',
+                    'client_discount',
+                    'is_partner',
+                    'client_city',
+                    'loyalty_id',
+                    'job',
+                    'instagram',
+                    'photo',
+                    'birth_date',
+                    'gender',
+                    'is_wholesale_buyer'
+                ]
             );
             $_client = collect($_client)->filter(function ($i) {
                 return strlen($i) > 0;

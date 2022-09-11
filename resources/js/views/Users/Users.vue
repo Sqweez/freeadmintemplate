@@ -6,35 +6,29 @@
                 <v-btn color="error" @click="userModal = true">Добавить продавца <v-icon>mdi-plus</v-icon></v-btn>
                 <v-row>
                     <v-col>
-                        <v-simple-table>
-                            <template v-slot:default>
-                                <thead>
-                                <tr>
-                                    <th>Имя</th>
-                                    <th>Логин</th>
-                                    <th>Роль</th>
-                                    <th>Город</th>
-                                    <th>Действие</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(user, idx) of users" :key="idx">
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.login }}</td>
-                                    <td>{{ user.role }}</td>
-                                    <td>{{ user.city }}</td>
-                                    <td>
-                                        <v-btn icon @click="userId = user.id; userModal = true;">
-                                            <v-icon>mdi-pencil</v-icon>
-                                        </v-btn>
-                                        <v-btn icon @click="confirmationModal = true; userId = user.id;">
-                                            <v-icon>mdi-delete</v-icon>
-                                        </v-btn>
-                                    </td>
-                                </tr>
-                                </tbody>
+                        <v-text-field
+                            class="mt-2"
+                            v-model="search"
+                            solo
+                            clearable
+                            label="Поиск пользователя"
+                            single-line
+                            hide-details
+                        />
+                        <v-data-table
+                            :items="users"
+                            :search="search"
+                            :headers="headers"
+                        >
+                            <template v-slot:item.actions="{ item }">
+                                <v-btn icon @click="userId = item.id; userModal = true;">
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn icon @click="confirmationModal = true; userId = item.id;">
+                                    <v-icon>mdi-delete</v-icon>
+                                </v-btn>
                             </template>
-                        </v-simple-table>
+                        </v-data-table>
                     </v-col>
                 </v-row>
             </v-container>
@@ -54,38 +48,61 @@
 </template>
 
 <script>
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import UserModal from "@/components/Modal/UserModal";
-    import ACTIONS from "@/store/actions";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import UserModal from "@/components/Modal/UserModal";
+import ACTIONS from "@/store/actions";
 
-    export default {
-        components: {
-            ConfirmationModal,
-            UserModal
-        },
-        data: () => ({
-            confirmationModal: false,
-            userModal: false,
-            userId: null,
-        }),
-        computed: {
-            users() {
-                return this.$store.getters.users;
-            }
-        },
-        methods: {
-            async deleteUser() {
-                await this.$store.dispatch(ACTIONS.DELETE_USER, this.userId);
-                this.$toast.success('Пользователь удален');
-                this.userId = null;
-                this.confirmationModal = false;
+export default {
+    components: {
+        ConfirmationModal,
+        UserModal
+    },
+    data: () => ({
+        confirmationModal: false,
+        userModal: false,
+        userId: null,
+        search: '',
+        headers: [
+            {
+                value: 'name',
+                text: 'Имя'
             },
+            {
+                value: 'login',
+                text: 'Логин'
+            },
+            {
+                value: 'role',
+                text: 'Роль'
+            },
+            {
+                value: 'city',
+                name: 'Город'
+            },
+            {
+                value: 'actions',
+                text: 'Действие'
+            }
+        ],
+    }),
+    computed: {
+        users() {
+            return this.$store.getters.users;
         }
+    },
+    methods: {
+        async deleteUser() {
+            await this.$store.dispatch(ACTIONS.DELETE_USER, this.userId);
+            this.$toast.success('Пользователь удален');
+            this.userId = null;
+            this.confirmationModal = false;
+        },
     }
+}
 </script>
 
 <style scoped>
-    th {
-        font-size: 16px;
-    }
+th {
+    font-size: 16px;
+}
 </style>
