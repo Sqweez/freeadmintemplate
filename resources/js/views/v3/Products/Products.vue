@@ -182,27 +182,34 @@
                             </v-list>
                         </template>
                         <template v-slot:item.quantity="{item}">
-                            <span v-if="storeFilter === -1">
-                                <v-list v-if="quantities[item.id]">
-                                    <v-list-item v-for="(quantity) of getQuantities(item.id)">
-                                        <v-list-item-content>
-                                            <v-list-item-title>{{ quantity.quantity }} шт</v-list-item-title>
-                                            <v-list-item-title
-                                                class="font-weight-black">{{ quantity.name }}</v-list-item-title>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                </v-list>
-                                <v-list v-else>
-                                    <v-list-item>
-                                         <v-list-item-content>
-                                            <v-list-item-title>0 шт</v-list-item-title>
-                                            <v-list-item-title class="font-weight-black">Всего</v-list-item-title>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                </v-list>
-                            </span>
+                            <v-expansion-panels v-if="storeFilter === -1" accordion flat style="width: 300px;">
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header>
+                                        Количество по городам
+                                    </v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <v-list v-if="quantities[item.id]">
+                                            <v-list-item v-for="(quantity) of getQuantities(item.id)">
+                                                <v-list-item-content>
+                                                    <v-list-item-title>{{ quantity.quantity }} шт</v-list-item-title>
+                                                    <v-list-item-title
+                                                        class="font-weight-black">{{ quantity.name }}</v-list-item-title>
+                                                </v-list-item-content>
+                                            </v-list-item>
+                                        </v-list>
+                                        <v-list v-else>
+                                            <v-list-item>
+                                                <v-list-item-content>
+                                                    <v-list-item-title>0 шт</v-list-item-title>
+                                                    <v-list-item-title class="font-weight-black">Всего</v-list-item-title>
+                                                </v-list-item-content>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
                             <span v-else>
-                                {{ item.quantity }}
+                                {{ item.quantity }} шт.
                             </span>
                         </template>
                         <template v-slot:item.actions="{ item }">

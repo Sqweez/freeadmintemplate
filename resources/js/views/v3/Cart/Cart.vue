@@ -645,7 +645,7 @@
                 this.isSplitPayment = value === 5;
             },
             isFullWholesalePurchase (value) {
-                this.cart = this.cart.map(c => ({ ...c, product_price: c.initial_price }));
+                this.cart = this.cart.map(c => ({ ...c, product_price: c.initial_price, discount: 0 }));
             }
         },
         mixins: [product, product_search, cart],
@@ -1002,9 +1002,9 @@
                 return this.$store.getters.IS_ADMIN;
             },
             discountTotal() {
-                return this.cart.reduce((a, c) => {
-                    return a + Math.max(this.discount, c.discount) /100 * c.product_price * c.count;
-                }, 0);
+                return !this.isDiscountDisabled ? this.cart.reduce((a, c) => {
+                    return a + Math.max(this.discount, c.discount) / 100 * c.product_price * c.count;
+                }, 0) : 0;
             },
             total() {
                 return this.subtotal - this.discountTotal;

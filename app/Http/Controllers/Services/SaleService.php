@@ -19,7 +19,7 @@ class SaleService {
         if ($sale['payment_type'] == __hardcoded(4)) {
             $sale['user_id'] = __hardcoded(32);
         }
-        if ($sale['is_opt']) {
+        if (isset($sale['is_opt']) && $sale['is_opt']) {
             $sale['is_confirmed'] = false;
         }
         return Sale::create($sale);
