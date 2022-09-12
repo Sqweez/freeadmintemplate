@@ -362,22 +362,16 @@
         },
         async created() {
             this.showMainProducts = !!this.IS_MODERATOR;
-            const store_id = (this.is_admin || this.IS_BOSS) ? null : this.user.store_id;
-            console.log(store_id);
             try {
+                this.$loading.enable();
                 await this.$store.dispatch('GET_PRODUCTS_v2');
+                const store_id = this.IS_SUPERUSER ? null : this.user.store_id;
+                await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+                this.storeFilter = -1;
             } catch (e) {
                 console.log(e.response);
-            }
-            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
-            if (this.IS_SUPERUSER) {
-                this.storeFilter = -1;
-            } else {
-                this.storeFilter = -1;
-            }
-
-            if (this.IS_FRANCHISE) {
-                this.storeFilter = this.user.store_id;
+            } finally {
+                this.$loading.disable();
             }
 
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
