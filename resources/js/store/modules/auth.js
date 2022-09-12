@@ -108,8 +108,8 @@ const authModule = {
                     console.log(response);
                     console.groupEnd();
                     return response
-                })
-                dispatch(ACTIONS.OPEN_SHIFT, user);
+                });
+                dispatch(ACTIONS.OPEN_SHIFT, response.data.user);
             }
         },
         async LOGOUT({commit}) {

@@ -53,7 +53,7 @@ const store = new Store({
             await dispatch(ACTIONS.GET_CITIES);
             await dispatch(ACTIONS.GET_LOYALTY);
             await dispatch(ACTIONS.GET_SALE_TYPES);
-            await dispatch(ACTIONS.OPEN_SHIFT);
+            // await dispatch(ACTIONS.OPEN_SHIFT);
             await dispatch(ACTIONS.GET_MARGIN_TYPES);
             this.$loading.disable();
         }
