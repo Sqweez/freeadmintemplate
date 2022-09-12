@@ -121,14 +121,14 @@
             ProductRangeModal
         },
         async created() {
-            const store_id = this.is_admin ? null : this.user.store_id;
+            const store_id = this.IS_SUPERUSER ? null : this.$user.store_id;
             try {
                 await this.$store.dispatch('GET_PRODUCTS_v2');
             } catch (e) {
                 console.log(e.response);
             }
-            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
-            this.storeFilter = this.stores[0].id;
+            await this.$store.dispatch(ACTIONS.GET_STORES, null);
+            this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
