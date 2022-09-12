@@ -42,13 +42,16 @@ const shiftModule = {
         }
     },
     actions: {
-        async [ACTIONS.OPEN_SHIFT]({commit, getters}, user) {
+        async [ACTIONS.OPEN_SHIFT]({commit, getters}, user = null) {
             if (!getters.IS_SELLER && !getters.IS_SENIOR_SELLER) {
                 return;
             }
+
+            const needleUser = user === null ? getters.USER : user;
+
             await openShift({
-                store_id: user.store_id,
-                user_id: user.id
+                store_id: needleUser.store_id,
+                user_id: needleUser.id
             })
         },
         async [ACTIONS.GET_SHIFT_TAXES]({commit}) {
