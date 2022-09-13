@@ -32,7 +32,7 @@ class ProductsResource extends JsonResource
             })->count() > 0;
 
         return [
-            'product_id' => intval($this->id),
+            'product_id' => $this->id,
             'is_hit' => !!$this->is_hit,
             'product_name' => strlen($this->product_name_web) ? $this->product_name_web : $this->product_name,
             'subcategory' => $this->subcategory->subcategory_name,

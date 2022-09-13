@@ -229,7 +229,7 @@ class ProductController extends Controller {
 
         $productQuery = Product::query()->whereIsSiteVisible(true)->whereIsHit(true);
 
-        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks', 'category', 'batches']);
         $productQuery->with(['favorite' => function ($query) use ($user_token) {
             return $query->where('user_token', $user_token);
         }]);
