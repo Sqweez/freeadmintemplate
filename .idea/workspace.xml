@@ -2,31 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Actions/Arrival/CreateArrivalAction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Actions/Arrival/UpdateArrivalAction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Modal/ArrivalInformationUpdateModal.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Modal/BaseModal.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/mixins/useArrivalCalculations.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/utils/helpers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Arrival.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Arrival.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/ArrivalProducts.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/ArrivalProducts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Helpers/functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/functions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ArrivalController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ArrivalController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ArrivalProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ArrivalProductResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ArrivalResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ArrivalResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/ArrivalInfoModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/ArrivalInfoModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/ArrivalHistory.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/ArrivalHistory.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/CurrentArrivals.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/CurrentArrivals.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/NewArrival.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/NewArrival.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/NewTransferSegment.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/NewTransferSegment.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/arrivals.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/arrivals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/utils/axiosClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/axiosClient.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/utils/economyService/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/economyService/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,8 +215,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.hot" />
         <item itemvalue="npm.prod" />
+        <item itemvalue="npm.hot" />
       </list>
     </recent_temporary>
   </component>
@@ -266,7 +243,7 @@
       <workItem from="1662974605150" duration="666000" />
       <workItem from="1663071235884" duration="479000" />
       <workItem from="1663071796782" duration="598000" />
-      <workItem from="1663092411986" duration="14624000" />
+      <workItem from="1663092411986" duration="14877000" />
     </task>
     <servers />
   </component>

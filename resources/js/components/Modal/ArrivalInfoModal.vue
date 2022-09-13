@@ -56,7 +56,7 @@
                                     </v-list-item-content>
                                 </v-list-item>
                             </v-list>
-                            <a :href="item.product_image" class="mt-2" style="margin-top: 10px; width: 200px; height: 200px;" target="_blank">
+                            <a :href="item.product_image" class="mt-2" style="margin-top: 10px; width: 200px; height: 200px; display: block;" target="_blank">
                                 <img :src="item.product_image" style="object-fit: cover; width: 100%; height: 100%;">
                             </a>
                         </td>
