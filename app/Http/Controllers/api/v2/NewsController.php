@@ -15,7 +15,15 @@ class NewsController extends Controller
         if ($request->has('shop')) {
             $news = News::with(
                 [
-                    'news_image', 'productNews'
+                    'news_image', 'productNews',
+                    'productNews.product',
+                    'productNews.product.category',
+                    'productNews.product.subcategory',
+                    'productNews.product.attributes',
+                    'productNews.product.product_thumbs',
+                    'productNews.product.product_images',
+                    'productNews.product.stocks',
+                    'productNews.product.batches',
                 ]
             )->get()->sortByDesc('created_at');
             return NewsResource::collection($news);
