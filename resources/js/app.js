@@ -15,6 +15,7 @@ import loadingPlugin from "./utils/loadingPlugin";
 import JsonExcel from "vue-json-excel";
 axios.defaults.withCredentials = true;
 import Rollbar from 'rollbar';
+import BaseModal from '@/components/Modal/BaseModal';
 
 import VueFroala from 'vue-froala-wysiwyg'
 import { VueEditor } from "vue2-editor";
@@ -25,6 +26,7 @@ Vue.use(VueEditor);
 Vue.use(loadingPlugin);
 Vue.use(vuePlugins);
 Vue.component('downloadExcel', JsonExcel);
+Vue.component('base-modal', BaseModal);
 
 
 Vue.config.productionTip = false;

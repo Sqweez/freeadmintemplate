@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Actions\Arrival\CreateArrivalAction;
+use App\Actions\Arrival\SubmitArrivalAction;
+use App\Actions\Arrival\UpdateArrivalAction;
 use App\Arrival;
 use App\ArrivalProducts;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Arrival\CreateArrivalRequest;
+use App\Http\Requests\Arrival\UpdateArrivalRequest;
+use App\Http\Resources\ArrivalForTransferResource;
 use App\Http\Resources\ArrivalResource;
 use App\ProductBatch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class ArrivalController extends Controller
 {
@@ -16,9 +23,6 @@ class ArrivalController extends Controller
         $is_completed = !!$request->get('is_completed', 0);
         return ArrivalResource::collection(
             Arrival::where('is_completed', $is_completed)
-                ->when($is_completed, function ($query) {
-                    return $query->whereDate('created_at', '>=', now()->subMonths(2));
-                })
                 ->with([
                     'products', 'products.product',
                     'products.product.product',
@@ -43,81 +47,45 @@ class ArrivalController extends Controller
                 }));
     }
 
-    public function getArrival(Arrival $arrival) {
+    public function getArrivalsForTransfer(): AnonymousResourceCollection {
+        $arrivals = Arrival::query()
+            ->where('is_completed', true)
+            ->with('products.product.product:id,product_name,product_price')
+            ->latest()
+            ->get();
+        return ArrivalForTransferResource::collection($arrivals);
+    }
+
+    public function show(Arrival $arrival): ArrivalResource {
         return new ArrivalResource($arrival);
     }
 
-    public function createArrival(Request $request) {
-        $arrival = Arrival::create($request->except('products'));
-        foreach ($request->get('products') as $item) {
-            $arrival->products()->create(
-                [
-                    'product_id' => $item['id'],
-                    'count' => $item['count'],
-                    'purchase_price' => $item['purchase_price']
-                ]
-            );
-        }
-
-        return new ArrivalResource($arrival);
+    public function store(CreateArrivalRequest $request, CreateArrivalAction $action): ArrivalResource {
+        $arrival = $action->handle($request->validated());
+        $arrival->loadRelations();
+        return ArrivalResource::make($arrival);
     }
 
-    public function changeArrival($id, Request $request) {
-        ArrivalProducts::where('arrival_id', $id)->delete();
-        $products = collect($request->all());
-        $products->each(function ($product) use ($id) {
-            ArrivalProducts::create([
-                'arrival_id' => $id,
-                'product_id' => $product['product_id'],
-                'count' => $product['count'],
-                'purchase_price' => $product['purchase_price']
-            ]);
-        });
+    public function submit(Request $request, Arrival $arrival, SubmitArrivalAction $action): Response {
+        $action->handle($request->all(), $arrival);
+        return response()->noContent();
     }
 
-    public function createBatch(Request $request) {
-        $arrival = Arrival::find($request->get('arrival_id'));
-        $products = $request->get('products');
-        foreach ($products as $product) {
-            ProductBatch::create([
-                'product_id' => $product['product_id'],
-                'quantity' => $product['count'],
-                'store_id' => $arrival->store_id,
-                'purchase_price' => $product['purchase_price'],
-                'arrival_id' => $arrival->id,
-            ]);
-        }
-
-        ArrivalProducts::destroy($arrival->products->pluck('id'));
-
-        foreach ($products as $product) {
-            ArrivalProducts::create([
-                'product_id' => $product['product_id'],
-                'arrival_id' => $arrival->id,
-                'count' => $product['count'],
-                'purchase_price' => $product['purchase_price']
-            ]);
-        }
-
-        $arrival->is_completed = true;
-        $arrival->save();
+    public function cancel(Arrival $arrival): Response {
+        $arrival->cancel();
+        ProductBatch::where('arrival_id', $arrival->id)->delete();
+        return response()->noContent();
     }
 
-    public function cancelArrival(Arrival $arrival) {
-        $id = $arrival->id;
-        if ($id !== -1) {
-            ProductBatch::where('arrival_id', $id)->delete();
-            $this->deleteArrival($arrival);
-        }
-    }
-
-    public function deleteArrival(Arrival $arrival) {
+    public function destroy(Arrival $arrival) {
         ArrivalProducts::destroy($arrival->products->pluck('id'));
         $arrival->delete();
     }
 
-    public function update(Arrival $arrival, Request $request) {
-        $arrival->update($request->all());
-        return new ArrivalResource($arrival);
+    public function update(UpdateArrivalRequest $request, Arrival $arrival, UpdateArrivalAction $action): ArrivalResource {
+        $action->handle($request->validated(), $arrival);
+        $arrival->fresh();
+        $arrival->loadRelations();
+        return ArrivalResource::make($arrival);
     }
 }

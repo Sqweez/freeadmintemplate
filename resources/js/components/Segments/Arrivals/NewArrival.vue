@@ -104,7 +104,7 @@
                                                 {{ deliverySurcharge | priceFilters}}
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
-                                                Надбавка за доставку
+                                                Наценка за доставку
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
@@ -142,7 +142,7 @@
                                                 </span>
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
-                                                Текущая надбавка
+                                                Текущая наценка
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
@@ -342,6 +342,7 @@ import cart from "@/mixins/cart";
 import SkuModal from "@/components/v2/Modal/SkuModal";
 import { db } from '@/db';
 import product from '@/mixins/product';
+import {mapActions} from 'vuex';
 
 export default {
     components: {
@@ -425,6 +426,9 @@ export default {
         }, 5000);
     },
     methods: {
+        ...mapActions({
+            '$createArrival': 'createArrival',
+        }),
         clearCache() {
             db.arrivals.clear()
         },
@@ -496,34 +500,37 @@ export default {
             link.click();
         },
         async onSubmit() {
-            const products = this.cart.map(c => {
-                return {
-                    id: c.id,
-                    count: c.count,
-                    purchase_price: c.purchase_price,
-                }
-            });
-
-
             if (!this.paymentCost) {
                 return this.$toast.error('Введите стоимость доставки!');
             }
 
             const arrival = {
-                products: products,
+                products: this.cart.map(c => ({
+                    id: c.id,
+                    count: c.count,
+                    purchase_price: c.purchase_price,
+                })),
                 store_id: this.child_store,
                 user_id: this.user.id,
-                is_completed: false,
                 comment: this.comment,
                 arrived_at: this.arrivedAt,
                 payment_cost: this.paymentCost,
             };
-            this.overlay = false;
-            await createArrival(arrival);
-            this.overlay = false;
-            await db.arrivals.clear();
-            this.$toast.success('Приемка создана успешно!');
-            this.cart = [];
+
+            try {
+                this.$loading.enable('Поступление создается...');
+                await this.$createArrival(arrival);
+                await db.arrivals.clear();
+                this.$toast.success('Поступление создано успешно!');
+                this.cart = [];
+                this.comment = '';
+                this.arrivedAt = null;
+                this.paymentCost = 0;
+            } catch (e) {
+                this.$toast.error('При создании поступления произошла ошибка!');
+            } finally {
+                this.$loading.disable();
+            }
         },
         getCartCount(id) {
             const index = this.cart.map(c => c.id).indexOf(id);

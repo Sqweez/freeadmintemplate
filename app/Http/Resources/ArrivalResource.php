@@ -24,6 +24,10 @@ class ArrivalResource extends JsonResource
     public function toArray($request)
     {
 
+        $products = collect(ArrivalProductResource::collection($this->products))->map(function ($product) {
+            return $product;
+        });
+
         return [
             'id' => $this->id,
             'store' => $this->store->name,
@@ -31,9 +35,7 @@ class ArrivalResource extends JsonResource
             'user_id' => $this->user_id,
             'user' => $this->user->name,
             'is_completed' => $this->is_completed,
-            'products' => collect(ArrivalProductResource::collection($this->products))->map(function ($product) {
-                return $product;
-            }),
+            'products' => $products,
             'position_count' => $this->products->count(),
             'product_count' => $this->products->sum('count'),
             'total_cost' => $this->products->reduce(function ($a, $c) {
@@ -42,11 +44,20 @@ class ArrivalResource extends JsonResource
             'total_sale_cost' => $this->products->reduce(function ($a, $c) {
                 return $a + intval($c->count) * intval($c->product->product_price ?? 0);
             }, 0),
-            'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
-            'arrived_at' => $this->arrived_at ? Carbon::parse($this->arrived_at)->format('d.m.Y') : null,
+            'date' => format_datetime($this->created_at),
+            'arrive_date' => format_date($this->arrived_at),
+            'arrived_at' => $this->arrived_at,
             'comment' => $this->comment,
             'bookings' => $this->bookings,
-            'payment_cost' => $this->payment_cost
+            'payment_cost' => $this->payment_cost,
+            'search' => trim($products->reduce(function ($a, $c) {
+                return $a . sprintf(
+                        " %s %s %s ",
+                        $c['product_name'],
+                        $c['manufacturer']['manufacturer_name'],
+                        collect($c['attributes'])->pluck('attribute_value')->join(' ')
+                    );
+            }, '')),
         ];
     }
 }

@@ -1,11 +1,8 @@
 <template>
     <div>
-        <v-overlay :value="overlay">
-            <v-progress-circular indeterminate size="64"></v-progress-circular>
-        </v-overlay>
         <v-card>
             <v-card-text>
-                <h5 v-if="IS_SUPERUSER">Общая сумма: {{totalPurchasePrice | priceFilters}}</h5>
+                <h5 v-if="IS_SUPERUSER">Общая закупочная сумма: {{totalPurchasePrice | priceFilters}}</h5>
                 <h5>Общая продажная сумма: {{totalProductPrice | priceFilters}}</h5>
                 <v-text-field
                     label="Поиск по поступлениям"
@@ -15,15 +12,8 @@
                 />
                 <v-data-table
                     :search="search"
-                    class="background-tooman-grey fz-18 mt-2"
-                    no-results-text="Нет результатов"
-                    no-data-text="Нет данных"
                     :headers="headers"
-                    :items="_arrivals"
-                    :footer-props="{
-                        'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
-                        'items-per-page-text': 'Записей на странице',
-                    }"
+                    :items="arrivals"
                 >
                     <template v-slot:item.common_info="{ item }">
                         <v-list>
@@ -57,7 +47,7 @@
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
-                            <v-list-item v-if="comment">
+                            <v-list-item v-if="item.comment">
                                 <v-list-item-content>
                                     <v-list-item-title>
                                         {{ item.comment }}
@@ -67,10 +57,10 @@
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
-                            <v-list-item v-if="item.arrived_at">
+                            <v-list-item v-if="item.arrive_date">
                                 <v-list-item-content>
                                     <v-list-item-title>
-                                        {{ item.arrived_at }}
+                                        {{ item.arrive_date }}
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
                                         Ожидаемая дата
@@ -107,7 +97,7 @@
                                         {{ item.total_cost | priceFilters }}
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
-                                        Общая сумма
+                                        Общая закупочная сумма
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
@@ -148,7 +138,7 @@
                                                     @click="current_arrival = item; arrivalModal = true; editArrivalMode = true;"
                                                     v-if="IS_SUPERUSER && !IS_MARKETOLOG"
                                                 >
-                                                    Редактировать состав <v-icon>mdi-pencil</v-icon>
+                                                    Редактировать <v-icon>mdi-pencil</v-icon>
                                                 </v-btn>
                                             </v-list-item-content>
                                         </v-list-item>
@@ -187,17 +177,6 @@
                                         <v-list-item>
                                             <v-list-item-content>
                                                 <v-btn
-                                                    color="primary"
-                                                    @click="editMode = true; arrivalId = item.id; storeId = item.store_id; paymentCost = item.payment_cost; comment = item.comment; arrivedAt = item.arrived_at"
-                                                    v-if="IS_SUPERUSER && !IS_MARKETOLOG"
-                                                >
-                                                    Редактировать информацию <v-icon>mdi-pencil</v-icon>
-                                                </v-btn>
-                                            </v-list-item-content>
-                                        </v-list-item>
-                                        <v-list-item>
-                                            <v-list-item-content>
-                                                <v-btn
                                                     v-if="!IS_MARKETOLOG"
                                                     color="primary"
                                                     @click="current_arrival = {...item}; bookingModal = true;"
@@ -219,19 +198,14 @@
                             </v-expansion-panel>
                         </v-expansion-panels>
                     </template>
-                    <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
-                        {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
-                    </template>
                 </v-data-table>
             </v-card-text>
         </v-card>
         <ArrivalInfoModal
             :state="arrivalModal"
-            :arrival="current_arrival"
+            :arrival-prop="current_arrival"
             :edit-mode="editArrivalMode"
             @cancel="arrivalModal = false; current_arrival = {}"
-            @submit="onSubmit"
-            @edit="onEdit"
             :search="search"
         />
         <ConfirmationModal
@@ -257,15 +231,14 @@ import axios from "axios";
 import {TOAST_TYPE} from "@/config/consts";
 import BookingModal from "@/components/Modal/BookingModal";
 import ACTIONS from "@/store/actions";
+import {mapActions} from 'vuex';
 
 export default {
     components: {BookingModal, ConfirmationModal, ArrivalInfoModal},
     data: () => ({
         search: '',
-        overlay: true,
         loading: false,
         editArrivalMode: false,
-        arrivals: [],
         current_arrival: {},
         arrivalModal: false,
         confirmationModal: false,
@@ -278,48 +251,25 @@ export default {
         comment: '',
     }),
     methods: {
+        ...mapActions({
+            '$getNotCompletedArrivals': 'getNotCompletedArrivals',
+            '$deleteArrival': 'deleteArrival',
+        }),
         async getArrivals() {
-            this.overlay = true;
-            const {data} = await getArrivals(false);
-            this.arrivals = data.map(arrival => {
-                arrival.search = arrival.products.map(product => {
-                    return `${product.product_name} ${product.manufacturer.manufacturer_name} ${product.attributes.map(a => a.attribute_value).join(' ')}`
-                }).join(' ')
-                return arrival
-            });
-            this.overlay = false;
-        },
-        async getArrival(id) {
-            this.overlay = true;
-            const {data} = await getArrival(id);
-            this.arrivals = this.arrivals.map(arrival => {
-                if (arrival.id === data.id) {
-                    arrival = data;
-                }
-                return arrival;
-            })
-            this.overlay = false;
+            this.$loading.enable('Данные загружаются...');
+            await this.$getNotCompletedArrivals();
+            this.$loading.disable();
         },
         async onBookingSubmit() {
             await this.getArrivals();
             this.arrival = {};
             this.bookingModal = false;
         },
-        async onSubmit() {
-            this.arrivals = this.arrivals.filter(a => a.id !== this.current_arrival.id);
-            this.arrivalModal = false;
-            this.current_arrival = {}
-        },
-        async onEdit() {
-            this.loading = true;
-            await this.getArrival(this.current_arrival.id);
-            this.arrivalModal = false;
-            this.current_arrival = {};
-        },
         async deleteArrival() {
-            await deleteArrival(this.current_arrival.id);
-            this.arrivals = this.arrivals.filter(a => a.id !== this.current_arrival.id);
             this.confirmationModal = false;
+            this.$loading.enable();
+            await this.$deleteArrival(this.current_arrival.id);
+            this.$loading.disable();
             this.current_arrival = {}
         },
         async printWaybill(id) {
@@ -356,6 +306,9 @@ export default {
         }
     },
     computed: {
+        arrivals () {
+            return this.$store.getters.ARRIVALS;
+        },
         headers() {
             return [
                 {
@@ -392,14 +345,6 @@ export default {
             return this.arrivals.reduce((a, c) => {
                 return a + +c.total_sale_cost;
             }, 0);
-        },
-        _arrivals() {
-            return this.arrivals.filter(s => {
-                if (this.arrivalId !== null) {
-                    return s.id === this.arrivalId;
-                }
-                return s;
-            })
         },
         stores() {
             return this.$store.getters.stores;

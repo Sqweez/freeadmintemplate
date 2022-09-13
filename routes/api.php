@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\ArrivalController;
 use App\Http\Controllers\api\TransferController;
 use App\Http\Controllers\api\v2\ProductController;
 use App\Http\Controllers\api\v2\CertificateController;
@@ -189,14 +190,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::delete('rating/criteria/{crit}', 'api\RatingController@deleteCriteria');
 
     // ArrivalController
-    Route::post('arrivals/change/{arrival}', 'api\ArrivalController@changeArrival');
-    Route::get('arrivals/cancel/{arrival}', 'api\ArrivalController@cancelArrival');
-    Route::get('arrivals/{arrival}', 'api\ArrivalController@getArrival');
-    Route::get('arrivals', 'api\ArrivalController@index');
-    Route::post('arrivals', 'api\ArrivalController@createArrival');
-    Route::post('arrivals/complete', 'api\ArrivalController@createBatch');
-    Route::delete('arrivals/{arrival}', 'api\ArrivalController@deleteArrival');
-    Route::patch('arrivals/{arrival}', 'api\ArrivalController@update');
+    Route::get('arrivals/transfers', [ArrivalController::class, 'getArrivalsForTransfer']);
+    Route::get('arrivals/cancel/{arrival}', 'api\ArrivalController@cancel');
+    Route::post('arrivals/{arrival}/submit', 'api\ArrivalController@submit');
+    Route::apiResource('arrivals', 'api\ArrivalController');
 
     // AnalyticsController
     Route::prefix('analytics')->group(function() {

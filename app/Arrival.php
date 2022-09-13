@@ -68,6 +68,10 @@ class Arrival extends Model
         return $this->hasMany('App\v2\Models\Booking');
     }
 
+    public function getProductCountAttribute(): int {
+        return $this->products->sum('count');
+    }
+
     protected static function boot() {
         parent::boot();
         static::creating(function ($query) {
@@ -76,5 +80,36 @@ class Arrival extends Model
         static::updating(function ($query) {
             $query->comment = $query->comment ?? '';
         });
+    }
+
+    public function loadRelations(): Arrival {
+        $this->load('products.product.product');
+        $this->load('products.product.product.manufacturer');
+        $this->load('products.product.product_images');
+        $this->load('products.product.attributes');
+        $this->load('products.product.attributes.attribute_name');
+        $this->load('products.product.product.attributes');
+        $this->load('products.product.product.attributes.attribute_name');
+        $this->load('bookings.products');
+        $this->load('products.bookingProducts');
+        return $this;
+    }
+
+    public function complete($comment, $deliveryCost) {
+        $this->update([
+            'is_completed' => true,
+            'completed_id' => auth()->id(),
+            'completed_at' => now(),
+            'comment' => $comment,
+            'payment_cost' => $deliveryCost
+        ]);
+    }
+
+    public function cancel() {
+        $this->update([
+            'is_completed' => false,
+            'cancelled_id' => auth()->id(),
+            'cancelled_at' => now(),
+        ]);
     }
 }

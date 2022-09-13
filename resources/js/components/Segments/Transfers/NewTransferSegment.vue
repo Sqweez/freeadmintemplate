@@ -113,9 +113,7 @@
         <v-select
             v-if="IS_SUPERUSER"
             label="Поступления"
-            :item-text="function(item) {
-              return !item.name ? `${item.date} | ${item.total_sale_cost} тнг | ${item.product_count} шт` : item.name;
-            }"
+            item-text="full_name"
             item-value="id"
             :items="arrivals"
             v-model="currentArrival"
@@ -253,6 +251,7 @@
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
     import {db} from "@/db";
+    import {__hardcoded} from '@/utils/helpers';
 
     export default {
         components: {
@@ -267,6 +266,7 @@
         data: () => ({
             cart: [],
             currentArrival: -1,
+            completedArrivals: [],
             search: '',
             confirmationModal: false,
             wayBillModal: false,
@@ -311,15 +311,19 @@
             ],
         }),
         async mounted() {
-            this.loading = true;
-            await this.$store.dispatch('GET_ARRIVALS', true);
+            this.$loading.enable('Пожалуйста, подождите');
             await this.$store.dispatch('GET_PRODUCTS_v2');
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+            this.storeFilter = this.IS_SUPERUSER ? this.stores[0]?.id : __hardcoded(6);
             if (this.IS_SELLER) {
                 this.storeFilter = 6;
             }
-            this.loading = false;
+            this.$loading.disable();
+            if (this.IS_SUPERUSER) {
+                const { data: { data } } = await axios.get(`/api/arrivals/transfers`);
+                this.completedArrivals = data;
+            }
         },
         mixins: [product, product_search, cart],
         methods: {
@@ -387,21 +391,17 @@
                 return [
                     {
                         id: -1,
-                        name: 'Все'
+                        full_name: 'Все'
                     },
-                    ...this.$store.getters.ARRIVALS
+                    ...this.completedArrivals,
                 ];
             },
             products() {
                 let products = this.$store.getters.PRODUCTS_v2;
 
                 if (this.currentArrival !== -1) {
-                    const arrivalProducts = this.arrivals.find(a => a.id === this.currentArrival)
-                        .products
-                        .map(p => p.id);
-                    products = products.filter(p => {
-                        return arrivalProducts.find(a => a == p.id);
-                    })
+                    const productIds = this.arrivals.find(a => a.id === this.currentArrival).product_ids;
+                    products = products.filter(product => productIds.includes(product.id));
                 }
 
                 if (this.manufacturerId !== -1) {

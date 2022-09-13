@@ -87,7 +87,7 @@ class ProductController extends Controller
                         }, 0),
                         'name' => collect($store)->first()['store']['name']
                     ];
-                })->values()->all();
+                })->values()->sortBy('store_id')->all();
                 $totalQuantity = collect($storesQuantity)->reduce(function ($a, $c) {
                     return $a + $c['quantity'];
                 }, 0);
