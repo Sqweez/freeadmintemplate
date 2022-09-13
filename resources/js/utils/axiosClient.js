@@ -8,6 +8,7 @@ axiosClient.interceptors.request.use((config) => {
         Authorization: store.getters.TOKEN,
         user_id: store.getters.USER.id,
         store_id: store.getters.USER.store_id,
+        accept: 'application/json'
     };
     return config;
 });

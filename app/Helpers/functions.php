@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 if (!function_exists('ucfirstRu')) {
     function ucfirstRu(string $value): string {
         return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
@@ -153,6 +155,17 @@ if (!function_exists('__hardcoded')) {
     }
 }
 
+if (!function_exists('format_datetime')) {
+    function format_datetime ($date = null): ?string {
+        return is_null($date) ? null : Carbon::parse($date)->format('d.m.Y H:i:s');
+    }
+}
+
+if (!function_exists('format_date')) {
+    function format_date ($date = null): ?string {
+        return is_null($date) ? null : Carbon::parse($date)->format('d.m.Y');
+    }
+}
 if (!function_exists('generate_number')) {
     function generate_number($length): string {
         $result = '';

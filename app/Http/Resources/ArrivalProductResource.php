@@ -38,6 +38,7 @@ class ArrivalProductResource extends JsonResource
                 ];
             })),
             'id' => $this->product->id,
+            'base_product_id' => $this->product->product_id,
             'count' => $this->count,
             'available_booking_count' => $this->available_booking_count,
             'booking_count' => $this->booking_count,

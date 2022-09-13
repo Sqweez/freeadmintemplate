@@ -65,10 +65,10 @@
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
-                            <v-list-item v-if="item.arrived_at">
+                            <v-list-item v-if="item.arrive_date">
                                 <v-list-item-content>
                                     <v-list-item-title>
-                                        {{ item.arrived_at }}
+                                        {{ item.arrive_date }}
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
                                         Ожидаемая дата
@@ -164,7 +164,7 @@
         </v-card>
         <ArrivalInfoModal
             :state="arrivalModal"
-            :arrival="current_arrival"
+            :arrivalProp="current_arrival"
             :confirm-mode="false"
             @cancel="arrivalModal = false; current_arrival = {}"
             :search="search"

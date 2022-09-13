@@ -1,6 +1,9 @@
 export default class {
 
     getMarginPercentage (product_price, purchase_price) {
+        if (!isFinite(product_price) || !isFinite(purchase_price)) {
+            return 0;
+        }
         const profit = product_price - purchase_price;
         return Math.round(profit * 100 / product_price);
     }
@@ -13,10 +16,13 @@ export default class {
         if (percentage < 45) {
             return 'yellow--text';
         }
-        return 'green-text';
+        return 'green--text';
     }
 
     getSurchargePercentage (product_price, purchase_price) {
+        if (!isFinite(product_price) || !isFinite(purchase_price)) {
+            return 0;
+        }
         const profit = product_price - purchase_price;
         if (purchase_price === 0) {
             return 0;
