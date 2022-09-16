@@ -266,8 +266,8 @@
         async created() {
             this.loading = this.products.length === 0 || false;
             await this.$store.dispatch('GET_PRODUCTS_v2');
-            const store_id = (this.is_admin || this.IS_BOSS) ? null : this.user.store_id;
-            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+            await this.$store.dispatch(ACTIONS.GET_STORES, null);
+            this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             this.loading = false;

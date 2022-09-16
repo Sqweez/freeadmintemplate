@@ -95,7 +95,7 @@ class CategoryController extends Controller {
                     $_subcategory->update(
                         [
                             'subcategory_name' => $subcategory['subcategory_name'],
-                            'subcategory_slug' => Str::slug($subcategory['subcategory_name'] . ' '. $subcategory['id'])
+                            //'subcategory_slug' => Str::slug($subcategory['subcategory_name'] . ' '. $subcategory['id'])
                         ]);
                 }
             }

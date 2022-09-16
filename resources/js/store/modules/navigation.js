@@ -490,6 +490,18 @@ const navigationModule = {
                 ],
             },
             {
+                title: 'Экономика',
+                url: '#',
+                hasDropdown: true,
+                icon: 'account_balance_wallet',
+                children: [
+                    {
+                        title: 'Типы маржинальности',
+                        url: '/economy/margin/types'
+                    }
+                ]
+            },
+            {
                 title: 'Продавцы',
                 url: '#',
                 hasDropdown: true,
@@ -810,6 +822,26 @@ const navigationModule = {
                 title: 'Клиенты',
                 url: '/clients',
                 icon: 'person'
+            },
+            {
+                title: 'Документооборот',
+                url: '#',
+                icon: 'article',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Создать документ',
+                        url: '/documents',
+                    },
+                    /*{
+                        title: 'Список документов',
+                        url: '/documents/list',
+                    },
+                    {
+                        title: 'Прайс-лист',
+                        url: '/documents/price/list'
+                    }*/
+                ]
             },
             {
                 title: 'Склад',

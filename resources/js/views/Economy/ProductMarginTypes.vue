@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card>
+        <v-card v-if="IS_BOSS">
             <v-card-text>
                 <div class="d-flex mt-4">
                     <v-btn color="primary" :outlined="activeSegment !== 'settings'" @click="activeSegment = 'settings'">
@@ -185,9 +185,10 @@ export default {
     },
     async created() {
         this.$loading.enable();
+        this.activeSegment = this.IS_BOSS ? 'settings' : 'products';
         await this.$store.dispatch('GET_PRODUCTS_v2');
-        const store_id = (this.is_admin || this.IS_BOSS) ? null : this.user.store_id;
-        await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+        await this.$store.dispatch(ACTIONS.GET_STORES);
+        this.storeFilter = this.stores[0].id;
         await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
         await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
         this.loading = false;
@@ -202,7 +203,7 @@ export default {
     data: () => ({
         addingToCart: false,
         itemsPerPage: 10,
-        activeSegment: 'settings',
+        activeSegment: null,
         showCart: false,
         loading: true,
         cart: [],

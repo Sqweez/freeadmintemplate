@@ -453,7 +453,8 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true
+                IS_BOSS: true,
+                IS_SELLER: true
             }
         }
     },
@@ -464,6 +465,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true,
+                // IS_SELLER: true
             }
         }
     },
@@ -474,6 +476,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true,
+                //IS_SELLER: true
             }
         }
     },
@@ -605,6 +608,7 @@ const routes = [
             CAN_ENTER: {
                 IS_BOSS: true,
                 IS_MARKETOLOG: true,
+                IS_ADMIN: true
             }
         }
     },
