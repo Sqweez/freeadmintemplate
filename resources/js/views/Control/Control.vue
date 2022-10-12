@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+<!--    <v-card>
         <v-card-title>
             Параметры товаров
         </v-card-title>
@@ -28,7 +28,19 @@
                 <component :is="currentSegment"/>
             </div>
         </v-card-text>
-    </v-card>
+    </v-card>-->
+    <i-card-page title="Параметры товаров">
+        <v-tabs v-model="tab">
+            <v-tab v-for="(tab, idx) of tabs" :key="idx">
+                {{ tab.value }}
+            </v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="tab">
+            <v-tab-item v-for="tab of tabs">
+                <component :is="tab.component"></component>
+            </v-tab-item>
+        </v-tabs-items>
+    </i-card-page>
 </template>
 
 <script>
@@ -41,25 +53,25 @@
     export default {
         data: () => ({
             loading: true,
-            segments: [
+            tab: 0,
+            tabs: [
                 {
-                    name: 'Категории товаров',
+                    value: 'Категории',
                     component: 'CategorySegment'
                 },
                 {
-                    name: 'Производители',
+                    value: 'Производители',
                     component: 'ManufacturerSegment'
                 },
                 {
-                    name: 'Атрибуты',
+                    value: 'Атрибуты',
                     component: 'AttributeSegment'
                 },
                 {
-                    name: 'Поставщики',
+                    value: 'Поставщики',
                     component: 'SupplierSegment'
                 }
             ],
-            currentSegment: 'CategorySegment'
         }),
         async mounted() {
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);

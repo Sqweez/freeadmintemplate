@@ -13,11 +13,23 @@
             <v-col sm="12" v-if="CAN_SALE && !IS_FRANCHISE">
                 <TasksWidget />
             </v-col>
-            <v-col sm="12" lg="12" md="12" v-if="CAN_SALE">
+            <v-col sm="12" lg="6" md="6" v-if="CAN_SALE">
                 <PlanWidget/>
             </v-col>
-            <v-col sm="12" lg="12" md="12" v-if="CAN_SALE && !IS_FRANCHISE">
+            <v-col sm="12" lg="12" md="12" v-if="CAN_SALE && !IS_FRANCHISE && false">
                 <BrandsWidget/>
+            </v-col>
+            <v-col sm="12" lg="6" md="6" v-if="IS_BOSS">
+                <BrandsRatingWidget />
+            </v-col>
+            <v-col sm="12" lg="6" md="6" v-if="IS_BOSS">
+                <PaymentTypeRating />
+            </v-col>
+            <v-col sm="12" lg="6" md="6" v-if="IS_BOSS">
+                <SellerByMarginTypesRating />
+            </v-col>
+            <v-col sm="12" lg="6" md="6" v-if="IS_BOSS">
+                <ProductSalesRating />
             </v-col>
         </v-row>
     </div>
@@ -30,16 +42,23 @@
     import PlanWidget from "@/components/Widgets/PlanWidget";
     import {mapGetters} from 'vuex';
     import SalesRatingWidget from "@/components/v2/Widgets/SalesRatingWidget";
-    import ACTIONS from "@/store/actions";
     import DashboardCompanion from "@/components/Widgets/DashboardCompanion";
     import TasksWidget from "@/components/Widgets/TasksWidget";
     import BrandsWidget from "@/components/Widgets/BrandsWidget";
+    import BrandsRatingWidget from '@/components/Widgets/BrandsRatingWidget';
+    import PaymentTypeRating from '@/components/Widgets/PaymentTypeRating';
+    import SellerByMarginTypesRating from '@/components/Widgets/SellerByMarginTypesRating';
+    import ProductSalesRating from '@/components/Widgets/ProductSalesRating';
 
     export default {
         data: () => ({
             items: ['Сегодня', 'Текущая неделя', 'Текущий месяц', 'Последние 3 месяца'],
         }),
         components: {
+            ProductSalesRating,
+            SellerByMarginTypesRating,
+            PaymentTypeRating,
+            BrandsRatingWidget,
             BrandsWidget,
             TasksWidget,
             DashboardCompanion,

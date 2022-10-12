@@ -2,8 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Manufacturer;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
+
+/* @mixin Manufacturer */
 
 class ManufacturerResource extends JsonResource
 {
@@ -21,9 +24,9 @@ class ManufacturerResource extends JsonResource
         return [
             'id' => $this->id,
             'manufacturer_name' => $this->manufacturer_name,
-            'manufacturer_img' =>
-                $is_shop ? ($this->manufacturer_img ? url('/') . Storage::url($this->manufacturer_img) : null) : $this->manufacturer_img,
-            'manufacturer_description' => $this->manufacturer_description
+            'manufacturer_img' => $this->manufacturer_img ? url('/') . Storage::url($this->manufacturer_img) : null,
+            'manufacturer_description' => $this->manufacturer_description,
+            'show_on_main' => $this->show_on_main
         ];
     }
 }

@@ -27,7 +27,8 @@ class ClientController extends Controller {
      */
     public function index(): AnonymousResourceCollection {
         return ClientResource::collection(
-            Client::with(['sales', 'transactions', 'city', 'loyalty'])
+            Client::query()
+                ->with(['sales', 'transactions', 'city', 'loyalty'])
                 ->get()
         );
     }

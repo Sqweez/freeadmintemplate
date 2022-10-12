@@ -1,52 +1,46 @@
 <template>
     <div class="mt-5">
-        <v-btn color="error" class="float-right d-block" @click="createMode = true">
+        <v-btn color="error" @click="showManufacturerModal = true">
             Добавить производителя
             <v-icon>mdi-plus</v-icon>
         </v-btn>
-        <br><br>
-        <v-simple-table>
-            <template v-slot:default>
-                <thead>
-                <tr>
-                    <th>Наименование</th>
-                    <th>Действие</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(manuf, index) of manufacturers" :key="index">
-                    <td>
-                        <span v-if="!editMode || manufacturer.id !== manuf.id">
-                            {{ manuf.manufacturer_name }}
-                        </span>
-                        <v-text-field
-                            v-else
-                            label="Наименование"
-                            v-model="manufacturer.manufacturer_name"
-                        />
-                    </td>
-                    <td>
-                        <div v-if="!editMode || manufacturer.id !== manuf.id">
-                            <v-btn icon @click="manufacturer = {...manuf}; createMode = true;">
-                                <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                            <v-btn icon @click="manufacturerId = manuf.id; deleteModal = true">
-                                <v-icon>mdi-delete</v-icon>
-                            </v-btn>
-                        </div>
-                        <div v-else>
-                            <v-btn icon @click="cancelEditing">
-                                <v-icon>mdi-cancel</v-icon>
-                            </v-btn>
-                            <v-btn icon @click="editManufacturer">
-                                <v-icon>mdi-check</v-icon>
-                            </v-btn>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
+        <v-text-field
+            class="my-4"
+            v-model="search"
+            solo
+            clearable
+            label="Поиск"
+            single-line
+            hide-details
+        ></v-text-field>
+        <v-data-table
+            :search="search"
+            :headers="headers"
+            :items="manufacturers"
+        >
+            <template v-slot:item.manufacturer_img="{ item }">
+                <div style="width: 200px; height: 200px;" v-if="item.manufacturer_img">
+                    <img :src="item.manufacturer_img" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span v-else>-</span>
             </template>
-        </v-simple-table>
+            <template v-slot:item.show_on_main="{item}">
+                <v-icon color="success" v-if="item.show_on_main">
+                    mdi-check
+                </v-icon>
+                <v-icon color="error" v-else>
+                    mdi-close
+                </v-icon>
+            </template>
+            <template v-slot:item.actions="{ item }">
+                <v-btn icon @click="manufacturer = item; showManufacturerModal = true;">
+                    <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn icon @click="manufacturerId = item.id; deleteModal = true">
+                    <v-icon>mdi-delete</v-icon>
+                </v-btn>
+            </template>
+        </v-data-table>
         <ConfirmationModal
             :state="deleteModal"
             message="Вы действительно хотите удалить выбранного производителя?"
@@ -54,8 +48,8 @@
             :on-confirm="deleteManufacturer"
         />
         <ManufacturerModal
-            v-on:cancel="createMode = false; manufacturer = {}"
-            :state="createMode"
+            @cancel="showManufacturerModal = false; manufacturer = {}"
+            :state="showManufacturerModal"
             :editing_manufacturer="manufacturer"
         />
     </div>
@@ -72,7 +66,26 @@
             ConfirmationModal
         },
         data: () => ({
-            createMode: false,
+            headers: [
+                {
+                    value: 'manufacturer_name',
+                    text: 'Наименование'
+                },
+                {
+                    value: 'manufacturer_img',
+                    text: 'Изображение'
+                },
+                {
+                    value: 'show_on_main',
+                    text: 'На главной'
+                },
+                {
+                    value: 'actions',
+                    text: 'Действие'
+                }
+            ],
+            search: '',
+            showManufacturerModal: false,
             manufacturer: {},
             manufacturerId: null,
             deleteModal: false,

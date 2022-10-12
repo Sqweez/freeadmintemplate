@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use App\ArrivalProducts;
 use App\Product;
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Arrival;
 

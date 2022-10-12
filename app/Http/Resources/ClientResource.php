@@ -51,7 +51,8 @@ class ClientResource extends JsonResource
             'gender' => $this->gender,
             'birth_date_formatted' => $this->birth_date ? Carbon::parse($this->birth_date)->format('d.m.Y') : 'Не указана',
             'birth_date' => $this->birth_date,
-            'is_wholesale_buyer' => $this->is_wholesale_buyer
+            'is_wholesale_buyer' => $this->is_wholesale_buyer,
+            'amount' => $this->sales_amount,
         ];
     }
 }
