@@ -21,7 +21,7 @@ class ReportController extends Controller
     public function getBrandsRating(Request $request, GetBrandSalesRatingAction $action) {
         $start = Carbon::parse($request->get('start', now()));
         $finish = Carbon::parse($request->get('finish', now()));
-        $store = intval($request->get('store', -1));
+        $store = intval($request->get('store_id', -1));
         return $action->handle($start, $finish, $store);
     }
 
