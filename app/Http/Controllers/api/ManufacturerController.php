@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateManufacturerRequest;
+use App\Http\Requests\UpdateManufacturerRequest;
 use App\Http\Resources\ManufacturerResource;
 use App\Manufacturer;
 use Illuminate\Database\Eloquent\Model;
@@ -26,26 +28,39 @@ class ManufacturerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return Manufacturer|Model
+     * @param CreateManufacturerRequest $request
+     * @return ManufacturerResource
      */
-    public function store(Request $request)
+    public function store(CreateManufacturerRequest $request)
     {
-        return Manufacturer::create($request->all());
+        $data = $request->validated();
+        if (isset($data['manufacturer_img'])) {
+            $data['manufacturer_img'] = $request->file('manufacturer_img')->store('public/manufacturers');
+        }
+        return ManufacturerResource::make(Manufacturer::create($data));
     }
 
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param UpdateManufacturerRequest $request
      * @param Manufacturer $manufacturer
-     * @return Manufacturer
+     * @return ManufacturerResource
      */
-    public function update(Request $request, Manufacturer $manufacturer)
-    {
-        $manufacturer->update($request->all());
-        return $manufacturer;
+    public function update(UpdateManufacturerRequest $request, Manufacturer $manufacturer): ManufacturerResource {
+        $data = $request->validated();
+        if (isset($data['manufacturer_img'])) {
+            try {
+                \Storage::delete($manufacturer->manufacturer_img);
+            } catch (\Exception $exception) {
+                \Log::error($exception->getMessage());
+            } finally {
+                $data['manufacturer_img'] = $request->file('manufacturer_img')->store('public/manufacturers');
+            }
+        }
+        $manufacturer->update($data);
+        return ManufacturerResource::make($manufacturer);
     }
 
     /**

@@ -1,4 +1,3 @@
-import {getArrivals} from "@/api/arrivals";
 import axiosClient from '@/utils/axiosClient';
 
 const arrivalModule = {

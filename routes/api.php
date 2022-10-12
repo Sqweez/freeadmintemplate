@@ -5,6 +5,7 @@ use App\Http\Controllers\api\TransferController;
 use App\Http\Controllers\api\v2\ProductController;
 use App\Http\Controllers\api\v2\CertificateController;
 use App\Http\Controllers\api\v2\CompanionController;
+use App\Http\Controllers\api\v2\ReportController;
 use App\Http\Controllers\api\v2\SeoController;
 use App\Http\Controllers\api\v2\WithDrawalController;
 use Illuminate\Support\Facades\Route;
@@ -391,6 +392,13 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
         Route::prefix('seo')->group(function () {
             Route::post('text/{type}/{id}', [SeoController::class, 'storeText']);
+        });
+
+        Route::prefix('reports')->group(function () {
+            Route::get('/plan', [ReportController::class, 'getPlanReports']);
+            Route::get('/brands', [ReportController::class, 'getBrandsRating']);
+            Route::get('/payment-types', [ReportController::class, 'getSellersByPaymentTypes']);
+            Route::get('/products-rating', [ReportController::class, 'getProductsRating']);
         });
     });
 });

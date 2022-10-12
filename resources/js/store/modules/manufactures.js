@@ -1,6 +1,8 @@
 import ACTIONS from '../actions'
 import MUTATIONS from '../mutations';
 import {createManufacturer, deleteManufacturers, editManufacturer, getManufacturers} from "../../api/manufacturer";
+import axios from 'axios';
+import axiosClient from '@/utils/axiosClient';
 
 const manufacturerModule = {
     state: {
@@ -35,12 +37,12 @@ const manufacturerModule = {
             commit(MUTATIONS.SET_MANUFACTURERS, manufacturers);
         },
         async [ACTIONS.CREATE_MANUFACTURER] ({commit}, payload) {
-            const manufacturer = await createManufacturer(payload);
-            commit(MUTATIONS.CREATE_MANUFACTURER, manufacturer);
+            const { data: { data } } = await axiosClient.post(`/manufacturers`, payload);
+            commit(MUTATIONS.CREATE_MANUFACTURER, data);
         },
-        async [ACTIONS.EDIT_MANUFACTURER] ({commit}, payload) {
-            const manufacturer = await editManufacturer(payload);
-            commit(MUTATIONS.EDIT_MANUFACTURER, manufacturer);
+        async [ACTIONS.EDIT_MANUFACTURER] ({commit}, { payload, id }) {
+            const { data: { data } } = await axios.post(`/api/manufacturers/${id}?_method=PATCH`, payload);
+            commit(MUTATIONS.EDIT_MANUFACTURER, data);
         },
         async [ACTIONS.DELETE_MANUFACTURER] ({commit}, payload) {
             await deleteManufacturers(payload);

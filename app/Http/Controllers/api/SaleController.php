@@ -140,11 +140,12 @@ class SaleController extends Controller {
             });
     }
 
-    public function getPlanReports() {
-        $today = Carbon::now();
+    public function getPlanReports(Request $request): array {
+        $today = now();
         $startOfMonth = $today->startOf('month')->toDateString();
 
         $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)
+            ->where('store_id', $request->get('store_id', 1))
             ->where('user_id', '!=', 2)
             ->where('payment_type', '!=', 4)
             ->with(['products:product_price,discount,sale_id'])

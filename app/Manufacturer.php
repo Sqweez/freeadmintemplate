@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * App\Manufacturer
@@ -28,14 +30,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Manufacturer extends Model
 {
-    protected $guarded = [];
-
-    protected $casts = [
-        'id' => 'integer'
+    protected $guarded = [
+        'id'
     ];
 
-    public function products() {
-        return $this->hasManyThrough(Product::class, ManufacturerProducts::class);
+    protected $casts = [
+        'id' => 'integer',
+        'show_on_main' => 'boolean'
+    ];
+
+    public function products(): HasMany {
+        return $this->hasMany(Product::class);
     }
 
 

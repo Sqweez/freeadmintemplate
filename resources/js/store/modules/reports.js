@@ -9,6 +9,7 @@ import {
 } from '@/api/sale'
 import ACTIONS from '../actions/index';
 import moment from 'moment';
+import axiosClient from '@/utils/axiosClient';
 
 const reportsModule = {
     state: {
@@ -90,8 +91,8 @@ const reportsModule = {
                 commit('changeSale', data.data);
             }
         },
-        async getPlanReports({commit}) {
-            const { data } = await getPlanReports();
+        async getPlanReports ({ commit }, store_id) {
+            const { data } = await axiosClient.get(`/v2/reports/plan?store_id=${store_id}`)
             commit('setPlanReports', data);
         },
         async updateSale({commit}, payload) {
