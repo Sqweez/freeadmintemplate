@@ -2,36 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Actions/Reports/GetPlanReportsAction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Requests/CreateManufacturerRequest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Requests/UpdateManufacturerRequest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_09_23_193343_alter_table_manufactures_column_show_on_main.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/DatePicker/DatePicker.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/GlobalComponents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Widgets/BrandsRatingWidget.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Widgets/PaymentTypeRating.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Widgets/ProductSalesRating.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Widgets/SellerByMarginTypesRating.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/utils/ICardPage.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ClientController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ManufacturerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ManufacturerController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ArrivalResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ArrivalResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ClientResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ClientResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ManufacturerResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ManufacturerResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Manufacturer.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Manufacturer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ReportController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/ManufacturerModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/ManufacturerModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/ManufacturerSegment.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/ManufacturerSegment.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Widgets/PlanWidget.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Widgets/PlanWidget.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/arrivals.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/arrivals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/manufactures.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/manufactures.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/reports.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/reports.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/helpers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Control/Control.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Control/Control.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Dashboard/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Dashboard/Dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Widgets/BrandsRatingWidget.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Widgets/BrandsRatingWidget.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Widgets/PaymentTypeRating.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Widgets/PaymentTypeRating.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Widgets/ProductSalesRating.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Widgets/ProductSalesRating.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Widgets/SellerByMarginTypesRating.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Widgets/SellerByMarginTypesRating.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -285,7 +262,7 @@
       <workItem from="1664297627358" duration="27000" />
       <workItem from="1664300362435" duration="18000" />
       <workItem from="1665078802710" duration="422000" />
-      <workItem from="1665557642456" duration="8500000" />
+      <workItem from="1665557642456" duration="9183000" />
     </task>
     <servers />
   </component>

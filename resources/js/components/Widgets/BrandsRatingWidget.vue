@@ -1,8 +1,8 @@
 <template>
     <div>
         <i-card-page title="Рейтинг брендов">
-            <v-responsive
-                :min-height="200"
+            <div
+                style="height: 300px;"
                 v-if="loading"
                 class="text-center d-flex justify-center align-center">
                 <v-progress-circular
@@ -10,7 +10,7 @@
                     color="primary"
                     indeterminate
                 ></v-progress-circular>
-            </v-responsive>
+            </div>
             <div v-else>
                 <i-date-picker v-model="dates"/>
                 <v-select label="Магазин" v-model="store" :items="$storeFilters" item-value="id" item-text="name"></v-select>

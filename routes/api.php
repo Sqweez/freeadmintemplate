@@ -399,6 +399,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/brands', [ReportController::class, 'getBrandsRating']);
             Route::get('/payment-types', [ReportController::class, 'getSellersByPaymentTypes']);
             Route::get('/products-rating', [ReportController::class, 'getProductsRating']);
+            Route::get('/margin-types', [ReportController::class, 'getSellersByMarginTypes']);
         });
     });
 });
