@@ -28,7 +28,52 @@
                     </v-btn>
                 </v-col>
             </v-row>
-            <v-simple-table v-slot:default>
+            <v-virtual-scroll
+                height="300"
+                item-height="64"
+                :items="cart"
+                v-if="cart.length"
+            >
+                <template v-slot:default="{ item, index }">
+                    <v-row style="max-width: 100%;">
+                        <v-col cols="7">
+                            <v-list class="product__list" flat>
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            {{ item.product_name }}
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} | {{ item.attributes.map(a => a.attribute_value).join(', ') }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-text-field
+                                label="Стоимость"
+                                type="number"
+                                v-model="item.product_price" />
+                        </v-col>
+                        <v-col cols="2">
+                            <v-text-field
+                                label="Итоговая стоимость"
+                                type="number"
+                                v-model="item.final_price"
+                            />
+                        </v-col>
+                        <v-col cols="1">
+                            <div style="width: 100%" class="d-flex justify-center">
+                                <v-btn icon color="error" @click="deleteList(index)">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </template>
+            </v-virtual-scroll>
+            <v-virtual-table v-if="false" :items="cart" :chunk-size="10">
                 <template>
                     <thead class="fz-18">
                     <tr>
@@ -40,7 +85,7 @@
                     </tr>
                     </thead>
                     <tbody class="background-iron-grey">
-                    <tr v-for="(item, index) of cart">
+                    <tr  v-for="(item, index) of cart">
                         <td>{{ index + 1 }}</td>
                         <td>
                             <v-list class="product__list" flat>
@@ -78,7 +123,7 @@
                     </tr>
                     </tbody>
                 </template>
-            </v-simple-table>
+            </v-virtual-table>
             <v-btn block color="primary" class="my-2" @click="loadReports" :disabled="!cart.length">
                 Загрузить прайс
             </v-btn>
@@ -247,8 +292,8 @@ export default {
     components: {ReportCancelModal, ConfirmationModal},
     mixins: [product_search],
     data: () => ({
-        moneyRate: 0,
-        ratio: 0,
+        moneyRate: 1,
+        ratio: 100,
         cart: [],
         overlay: false,
         loading: false,
@@ -375,16 +420,11 @@ export default {
             } finally {
                 this.$loading.disable();
             }
-
-           /* const link = document.createElement('a');
-            link.href = `${window.location.origin}/${data.path}`;
-            link.click();
-            this.loading = false;*/
         },
         calculateFinalPrice () {
             this.cart = this.cart.map(item => {
-               const price = item.purchase_price / this.moneyRate;
-               item.final_price = Math.floor(price * (this.ratio / 100));
+               const price = item.product_price / this.moneyRate;
+               item.final_price = Math.ceil(price * (this.ratio / 100));
                return item;
             });
         },
@@ -396,16 +436,6 @@ export default {
         },
         deleteList(key) {
             this.cart.splice(key, 1);
-        },
-        async changeSale() {
-            this.overlay = true;
-            await this.$store.dispatch('updateSale', {
-                id: this.report.id,
-                payment_type: this.report.payment_type
-            });
-            this.report = {};
-            this.overlay = false;
-            this.editMode = false;
         },
         closeModal() {
             this.currentProducts = [];
@@ -419,32 +449,6 @@ export default {
         async onConfirm() {
             this.closeModal();
         },
-        printCheck(id) {
-            window.open(`/check/${id}`, '_blank');
-        },
-        async loadReport() {
-
-            if (this.currentDate === DATE_FILTERS.CUSTOM_FILTER) {
-                if (!(this.start || this.finish)) {
-                    return;
-                }
-            }
-            this.overlay = true;
-            this.loading = true;
-            const dateObject = {
-                start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
-                finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1]
-            };
-            await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
-            this.overlay = false;
-            this.loading = false;
-
-        },
-        async changeCustomDate() {
-            this.$refs.startMenu.save(this.start);
-            this.$refs.finishMenu.save(this.finish);
-
-        }
     },
     computed: {
         is_admin() {

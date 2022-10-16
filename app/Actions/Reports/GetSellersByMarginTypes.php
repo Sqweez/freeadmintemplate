@@ -18,7 +18,7 @@ class GetSellersByMarginTypes {
                     });
                 });
             })
-            ->when($margin_type !== -1, function ($query) use ($margin_type) {
+            /*->when($margin_type !== -1, function ($query) use ($margin_type) {
                 return $query->with(['products' => function ($query) use ($margin_type) {
                     return $query->with(['product' => function ($subQuery) use ($margin_type) {
                         return $subQuery->where('margin_type_id', $margin_type);
@@ -27,10 +27,20 @@ class GetSellersByMarginTypes {
             })
             ->when($margin_type === -1, function ($q) {
                 return $q->with('products.product');
-            })
+            })*/
+            ->with('products.product')
             ->with('user')
             ->with('store')
             ->get()
+            ->map(function ($sales) use ($margin_type) {
+                if ($margin_type === -1) {
+                    return $sales;
+                }
+                $sales->products = $sales->products->filter(function ($product) use ($margin_type) {
+                    return $product->product->margin_type_id === $margin_type;
+                });
+                return $sales;
+            })
             ->groupBy('user_id')
             ->map(function ($sales, $user_id) {
                 return [
