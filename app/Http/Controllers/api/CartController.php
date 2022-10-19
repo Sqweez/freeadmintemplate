@@ -238,7 +238,7 @@ class CartController extends Controller {
 
         $discount = $order['discount'];
 
-        $products = ProductSku::with(['product', 'product.attributes', 'attributes'])->whereIn('id', $order->items->pluck('product_id'))->get();
+        $products = ProductSku::with(['product', 'product.attributes', 'attributes', 'product.manufacturer'])->whereIn('id', $order->items->pluck('product_id'))->get();
         $cartProducts = collect($order->items);
 
         foreach ($products as $key => $product) {
@@ -251,7 +251,24 @@ class CartController extends Controller {
             });
             $count = $_cartProducts->count();
             $batches = ProductBatch::with('store')->whereIn('id', $_cartProducts->pluck('product_batch_id'))->get();
-            $message .= ($key + 1) . '.' . $product->product_name . ',' . $attributes . ' ' . $product['product']['stock_price'] . 'тг' . ' | ' . $count . 'шт.' . "\n";
+            $productFullName = sprintf(
+                "%s. %s, %s, %s %sтг | %sшт",
+                ($key + 1),
+                $product->product_name,
+                $product->manufacturer->manufacturer_name,
+                $attributes,
+                $product['product']['stock_price'],
+                $count
+            );
+
+            $message .= sprintf(
+                "<a href='%s'>%s</a>",
+                'https://iron-addicts.kz/product/' . \Str::slug($product->product_name) . '/' . $product->product_id,
+                $productFullName
+            );
+
+            $message .= "\n";
+            //$message .= ($key + 1) . '.' . $product->product_name . ',' . $attributes . ' ' . $product['product']['stock_price'] . 'тг' . ' | ' . $count . 'шт.' . "\n";
             $message .= 'Склады товаров: ' . $batches->reduce(function ($a, $c) {
                     return $a . ' ' . $c['store']['name'] . ',';
                 }, '') . "\n";

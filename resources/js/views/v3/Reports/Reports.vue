@@ -441,26 +441,48 @@
                                     Заказ <v-icon class="ml-2">mdi-pencil</v-icon>
                                 </v-btn>
                             </v-list-item>
-                            <v-list-item>
-                                <v-btn small depressed color="success" text :href="'/print/check/' + item.id" target="_blank">
-                                    Чек <v-icon class="ml-2">mdi-printer</v-icon>
-                                </v-btn>
-                            </v-list-item>
-                            <v-list-item>
-                                <v-btn small depressed color="success" text @click="createWaybill(item)">
-                                    Накладная <v-icon class="ml-2">mdi-printer</v-icon>
-                                </v-btn>
-                            </v-list-item>
-                            <v-list-item>
-                                <v-btn small depressed color="success" text @click="createInvoice(item)">
-                                    Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
-                                </v-btn>
-                            </v-list-item>
-                            <v-list-item v-if="IS_SUPERUSER">
-                                <v-btn small depressed color="success" text @click="sendTelegram(item.id)">
-                                    Отправить в телегу <v-icon class="ml-2">mdi-email</v-icon>
-                                </v-btn>
-                            </v-list-item>
+                            <v-expansion-panels style="min-width: 284px;" flat>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header ripple>
+                                        <span
+                                            class="text-button"
+                                            style="
+                                            padding-left: 5px;
+                                            font-size: 12px!important;
+                                            color: #43a047;"
+                                        >
+                                            Документы
+                                        </span>
+                                    </v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <v-list-item>
+                                            <v-btn small depressed color="success" text :href="'/print/check/' + item.id" target="_blank">
+                                                Чек <v-icon class="ml-2">mdi-printer</v-icon>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item>
+                                            <v-btn small depressed color="success" text @click="createWaybill(item)">
+                                                Накладная <v-icon class="ml-2">mdi-printer</v-icon>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item>
+                                            <v-btn small depressed color="success" text @click="createInvoice(item)">
+                                                Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item>
+                                            <v-btn small depressed color="success" text @click="createPaymentInvoice(item)">
+                                                Счет на оплату <v-icon class="ml-2">mdi-printer</v-icon>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item v-if="IS_SUPERUSER">
+                                            <v-btn small depressed color="success" text @click="sendTelegram(item.id)">
+                                                Отправить в телегу <v-icon class="ml-2">mdi-email</v-icon>
+                                            </v-btn>
+                                        </v-list-item>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
                         </v-list>
                         <v-list v-if="editMode && report.id === item.id">
                             <v-list-item>
@@ -517,6 +539,7 @@ import ACTIONS from '@/store/actions/index';
 import axios from 'axios';
 import SaleEditModal from "@/components/Modal/SaleEditModal";
 import WholeSaleConfirmation from '@/components/Modal/WholeSaleConfirmation';
+import {__deepClone} from '@/utils/helpers';
 
 const DATE_FILTERS = {
         ALL_TIME: 1,
@@ -752,6 +775,22 @@ const DATE_FILTERS = {
                     BINLocation: '',
                     product: cart.length > 1 ? 'Спортивные витамины в ассортименте'
                         : `${cart[0].product_name} ${cart[0].attributes.map(a => a.attribute_value).join(' ')} ${cart[0].manufacturer.manufacturer_name}`,
+                })
+                const link = document.createElement('a');
+                link.href = `${window.location.origin}/${data.path}`;
+                link.click();
+                this.$loading.disable();
+            },
+            async createPaymentInvoice (report) {
+                this.$loading.enable();
+                const _report = __deepClone(report);
+                const cart = _report.products.map(r => {
+                    r.attributes = r._attributes;
+                    return r;
+                });
+                const { data } = await axios.post(`/api/v2/documents/invoice`, {
+                    cart,
+                    customer: report.client.client_name,
                 })
                 const link = document.createElement('a');
                 link.href = `${window.location.origin}/${data.path}`;
