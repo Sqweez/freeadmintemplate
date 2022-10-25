@@ -17,6 +17,11 @@ const navigationModule = {
                 icon: 'person'
             },
             {
+                title: 'Оптовые клиенты',
+                url: '/clients/wholesale',
+                icon: 'person'
+            },
+            {
                 title: 'Изъятия',
                 url: '/with-drawal',
                 icon: 'report'
@@ -404,6 +409,11 @@ const navigationModule = {
             {
                 title: 'Клиенты',
                 url: '/clients',
+                icon: 'person'
+            },
+            {
+                title: 'Оптовые клиенты',
+                url: '/clients/wholesale',
                 icon: 'person'
             },
             {

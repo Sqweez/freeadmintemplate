@@ -37,6 +37,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereComment($value)
  * @property int $payment_cost
  * @method static \Illuminate\Database\Eloquent\Builder|Arrival wherePaymentCost($value)
+ * @property string|null $completed_at
+ * @property string|null $cancelled_at
+ * @property int|null $completed_id
+ * @property int|null $cancelled_id
+ * @property-read int $product_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereCancelledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereCancelledId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Arrival whereCompletedId($value)
  */
 class Arrival extends Model
 {

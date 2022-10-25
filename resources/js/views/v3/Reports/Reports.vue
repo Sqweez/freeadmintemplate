@@ -788,7 +788,7 @@ const DATE_FILTERS = {
                     r.attributes = r._attributes;
                     return r;
                 });
-                const { data } = await axios.post(`/api/v2/documents/invoice`, {
+                const { data } = await axios.post(`/api/v2/documents/invoice-payment`, {
                     cart,
                     customer: report.client.client_name,
                 })
@@ -799,7 +799,7 @@ const DATE_FILTERS = {
             },
             async sendTelegram(saleId) {
                 this.$loading.enable();
-                const response = await axios.get(`/api/sales/telegram/${saleId}`);
+                await axios.get(`/api/sales/telegram/${saleId}`);
                 this.$loading.disable();
             }
         },

@@ -76,6 +76,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read mixed $final_price_without_red
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereIsOpt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereIsPaid($value)
+ * @property bool $is_confirmed
+ * @property-read int $kaspi_red_commission
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereIsConfirmed($value)
  */
 class Sale extends Model
 {
