@@ -83,6 +83,14 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $real_sales_count
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereBirthDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereGender($value)
+ * @property bool $is_wholesale_buyer
+ * @property int|null $wholesale_type_id
+ * @property-read mixed $wholesale_type
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereIsWholesaleBuyer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereWholesaleTypeId($value)
+ * @property string $wholesale_status
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereWholesaleStatus($value)
+ * @property-read string $wholesale_status_text
  */
 class Client extends Model
 {
@@ -95,6 +103,19 @@ class Client extends Model
     ];
 
     protected $guarded = [];
+
+    const WHOLE_SALE_TYPES = [
+        0 => 'Спортивный зал',
+        1 => 'Магазин',
+        2 => 'Кофейня',
+        3 => 'Прочее',
+    ];
+
+    const WHOLE_SALE_STATUS = [
+        0 => 'Сотрудничает',
+        1 => 'Думает',
+        2 => 'Не сотрудничает',
+    ];
 
     const DISCOUNT = [
         [
@@ -206,6 +227,20 @@ class Client extends Model
         $query->whereHas('loyalty', function ($q) {
             return $q->whereId(2);
         });
+    }
+
+    public function getWholesaleTypeAttribute(): string {
+        return !$this->is_wholesale_buyer
+            ? 'Обычный покупатель'
+            : (self::WHOLE_SALE_TYPES[$this->wholesale_type_id - 1] ?? 'Неизвестно'
+            );
+    }
+
+    public function getWholesaleStatusTextAttribute(): string {
+        return !$this->is_wholesale_buyer
+            ? 'Обычный покупатель'
+            : (self::WHOLE_SALE_STATUS[$this->wholesale_status - 1] ?? 'Неизвестно'
+            );
     }
 
     public function setPhotoAttribute($value) {

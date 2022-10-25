@@ -23,12 +23,18 @@ class ClientController extends Controller {
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection {
+    public function index(Request $request): AnonymousResourceCollection {
         return ClientResource::collection(
             Client::query()
                 ->with(['sales', 'transactions', 'city', 'loyalty'])
+                ->when($request->has('wholesale'), function ($query) {
+                    return $query
+                        ->where('is_wholesale_buyer', true)
+                        ->orderBy('wholesale_status');
+                })
                 ->get()
         );
     }
@@ -80,13 +86,16 @@ class ClientController extends Controller {
                     'photo',
                     'birth_date',
                     'gender',
-                    'is_wholesale_buyer'
+                    'is_wholesale_buyer',
+                    'wholesale_type_id',
+                    'wholesale_status'
                 ]
             );
             $_client = collect($_client)->filter(function ($i) {
                 return strlen($i) > 0;
             });
             $client->update($_client->toArray());
+            $client->refresh();
             return new ClientResource($client);
         } else {
             $_client = $request->except(['site', 'is_partner', 'client_discount', 'client_balance', 'city']);
@@ -221,7 +230,6 @@ class ClientController extends Controller {
         return collect($client)->only('user_token');
     }
 
-
     public function getOrders(Request $request) {
         $user_token = $request->get('user_token');
         $client = Client::ofToken($user_token)->with([
@@ -256,7 +264,6 @@ class ClientController extends Controller {
 
     public function addBalance(Request $request, Client $client) {
         ClientTransaction::create(['client_id' => $client->id, 'user_id' => 1, 'amount' => $request->get('sum'), 'sale_id' => -1]);
-
         return new ClientResource($client);
     }
 
@@ -323,4 +330,12 @@ class ClientController extends Controller {
         ];
     }
 
+    public function getWholeSaleTypes() {
+        return collect(Client::WHOLE_SALE_TYPES)->map(function ($value, $key) {
+            return [
+                'id' => $key + 1,
+                'name' => $value
+            ];
+        })->values();
+    }
 }

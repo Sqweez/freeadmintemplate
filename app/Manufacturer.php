@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
  * @property-read int|null $products_count
+ * @property bool $show_on_main
+ * @method static \Illuminate\Database\Eloquent\Builder|Manufacturer whereShowOnMain($value)
  */
 class Manufacturer extends Model
 {

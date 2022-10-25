@@ -53,6 +53,10 @@ class ClientResource extends JsonResource
             'birth_date' => $this->birth_date,
             'is_wholesale_buyer' => $this->is_wholesale_buyer,
             'amount' => $this->sales_amount,
+            'wholesale_type' => $this->wholesale_type,
+            'wholesale_type_id' => $this->wholesale_type_id,
+            'wholesale_status' => $this->wholesale_status,
+            'wholesale_status_text' => $this->wholesale_status_text,
         ];
     }
 }

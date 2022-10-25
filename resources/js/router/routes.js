@@ -72,6 +72,7 @@ import BestBeforeIndex from "@/views/BestBefore/BestBeforeIndex";
 import WithDrawalIndex from "@/views/WithDrawal/WithDrawalIndex";
 import TerminalIndex from "@/views/Terminal/TerminalIndex";
 import SettingsIndex from "@/views/Settings/SettingsIndex";
+import WholesaleClients from '@/views/Clients/WholesaleClients';
 
 const routes = [
     {
@@ -119,6 +120,19 @@ const routes = [
                 IS_SENIORSELLER: true,
                 IS_BOSS: true,
                 IS_MARKETOLOG: true,
+                IS_FRANCHISE: true,
+            }
+        }
+    },
+    {
+        path: '/clients/wholesale',
+        component: WholesaleClients,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+                IS_SENIORSELLER: true,
+                IS_BOSS: true,
                 IS_FRANCHISE: true,
             }
         }

@@ -9,6 +9,7 @@
                 <h5>Телефон: +{{ client.client_phone }}</h5>
                 <h5>Номер карты: {{ client.client_card }}</h5>
                 <h5>Сумма покупок: {{ client.total_sum | priceFilters }}</h5>
+                <h5 v-if="IS_BOSS">Сумма прибыли: {{ totalMargin | priceFilters }}</h5>
                 <h5>Город: {{ client.city }}</h5>
                 <h5>Тип лояльности: {{ client.loyalty.name }}</h5>
                 <h5>Пол: {{ client.gender_name }}</h5>
@@ -183,6 +184,13 @@ export default {
             {text: 'Дополнительные данные', value: 'additional_data'},
         ],
     }),
+    computed: {
+        totalMargin () {
+            return this.sales.reduce((a, c) => {
+                return a + c.margin;
+            }, 0);
+        }
+    },
     async mounted() {
         await this.$loading.enable();
         const { data } = await axios.get(`/api/clients/${this.$route.params.id}`)
