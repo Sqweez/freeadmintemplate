@@ -46,45 +46,44 @@ class SaleService {
 
     public function createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale_id, $partner_id, $payment_type = 1): bool {
         $client = Client::find($client_id);
-        if (!$client) {
-            return false;
-        }
+        if ($client) {
+            $amountWithOutDiscount = $this->getTotalCost($cart, 0);
+            $newDiscount = 0;
+            if ($amountWithOutDiscount >= 15000) {
+                $newDiscount = 5;
+            }
+            if ($amountWithOutDiscount >= 30000) {
+                $newDiscount = 10;
+            }
 
-        $amountWithOutDiscount = $this->getTotalCost($cart, 0);
-        $newDiscount = 0;
-        if ($amountWithOutDiscount >= 15000) {
-            $newDiscount = 5;
-        }
-        if ($amountWithOutDiscount >= 30000) {
-            $newDiscount = 10;
-        }
+            if ($newDiscount > $client->client_discount) {
+                $client->update(['client_discount' => $newDiscount]);
+            }
 
-        if ($newDiscount > $client->client_discount) {
-            $client->update(['client_discount' => $newDiscount]);
-        }
+            $amount = $this->getTotalCost($cart, $discount);
 
-        $amount = $this->getTotalCost($cart, $discount);
+            $client->sales()->create([
+                'sale_id' => $sale_id,
+                'amount' => $amount
+            ]);
 
-        $client->sales()->create([
-            'sale_id' => $sale_id,
-            'amount' => $amount
-        ]);
+            $cashbackPercent = $payment_type === 3 ? 5 : $client->loyalty->cashback;
 
-        $cashbackPercent = $payment_type === 3 ? 5 : $client->loyalty->cashback;
-
-        $client->transactions()->create([
-            'sale_id' => $sale_id,
-            'user_id' => $user_id,
-            'amount' => $amount * ($cashbackPercent / 100)
-        ]);
-
-        if ($balance > 0) {
             $client->transactions()->create([
                 'sale_id' => $sale_id,
                 'user_id' => $user_id,
-                'amount' => $balance * -1
+                'amount' => $amount * ($cashbackPercent / 100)
             ]);
+
+            if ($balance > 0) {
+                $client->transactions()->create([
+                    'sale_id' => $sale_id,
+                    'user_id' => $user_id,
+                    'amount' => $balance * -1
+                ]);
+            }
         }
+
 
         $partner = Client::find($partner_id);
 
@@ -103,7 +102,9 @@ class SaleService {
             ]);
         }
 
-        $client->fresh();
+        if ($client) {
+            $client->fresh();
+        }
 
         return true;
     }
