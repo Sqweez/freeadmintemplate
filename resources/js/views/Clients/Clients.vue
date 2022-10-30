@@ -58,6 +58,10 @@
                                 label="Оптовик"
                                 v-model="isWholesaleBuyer"
                             />
+                            <v-checkbox
+                                label="Каспи клиент"
+                                v-model="isKaspiClient"
+                            />
                         </v-col>
                     </v-row>
                 </div>
@@ -73,7 +77,7 @@
                             hide-details
                         ></v-text-field>
                         <v-data-table
-                            :loading="clients.length === 0"
+                            :loading="IS_LOADING_STATE"
                             loading-text="Идет загрузка клиентов"
                             :search="search"
                             no-results-text="Нет результатов"
@@ -129,6 +133,18 @@
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
                                                 Партнер
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item v-if="item.is_kaspi">
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-icon :color="item.is_kaspi ? 'success' : 'error'">
+                                                    {{ item.is_kaspi ? 'mdi-check' : 'mdi-close' }}
+                                                </v-icon>
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Каспи-клиент
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
@@ -329,6 +345,7 @@
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         data: () => ({
+            isKaspiClient: false,
             isWholesaleBuyer: false,
             withoutBarcode: false,
             exportModal: false,
@@ -447,6 +464,8 @@
                             return true;
                         }
                         return c.is_wholesale_buyer;
+                    }).filter(c => {
+                        return !this.isKaspiClient ? true : c.is_kaspi;
                     })
             },
             shops() {

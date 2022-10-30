@@ -21,11 +21,11 @@
                        v-model="client.client_name"
                    />
                    <v-text-field
-                       label="Номер"
                        solo
                        v-model="client.client_phone"
                        ref="client_phone"
                        id="client_phone"
+                       placeholder="Телефон"
                    />
                    <v-text-field
                        label="Номер карты"
@@ -60,6 +60,10 @@
                        v-model="client.birth_date"
                        type="date"
                    />
+                   <v-checkbox
+                       v-model="client.is_kaspi"
+                       label="Каспи клиент"
+                   ></v-checkbox>
                    <v-checkbox
                        v-model="client.is_wholesale_buyer"
                        label="Оптовый покупатель"

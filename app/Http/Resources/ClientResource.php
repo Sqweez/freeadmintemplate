@@ -57,6 +57,7 @@ class ClientResource extends JsonResource
             'wholesale_type_id' => $this->wholesale_type_id,
             'wholesale_status' => $this->wholesale_status,
             'wholesale_status_text' => $this->wholesale_status_text,
+            'is_kaspi' => $this->is_kaspi
         ];
     }
 }

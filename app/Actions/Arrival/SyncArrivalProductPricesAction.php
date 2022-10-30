@@ -11,7 +11,10 @@ class SyncArrivalProductPricesAction {
             Product::query()
                 ->where('product_price', '!=', $product['product_price'])
                 ->where('id', $product['base_product_id'])
-                ->update(['product_price' => $product['product_price']]);
+                ->update([
+                    'product_price' => $product['product_price'],
+                    'kaspi_product_price' => $product['product_price']
+                ]);
         });
     }
 

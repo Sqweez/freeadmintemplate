@@ -91,6 +91,8 @@ use Illuminate\Support\Carbon;
  * @property string $wholesale_status
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereWholesaleStatus($value)
  * @property-read string $wholesale_status_text
+ * @property bool $is_kaspi
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereIsKaspi($value)
  */
 class Client extends Model
 {
@@ -99,7 +101,8 @@ class Client extends Model
 
     protected $casts = [
         'client_city' => 'integer',
-        'is_wholesale_buyer' => 'boolean'
+        'is_wholesale_buyer' => 'boolean',
+        'is_kaspi' => 'boolean'
     ];
 
     protected $guarded = [];
