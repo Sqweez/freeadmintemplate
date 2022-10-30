@@ -88,7 +88,8 @@ class ClientController extends Controller {
                     'gender',
                     'is_wholesale_buyer',
                     'wholesale_type_id',
-                    'wholesale_status'
+                    'wholesale_status',
+                    'is_kaspi'
                 ]
             );
             $_client = collect($_client)->filter(function ($i) {
