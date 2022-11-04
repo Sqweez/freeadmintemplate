@@ -37,6 +37,60 @@
                                 color="white darken-2"
                             />
                         </div>
+                        <div v-if="IS_SUPERUSER">
+                            <v-checkbox
+                                label="Продажа сегодняшним числом"
+                                v-model="isTodaySale"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                            <v-menu
+                                v-if="!isTodaySale"
+                                ref="customSaleDateMenu"
+                                v-model="customSaleDateMenu"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                :return-value.sync="customSaleDate"
+                                transition="scale-transition"
+                                min-width="290px"
+                                offset-y
+                                full-width
+                            >
+                                <template v-slot:activator="{ on }">
+                                    <v-text-field
+                                        v-model="customSaleDate"
+                                        label="Дата продажи"
+                                        prepend-icon="event"
+                                        readonly
+                                        v-on="on"
+                                    ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                    v-model="customSaleDate"
+                                    locale="ru"
+                                    no-title
+                                    scrollable
+                                >
+                                    <div class="flex-grow-1"></div>
+                                    <v-btn
+                                        text
+                                        outlined
+                                        color="primary"
+                                        @click="customSaleDateMenu = false"
+                                    >
+                                        Отмена
+                                    </v-btn>
+                                    <v-btn
+                                        text
+                                        outlined
+                                        color="primary"
+                                        @click="$refs.customSaleDateMenu.save(customSaleDate)"
+                                    >
+                                        OK
+                                    </v-btn>
+                                </v-date-picker>
+                            </v-menu>
+                        </div>
                         <div v-if="!isFree">
                             <v-checkbox
                                 label="Раздельная оплата"
@@ -562,6 +616,7 @@
     import cart from "@/mixins/cart";
     import CertificateModal from "@/components/Modal/CertificateModal";
     import PreordersListModal from "@/components/Modal/PreordersListModal";
+    import moment from 'moment';
     export default {
         components: {
             PreordersListModal,
@@ -574,7 +629,7 @@
         async created() {
             this.loading = this.products.length === 0 || false;
             await this.$store.dispatch('GET_PRODUCTS_v2');
-            this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
+            //this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
             await this.$store.dispatch(ACTIONS.GET_STORES);
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
@@ -592,6 +647,9 @@
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         watch: {
+            stores (value) {
+                this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
+            },
             storeFilter() {
                 this.cart = [];
             },
@@ -650,6 +708,9 @@
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            customSaleDateMenu: null,
+            customSaleDate: moment().format('YYYY-MM-DD'),
+            isTodaySale: true,
             banknoteNominal: 0,
             isSendTelegram: false,
             isOpt: false,
@@ -899,6 +960,11 @@
                     is_paid: this.is_paid,
                     is_opt: this.isOpt,
                 };
+
+                if (!this.isTodaySale && this.customSaleDate) {
+                    sale.custom_sale_date = this.customSaleDate;
+                }
+
                 try {
                     this.overlay = true;
                     if (this.isKaspiTerminalEnabled) {
@@ -941,6 +1007,8 @@
                     this.isSendTelegram = false;
                     this.is_paid = false;
                     this.banknoteNominal = 0;
+                    this.isTodaySale = true;
+                    this.customSaleDate = moment().format('YYYY-MM-DD');
                 } catch (e) {
                     throw e;
                 }

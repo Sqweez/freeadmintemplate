@@ -721,7 +721,7 @@ const routes = [
     {
         path: '/settings',
         component: SettingsIndex
-    }
+    },
 ];
 
 export default routes;
