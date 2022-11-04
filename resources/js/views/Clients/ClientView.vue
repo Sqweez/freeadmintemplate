@@ -6,7 +6,7 @@
             </v-card-title>
             <v-card-text v-if="!IS_LOADING">
                 <h5>Клиент: {{ client.client_name }}</h5>
-                <h5>Телефон: +{{ client.client_phone }}</h5>
+                <h5>Телефон: {{ client.client_phone }}</h5>
                 <h5>Номер карты: {{ client.client_card }}</h5>
                 <h5>Сумма покупок: {{ client.total_sum | priceFilters }}</h5>
                 <h5 v-if="IS_BOSS">Сумма прибыли: {{ totalMargin | priceFilters }}</h5>

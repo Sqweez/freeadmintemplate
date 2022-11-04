@@ -11,6 +11,7 @@ use App\ProductBatch;
 use App\Sale;
 use App\Transfer;
 use App\v2\Models\ProductSku;
+use Carbon\Carbon;
 
 class SaleService {
 
@@ -21,6 +22,10 @@ class SaleService {
         }
         if (isset($sale['is_opt']) && $sale['is_opt']) {
             $sale['is_confirmed'] = false;
+        }
+        if (isset($sale['custom_sale_date'])) {
+            $sale['created_at'] = Carbon::parse($sale['custom_sale_date'])->addHours(22);
+            unset($sale['custom_sale_date']);
         }
         return Sale::create($sale);
     }

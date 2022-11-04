@@ -34,8 +34,7 @@ use Illuminate\Http\Request;
 
 class SaleController extends Controller {
 
-    public function store(Request $request) {
-        $saleService = new SaleService();
+    public function store(Request $request, SaleService $saleService) {
         try {
             \DB::beginTransaction();
             $cart = $request->get('cart');
@@ -73,7 +72,8 @@ class SaleController extends Controller {
 
             \DB::commit();
             return [
-                'product_quantities' => ProductBatch::whereIn('product_id', collect($cart)->pluck('id'))
+                'product_quantities' => ProductBatch::query()
+                    ->whereIn('product_id', collect($cart)->pluck('id'))
                     ->whereStoreId($store_id)
                     ->groupBy('product_id')
                     ->select('product_id')
