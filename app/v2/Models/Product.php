@@ -132,6 +132,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product ofStocks()
  * @property bool $is_iherb
  * @method static Builder|Product whereIsIherb($value)
+ * @property int|null $iherb_price
+ * @method static Builder|Product whereIherbPrice($value)
  */
 class Product extends Model
 {
