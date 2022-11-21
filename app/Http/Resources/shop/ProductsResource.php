@@ -46,7 +46,8 @@ class ProductsResource extends JsonResource
             'is_favorite' => !!$this->favorite,
             'category_id' => intval($this->category_id),
             'stock_price' => $this->stock_price,
-            'has_stock' => $this->stock_price !== $this->product_price
+            'has_stock' => $this->stock_price !== $this->product_price,
+            'iherb_price' => $this->iherb_price ?: $this->product_price,
         ];
     }
 }
