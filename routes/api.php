@@ -49,6 +49,9 @@ Route::get('backup', 'Services\BackupController@backup');
 
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('shop')->group(function () {
+        Route::prefix('iherb')->group(function () {
+            Route::get('hits', [\App\Http\Controllers\api\shop\ProductController::class, 'getIherbHitProducts']);
+        });
         Route::post('analytics/search', 'api\AnalyticsController@storeSearch');
         Route::get('stores', 'api\StoreController@indexStores');
         Route::get('categories', 'api\CategoryController@indexShop');
