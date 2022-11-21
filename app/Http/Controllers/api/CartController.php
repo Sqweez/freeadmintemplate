@@ -158,6 +158,7 @@ class CartController extends Controller {
         $store_id = $request->get('store_id');
         $customer_info = $request->get('customer_info');
         $other_discount = $request->has('discount') ? intval($request->get('discount')) : 0;
+        $is_iherb = $request->has('iherb');
 
         $client_id = -1;
         $discount = 0;
@@ -171,7 +172,7 @@ class CartController extends Controller {
 
         try {
             DB::beginTransaction();
-            $order = $this->createOrder($user_token, $store_id, $customer_info, $client_id, $discount);
+            $order = $this->createOrder($user_token, $store_id, $customer_info, $client_id, $discount, $is_iherb);
             $products = CartProduct::where('cart_id', $cart)->get();
             $this->createOrderProducts($order, $store_id, $products);
             CartProduct::where('cart_id', $cart)->delete();
@@ -227,9 +228,9 @@ class CartController extends Controller {
         TelegramService::sendMessage($order->store->telegram_chat_id, urlencode($message));
     }
 
-    public function getMessage(Order $order, $result = null) {
+    public function getMessage(Order $order, $result = null): string {
         $store = Store::where('id', $order['city'])->first();
-        $message = 'Новый заказ 💪💪💪' . "\n";
+        $message = 'Новый' . ($order->is_iherb ? ' IHERB' : '') . ' заказ 💪💪💪' . "\n";
         $message .= 'Заказ №' . $order['id'] . "\n";
         $message .= 'ФИО: ' . $order['fullname'] . "\n";
         $message .= 'Номер телефона: ' . $order['phone'] . "\n";
@@ -368,7 +369,7 @@ class CartController extends Controller {
      * private methods
      * */
 
-    private function createOrder($user_token, $store_id, $customer_info, $client_id, $discount) {
+    private function createOrder($user_token, $store_id, $customer_info, $client_id, $discount, $is_iherb) {
         $order = [
             'user_token' => $user_token,
             'store_id' => $store_id,
@@ -385,6 +386,7 @@ class CartController extends Controller {
             'discount' => $discount,
             'balance' => $customer_info['balance'],
             'is_paid' => 0,
+            'is_iherb' => $is_iherb
         ];
         return Order::create($order);
     }

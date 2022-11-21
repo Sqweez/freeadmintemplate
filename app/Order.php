@@ -59,6 +59,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Order withoutTrashed()
  * @property-read Model|\Eloquent $image
  * @property-read int|null $image_count
+ * @property int $is_iherb
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsIherb($value)
  */
 class Order extends Model
 {
