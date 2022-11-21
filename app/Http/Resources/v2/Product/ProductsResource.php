@@ -51,6 +51,7 @@ class ProductsResource extends JsonResource
             'margin_type' => $this->margin_type ? $this->margin_type->only(['id', 'title']) : MarginType::find($this->margin_type_id),
             'is_kaspi_visible' => $this->is_kaspi_visible,
             'is_iherb' => $this->is_iherb,
+            'iherb_price' => $this->iherb_price,
         ];
     }
 }

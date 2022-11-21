@@ -117,6 +117,10 @@ class ProductController extends Controller {
             $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
         }
 
+        $productQuery->when(\request()->has('iherb'), function ($query) {
+            return $query->where('is_iherb', true);
+        });
+
         $productQuery->whereHas('category', function ($q) {
             return $q->where('is_site_visible', true);
         });
@@ -157,6 +161,9 @@ class ProductController extends Controller {
         });
         $productQuery->whereHas('subcategory', function ($q) {
             return $q->where('is_site_visible', true);
+        });
+        $productQuery->when(\request()->has('iherb'), function ($query) {
+            return $query->where('is_iherb', true);
         });
         $productQuery->orderBy('product_name');
         return $productQuery

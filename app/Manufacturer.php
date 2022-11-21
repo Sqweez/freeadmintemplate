@@ -42,9 +42,6 @@ class Manufacturer extends Model
     ];
 
     public function products(): HasMany {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(\App\v2\Models\Product::class);
     }
-
-
-
 }

@@ -32,6 +32,7 @@ class ProductResource extends JsonResource
         return [
             'product_id' => $this->id,
             'product_price' => $this->product_price,
+            'iherb_price' => $this->iherb_price ?: $this->product_price,
             'subcategory' => $this->subcategory->subcategory_name,
             'product_name' => strlen($this->product_name_web) ? $this->product_name_web : $this->product_name,
             'product_description' => $this->product_description,

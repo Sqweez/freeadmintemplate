@@ -158,6 +158,11 @@
                         :disabled="!IS_SUPERUSER"
                         v-model.number="kaspi_product_price"
                         type="number"/>
+                    <v-text-field
+                        label="Стоимость Iherb"
+                        :disabled="!IS_SUPERUSER"
+                        v-model.number="iherb_price"
+                        type="number"/>
                     <div class="d-flex align-center"  v-if="!isEditing || (grouping_attribute_id === 0 || grouping_attribute_id === null)">
                         <v-text-field
 
@@ -564,6 +569,7 @@ export default {
         product_barcode: null,
         product_price: null,
         kaspi_product_price: 0,
+        iherb_price: 0,
         product_attributes: [
             {
                 attribute_id: null,
@@ -669,6 +675,7 @@ export default {
             this.meta_title = '';
             this.meta_description = '';
             this.additionalSubcategories = [];
+            this.iherb_price = 0;
         },
         assignFields() {
             this.product_name = this.product.product_name;
@@ -690,6 +697,7 @@ export default {
             this.kaspi_product_price = this.product.kaspi_product_price;
             this.is_kaspi_visible = this.product.is_kaspi_visible;
             this.supplier_id = this.product.supplier_id;
+            this.iherb_price = this.product.iherb_price;
             this.comments = this.product.comments;
             this.additionalSubcategories = this.product.additional_subcategories ? this.product.additional_subcategories : [];
             if (this.grouping_attribute_id === null) {
@@ -823,6 +831,7 @@ export default {
                 product_description: this.product_description,
                 product_price: this.product_price,
                 kaspi_product_price: this.kaspi_product_price,
+                iherb_price: this.iherb_price,
                 product_barcode: this.product_barcode,
                 is_iherb: this.is_iherb,
                 is_hit: this.is_hit,

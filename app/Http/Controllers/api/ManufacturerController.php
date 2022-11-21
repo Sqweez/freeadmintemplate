@@ -22,7 +22,16 @@ class ManufacturerController extends Controller
      */
     public function index(Request $request)
     {
-        return ManufacturerResource::collection(Manufacturer::query()->orderBy('manufacturer_name')->get());
+        return ManufacturerResource::collection(
+            Manufacturer::query()
+                ->orderBy('manufacturer_name')
+                ->when($request->has('iherb'), function ($query) {
+                    return $query->whereHas('products', function ($subQuery) {
+                        return $subQuery->where('is_iherb', true);
+                    });
+                })
+                ->get()
+        );
     }
 
     /**
