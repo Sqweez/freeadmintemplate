@@ -10,6 +10,7 @@ use App\Manufacturer;
 use App\v2\Models\ProductSku;
 use App\v2\Models\Product;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
@@ -220,6 +221,51 @@ class ProductController extends Controller {
         return ProductsResource::collection(
             $products
         );
+    }
+
+    public function getIherbHitProducts(Request $request): Collection {
+        $store_id = intval($request->get('store_id')) || -1;
+        $user_token = $request->get('user_token');
+        $productQuery = Product::query()
+            ->whereIsSiteVisible(true)
+            ->whereIsHit(true)
+            ->where('is_iherb', true);
+
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks', 'category', 'batches']);
+        $productQuery->with(['favorite' => function ($query) use ($user_token) {
+            return $query->where('user_token', $user_token);
+        }]);
+
+        $productQuery->with(['sku.batches' => function ($q) {
+            return $q->where('quantity', '>', 0);
+        }]);
+
+        $products = $productQuery->get();
+
+        return collect(ProductsResource::collection($products))
+            ->map(function ($i) use ($products) {
+                $needle = $products->where('id', $i['product_id'])->first();
+                // @TODO 2022-05-24T22:05:44 ugly rework
+                $batches = [];
+                foreach ($needle['sku'] as $item) {
+                    foreach ($item['batches'] as $batch) {
+                        $batches[] = $batch;
+                    }
+                }
+                $batches = collect($batches)
+                    ->groupBy('store_id')
+                    ->map(function ($v, $k) {
+                        return [
+                            'store_id' => $k,
+                            'quantity' => collect($v)->reduce(function ($a, $c) {
+                                return $a + $c['quantity'];
+                            }, 0)
+                        ];
+                    })
+                    ->values();
+                $i['batches'] = $batches;
+                return $i;
+            });
     }
 
     public function getHitProducts(Request $request) {
