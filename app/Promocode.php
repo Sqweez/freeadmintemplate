@@ -30,16 +30,28 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Promocode extends Model
 {
-    protected $fillable = ['client_id', 'promocode', 'discount', 'is_active', 'id'];
+    protected $fillable = [
+        'client_id', 'promocode', 'discount', 'is_active', 'id', 'active_until'
+    ];
 
     public function partner() {
         return $this->belongsTo('App\Client', 'client_id')->withTrashed()->withDefault([
-            'client_name' => 'Удален',
-            'id' => -1,
+            'client_name' => 'Без партнера',
+            'id' => null,
         ]);
     }
 
     public function scopeOfPartner($query, $id) {
         $query->where('client_id', $id);
+    }
+
+    public function scopeActive($query) {
+        $query
+            ->where(function ($query) {
+                $query
+                    ->whereDate('active_until', '>=', today())
+                    ->orWhere('active_until', null);
+            })
+            ->where('is_active', true);
     }
 }

@@ -3,11 +3,21 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/CartController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/CartController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/shop/CartProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/shop/CartProductResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CronController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CronController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/PromocodeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/PromocodeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/PromocodeResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/PromocodeResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportsResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Promocode.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Promocode.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/PromocodeModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/PromocodeModal.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/WholeSaleConfirmation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/WholeSaleConfirmation.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/Promocodes.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/Promocodes.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,6 +208,16 @@
       <TestRunner scope="XML" />
       <method v="2" />
     </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="hot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -220,8 +240,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.prod" />
         <item itemvalue="npm.hot" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.prod" />
       </list>
     </recent_temporary>
   </component>
@@ -277,7 +298,12 @@
       <workItem from="1667925207284" duration="716000" />
       <workItem from="1668061931577" duration="666000" />
       <workItem from="1668270417602" duration="64000" />
-      <workItem from="1669045730846" duration="2630000" />
+      <workItem from="1669045730846" duration="2754000" />
+      <workItem from="1669364274402" duration="17000" />
+      <workItem from="1669381165753" duration="142000" />
+      <workItem from="1669895678641" duration="1209000" />
+      <workItem from="1672343136437" duration="700000" />
+      <workItem from="1673281398521" duration="4312000" />
     </task>
     <servers />
   </component>

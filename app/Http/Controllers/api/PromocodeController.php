@@ -18,12 +18,14 @@ class PromocodeController extends Controller
         $promocode = $request->get('promocode');
         $client_id = $request->get('client_id');
         $discount = $request->get('discount', null);
+        $active_until = $request->get('active_until', null);
         try {
             $promocode = Promocode::create([
                 'promocode' => $promocode,
                 'client_id' => $client_id,
                 'discount' => $discount,
-                'is_active' => true
+                'is_active' => true,
+                'active_until' => $active_until
             ]);
             return new PromocodeResource($promocode);
         } catch (\Exception $exception) {
@@ -36,7 +38,7 @@ class PromocodeController extends Controller
 
     }
 
-    public function update(Request $request, Promocode $promocode) {
+    public function update(Request $request, Promocode $promocode): PromocodeResource {
         $promocode->update($request->all());
         return new PromocodeResource($promocode);
     }
@@ -47,11 +49,14 @@ class PromocodeController extends Controller
     }
 
     public function searchPromocode($promocode) {
-        $_promocode = Promocode::where('promocode', $promocode)->where('is_active', true)->first();
+        $_promocode = Promocode::query()
+            ->where('promocode', $promocode)
+            ->active()
+            ->first();
         if (!$_promocode) {
             return response()->json([
-                'error' => 'Промокод не найден!'
-            ])->setStatusCode(500);
+                'error' => 'Промокод не найден или неактивен'
+            ])->setStatusCode(404);
         }
         return new PromocodeResource($_promocode);
     }

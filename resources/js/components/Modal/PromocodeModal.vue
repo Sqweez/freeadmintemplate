@@ -21,8 +21,19 @@
                     item-value="id"
                     item-text="client_name"
                     v-model="promocode.client_id"
-                ></v-autocomplete>
-                <v-text-field label="Скидка" type="number" v-model="promocode.discount"></v-text-field>
+                />
+                <v-text-field
+                    label="Скидка"
+                    type="number"
+                    v-model="promocode.discount"
+                />
+                <v-text-field
+                    label="Активен до"
+                    type="date"
+                    v-model="promocode.active_until"
+                    hint="Оставьте пустым, чтобы сделать промокод бессрочным"
+                    persistent-hint
+                />
             </v-card-text>
             <v-card-actions>
                 <v-btn text @click="$emit('cancel')">
@@ -73,6 +84,7 @@
                         promocode: '',
                         client_id: null,
                         discount: null,
+                        active_until: null
                     };
                 } else {
                     if (this.editMode) {
@@ -82,6 +94,7 @@
                             promocode: '',
                             client_id: null,
                             discount: null,
+                            active_until: null
                         };
                     }
                 }

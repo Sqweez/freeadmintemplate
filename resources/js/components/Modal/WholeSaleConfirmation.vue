@@ -1,6 +1,6 @@
 <template>
     <v-dialog max-width="1800" v-model="state" persistent>
-        <v-card v-if="!IS_LOADING_STATE">
+        <v-card v-if="!IS_LOADING_STATE && isLoaded">
             <v-card-title class="headline justify-space-between">
                 <span class="white--text">Подтверждение оптовой продажи</span>
                 <v-btn icon text class="float-right" @click="$emit('cancel')">
@@ -346,13 +346,13 @@ export default {
             client_balance: 0,
             client_discount: 0,
             total_sum: 0,
-        }
+        },
+        isLoaded: false,
     }),
     watch: {
         async state(value) {
             if (value) {
                 this.$loading.enable();
-                console.log(this.report);
                 await this.onInit(this.report.store.id)
                 if (this.report.client.id !== -1) {
                     this.client = this.clients.find(c => c.id === this.report.client.id);
@@ -380,6 +380,7 @@ export default {
                 });
                 this.discountPercent = this.report.discount;
                 this.$loading.disable();
+                this.isLoaded = true;
             } else {
                 this.cart = [];
                 this.client = {

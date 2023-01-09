@@ -46,6 +46,7 @@ class SaleController extends Controller {
             $partner_id = $request->get('partner_id');
             $certificate = $request->get('certificate', null);
             $used_certificate = $request->get('used_certificate', null);
+            $promocode_id = $request->get('promocode_id', null);
             $preorder = $request->get('preorder', null);
             $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate', 'preorder']));
             $saleService->createSaleProducts($sale, $store_id, $cart);

@@ -71,7 +71,8 @@ class ReportsResource extends JsonResource
             'kaspi_red_commission' => $this->kaspi_red_commission,
             'is_kaspi_red' => $this->kaspi_red,
             'is_confirmed' => $this->is_confirmed,
-            'is_full_wholesale_purchase' => $this->is_opt && optional($this->client)->is_wholesale_buyer
+            'is_full_wholesale_purchase' => $this->is_opt && optional($this->client)->is_wholesale_buyer,
+            'promocode' => $this->promocode,
         ];
     }
 }

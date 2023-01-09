@@ -124,6 +124,10 @@
                     text: 'Активен'
                 },
                 {
+                    value: 'active_until',
+                    text: 'Активен до'
+                },
+                {
                     value: 'actions',
                     text: 'Действие'
                 }
@@ -157,6 +161,7 @@
                             discount: promocode.discount,
                             promocode: promocode.promocode,
                             is_active: true,
+                            active_until: promocode.active_until,
                         }
 
                         await this.$store.dispatch('editPromocode', _promocode);
@@ -166,6 +171,7 @@
                             discount: promocode.discount,
                             promocode: promocode.promocode,
                             is_active: true,
+                            active_until: promocode.active_until
                         }
                         await this.$store.dispatch('addPromocode', _promocode);
                     }

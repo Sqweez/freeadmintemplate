@@ -297,6 +297,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/price/list', [CronController::class, 'storePriceList']);
             Route::get('birthday', [CronController::class, 'getBirthdayClients']);
             Route::get('platinum', [CronController::class, 'getPlatinumClientsRemainder']);
+            Route::get('platinum/disable', [CronController::class, 'disablePlatinumClients']);
         });
 
         Route::prefix('orders')->group(function () {
