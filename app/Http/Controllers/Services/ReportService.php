@@ -18,7 +18,7 @@ class ReportService {
         /* @var User $authUser */
         $authUser = auth()->user();
         if (!$is_supplier) {
-            $saleQuery = $saleQuery->report()->reportDate([$start, $finish]);
+            $saleQuery = $saleQuery->report()->reportDate([$start, $finish])->with('promocode');
             if ($user_id) {
                 $user = User::find($user_id);
                 $saleQuery->whereStoreId($user->store_id);
@@ -70,7 +70,7 @@ class ReportService {
 
     public static function getClientReports($client_id): AnonymousResourceCollection {
         $saleQuery = Sale::query();
-        $saleQuery = $saleQuery->report()->whereClientId($client_id);
+        $saleQuery = $saleQuery->report()->whereClientId($client_id)->orderByDesc('created_at');
 
         return ReportsResource::collection(
             $saleQuery->get()

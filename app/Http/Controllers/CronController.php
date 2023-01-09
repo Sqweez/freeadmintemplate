@@ -54,6 +54,20 @@ class CronController extends Controller
         return response([], 200);
     }
 
+    public function disablePlatinumClients() {
+        $clients = ClientResource::collection(
+            Client::with(['sales', 'transactions', 'city', 'loyalty'])
+                ->platinumClients()
+                ->get()
+        )->toArray(\request());
+        $clients = collect($clients)->filter(function ($client) { return $client['until_platinum'] > 0; })->values();
+        Client::whereIn('id', $clients->pluck('id'))
+            ->update([
+                'loyalty_id' => 1,
+                'client_discount' => 10
+            ]);
+    }
+
     public function getBirthdayClients(TelegramService $telegramService) {
         $clientsWithBirthday = Client::query()
             ->whereNotNull('birth_date')

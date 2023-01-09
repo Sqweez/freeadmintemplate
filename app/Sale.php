@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -161,6 +162,12 @@ class Sale extends Model
     public function certificate(): HasOne {
         return $this->hasOne('App\v2\Models\Certificate', 'sale_id')->withDefault([
             'amount' => 0
+        ]);
+    }
+
+    public function promocode(): BelongsTo {
+        return $this->belongsTo(Promocode::class)->withDefault([
+            'promocode' => '-'
         ]);
     }
 

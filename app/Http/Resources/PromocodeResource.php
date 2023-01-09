@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Promocode;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/* @mixin Promocode */
 class PromocodeResource extends JsonResource
 {
     /**
@@ -16,11 +18,12 @@ class PromocodeResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'discount' => intval($this->discount),
+            'discount' => $this->discount,
             'client_id' => $this->client_id,
             'partner' => $this->partner,
             'promocode' => $this->promocode,
-            'is_active' => !!$this->is_active
+            'is_active' => !!$this->is_active,
+            'active_until' => format_date($this->active_until)
         ];
     }
 }

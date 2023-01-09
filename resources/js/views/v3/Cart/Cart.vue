@@ -176,7 +176,7 @@
                                 outlined
                             />
                         </div>
-                        <div v-if="!isFree && !isFullWholesalePurchase">
+                        <div v-if="!isFree && !isFullWholesalePurchase && clientChosen">
                             <v-autocomplete
                                 label="Партнер"
                                 outlined
@@ -189,7 +189,7 @@
                                 @click:append-outer="partner_id = null"
                             ></v-autocomplete>
                         </div>
-                        <div v-if="!isFree && !isFullWholesalePurchase">
+                        <div v-if="!isFree && !isFullWholesalePurchase && clientChosen">
                             <v-text-field
                                 label="Промокод"
                                 :disabled="!!partner_id"
@@ -708,6 +708,7 @@
         },
         mixins: [product, product_search, cart],
         data: () => ({
+            promocode_id: null,
             customSaleDateMenu: null,
             customSaleDate: moment().format('YYYY-MM-DD'),
             isTodaySale: true,
@@ -860,18 +861,21 @@
                 this.partner_id = null;
                 this.promocode = '';
                 this.discountPercent = 0;
+                this.promocode_id = null;
                 this.promocodeSet = false;
             },
             async searchPromocode() {
                 this.$loading.enable();
                 try {
-                    const response = await axios.get(`/api/promocode/search/${this.promocode}`);
-                    this.partner_id = response.data.data.partner.id;
-                    this.discountPercent = Math.max(this.discountPercent, response.data.data.discount);
-                    this.$toast.success('Партнер установлен');
+                    const { data: { data } } = await axios.get(`/api/promocode/search/${this.promocode}`);
+                    this.partner_id = data.partner.id;
+                    this.promocode_id = data.id;
+                    this.discountPercent = Math.max(this.discountPercent, data.discount);
+                    this.$toast.success('Промокод применен');
                     this.promocodeSet = true;
                 } catch (e) {
-                    this.$toast.error('Промокод не найден')
+                    console.log(e);
+                    this.$toast.error(e.response.data.error)
                 } finally {
                     this.$loading.disable();
                 }
@@ -959,6 +963,7 @@
                     is_delivery: this.isDelivery,
                     is_paid: this.is_paid,
                     is_opt: this.isOpt,
+                    promocode_id: this.promocode_id
                 };
 
                 if (!this.isTodaySale && this.customSaleDate) {
@@ -1009,6 +1014,8 @@
                     this.banknoteNominal = 0;
                     this.isTodaySale = true;
                     this.customSaleDate = moment().format('YYYY-MM-DD');
+                    this.promocode_id = null;
+                    this.promocode = '';
                 } catch (e) {
                     throw e;
                 }

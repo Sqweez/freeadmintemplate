@@ -224,6 +224,12 @@
                 v-model="searchComment"
                 clearable
             />
+            <v-text-field
+                label="Поиск по промокоду"
+                append-icon="search"
+                v-model="searchPromocode"
+                clearable
+            />
             <v-data-table
                 no-results-text="Нет результатов"
                 no-data-text="Нет данных"
@@ -364,6 +370,12 @@
                             <v-list-item-content>
                                 <v-list-item-title style="white-space: normal;">{{ item.comment }}</v-list-item-title>
                                 <v-list-item-subtitle style="white-space: normal;">Комментарий</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="item.promocode.id">
+                            <v-list-item-content>
+                                <v-list-item-title style="white-space: normal;">{{ item.promocode.promocode }}</v-list-item-title>
+                                <v-list-item-subtitle style="white-space: normal;">Промокод</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item v-if="item.is_booking">
@@ -554,6 +566,7 @@ const DATE_FILTERS = {
     export default {
         components: {WholeSaleConfirmation, SaleEditModal, ReportCancelModal, ConfirmationModal},
         data: () => ({
+            searchPromocode: '',
             showOnlyUnconfirmed: false,
             wholeSaleConfirmationModal: false,
             manufacturerId: -1,
@@ -963,6 +976,12 @@ const DATE_FILTERS = {
                                 return true;
                             }
                             return !s.is_confirmed;
+                        })
+                        .filter(s => {
+                            if (this.searchPromocode.length < 3) {
+                                return true;
+                            }
+                            return s.promocode.promocode.toLowerCase().includes(this.searchPromocode.toLowerCase());
                         });
                 } catch (e) {
                     console.log(e)
