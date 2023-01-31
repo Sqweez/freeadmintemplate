@@ -41,7 +41,12 @@
                         {{ item.partner.client_name }}
                     </template>
                     <template v-slot:item.discount="{item}">
-                        {{ item.discount}}%
+                        <span v-if="item.promocode_type.id === 1">
+                            {{ item.discount}}%
+                        </span>
+                        <span v-if="item.promocode_type.id === 2">
+                            {{ item.discount | priceFilters}}
+                        </span>
                     </template>
                     <template v-slot:item.actions="{item}">
                         <v-btn icon  color="success" @click="promocode_id = item.id; hideModal = true;">
@@ -52,11 +57,11 @@
                                 mdi-eye
                             </v-icon>
                         </v-btn>
-                        <v-btn icon color="primary" @click="promocode = item; editMode = true; promocodeModal = true;">
+<!--                        <v-btn icon color="primary" @click="promocode = item; editMode = true; promocodeModal = true;">
                             <v-icon>
                                 mdi-pencil
                             </v-icon>
-                        </v-btn>
+                        </v-btn>-->
                         <v-btn icon color="red" @click="deleteModal = true; promocode_id = item.id">
                             <v-icon>
                                 mdi-delete
@@ -120,6 +125,10 @@
                     text: 'Скидка'
                 },
                 {
+                    value: 'promocode_type.name',
+                    text: 'Тип промокода'
+                },
+                {
                     value: 'is_active',
                     text: 'Активен'
                 },
@@ -162,18 +171,13 @@
                             promocode: promocode.promocode,
                             is_active: true,
                             active_until: promocode.active_until,
+                            promocode_type_id: promocode.promocode_type_id,
+                            min_total: promocode.min_total,
                         }
 
                         await this.$store.dispatch('editPromocode', _promocode);
                     } else {
-                        const _promocode = {
-                            client_id: promocode.client_id,
-                            discount: promocode.discount,
-                            promocode: promocode.promocode,
-                            is_active: true,
-                            active_until: promocode.active_until
-                        }
-                        await this.$store.dispatch('addPromocode', _promocode);
+                        await this.$store.dispatch('addPromocode', promocode);
                     }
                 } catch (e) {
                     this.$toast.error('Произошла ошибка!');
@@ -195,6 +199,10 @@
         async created() {
             this.$loading.enable();
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
+            await this.$store.dispatch('GET_PRODUCTS_v2');
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+            await this.$store.dispatch('getPromocodeTypes');
             await this.$store.dispatch('getPromocodes');
             this.$loading.disable();
         }

@@ -1,11 +1,14 @@
 import axios from 'axios';
+import axiosClient from '@/utils/axiosClient';
 
 export default {
     state: {
         promocodes: [],
+        promocode_types: [],
     },
     getters: {
         PROMOCODES: s => s.promocodes,
+        PROMOCODE_TYPES: s => s.promocode_types,
     },
     mutations: {
         setPromocodes(state, payload) {
@@ -24,9 +27,16 @@ export default {
         },
         deletePromocode(state, payload) {
             state.promocodes = state.promocodes.filter(p => p.id !== payload)
+        },
+        setPromocodeTypes (state, types) {
+            state.promocode_types = types;
         }
     },
     actions: {
+        async getPromocodeTypes ({ commit }) {
+            const { data } = await axiosClient.get('promocode/types');
+            commit('setPromocodeTypes', data);
+        },
         async getPromocodes({commit}, payload) {
             try {
                 const response = await axios.get('/api/promocode')
@@ -37,7 +47,7 @@ export default {
         },
         async addPromocode({commit}, payload) {
             try {
-                const response = await axios.post(`/api/promocode`, payload);
+                const response = await axiosClient.post(`promocode`, payload);
                 await commit('addPromocode', response.data.data);
                 this.$toast.success('Промокод создан!')
             } catch (e) {
@@ -46,7 +56,7 @@ export default {
         },
         async editPromocode({commit}, payload) {
             try {
-                const response = await axios.patch(`/api/promocode/${payload.id}`, payload);
+                const response = await axiosClient.patch(`promocode/${payload.id}`, payload);
                 await commit('editPromocode', response.data.data);
                 this.$toast.success('Промокод отредактирован!')
             } catch (e) {

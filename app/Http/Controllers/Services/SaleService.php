@@ -8,6 +8,7 @@ use App\Client;
 use App\CompanionSaleProduct;
 use App\CompanionTransaction;
 use App\ProductBatch;
+use App\Promocode;
 use App\Sale;
 use App\Transfer;
 use App\v2\Models\ProductSku;
@@ -26,6 +27,12 @@ class SaleService {
         if (isset($sale['custom_sale_date'])) {
             $sale['created_at'] = Carbon::parse($sale['custom_sale_date'])->addHours(22);
             unset($sale['custom_sale_date']);
+        }
+        if ($sale['promocode_id']) {
+            $promocode = Promocode::find($sale['promocode_id']);
+            if ($promocode->promocode_type_id === 2) {
+                $sale['promocode_fixed_amount'] = $promocode->discount;
+            }
         }
         return Sale::create($sale);
     }

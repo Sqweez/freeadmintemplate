@@ -65,13 +65,13 @@ class ReportsResource extends JsonResource
             'comment' => $this->comment,
             'preorder' => $this->preorder,
             'is_delivery' => $this->is_delivery,
-            'is_booking' => $this->booking ? true : false,
+            'is_booking' => (bool)$this->booking,
             'booking_paid_sum' => $this->booking ? $this->booking->paid_sum : 0,
             'is_paid' => $this->is_paid,
             'kaspi_red_commission' => $this->kaspi_red_commission,
             'is_kaspi_red' => $this->kaspi_red,
             'is_confirmed' => $this->is_confirmed,
-            'is_full_wholesale_purchase' => $this->is_opt && optional($this->client)->is_wholesale_buyer,
+            'is_full_wholesale_purchase' => $this->is_opt,
             'promocode' => $this->promocode,
         ];
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Promocode\CreatePromocodeRequest;
 use App\Http\Resources\PromocodeResource;
 use App\Product;
 use App\Promocode;
@@ -14,19 +15,21 @@ class PromocodeController extends Controller
         return PromocodeResource::collection(Promocode::with('partner')->get());
     }
 
-    public function store(Request $request) {
-        $promocode = $request->get('promocode');
-        $client_id = $request->get('client_id');
-        $discount = $request->get('discount', null);
-        $active_until = $request->get('active_until', null);
+    public function getTypes(): array {
+        return collect(Promocode::TYPES)
+            ->map(function ($value, $key) {
+                return [
+                    'id' => $key,
+                    'name' => $value
+                ];
+            })
+            ->values()
+            ->toArray();
+    }
+
+    public function store(CreatePromocodeRequest $request) {
         try {
-            $promocode = Promocode::create([
-                'promocode' => $promocode,
-                'client_id' => $client_id,
-                'discount' => $discount,
-                'is_active' => true,
-                'active_until' => $active_until
-            ]);
+            $promocode = Promocode::create($request->validated())->refresh();
             return new PromocodeResource($promocode);
         } catch (\Exception $exception) {
             return response()->json([
@@ -40,7 +43,7 @@ class PromocodeController extends Controller
 
     public function update(Request $request, Promocode $promocode): PromocodeResource {
         $promocode->update($request->all());
-        return new PromocodeResource($promocode);
+        return new PromocodeResource($promocode->refresh());
     }
 
 

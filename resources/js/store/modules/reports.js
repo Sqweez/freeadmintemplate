@@ -56,6 +56,14 @@ const reportsModule = {
         },
         setBrandsMotivation(state, payload) {
             state.brandsMotivation = payload;
+        },
+        markAsOpt (state, id) {
+            state.reports = state.reports.map(r => {
+                if (r.id === id) {
+                    r.is_opt = true;
+                }
+                return r;
+            })
         }
     },
     actions: {

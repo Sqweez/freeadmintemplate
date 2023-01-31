@@ -453,6 +453,11 @@
                                     Заказ <v-icon class="ml-2">mdi-pencil</v-icon>
                                 </v-btn>
                             </v-list-item>
+                            <v-list-item v-if="!item.is_full_wholesale_purchase && IS_SUPERUSER">
+                                <v-btn small depressed color="primary" text @click="markAsOpt(item)">
+                                    Сделать оптовой <v-icon class="ml-2">mdi-check</v-icon>
+                                </v-btn>
+                            </v-list-item>
                             <v-expansion-panels style="min-width: 284px;" flat>
                                 <v-expansion-panel>
                                     <v-expansion-panel-header ripple>
@@ -687,6 +692,14 @@ const DATE_FILTERS = {
             }
         },
         methods: {
+            async markAsOpt (item) {
+                this.$loading.enable();
+                await this.$store.dispatch('updateSale', {
+                    id: item.id,
+                    is_opt: true
+                });
+                this.$loading.disable();
+            },
             async changeSale() {
                 this.overlay = true;
                 await this.$store.dispatch('updateSale', {

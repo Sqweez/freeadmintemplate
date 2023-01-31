@@ -66,13 +66,13 @@ class ImageService {
         return $image->encode(\File::extension($imagePath), $quality);
     }
 
-    private function getImageName($imagePath, $width, $height) {
+    private function getImageName($imagePath, $width, $height): string {
         $imageOriginalName = \File::name($imagePath);
         $imageOriginalExt = \File::extension($imagePath);
         return "{$imageOriginalName}_{$width}x{$height}.{$imageOriginalExt}";
     }
 
-    private function getImageDir($imagePath) {
+    private function getImageDir($imagePath): string {
         $imageOriginalDir = \File::dirname('public/' . $imagePath);
         $dir = $imageOriginalDir . "\\thumbs\\";
         if (!Storage::exists($dir)) {
