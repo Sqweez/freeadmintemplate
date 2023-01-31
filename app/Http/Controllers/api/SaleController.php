@@ -294,14 +294,7 @@ class SaleController extends Controller {
 
     private function getTotalAmount($sales) {
         return (collect($sales)->reduce(function ($a, $c){
-            $price = intval(collect($c['products'])->reduce(function ($_a, $_c) use ($c) {
-                $price = $_c['product_price'] - ($_c['product_price'] * ($_c['discount'] / 100));
-                return $_a + $price;
-            }, 0));
-            if ($c['kaspi_red']) {
-                $price -= $price * Sale::KASPI_RED_PERCENT;
-            }
-            return ceil($a + $price - $c['balance']);
+            return $a + $c->final_price;
         }, 0));
     }
 
@@ -449,7 +442,7 @@ class SaleController extends Controller {
         });
     }
 
-    public function sendTelegramOrderMessage(Sale $sale, TelegramService $telegramService) {
+    public function sendTelegramOrderMessage(Sale $sale, TelegramService $telegramService): \Illuminate\Http\JsonResponse {
         try {
             $message = $this->getDeliveryMessage($sale);
             $ironDeliveryChat = '-1001615606567';

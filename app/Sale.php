@@ -260,6 +260,9 @@ class Sale extends Model
             $price -= $this->booking->paid_sum;
         }
 
+        $price -= $this->promocode_fixed_amount;
+
+
         return ceil($price - $this->balance);
     }
 

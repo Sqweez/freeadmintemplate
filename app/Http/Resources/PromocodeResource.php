@@ -23,7 +23,13 @@ class PromocodeResource extends JsonResource
             'partner' => $this->partner,
             'promocode' => $this->promocode,
             'is_active' => !!$this->is_active,
-            'active_until' => format_date($this->active_until)
+            'active_until' => format_date($this->active_until),
+            'promocode_type' => $this->promocode_type,
+            'promocode_type_id' => $this->promocode_type_id,
+            'min_total' => intval($this->min_total),
+            'required_products' => $this->required_products,
+            'free_product_id' => $this->free_product_id,
+            'brand_id' => $this->brand_id
         ];
     }
 }

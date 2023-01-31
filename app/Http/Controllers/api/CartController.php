@@ -320,6 +320,13 @@ class CartController extends Controller {
 
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/decline'>Отменить заказ❌</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>";
+        $message .= "<a href='"
+            . sprintf(
+                'https://api.whatsapp.com/send?phone=%s&text=%s',
+                $order['phone'],
+                'Здравствуйте, Ваш заказ принят и передан курьеру. Ожидайте доставку в ближайшее время. (с) Служба заботы о клиентах “Iron addicts”'
+            )
+            .  "'>Отправить в WA клиенту</a>";
 
 
         return urlencode($message);

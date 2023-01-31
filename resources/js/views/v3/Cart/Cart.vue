@@ -782,6 +782,7 @@
             ],
             kaspiProcessId: null,
             kaspiTransactionId: null,
+            currentPromocode: null,
         }),
         methods: {
             ...mapActions([
@@ -868,16 +869,50 @@
                 this.$loading.enable();
                 try {
                     const { data: { data } } = await axios.get(`/api/promocode/search/${this.promocode}`);
-                    this.partner_id = data.partner.id;
-                    this.promocode_id = data.id;
-                    this.discountPercent = Math.max(this.discountPercent, data.discount);
-                    this.$toast.success('Промокод применен');
-                    this.promocodeSet = true;
+                    this.checkPromocodeRules(data);
                 } catch (e) {
                     console.log(e);
                     this.$toast.error(e.response.data.error)
                 } finally {
                     this.$loading.disable();
+                }
+            },
+            checkPromocodeRules (promocode) {
+                if (promocode.min_total > 0 && this.subtotal < promocode.min_total) {
+                    return this.$toast.error(`Для применения это промокода сумма покупки должна быть как минимум ${promocode.min_total} тенге!`)
+                }
+                if (promocode.promocode_type_id === 1) {
+                    this.discountPercent = Math.max(this.discountPercent, promocode.discount);
+                    this.currentPromocode = {...promocode};
+                    this.promocodeSet = true;
+                    this.partner_id = data.partner.id;
+                    this.promocode_id = data.id;
+                    return this.$toast.success('Промокод применен!');
+                }
+                if (promocode.promocode_type_id === 2) {
+                    this.currentPromocode = {...promocode};
+                    this.promocodeSet = true;
+                    this.partner_id = data.partner.id;
+                    this.promocode_id = data.id;
+                    return this.$toast.success('Промокод применен!');
+                }
+                if (promocode.promocode_type_id === 3) {
+                    const hasAllProducts = promocode.required_products.every(r => {
+                        const element = this.cart.find(c => c.product_id === r.product_id);
+                        return element && element.count >= r.count;
+                    })
+                    if (!hasAllProducts) {
+                        return this.$toast.error('Не все товары из условия добавлены в корзину!');
+                    }
+                    const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
+                    if (freeProductIndex === -1) {
+                        return this.$toast.error('Добавьте подарочный товар в корзину!');
+                    }
+                    this.$set(this.cart[freeProductIndex], 'discount', 100);
+                    this.partner_id = promocode.partner.id;
+                    this.promocode_id = promocode.id;
+                    this.promocodeSet = true;
+                    return this.$toast.success('Промокод применен!');
                 }
             },
             async refreshProducts() {
@@ -903,6 +938,9 @@
             onClientChosen(client) {
                 this.clientCartModal = false;
                 this.client = client;
+                if (client.is_wholesale_buyer) {
+                    this.isOpt = true;
+                }
             },
             async createKaspiResponse() {
                 const kaspiTerminalIp = localStorage.getItem('kaspi_terminal_ip');
@@ -963,7 +1001,7 @@
                     is_delivery: this.isDelivery,
                     is_paid: this.is_paid,
                     is_opt: this.isOpt,
-                    promocode_id: this.promocode_id
+                    promocode_id: this.promocode_id,
                 };
 
                 if (!this.isTodaySale && this.customSaleDate) {
@@ -1118,6 +1156,10 @@
 
                 if (this.preorder) {
                     total -= this.preorder.amount;
+                }
+
+                if (this.currentPromocode && this.currentPromocode.promocode_type_id === 2) {
+                    total -= this.currentPromocode.discount;
                 }
 
                 return Math.max(0, Math.ceil(total));

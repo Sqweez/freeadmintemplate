@@ -214,6 +214,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     // Promocode
     Route::get('promocode/search/{promocode}', 'api\PromocodeController@searchPromocode');
+    Route::get('promocode/types', [PromocodeController::class, 'getTypes']);
     Route::resource('promocode', 'api\PromocodeController');
 
     // Роуты v2

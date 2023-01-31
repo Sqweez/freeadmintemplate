@@ -30,8 +30,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Promocode extends Model
 {
-    protected $fillable = [
-        'client_id', 'promocode', 'discount', 'is_active', 'id', 'active_until'
+    protected $guarded = ['id'];
+
+    protected $casts = [
+        'required_products' => 'array'
+    ];
+
+    const TYPES = [
+        1 => 'Процентный',
+        2 => 'Фиксированный',
+        3 => 'Покупка определенных позиций',
+        4 => 'Покупка определенного бренда на сумму'
     ];
 
     public function partner() {
@@ -53,5 +62,12 @@ class Promocode extends Model
                     ->orWhere('active_until', null);
             })
             ->where('is_active', true);
+    }
+
+    public function getPromocodeTypeAttribute(): array {
+        return [
+            'id' => $this->promocode_type_id,
+            'name' => self::TYPES[$this->promocode_type_id],
+        ];
     }
 }
