@@ -27,6 +27,20 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Promocode wherePromocode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promocode whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $active_until
+ * @property int $promocode_type_id
+ * @property int $min_total
+ * @property int|null $brand_id
+ * @property array|null $required_products
+ * @property int|null $free_product_id
+ * @property-read array $promocode_type
+ * @method static \Illuminate\Database\Eloquent\Builder|Promocode active()
+ * @method static \Illuminate\Database\Eloquent\Builder|Promocode whereActiveUntil($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promocode whereBrandId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promocode whereFreeProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promocode whereMinTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promocode wherePromocodeTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promocode whereRequiredProducts($value)
  */
 class Promocode extends Model
 {

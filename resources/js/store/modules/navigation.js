@@ -217,6 +217,11 @@ const navigationModule = {
                 icon: 'report',
             },
             {
+                title: 'Рассылка',
+                url: '/mailing',
+                icon: 'mail'
+            },
+            {
                 title: 'Kaspi',
                 url: '#',
                 icon: 'home',
@@ -556,6 +561,11 @@ const navigationModule = {
                 title: 'Отчеты по клиентам',
                 url: '/analytics/clients/sales',
                 icon: 'report',
+            },
+            {
+                title: 'Рассылка',
+                url: '/mailing',
+                icon: 'mail'
             },
             {
                 title: 'Аналитика продаж бренды',

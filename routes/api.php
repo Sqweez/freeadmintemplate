@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\ArrivalController;
 use App\Http\Controllers\api\TransferController;
+use App\Http\Controllers\api\v2\MailingController;
 use App\Http\Controllers\api\v2\ProductController;
 use App\Http\Controllers\api\v2\CertificateController;
 use App\Http\Controllers\api\v2\CompanionController;
@@ -406,6 +407,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/payment-types', [ReportController::class, 'getSellersByPaymentTypes']);
             Route::get('/products-rating', [ReportController::class, 'getProductsRating']);
             Route::get('/margin-types', [ReportController::class, 'getSellersByMarginTypes']);
+        });
+
+        Route::prefix('mailing')->group(function () {
+            Route::post('/', [MailingController::class, 'store']);
         });
     });
 });

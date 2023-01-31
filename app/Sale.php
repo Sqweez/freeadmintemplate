@@ -80,6 +80,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property bool $is_confirmed
  * @property-read int $kaspi_red_commission
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereIsConfirmed($value)
+ * @property int|null $promocode_id
+ * @property int $promocode_fixed_amount
+ * @property-read \App\Promocode|null $promocode
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePromocodeFixedAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePromocodeId($value)
  */
 class Sale extends Model
 {

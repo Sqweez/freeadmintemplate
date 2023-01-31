@@ -73,6 +73,7 @@ import WithDrawalIndex from "@/views/WithDrawal/WithDrawalIndex";
 import TerminalIndex from "@/views/Terminal/TerminalIndex";
 import SettingsIndex from "@/views/Settings/SettingsIndex";
 import WholesaleClients from '@/views/Clients/WholesaleClients';
+import MailingIndex from '@/views/Mailing/MailingIndex';
 
 const routes = [
     {
@@ -722,6 +723,10 @@ const routes = [
         path: '/settings',
         component: SettingsIndex
     },
+    {
+        path: '/mailing',
+        component: MailingIndex
+    }
 ];
 
 export default routes;
