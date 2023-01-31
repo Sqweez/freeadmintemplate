@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\v2\Models\MailingRecepient;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -149,6 +150,16 @@ class Client extends Model
     ];
 
     const PLATINUM_CLIENT_MONTHLY_THRESHOLD = 50000;
+
+    public function recipients(): HasMany {
+        return $this->hasMany(MailingRecepient::class, 'client_id');
+    }
+
+    public function lastMailing(): \Illuminate\Database\Eloquent\Relations\HasOne {
+        return $this
+            ->hasOne(MailingRecepient::class, 'client_id')
+            ->latest();
+    }
 
     public function transactions() {
         return $this->hasMany('App\ClientTransaction', 'client_id');

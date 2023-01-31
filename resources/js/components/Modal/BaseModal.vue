@@ -3,6 +3,7 @@
         v-bind="$attrs"
         persistent
         v-model="state"
+        :max-width="maxWidth"
     >
         <v-card v-if="IS_LOADING_STATE">
             <v-card-text>
@@ -54,6 +55,10 @@ export default {
         state: {
             type: Boolean,
             default: false,
+        },
+        maxWidth: {
+            type: Number,
+            default: 1000,
         }
     },
     data: () => ({}),

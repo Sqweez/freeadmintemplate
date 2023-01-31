@@ -57,7 +57,8 @@ class ClientResource extends JsonResource
             'wholesale_type_id' => $this->wholesale_type_id,
             'wholesale_status' => $this->wholesale_status,
             'wholesale_status_text' => $this->wholesale_status_text,
-            'is_kaspi' => $this->is_kaspi
+            'is_kaspi' => $this->is_kaspi,
+            'last_mailing_date' => $this->lastMailing ? format_datetime($this->lastMailing->created_at) : 'Никогда'
         ];
     }
 }
