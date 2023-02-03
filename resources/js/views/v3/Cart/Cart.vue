@@ -822,8 +822,7 @@
             },
             async sendTelegram(saleId) {
                 this.$loading.enable();
-                const response = await axios.get(`/api/sales/telegram/${saleId}`);
-                console.log(response);
+                await axios.get(`/api/sales/telegram/${saleId}`);
                 this.$loading.disable();
             },
             async createCertificate(certificate) {

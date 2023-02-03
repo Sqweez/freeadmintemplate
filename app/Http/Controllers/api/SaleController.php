@@ -15,6 +15,8 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\ReportResource;
 use App\Http\Resources\v2\Report\ReportsResource;
 use App\Http\Resources\SaleByCityResource;
+use App\Jobs\Notifications\SendDeliveryNotificationJob;
+use App\Jobs\Notifications\SendWholesaleOrderNotificationJob;
 use App\Manufacturer;
 use App\Product;
 use App\ProductBatch;
@@ -30,7 +32,9 @@ use App\v2\Models\Preorder;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
 use Facade\FlareClient\Report;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class SaleController extends Controller {
 
@@ -70,8 +74,10 @@ class SaleController extends Controller {
                 $_preorder->sale_id = $sale->id;
                 $_preorder->save();
             }
-
             \DB::commit();
+            if ($sale->is_opt) {
+                SendWholesaleOrderNotificationJob::dispatch($sale);
+            }
             return [
                 'product_quantities' => ProductBatch::query()
                     ->whereIn('product_id', collect($cart)->pluck('id'))
@@ -102,6 +108,10 @@ class SaleController extends Controller {
         $store_id = $request->get('store_id', null);
         $manufacturer_id = $request->get('manufacturer_id', null);
         return ReportService::getReports($start, $finish, $user_id, $is_supplier, $store_id, $manufacturer_id);
+    }
+
+    public function getSaleById(Sale $sale): ReportsResource {
+        return ReportsResource::make($sale);
     }
 
     public function report(Sale $sale) {
@@ -352,7 +362,21 @@ class SaleController extends Controller {
 
     }
 
-    public function update(Request $request, $id) {
+    public function cancelSaleFull(Sale $sale): string {
+        $products = $sale->products;
+        $products->each(/**
+         * @throws \Exception
+         */ function (SaleProduct $product) use ($sale) {
+            ProductBatch::where('id', $product->product_batch_id)->increment('quantity');
+            $product->delete();
+        });
+        ClientSale::where('sale_id', $sale['id'])->delete();
+        ClientTransaction::where('sale_id', $sale['id'])->delete();
+        $sale->delete();
+        return 'Продажа была отменена!';
+    }
+
+    public function update(Request $request, $id): ReportsResource {
         $sale = Sale::findOrFail($id);
         $sale->update($request->all());
         return new ReportsResource(Sale::report()
@@ -433,7 +457,7 @@ class SaleController extends Controller {
             })->values()->all();
     }
 
-    public function getSaleTypes() {
+    public function getSaleTypes(): Collection {
         return collect(Sale::PAYMENT_TYPES)->map(function ($item, $key) {
             return [
                 'id' => $key,
@@ -442,11 +466,9 @@ class SaleController extends Controller {
         });
     }
 
-    public function sendTelegramOrderMessage(Sale $sale, TelegramService $telegramService): \Illuminate\Http\JsonResponse {
+    public function sendTelegramOrderMessage(Sale $sale): JsonResponse {
         try {
-            $message = $this->getDeliveryMessage($sale);
-            $ironDeliveryChat = '-1001615606567';
-            $telegramService->sendMessage($ironDeliveryChat, urlencode($message));
+            SendDeliveryNotificationJob::dispatch($sale);
             return response()->json([], 200);
         } catch (\Exception $exception) {
             return response()->json([
@@ -455,40 +477,8 @@ class SaleController extends Controller {
         }
     }
 
-    private function getDeliveryMessage($sale) {
-        $sale = new ReportsResource($sale);
-        $message = 'Новая доставка №' . $sale->id . "\n";
-        $message .= 'ФИО: ' . $sale['client']['client_name'] . "\n";
-        $message .= 'Телефон: ' . $sale['client']['client_phone'] . "\n";
-        $message .= $sale['comment'] . "\n";
-        $message .= $sale['is_paid'] ? 'Оплачен ✅✅✅' : 'НЕ ОПЛАЧЕН ❌❌❌';
-        $message .= "\n";
-        $message .= 'Способ оплаты: ' . Sale::PAYMENT_TYPES[$sale->payment_type]['name'] . "\n";
-        $message .= "Товары: \n";
-        $saleProducts = $sale['products'];
-        $products = collect($sale['products'])
-            ->groupBy('product_id')
-            ->map(function ($item) {
-                return collect($item)->first();
-            })
-            ->values()
-            ->all();
-        foreach ($products as $key => $product) {
-            $_product = $product['product']['product'];
-            $attributes = collect($product['product']['product']['attributes'])
-                ->mergeRecursive(collect($product['product']['attributes']))
-                ->pluck('attribute_value')
-                ->join(', ');
-            $count = $saleProducts->filter(function ($item) use ($product) {
-                return $item['product_id'] === $product['product_id'];
-            })->count();
-            $message .=
-                ($key + 1) . '. ' .
-                $_product['product_name'] . ' ' . $attributes .
-                ' | ' . $count . 'шт' .
-                "\n";
-        }
-        $message .= 'К оплате: ' . $sale->final_price_without_red . 'тнг';
-        return $message;
+    public function confirmSale(Sale $sale) {
+        $sale->update(['is_confirmed' => true]);
+        return 'Продажа подтверждена!';
     }
 }

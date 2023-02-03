@@ -74,6 +74,7 @@ import TerminalIndex from "@/views/Terminal/TerminalIndex";
 import SettingsIndex from "@/views/Settings/SettingsIndex";
 import WholesaleClients from '@/views/Clients/WholesaleClients';
 import MailingIndex from '@/views/Mailing/MailingIndex';
+import SingleSaleReport from '@/views/v3/Reports/SingleSaleReport';
 
 const routes = [
     {
@@ -378,6 +379,10 @@ const routes = [
     {
         path: '/reports',
         component: ReportsV3
+    },
+    {
+        path: '/reports/:id',
+        component: SingleSaleReport
     },
     {
         path: '/kaspi/products',

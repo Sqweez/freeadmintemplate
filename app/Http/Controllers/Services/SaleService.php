@@ -34,7 +34,7 @@ class SaleService {
                 $sale['promocode_fixed_amount'] = $promocode->discount;
             }
         }
-        return Sale::create($sale);
+        return Sale::create($sale)->refresh();
     }
 
     public function createSaleProducts(Sale $sale, $store_id, array $cart) {

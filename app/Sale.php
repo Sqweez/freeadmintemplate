@@ -307,6 +307,18 @@ class Sale extends Model
         return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
+    public function getReportURL(): string {
+        return sprintf('%s/reports/%s', url('/'), $this->id);
+    }
+
+    public function getCancelURL(): string {
+        return sprintf('%s/api/sales/%s/cancel/full', url('/'), $this->id);
+    }
+
+    public function getConfirmationURL(): string {
+        return sprintf('%s/api/sales/%s/confirm', url('/'), $this->id);
+    }
+
     /* public function setCommentAttribute($value) {
          $this->attributes['comment'] = '';//$value === null ? '' : $value;
      }*/

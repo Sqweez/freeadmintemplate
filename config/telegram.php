@@ -1,5 +1,8 @@
 <?php
 
 return [
+    'BOT_TOKEN' => env('TELEGRAM_TOKEN', ''),
     'BIRTHDAY_CHAT' => env('TELEGRAM_BIRTHDAY_CHAT_ID', ''),
+    'NOTIFICATIONS_CHAT' => env('TELEGRAM_NOTIFICATIONS_CHAT_ID', ''),
+    'DELIVERY_CHAT' => env('TELEGRAM_DELIVERY_CHAT_ID', ''),
 ];

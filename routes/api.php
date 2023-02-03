@@ -154,6 +154,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     //SaleController
     Route::prefix('sales')->group(function () {
         Route::get('types', [SaleController::class, 'getSaleTypes']);
+        Route::get('{sale}/confirm', [SaleController::class, 'confirmSale']);
+        Route::get('{sale}/cancel/full', [SaleController::class, 'cancelSaleFull']);
         Route::post('{sale}/cancel', [SaleController::class, 'cancelSale']);
         Route::post('/', [SaleController::class, 'store']);
         Route::get('brands/motivation', [SaleController::class, 'getMotivationReport']);
@@ -167,6 +169,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::get('reports/plan', 'api\SaleController@getPlanReports');
     Route::get('reports/total', 'api\SaleController@getTotal');
     Route::post('reports/products', 'api\SaleController@getReportProducts');
+    Route::get('reports/{sale}', 'api\SaleController@getSaleById');
 
 
     Route::get('cart/group', 'api\CartController@groupCart');
