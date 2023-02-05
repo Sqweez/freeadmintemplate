@@ -169,8 +169,10 @@ class OrderController extends Controller
             'kaspi_red' => 0,
             'balance' => $order['balance'] ?? 0,
             'order_id' => $order->id,
+            'promocode_id' => $order->promocode_id,
+            'promocode_fixed_amount' => $order->promocode_fixed_amount,
             // Безналичная оплата для интернет-заказов
-            'payment_type' => 1
+            'payment_type' => 1,
         ]);
 
 
@@ -181,7 +183,7 @@ class OrderController extends Controller
                 'sale_id' => $sale['id'],
                 'purchase_price' => $product['purchase_price'],
                 'product_price' => $product['product_price'],
-                'discount' => $sale['discount']
+                'discount' => max($product->discount, $sale->discount)
             ]);
         });
 

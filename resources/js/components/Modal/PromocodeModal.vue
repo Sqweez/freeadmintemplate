@@ -90,6 +90,15 @@
                         </template>
                     </v-simple-table>
                 </div>
+                <div v-if="promocode.promocode_type_id === 4">
+                    <v-select
+                        label="Выбранный бренд"
+                        v-model="promocode.brand_id"
+                        :items="manufacturers"
+                        item-text="manufacturer_name"
+                        item-value="id"
+                    />
+                </div>
                 <div v-if="[3, 4].includes(promocode.promocode_type_id)">
                     <h5>Подарок:</h5>
                     <v-simple-table v-slot:default v-if="freeProduct">
@@ -130,7 +139,7 @@
                         </template>
                     </v-simple-table>
                 </div>
-                <div v-if="[3, 4].includes(promocode.promocode_type_id)">
+                <div v-show="[3, 4].includes(promocode.promocode_type_id)">
                     <h5>Товары:</h5>
                     <v-text-field
                         class="mt-2"
@@ -153,7 +162,7 @@
                         </v-col>
                         <v-col cols="12" xl="4">
                             <v-autocomplete
-                                :items="manufacturers"
+                                :items="manufacturersFilters"
                                 item-text="manufacturer_name"
                                 v-model="manufacturerId"
                                 item-value="id"
@@ -312,6 +321,22 @@
                     promocode.free_product_id = this.freeProduct.product_id;
                 }
 
+                if (this.promocode.promocode_type_id === 4) {
+                    if (!this.freeProduct) {
+                        return this.$toast.error('Выберите подарок!');
+                    }
+
+                    if (!this.promocode.brand_id) {
+                        return this.$toast.error('Выберите бренд')
+                    }
+
+                    if (!this.promocode.min_total) {
+                        return this.$toast.error('Выберите минимальную сумму закупа!')
+                    }
+
+                    promocode.free_product_id = this.freeProduct.product_id;
+                }
+
                 this.$emit('submit', promocode);
             }
         },
@@ -332,12 +357,15 @@
                 }
                 return products;
             },
-            manufacturers() {
+            manufacturersFilters() {
                 return [
                     {
                         id: -1,
                         manufacturer_name: 'Все'
                     }, ...this.$store.getters.manufacturers];
+            },
+            manufacturers() {
+                return this.$store.getters.manufacturers;
             },
             categories() {
                 return [

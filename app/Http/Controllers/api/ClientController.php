@@ -331,12 +331,26 @@ class ClientController extends Controller {
         ];
     }
 
-    public function getWholeSaleTypes() {
+    public function getWholeSaleTypes(): Collection {
         return collect(Client::WHOLE_SALE_TYPES)->map(function ($value, $key) {
             return [
                 'id' => $key + 1,
                 'name' => $value
             ];
         })->values();
+    }
+
+    public function addBalanceMassive(Request $request) {
+        $clients = $request->get('clients', []);
+        $user_id = auth()->id();
+        foreach ($clients as $client) {
+            ClientTransaction::create(
+                [
+                    'client_id' => $client,
+                    'user_id' => $user_id,
+                    'amount' => $request->get('sum'),
+                    'sale_id' => -1
+                ]);
+        }
     }
 }

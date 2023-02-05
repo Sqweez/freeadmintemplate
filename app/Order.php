@@ -61,6 +61,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read int|null $image_count
  * @property int $is_iherb
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsIherb($value)
+ * @property int|null $promocode_id
+ * @property int $promocode_fixed_discount
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePromocodeFixedDiscount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePromocodeId($value)
+ * @property int $promocode_fixed_amount
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePromocodeFixedAmount($value)
  */
 class Order extends Model
 {
