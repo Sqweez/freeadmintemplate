@@ -17,21 +17,27 @@ use App\User;
 use App\v2\Models\Image;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use TelegramService;
 
 class OrderController extends Controller
 {
 
-    public function getOrders() {
-        return OrderResource::collection(Order::with(
-            [
-                'store:id,name', 'items',
-                'items.batch.store',
-                'items.product', 'items.product.attributes',
-                'items.product.product', 'items.product.product.attributes',
-                'items.product.product.manufacturer', 'image'
-            ]
-        )->orderByDesc('created_at')->get());
+    public function getOrders(): AnonymousResourceCollection {
+        $orders = Order::query()
+            ->with(
+                [
+                    'store:id,name', 'items',
+                    'items.batch.store',
+                    'items.product', 'items.product.attributes',
+                    'items.product.product', 'items.product.product.attributes',
+                    'items.product.product.manufacturer', 'image'
+                ]
+            )
+            ->orderByDesc('created_at')
+            ->whereDate('created_at', '>=', now()->subDays(30))
+            ->get();
+        return OrderResource::collection($orders);
     }
 
     public function restoreOrder(Order $order) {
