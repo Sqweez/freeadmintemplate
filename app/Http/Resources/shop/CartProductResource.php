@@ -42,6 +42,8 @@ class CartProductResource extends JsonResource
             'product_name_slug' => Str::slug($this->product->product_name, '-'),
             'product_id' => $this->product->product_id,
             'discount' => $this->discount,
+            'final_price' => $this->product->product->stock_price - ($this->product->product->stock_price * $this->discount / 100),
+            'manufacturer_id' => $this->product->manufacturer_id,
         ];
     }
 }
