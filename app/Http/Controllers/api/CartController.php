@@ -172,6 +172,23 @@ class CartController extends Controller {
             $discount = Client::find($client_id)['client_discount'];
         };
 
+        if (!$client_id) {
+            $client = Client::whereClientPhone($customer_info['phone'])->first();
+            if (!$client) {
+                $client = Client::query()
+                    ->create([
+                        'phone' => $customer_info['phone'],
+                        'client_name' => $customer_info['fullname'],
+                        'city' => $customer_info['city'],
+                        'client_card' => '',
+                        'loyalty_id' => 1,
+                        'gender' => 'M'
+                    ])
+                    ->refresh();
+            }
+            $client_id = $client->id;
+        }
+
         $discount = max($discount, $other_discount);
 
         try {
