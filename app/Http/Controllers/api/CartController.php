@@ -9,6 +9,7 @@ use App\Http\Resources\shop\CartResource;
 use App\Http\Resources\v2\Order\OrderResource;
 use App\Order;
 use App\OrderProduct;
+use App\Promocode;
 use App\User;
 use App\v2\Models\OrderMessage;
 use App\v2\Models\ProductSku;
@@ -161,6 +162,7 @@ class CartController extends Controller {
         $customer_info = $request->get('customer_info');
         $other_discount = $request->has('discount') ? intval($request->get('discount')) : 0;
         $is_iherb = $request->has('iherb');
+        $promocode = $request->get('promocode', null);
 
         $client_id = -1;
         $discount = 0;
@@ -174,7 +176,7 @@ class CartController extends Controller {
 
         try {
             DB::beginTransaction();
-            $order = $this->createOrder($user_token, $store_id, $customer_info, $client_id, $discount, $is_iherb);
+            $order = $this->createOrder($user_token, $store_id, $customer_info, $client_id, $discount, $is_iherb, $promocode);
             $products = CartProduct::where('cart_id', $cart)->get();
             $this->createOrderProducts($order, $store_id, $products);
             CartProduct::where('cart_id', $cart)->delete();
@@ -312,8 +314,9 @@ class CartController extends Controller {
         $message .= 'Способ получения: ' . $delivery . "\n";
 
         $totalCostWithDiscount = ceil($order->items->reduce(function ($a, $c) use ($discount){
-                return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
+                return $a + ($c['product_price'] * ((100 - intval($c['discount'])) / 100));
             }, 0) - intval($order['balance']));
+        $totalCostWithDiscount = $totalCostWithDiscount - $order['promocode_fixed_amount'];
         $deliveryCost = $this->getDeliveryCost($order->city_text, $totalCostWithDiscount, $order['delivery']);
 
         $message .= 'Общая сумма: ' . $totalCostWithDiscount . 'тг' . "\n";
@@ -322,19 +325,18 @@ class CartController extends Controller {
 
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/decline'>Отменить заказ❌</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>";
-        $message .= "<a href='"
-            . sprintf(
-                'https://api.whatsapp.com/send?phone=%s&text=%s',
-                $order['phone'],
-                'Здравствуйте, Ваш заказ принят и передан курьеру. Ожидайте доставку в ближайшее время. (с) Служба заботы о клиентах “Iron addicts”'
-            )
-            .  "'>Отправить в WA клиенту</a>";
+        $waString = sprintf(
+            'https://api.whatsapp.com/send?phone=%s&text=%s',
+            $order['phone'],
+            'Здравствуйте, Ваш заказ принят и передан курьеру. Ожидайте доставку в ближайшее время. (с) Служба заботы о клиентах “Iron addicts”'
+        );
+        $message .= "<a href='" . $waString . "'>Отправить в WA клиенту</a>";
 
 
         return urlencode($message);
     }
 
-    private function getDeliveryCost($city, $total, $deliveryMethod) {
+    private function getDeliveryCost($city, $total, $deliveryMethod): int {
         if ($deliveryMethod === 1) {
             return 0;
         }
@@ -378,7 +380,7 @@ class CartController extends Controller {
      * private methods
      * */
 
-    private function createOrder($user_token, $store_id, $customer_info, $client_id, $discount, $is_iherb) {
+    private function createOrder($user_token, $store_id, $customer_info, $client_id, $discount, $is_iherb, $promocode) {
         $order = [
             'user_token' => $user_token,
             'store_id' => $store_id,
@@ -397,7 +399,15 @@ class CartController extends Controller {
             'is_paid' => 0,
             'is_iherb' => $is_iherb
         ];
-        return Order::create($order);
+
+        if ($promocode) {
+            $order['promocode_id'] = $promocode['id'];
+            if ($promocode['promocode_type_id'] === __hardcoded(2)) {
+                $order['promocode_fixed_amount'] = $promocode['discount'];
+            }
+        }
+
+        return Order::create($order)->refresh();
     }
 
     private function createOrderProducts($order, $store_id, $products) {
@@ -420,7 +430,8 @@ class CartController extends Controller {
                             'product_id' => $product['product_id'],
                             'order_id' => $order['id'],
                             'purchase_price' => $product_batch['purchase_price'],
-                            'product_price' => $productPrice
+                            'product_price' => $productPrice,
+                            'discount' => max($product['discount'], $order['discount'])
                         ];
 
                         OrderProduct::create($product_sale);
