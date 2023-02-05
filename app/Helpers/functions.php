@@ -177,3 +177,9 @@ if (!function_exists('generate_number')) {
         return $result;
     }
 }
+
+if (!function_exists('unmask_phone')) {
+    function unmask_phone ($phone) {
+        return str_replace(['(', ')', '-', ' '], '', $phone);
+    }
+}
