@@ -94,6 +94,9 @@ use Illuminate\Support\Carbon;
  * @property-read string $wholesale_status_text
  * @property bool $is_kaspi
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereIsKaspi($value)
+ * @property-read MailingRecepient|null $lastMailing
+ * @property-read Collection|MailingRecepient[] $recipients
+ * @property-read int|null $recipients_count
  */
 class Client extends Model
 {

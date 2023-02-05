@@ -913,6 +913,28 @@
                     this.promocodeSet = true;
                     return this.$toast.success('Промокод применен!');
                 }
+
+                if (promocode.promocode_type_id === 4) {
+                    const productsInCart = this.cart.filter(c => {
+                        console.log(c);
+                       return c.product_id !== promocode.free_product_id && c.manufacturer_id === promocode.brand_id;
+                    });
+                    const totalPrice = productsInCart.reduce((a, c) => {
+                        return a + c.quantity * c.product_price;
+                    }, 0);
+                    if (promocode.min_total > 0 && totalPrice < promocode.min_total) {
+                        return this.$toast.error(`Для применения это промокода сумма покупки выбранного бренда должна быть как минимум ${promocode.min_total} тенге!`)
+                    }
+                    const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
+                    if (freeProductIndex === -1) {
+                        return this.$toast.error('Добавьте подарочный товар в корзину!');
+                    }
+                    this.$set(this.cart[freeProductIndex], 'discount', 100);
+                    this.partner_id = promocode.partner.id;
+                    this.promocode_id = promocode.id;
+                    this.promocodeSet = true;
+                    return this.$toast.success('Промокод применен!');
+                }
             },
             async refreshProducts() {
                 this.loading = true;

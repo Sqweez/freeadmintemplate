@@ -34,7 +34,8 @@ class CreatePromocodeRequest extends FormRequest
             'promocode_type_id' => 'required',
             'free_product_id' => 'present|nullable',
             'required_products' => 'present|nullable',
-            'brand_id' => 'present|nullable'
+            'brand_id' => 'present|nullable',
+            'min_total' => 'required'
         ];
     }
 
@@ -42,6 +43,8 @@ class CreatePromocodeRequest extends FormRequest
         $this->merge([
             'is_active' => true,
             'discount' => $this->discount ?: 0,
+            'brand_id' => $this->promocode_type_id === 4 ? $this->brand_id : null,
+            'required_products' => $this->promocode_type_id === 3 ? $this->required_products : null,
         ]);
     }
 }

@@ -137,6 +137,10 @@
                     text: 'Активен до'
                 },
                 {
+                    value: 'min_total',
+                    text: 'Минимальная сумма покупки'
+                },
+                {
                     value: 'actions',
                     text: 'Действие'
                 }
@@ -163,6 +167,7 @@
             },
             async onSubmit(promocode) {
                 try {
+                    this.$loading.enable();
                     if (this.editMode) {
                         const _promocode = {
                             id: promocode.id,
@@ -185,6 +190,7 @@
                     this.promocode = {};
                     this.promocodeModal = false;
                     this.editMode = false;
+                    this.$loading.disable();
                 }
             }
         },

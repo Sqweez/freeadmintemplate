@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderProduct whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \App\ProductBatch $batch
+ * @property int $discount
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderProduct whereDiscount($value)
  */
 class OrderProduct extends Model
 {

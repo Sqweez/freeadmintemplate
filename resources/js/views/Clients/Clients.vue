@@ -12,6 +12,14 @@
                             <v-btn class="mt-2" color="success" @click="exportModal = true;" v-if="!IS_MARKETOLOG">
                                 Экспорт клиентов <v-icon>mdi-file-excel-box</v-icon>
                             </v-btn>
+                            <v-btn
+                                color="success"
+                                :disabled="selectedClients.length === 0"
+                                class="mt-2"
+                                @click="isMassBalanceEnabled = true; balanceModal = true;"
+                            >
+                                Массово добавить баланс <v-icon>mdi-cash</v-icon>
+                            </v-btn>
                         </v-col>
                         <v-col>
                             <v-select
@@ -75,8 +83,13 @@
                             label="Поиск клиента"
                             single-line
                             hide-details
-                        ></v-text-field>
+                        />
+                        <v-btn depressed small color="error" @click="selectClients" class="my-2">
+                            Выбрать всех текущих <v-icon>mdi-check</v-icon>
+                        </v-btn>
                         <v-data-table
+                            v-model="selectedClients"
+                            show-select
                             :loading="IS_LOADING_STATE"
                             loading-text="Идет загрузка клиентов"
                             :search="search"
@@ -314,7 +327,7 @@
             message="Вы действительно хотите удалить выбранного клиента?" />
         <BalanceModal
             :state="balanceModal"
-            @cancel="userId = null; balanceModal = false"
+            @cancel="userId = null; balanceModal = false; isMassBalanceEnabled = false;"
             @submit="addBalance"
         />
         <ExportClientsModal
@@ -332,6 +345,7 @@
     import BalanceModal from "@/components/Modal/BalanceModal";
     import ExportClientsModal from "@/components/Modal/Export/ExportClientsModal";
     import GENDERS from "@/common/enums/genders";
+    import axiosClient from '@/utils/axiosClient';
 
     export default {
         components: {
@@ -345,6 +359,8 @@
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         data: () => ({
+            isMassBalanceEnabled: false,
+            selectedClients: [],
             isKaspiClient: false,
             isWholesaleBuyer: false,
             withoutBarcode: false,
@@ -480,6 +496,9 @@
             },
         },
         methods: {
+            selectClients () {
+                this.selectedClients = [...this.clients];
+            },
             async deleteUser() {
                 await this.$store.dispatch(ACTIONS.DELETE_CLIENT, this.userId);
                 this.$toast.success('Клиент удален');
@@ -487,12 +506,23 @@
                 this.confirmationModal = false;
             },
             async addBalance(e) {
-                await this.$store.dispatch(ACTIONS.ADD_BALANCE, {
-                    client_id: this.userId,
-                    sum: e,
-                });
+                this.$loading.enable();
                 this.balanceModal = false;
+                if (!this.isMassBalanceEnabled) {
+                    await this.$store.dispatch(ACTIONS.ADD_BALANCE, {
+                        client_id: this.userId,
+                        sum: e,
+                    });
+                } else {
+                    await axiosClient.post(`clients/balance`, {
+                        clients: this.selectedClients.map(c => c.id),
+                        sum: e
+                    });
+                    await this.$store.dispatch(ACTIONS.GET_CLIENTS);
+                    this.selectedClients = [];
+                }
                 this.userId = null;
+                this.$loading.disable();
                 this.$toast.success('Баланс успешно пополнен!');
             },
             sendWhatsapp(client) {
