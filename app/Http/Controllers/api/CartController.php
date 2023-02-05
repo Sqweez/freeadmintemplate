@@ -33,6 +33,7 @@ class CartController extends Controller {
         $count = $request->get('count');
         $type = $request->get('type') ?? 'web';
         $store_id = $request->get('store_id') ?? 1;
+        $discount = $request->get('discount', 0);
         $cart = Cart
             ::where('user_token', $user_token)
             ->firstOrCreate([
@@ -48,7 +49,8 @@ class CartController extends Controller {
         } else {
             $cart->products()->create([
                 'product_id' => $product,
-                'count' => $count
+                'count' => $count,
+                'discount' => $discount
             ]);
         }
 

@@ -5,7 +5,7 @@ namespace App\Http\Resources\shop;
 use App\CartProduct;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
-
+/* @mixin CartProduct */
 class CartProductResource extends JsonResource
 {
     /**
@@ -41,6 +41,7 @@ class CartProductResource extends JsonResource
             'iherb_price' => $this->product->product->iherb_price,
             'product_name_slug' => Str::slug($this->product->product_name, '-'),
             'product_id' => $this->product->product_id,
+            'discount' => $this->discount,
         ];
     }
 }
