@@ -137,7 +137,7 @@ class OrderController extends Controller
         )->whereKey($order->id)->first());
     }
 
-    public function update(Order $order, Request $request) {
+    public function update(Order $order, Request $request): OrderResource {
         $order->update($request->all());
         return new OrderResource(Order::with(
             [

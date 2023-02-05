@@ -43,7 +43,7 @@ class OrderResource extends JsonResource
             'city_text' => $this->city_text->name ?? 'Неизвестно',
             'comment' => $this->comment,
             'total_price' => ceil($this->items->reduce(function($a, $c) {
-                return $a + intval($c['product_price']);
+                return $a + ($c['product_price'] * ((100 - intval($c['discount'])) / 100));
             }, 0)  - $this->items->reduce(function($a, $c) {
                     return $a + intval($c['product_price']);
                 }, 0) * ($this->discount / 100)),
