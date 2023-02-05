@@ -5,7 +5,7 @@ namespace App\Http\Resources\v2\Order;
 use App\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+/* @mixin Order */
 class OrderResource extends JsonResource
 {
     /**
