@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\v2\Models\ProductSku;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\CartProduct
@@ -37,8 +39,8 @@ class CartProduct extends Model
         'count' => 'integer'
     ];
 
-    public function product() {
-        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id');
+    public function product(): BelongsTo {
+        return $this->belongsTo(ProductSku::class, 'product_id');
     }
 
     public function scopeCart($query, $cart_id) {
