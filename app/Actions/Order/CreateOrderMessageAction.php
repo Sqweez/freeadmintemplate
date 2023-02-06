@@ -100,12 +100,7 @@ class CreateOrderMessageAction {
 
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/decline'>Отменить заказ❌</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>" . "\n";
-        $waString = sprintf(
-            'https://api.whatsapp.com/send?phone=%s&text=%s',
-            \Str::replaceFirst('+', '', $order['phone']),
-            'Здравствуйте, Ваш заказ принят и передан курьеру. Ожидайте доставку c ?? до ??. (с) Служба заботы о клиентах “Iron addicts”'
-        );
-        $message .= "\n" . "<a href='" . $waString . "'>Отправить в WA клиенту</a>";
+        $message .= "<a href='https://ironadmin.ariesdev.kz/orders/" . $order['id'] . "/whatsapp'>Отправить в WA клиенту✔️</a>" . "\n";
 
         return urlencode($message);
     }
