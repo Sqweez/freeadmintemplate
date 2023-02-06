@@ -42,6 +42,7 @@ class CronController extends Controller
     }
 
     public function getPlatinumClientsRemainder(TelegramService $telegramService) {
+        return;
         $clients = ClientResource::collection(
             Client::with(['sales', 'transactions', 'city', 'loyalty'])
                 ->platinumClients()

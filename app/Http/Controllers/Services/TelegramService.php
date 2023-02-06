@@ -24,14 +24,17 @@ class TelegramService {
     /**
      * @throws GuzzleException
      */
-    public function sendMessage($chat_id, $message): ResponseInterface {
-        return $this->client->request('POST', $this->getURL(), [
-            'form_params' => [
-                'parse_mode' => 'HTML',
-                'chat_id' => $chat_id,
-                'text' => urldecode($message)
-            ],
-        ]);
+    public function sendMessage($chat_id, $message) {
+        $messages = is_array($message) ? $message : \Arr::wrap($message);
+        foreach ($messages as $_message) {
+            $this->client->request('POST', $this->getURL(), [
+                'form_params' => [
+                    'parse_mode' => 'HTML',
+                    'chat_id' => $chat_id,
+                    'text' => urldecode($_message)
+                ],
+            ]);
+        }
     }
 
     private function getURL(): string {
