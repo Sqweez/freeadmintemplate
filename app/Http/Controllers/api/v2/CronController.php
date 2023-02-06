@@ -14,26 +14,22 @@ class CronController extends Controller
     public function orderMessages() {
         $messages = OrderMessage::where('is_delivered', false)->get();
         $messages->each(function ($message) {
-            try {
-                $order = Order::find($message['order_id']);
-                if ($order['payment'] == Order::ORDER_PAYMENT_ONLINE && $order['is_paid'] == false) {
-                    return null;
-                } else {
-                    if ($order !== null) {
-                        $_message = (new CartController())->getMessage($order, null);
-                        if (!(strlen($_message) > 4095)) {
-                            \TelegramService::sendMessage($message['chat_id'], $_message);
-                        }
-                        OrderMessage::find($message['id'])->update([
-                            'is_delivered' => true
-                        ]);
+            $order = Order::find($message['order_id']);
+            if ($order['payment'] == Order::ORDER_PAYMENT_ONLINE && !$order['is_paid']) {
+                return null;
+            } else {
+                if ($order !== null) {
+                    $_message = (new CartController())->getMessage($order, null);
+                    if (!(strlen($_message) > 4095)) {
+                        \TelegramService::sendMessage($message['chat_id'], $_message);
                     }
-                    else {
-                        OrderMessage::find($message['id'])->delete();
-                    }
+                    OrderMessage::find($message['id'])->update([
+                        'is_delivered' => true
+                    ]);
                 }
-            } catch (\Exception $exception) {
-                throw $exception;
+                else {
+                    OrderMessage::find($message['id'])->delete();
+                }
             }
         });
     }
