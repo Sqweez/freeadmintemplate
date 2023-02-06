@@ -3,13 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Clients/CollectPlatinumClientsInformation.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Clients/CollectPlatinumClientsInformation.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Actions/Order/CreateOrderMessageAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Actions/Order/CreateOrderMessageAction.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/TelegramService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/TelegramService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/CartController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/CartController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/CronController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/CronController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/telegram.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/telegram.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -232,8 +228,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.hot" />
         <item itemvalue="npm.prod" />
+        <item itemvalue="npm.hot" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
@@ -302,7 +298,7 @@
       <workItem from="1675164739569" duration="14952000" />
       <workItem from="1675423274530" duration="6406000" />
       <workItem from="1675611885416" duration="12673000" />
-      <workItem from="1675695539712" duration="5933000" />
+      <workItem from="1675695539712" duration="6596000" />
     </task>
     <servers />
   </component>

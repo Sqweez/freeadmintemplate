@@ -31,7 +31,7 @@ class TelegramService {
                 'form_params' => [
                     'parse_mode' => 'HTML',
                     'chat_id' => $chat_id,
-                    'text' => ($_message)
+                    'text' => $this->getMessage($_message)
                 ],
             ]);
         }
@@ -43,5 +43,13 @@ class TelegramService {
 
     public function send($chat_id, $message) {
         return $this->sendMessage($chat_id, $message);
+    }
+
+    private function getMessage($message) {
+        if (preg_match("@^[a-zA-Z0-9%+-_]*$@", $message)) {
+            return urldecode($message);
+        } else {
+            return $message;
+        }
     }
 }
