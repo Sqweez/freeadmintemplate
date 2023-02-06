@@ -31,7 +31,7 @@ class TelegramService {
                 'form_params' => [
                     'parse_mode' => 'HTML',
                     'chat_id' => $chat_id,
-                    'text' => urldecode($_message)
+                    'text' => ($_message)
                 ],
             ]);
         }
@@ -39,5 +39,9 @@ class TelegramService {
 
     private function getURL(): string {
         return sprintf('https://api.telegram.org/bot%s/sendMessage', $this->token);
+    }
+
+    public function send($chat_id, $message) {
+        return $this->sendMessage($chat_id, $message);
     }
 }

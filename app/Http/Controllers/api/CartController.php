@@ -7,6 +7,7 @@ use App\CartProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\CartResource;
 use App\Http\Resources\v2\Order\OrderResource;
+use App\Jobs\Notifications\Order\SendOrderNotificationJob;
 use App\Order;
 use App\OrderProduct;
 use App\Promocode;
@@ -199,12 +200,13 @@ class CartController extends Controller {
             $products = CartProduct::where('cart_id', $cart)->get();
             $this->createOrderProducts($order, $store_id, $products);
             CartProduct::where('cart_id', $cart)->delete();
+            SendOrderNotificationJob::dispatch($order);
 
-            OrderMessage::create([
+           /* OrderMessage::create([
                 'order_id' => $order['id'],
                 'chat_id' => env('TELEGRAM_KZ_CHAT_ID'),
                 'is_delivered' => false
-            ]);
+            ]);*/
 
 
             DB::commit();
@@ -346,11 +348,10 @@ class CartController extends Controller {
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>" . "\n";
         $waString = sprintf(
             'https://api.whatsapp.com/send?phone=%s&text=%s',
-            $order['phone'],
-            'Здравствуйте, Ваш заказ принят и передан курьеру. Ожидайте доставку в ближайшее время. (с) Служба заботы о клиентах “Iron addicts”'
+            \Str::replaceFirst('+', '', $order['phone']),
+            'Здравствуйте, Ваш заказ принят и передан курьеру. Ожидайте доставку c ?? до ??. (с) Служба заботы о клиентах “Iron addicts”'
         );
-        $message .= "<a href='" . $waString . "'>Отправить в WA клиенту</a>";
-
+        $message .= "\n" . "<a href='" . $waString . "'>Отправить в WA клиенту</a>";
 
         return urlencode($message);
     }

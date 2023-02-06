@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 class CronController extends Controller
 {
     public function orderMessages() {
+        return false;
         $messages = OrderMessage::where('is_delivered', false)->get();
         $messages->each(function ($message) {
             $order = Order::find($message['order_id']);
