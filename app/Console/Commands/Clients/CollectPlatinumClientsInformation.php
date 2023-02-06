@@ -76,7 +76,7 @@ class CollectPlatinumClientsInformation extends Command
         $message .= "Телефон: " . $client['client_phone'] . "\n";
         $message .= "Город: " . $client['city'] . "\n";
         $message .= "Остаток:" . $client['until_platinum'] . "₸" . "\n";
-        $message .= "<a href='https://api.whatsapp.com/send?phone=" . $client['client_phone'] . "'>Открыть Whatsapp</a>" . "\n";
+        $message .= "<a href='https://api.whatsapp.com/send?phone=" . \Str::replaceFirst('+', '', $client['client_phone']) . "'>Открыть Whatsapp</a>" . "\n";
         return $message;
     }
 }

@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command(CollectPlatinumClientsInformation::class)
-            ->monthlyOn(7, '22:04');
+            ->monthlyOn(6, '10:00');
         $schedule->command(CollectPlatinumClientsInformation::class)
             ->monthlyOn(23, '10:00');
         // $schedule->command('inspire')
@@ -43,5 +43,15 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    /**
+     * Get the timezone that should be used by default for scheduled events.
+     *
+     * @return \DateTimeZone|string|null
+     */
+    protected function scheduleTimezone()
+    {
+        return 'Asia/Almaty';
     }
 }
