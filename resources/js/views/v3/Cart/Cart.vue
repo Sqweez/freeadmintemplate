@@ -166,7 +166,7 @@
                                 @click:append-outer="used_certificate = null"
                             />
                         </div>
-                        <div v-if="clientChosen && !isFree">
+                        <div v-if="clientChosen && !isFree && !isOpt">
                             <v-text-field
                                 class="w-150px"
                                 type="number"
@@ -704,6 +704,11 @@
             },
             isFullWholesalePurchase (value) {
                 this.cart = this.cart.map(c => ({ ...c, product_price: c.initial_price, discount: 0 }));
+            },
+            isOpt (value) {
+                if (value) {
+                    this.balance = 0;
+                }
             }
         },
         mixins: [product, product_search, cart],
