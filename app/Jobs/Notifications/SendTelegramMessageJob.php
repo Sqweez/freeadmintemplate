@@ -15,6 +15,8 @@ class SendTelegramMessageJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 1;
+
     private string $message;
     private string $chat_id;
     /**

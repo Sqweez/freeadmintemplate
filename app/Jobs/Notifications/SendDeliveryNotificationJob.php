@@ -32,10 +32,10 @@ class SendDeliveryNotificationJob implements ShouldQueue
      *
      * @param GetSaleDeliveryMessageAction $action
      * @param NotificationService $service
-     * @return PendingDispatch
+     * @return void
      */
-    public function handle(GetSaleDeliveryMessageAction $action, NotificationService $service): PendingDispatch {
+    public function handle(GetSaleDeliveryMessageAction $action, NotificationService $service) {
         $message = $action->handle($this->sale);
-        return $service->sendSaleDeliveryMessage($message);
+        $service->sendSaleDeliveryMessage($message);
     }
 }
