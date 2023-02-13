@@ -33,10 +33,11 @@ class SendTelegramMessageJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @return ResponseInterface
+     * @param TelegramService $service
+     * @return void
      * @throws GuzzleException
      */
-    public function handle(TelegramService $service): ResponseInterface {
-        return $service->sendMessage($this->chat_id, $this->message);
+    public function handle(TelegramService $service) {
+        $service->sendMessage($this->chat_id, $this->message);
     }
 }
