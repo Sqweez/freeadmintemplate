@@ -19,7 +19,7 @@ class GetWholeSaleMessageAction {
         $message .= sprintf('Магазин: %s', $sale->store->name);
         $message .= "\n";
         $finalPrice = $sale->getFinalPriceAttribute();
-        $message .= sprintf('Сумма заказа %s тенге', $finalPrice);
+        $message .= sprintf('Сумма заказа %s тенге', number_format($finalPrice, 0, ' ', ' '));
         $message .= "\n";
         $byMarginTypes = $sale->products
             ->map(function (SaleProduct $saleProduct) {
@@ -36,15 +36,16 @@ class GetWholeSaleMessageAction {
         $marginTypes = MarginType::all();
         foreach ($marginTypes as $marginType) {
             $total = $byMarginTypes[$marginType['id']] ?? 0;
-            $byCategory = number_format(100 * $total / $finalPrice, 2);
+            $byCategory = number_format(100 * $total / ($finalPrice + $sale->balance), 2);
             $message .= sprintf('Категория %s - %s', $marginType['title'], $byCategory) . "%";
             $message .= "\n";
         }
-        $message .= sprintf('<a href="%s">Ссылка на заказ</a>', $sale->getReportURL());
+        $message .= "<a href='". $sale->getReportURL() ."'>Ссылка на заказ</a>";
         $message .= "\n";
-        $message .= sprintf('<a href="%s">Отменить заказ❌</a>', $sale->getCancelURL());
+        $message .= "<a href='". $sale->getCancelURL() ."'>Отменить заказ❌</a>";
         $message .= "\n";
-        $message .= sprintf('<a href="%s">Подтвердить заказ✔</a>', $sale->getConfirmationURL());
+        $message .= "<a href='". $sale->getConfirmationURL() ."'>Подтвердить заказ✔</a>";
+        $message .= "\n";
         return $message;
     }
 }
