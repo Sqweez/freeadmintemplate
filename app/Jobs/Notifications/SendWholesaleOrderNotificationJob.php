@@ -30,11 +30,11 @@ class SendWholesaleOrderNotificationJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @return \Illuminate\Foundation\Bus\PendingDispatch
+     * @return void
      */
     public function handle(NotificationService $notificationService, GetWholeSaleMessageAction $action)
     {
         $message = $action->handle($this->sale);
-        return $notificationService->sendNotificationMessage($message);
+        $notificationService->sendNotificationMessage($message);
     }
 }
