@@ -46,6 +46,6 @@ class GetWholeSaleMessageAction {
         $message .= "\n";
         $message .= "<a href='". $sale->getConfirmationURL() ."'>Подтвердить заказ✔</a>";
         $message .= "\n";
-        return $message;
+        return urlencode($message);
     }
 }
