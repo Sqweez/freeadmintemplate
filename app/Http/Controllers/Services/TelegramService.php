@@ -29,7 +29,7 @@ class TelegramService {
         foreach ($messages as $_message) {
             $this->client->request('POST', $this->getURL(), [
                 'form_params' => [
-                    'parse_mode' => 'MarkdownV2',
+                    'parse_mode' => 'HTML',
                     'chat_id' => $chat_id,
                     'text' => $this->getMessage($_message)
                 ],
