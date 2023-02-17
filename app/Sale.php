@@ -308,15 +308,15 @@ class Sale extends Model
     }
 
     public function getReportURL(): string {
-        return sprintf('%s/reports/%s', url('/'), $this->id);
+        return sprintf('%s/reports/%s', config('app.url'), $this->id);
     }
 
     public function getCancelURL(): string {
-        return sprintf('%s/api/sales/%s/cancel/full', url('/'), $this->id);
+        return sprintf('%s/api/sales/%s/cancel/full', config('app.url'), $this->id);
     }
 
     public function getConfirmationURL(): string {
-        return sprintf('%s/api/sales/%s/confirm', url('/'), $this->id);
+        return sprintf('%s/api/sales/%s/confirm', config('app.url'), $this->id);
     }
 
     /* public function setCommentAttribute($value) {
