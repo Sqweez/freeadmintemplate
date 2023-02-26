@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Actions/Order/CreateOrderMessageAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Actions/Order/CreateOrderMessageAction.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ClientController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/StoreController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/StoreController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Requests/Promocode/CreatePromocodeRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Requests/Promocode/CreatePromocodeRequest.php" afterDir="false" />
@@ -17,6 +17,7 @@
       <change beforePath="$PROJECT_DIR$/resources/js/store/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/store/modules/clients.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/clients.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/Promocodes.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/Promocodes.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -312,7 +313,7 @@
       <workItem from="1675695539712" duration="6674000" />
       <workItem from="1676298124130" duration="2000" />
       <workItem from="1676302926408" duration="2928000" />
-      <workItem from="1677431912709" duration="5291000" />
+      <workItem from="1677431912709" duration="6456000" />
     </task>
     <servers />
   </component>

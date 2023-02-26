@@ -50,6 +50,8 @@ class Promocode extends Model
         'required_products' => 'array'
     ];
 
+    const GOV_PROMOCODE_ID = 165;
+
     const TYPES = [
         1 => 'Процентный',
         2 => 'Фиксированный',
