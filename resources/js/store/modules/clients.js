@@ -92,8 +92,12 @@ const clientModule = {
             await deleteClient(payload);
             await commit(MUTATIONS.DELETE_CLIENT, payload);
         },
-        async [ACTIONS.GET_CLIENTS]({commit}) {
+        async [ACTIONS.GET_CLIENTS]({commit}, filters) {
             const payload = await getClients();
+            await commit(MUTATIONS.SET_CLIENTS, payload);
+        },
+        async [ACTIONS.GET_PARTNERS] ({ commit }) {
+            const payload = await axiosClient.get(`/clients?is_partner=1`);
             await commit(MUTATIONS.SET_CLIENTS, payload);
         },
         async [ACTIONS.GET_WHOLESALE_CLIENTS] ({commit}) {
