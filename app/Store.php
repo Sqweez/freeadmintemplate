@@ -78,13 +78,13 @@ class Store extends Model
     }
 
     public function getBalanceAttribute() {
-        return $this->transactions()
+        return $this->transactions
                 ->where('type', CompanionTransaction::COMPANION_OWN_BALANCE_TYPE)
                 ->sum('transaction_sum') ?? 0;
     }
 
     public function getIronBalanceAttribute() {
-        return $this->transactions()
+        return $this->transactions
                 ->where('type', CompanionTransaction::COMPANION_IRON_BALANCE_TYPE)
                 ->sum('transaction_sum') ?? 0;
     }

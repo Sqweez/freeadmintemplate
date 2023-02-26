@@ -46,16 +46,17 @@ const store = new Store({
     actions: {
         async INIT({commit, dispatch}) {
             this.$loading.enable();
-            await dispatch(ACTIONS.GET_STORES);
-            await dispatch(ACTIONS.GET_STORE_TYPES);
-            await dispatch(ACTIONS.GET_USERS);
-            await dispatch(ACTIONS.GET_USER_ROLES);
-            await dispatch(ACTIONS.GET_CITIES);
-            await dispatch(ACTIONS.GET_LOYALTY);
-            await dispatch(ACTIONS.GET_SALE_TYPES);
-            await dispatch(ACTIONS.GET_WHOLESALE_TYPES);
-            // await dispatch(ACTIONS.OPEN_SHIFT);
-            await dispatch(ACTIONS.GET_MARGIN_TYPES);
+            await Promise.all([
+                await dispatch(ACTIONS.GET_STORES),
+                await dispatch(ACTIONS.GET_STORE_TYPES),
+                await dispatch(ACTIONS.GET_USERS),
+                await dispatch(ACTIONS.GET_USER_ROLES),
+                await dispatch(ACTIONS.GET_CITIES),
+                await dispatch(ACTIONS.GET_LOYALTY),
+                await dispatch(ACTIONS.GET_SALE_TYPES),
+                await dispatch(ACTIONS.GET_WHOLESALE_TYPES),
+                await dispatch(ACTIONS.GET_MARGIN_TYPES),
+            ])
             this.$loading.disable();
         }
     },

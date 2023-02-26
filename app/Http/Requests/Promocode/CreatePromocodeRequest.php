@@ -43,8 +43,8 @@ class CreatePromocodeRequest extends FormRequest
         $this->merge([
             'is_active' => true,
             'discount' => $this->discount ?: 0,
-            'brand_id' => $this->promocode_type_id === 4 ? $this->brand_id : null,
-            'required_products' => $this->promocode_type_id === 3 ? $this->required_products : null,
+            'brand_id' => $this->brand_id ?: null,
+            'required_products' => $this->required_products ?: null,
         ]);
     }
 }

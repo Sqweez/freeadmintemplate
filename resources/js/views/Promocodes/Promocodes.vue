@@ -5,7 +5,7 @@
                 Промокоды
             </v-card-title>
             <v-card-text>
-                <v-btn color="success" @click="promocodeModal = true;">
+                <v-btn color="success" @click="$router.push('/promocodes/create')">
                     Добавить промокод
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
@@ -86,23 +86,14 @@
             @cancel="deleteModal = false; promocode_id = null;"
             message="Вы действительно хотите изменить активность промокода?"
         />
-        <PromocodeModal
-            :state="promocodeModal"
-            :edit-mode="editMode"
-            :_promocode="promocode"
-            @cancel="promocode = {}; editMode = false; promocodeModal = false"
-            @submit="onSubmit"
-        />
     </div>
 </template>
 
 <script>
-    import ACTIONS from "@/store/actions";
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import PromocodeModal from "../../components/Modal/PromocodeModal";
 
     export default {
-        components: {PromocodeModal, ConfirmationModal},
+        components: {ConfirmationModal},
         data: () => ({
             search: '',
             hideModal: false,
@@ -204,12 +195,14 @@
         },
         async created() {
             this.$loading.enable();
-            await this.$store.dispatch(ACTIONS.GET_CLIENTS);
-            await this.$store.dispatch('GET_PRODUCTS_v2');
-            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
-            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
-            await this.$store.dispatch('getPromocodeTypes');
-            await this.$store.dispatch('getPromocodes');
+            await Promise.all([
+                // await this.$store.dispatch(ACTIONS.GET_CLIENTS),
+                // await this.$store.dispatch('GET_PRODUCTS_v2'),
+                // await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+                // await this.$store.dispatch(ACTIONS.GET_CATEGORIES),
+                await this.$store.dispatch('getPromocodeTypes'),
+                await this.$store.dispatch('getPromocodes')
+            ]);
             this.$loading.disable();
         }
     }
