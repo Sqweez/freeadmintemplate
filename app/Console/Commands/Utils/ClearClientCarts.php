@@ -40,7 +40,7 @@ class ClearClientCarts extends Command
     public function handle()
     {
         Cart::query()
-            ->whereDate('created_at', '>=', now()->subDays(2))
+            ->whereDate('created_at', '<=', now()->subDays(2))
             ->get()
             ->each(function (Cart $cart) {
                 $this->line($cart->id);
