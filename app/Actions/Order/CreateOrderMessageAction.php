@@ -4,6 +4,7 @@ namespace App\Actions\Order;
 
 use App\Order;
 use App\ProductBatch;
+use App\Promocode;
 use App\v2\Models\ProductSku;
 
 class CreateOrderMessageAction {
@@ -12,7 +13,7 @@ class CreateOrderMessageAction {
         $message = 'Новый' . ($order->is_iherb ? ' IHERB' : '') . ' заказ 💪💪💪' . "\n";
         $message .= 'Заказ №' . $order['id'] . "\n";
         $message .= 'ФИО: ' . $order['fullname'] . "\n";
-        $message .= 'Номер телефона: ' . $order['phone'] . "\n";
+        $message .= 'Номер телефона: ' . unmask_phone($order['phone']) . "\n";
         $message .= 'Город: ' . $order->city_text->name . "\n";
         $message .= 'Адрес: ' . $order['address'] . "\n";
 
@@ -93,6 +94,10 @@ class CreateOrderMessageAction {
             }, 0) - intval($order['balance']));
         $totalCostWithDiscount = $totalCostWithDiscount - $order['promocode_fixed_amount'];
         $deliveryCost = $this->getDeliveryCost($order->city_text, $totalCostWithDiscount, $order['delivery']);
+
+        if ($order->promocode_id === Promocode::GOV_PROMOCODE_ID) {
+            $message .= '⚠⚠⚠ПРИМЕНЕН ПРОМОКОД ГОССЛУЖБА, УБЕДИТЕСЬ В ПОДЛИННОСТИ ⚠⚠⚠' . "\n";
+        }
 
         $message .= 'Общая сумма: ' . $totalCostWithDiscount . 'тг' . "\n";
         $message .= 'Стоимость доставки: ' . $deliveryCost . 'тг' . "\n";

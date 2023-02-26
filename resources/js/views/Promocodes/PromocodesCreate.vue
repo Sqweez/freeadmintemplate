@@ -239,7 +239,7 @@ export default {
             await this.$store.dispatch('getPromocodeTypes'),
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES),
-            await this.$store.dispatch(ACTIONS.GET_CLIENTS),
+            await this.$store.dispatch(ACTIONS.GET_PARTNERS),
         ]);
         this.$loading.disable();
     },
