@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
+use App\Console\Commands\Utils\ClearClientCarts;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -29,6 +30,8 @@ class Kernel extends ConsoleKernel
             ->monthlyOn(6, '10:00');
         $schedule->command(CollectPlatinumClientsInformation::class)
             ->monthlyOn(23, '10:00');
+        $schedule->command(ClearClientCarts::class)
+            ->hourly();
         // $schedule->command('inspire')
         //          ->hourly();
     }
