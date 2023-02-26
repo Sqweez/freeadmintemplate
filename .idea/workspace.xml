@@ -13,7 +13,9 @@
       <change beforePath="$PROJECT_DIR$/config/debugbar.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/debugbar.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/router/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/router/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/store/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/actions/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/store/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/clients.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/clients.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/Promocodes.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/Promocodes.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -310,7 +312,7 @@
       <workItem from="1675695539712" duration="6674000" />
       <workItem from="1676298124130" duration="2000" />
       <workItem from="1676302926408" duration="2928000" />
-      <workItem from="1677431912709" duration="5003000" />
+      <workItem from="1677431912709" duration="5291000" />
     </task>
     <servers />
   </component>

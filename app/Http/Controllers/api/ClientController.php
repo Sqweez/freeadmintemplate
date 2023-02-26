@@ -35,6 +35,10 @@ class ClientController extends Controller {
                         ->where('is_wholesale_buyer', true)
                         ->orderBy('wholesale_status');
                 })
+                ->when($request->has('is_partner'), function ($query) {
+                    return $query
+                        ->where('is_partner', true);
+                })
                 ->get()
         );
     }

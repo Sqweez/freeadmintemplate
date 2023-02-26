@@ -31,6 +31,7 @@ export default {
     GET_STORES: 'getStores',
     GET_STORE_TYPES: 'getStoreTypes',
     GET_CLIENTS: 'getClients',
+    GET_PARTNERS: 'getPartners',
     MAKE_SALE: 'makeSale',
     MAKE_TRANSFER: 'makeTransfer',
     GET_USERS: 'getUsers',
