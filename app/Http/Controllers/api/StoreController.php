@@ -19,7 +19,10 @@ class StoreController extends Controller
      * @return AnonymousResourceCollection
      */
     public function index(Request $request): AnonymousResourceCollection {
-        $storeQuery = Store::query()->with('type')->with('city_name');
+        $storeQuery = Store::query()
+            ->with('type')
+            ->with(['transactions'])
+            ->with('city_name');
         if ($request->has('store_id')) {
             $storeQuery->where('id', $request->get('store_id'));
         }

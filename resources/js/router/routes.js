@@ -75,6 +75,7 @@ import SettingsIndex from "@/views/Settings/SettingsIndex";
 import WholesaleClients from '@/views/Clients/WholesaleClients';
 import MailingIndex from '@/views/Mailing/MailingIndex';
 import SingleSaleReport from '@/views/v3/Reports/SingleSaleReport';
+import PromocodesCreate from '@/views/Promocodes/PromocodesCreate';
 
 const routes = [
     {
@@ -303,6 +304,20 @@ const routes = [
             },
         },
         component: Promocodes
+    },
+    {
+        path: '/promocodes/create',
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+                IS_BOSS: true,
+                IS_SENIORSELLER: true,
+                IS_MARKETOLOG: true,
+                IS_FRANCHISE: true
+            },
+        },
+        component: PromocodesCreate
     },
     {
         path: '/stats/partners',

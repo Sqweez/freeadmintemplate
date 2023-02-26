@@ -33,7 +33,7 @@ class ClientResource extends JsonResource
             'client_card' => $this->client_card,
             'client_discount' => max($this->calculateDiscountPercent(), $this->loyalty->discount),
             'client_initial_discount' => $this->calculateDiscountPercent(),
-            'client_balance' => $this->transactions->sum('amount'),
+            'client_balance' => 0,//$this->transactions->sum('amount'),
             'total_sum' => $this->total_sales_amount,
             'current_month_sum' => $this->current_month_sales_amount,
             'until_platinum' => max(0, Client::PLATINUM_CLIENT_MONTHLY_THRESHOLD - $this->current_month_sales_amount),
@@ -58,7 +58,7 @@ class ClientResource extends JsonResource
             'wholesale_status' => $this->wholesale_status,
             'wholesale_status_text' => $this->wholesale_status_text,
             'is_kaspi' => $this->is_kaspi,
-            'last_mailing_date' => $this->lastMailing ? format_datetime($this->lastMailing->created_at) : 'Никогда'
+            //'last_mailing_date' => $this->lastMailing ? format_datetime($this->lastMailing->created_at) : 'Никогда'
         ];
     }
 }
