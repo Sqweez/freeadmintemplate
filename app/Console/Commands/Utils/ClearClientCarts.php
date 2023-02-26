@@ -41,6 +41,10 @@ class ClearClientCarts extends Command
     {
         Cart::query()
             ->whereDate('created_at', '>=', now()->subDays(2))
-            ->delete();
+            ->get()
+            ->each(function (Cart $cart) {
+                $cart->products()->delete();
+                $cart->delete();
+            });
     }
 }
