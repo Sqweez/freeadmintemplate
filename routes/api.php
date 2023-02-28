@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\ArrivalController;
 use App\Http\Controllers\api\TransferController;
 use App\Http\Controllers\api\v2\MailingController;
+use App\Http\Controllers\api\v2\MatrixController;
 use App\Http\Controllers\api\v2\ProductController;
 use App\Http\Controllers\api\v2\CertificateController;
 use App\Http\Controllers\api\v2\CompanionController;
@@ -415,6 +416,13 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
         Route::prefix('mailing')->group(function () {
             Route::post('/', [MailingController::class, 'store']);
+        });
+
+        Route::prefix('matrix')->group(function () {
+            Route::get('/{matrix}', [MatrixController::class, 'show']);
+            Route::patch('/{matrix}', [MatrixController::class, 'update']);
+            Route::get('/', [MatrixController::class, 'index']);
+            Route::post('/', [MatrixController::class, 'store']);
         });
     });
 });

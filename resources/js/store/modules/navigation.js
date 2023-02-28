@@ -95,6 +95,10 @@ const navigationModule = {
                     {
                         title: 'Сроки годности',
                         url: '/products/best-before'
+                    },
+                    {
+                        title: 'Товарные матрицы',
+                        url: '/matrixes'
                     }
                 ],
             },
@@ -501,6 +505,10 @@ const navigationModule = {
                     {
                         title: 'Сроки годности',
                         url: '/products/best-before'
+                    },
+                    {
+                        title: 'Товарные матрицы',
+                        url: '/matrixes'
                     }
                 ],
             },

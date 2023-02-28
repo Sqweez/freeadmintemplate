@@ -627,14 +627,15 @@
             WayBillModal
         },
         async created() {
-            this.loading = this.products.length === 0 || false;
-            await this.$store.dispatch('GET_PRODUCTS_v2');
-            //this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
+            this.$loading.enable();
+            await Promise.all([
+                await this.$store.dispatch('GET_PRODUCTS_v2'),
+                await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+                await this.$store.dispatch(ACTIONS.GET_CATEGORIES),
+                await this.$store.dispatch('GET_CERTIFICATES'),
+                await this.$store.dispatch('GET_PREORDERS')
+            ]);
             await this.$store.dispatch(ACTIONS.GET_STORES);
-            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
-            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
-            await this.$store.dispatch('GET_CERTIFICATES');
-            await this.$store.dispatch('GET_PREORDERS');
             this.client = this.user.store.type_id === 3 ? {
                     id: -1,
                     client_name: 'Гость',
@@ -643,7 +644,7 @@
                     client_discount: 0,
                     total_sum: 0,
                 } : null;
-            this.loading = false;
+            this.$loading.disable();
             await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         },
         watch: {

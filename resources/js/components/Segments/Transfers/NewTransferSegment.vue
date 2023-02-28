@@ -22,7 +22,6 @@
                         height="150"
                         alt="Изображение">
                 </div>
-
             </div>
             <v-card-text style="padding: 0;">
                 <v-simple-table v-slot:default class="mt-5">
@@ -82,14 +81,14 @@
                         <tr>
                             <th class="text-center">Общее количество</th>
                             <th class="text-center">Общая сумма</th>
-                            <th class="text-center">Склад</th>
+<!--                            <th class="text-center">Склад</th>-->
                         </tr>
                         </thead>
                         <tbody class="background-iron-grey fz-18">
                         <tr>
                             <td class="text-center">{{ cartCount }} шт.</td>
                             <td class="text-center">{{ subtotal }} ₸</td>
-                            <td class="text-center">
+<!--                            <td class="text-center">
                                 <v-select
                                     :items="_stores"
                                     item-text="name"
@@ -98,7 +97,7 @@
                                     label="Склад"
                                     :disabled="!IS_SUPERUSER"
                                 />
-                            </td>
+                            </td>-->
                         </tr>
                         </tbody>
                     </template>
@@ -119,6 +118,24 @@
             v-model="currentArrival"
         />
         <v-card class="background-iron-darkgrey">
+            <v-row>
+                <v-col cols="6" />
+                <v-col cols="12" lg="3">
+                    <v-select
+                        :items="_stores"
+                        item-text="name"
+                        v-model="child_store"
+                        item-value="id"
+                        label="Склад"
+                        :disabled="!IS_SUPERUSER"
+                    />
+                </v-col>
+                <v-col cols="12" lg="3">
+                    <v-btn color="primary" class="my-2" @click="createByMatrix">
+                        Создать на основании матрицы
+                    </v-btn>
+                </v-col>
+            </v-row>
             <v-card-title>
                 Товары
             </v-card-title>
@@ -250,8 +267,8 @@
     import product from "@/mixins/product";
     import product_search from "@/mixins/product_search";
     import cart from "@/mixins/cart";
-    import {db} from "@/db";
     import {__hardcoded} from '@/utils/helpers';
+    import axiosClient from '@/utils/axiosClient';
 
     export default {
         components: {
@@ -264,6 +281,7 @@
             },
         },
         data: () => ({
+            matrixes: [],
             cart: [],
             currentArrival: -1,
             completedArrivals: [],
@@ -312,9 +330,15 @@
         }),
         async mounted() {
             this.$loading.enable('Пожалуйста, подождите');
-            await this.$store.dispatch('GET_PRODUCTS_v2');
-            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
-            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+            await Promise.all([
+                await this.$store.dispatch('GET_PRODUCTS_v2'),
+                await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+                await this.$store.dispatch(ACTIONS.GET_CATEGORIES),
+                await axiosClient.get('/v2/matrix')
+                    .then(response => {
+                        this.matrixes = response.data.data;
+                    })
+            ]);
             this.storeFilter = this.IS_SUPERUSER ? this.stores[0]?.id : __hardcoded(6);
             if (this.IS_SELLER) {
                 this.storeFilter = 6;
@@ -327,6 +351,25 @@
         },
         mixins: [product, product_search, cart],
         methods: {
+            createByMatrix () {
+                const matrix = this.matrixes.find(m => m.store.id === this.child_store);
+                if (!matrix) {
+                    return this.$toast.warning('Товарная матрица для этого склада не создана!');
+                }
+                matrix.products.forEach(product => {
+                   const needleProduct = this.products.find(p => p.id === product.id);
+                   if (needleProduct && needleProduct.quantity > 0) {
+                       this.cart.push({
+                           ...needleProduct,
+                           count: Math.min(needleProduct.quantity, product.count),
+                           product_price: needleProduct.product_price,
+                           discount: 0,
+                           uuid: Math.random(),
+                           initial_price: needleProduct.product_price
+                       })
+                   }
+                });
+            },
             async uploadPhoto(e) {
                 const file = e.target.files[0];
                 const result = await uploadFile(file, 'file', 'transfers');

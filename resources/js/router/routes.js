@@ -76,6 +76,9 @@ import WholesaleClients from '@/views/Clients/WholesaleClients';
 import MailingIndex from '@/views/Mailing/MailingIndex';
 import SingleSaleReport from '@/views/v3/Reports/SingleSaleReport';
 import PromocodesCreate from '@/views/Promocodes/PromocodesCreate';
+import MatrixIndex from '@/views/Matrix/MatrixIndex';
+import MatrixCreate from '@/views/Matrix/MatrixCreate';
+import MatrixEdit from '@/views/Matrix/MatrixEdit';
 
 const routes = [
     {
@@ -746,7 +749,19 @@ const routes = [
     {
         path: '/mailing',
         component: MailingIndex
-    }
+    },
+    {
+        path: '/matrixes',
+        component: MatrixIndex,
+    },
+    {
+        path: '/matrixes/create',
+        component: MatrixCreate,
+    },
+    {
+        path: '/matrixes/:id',
+        component: MatrixEdit,
+    },
 ];
 
 export default routes;

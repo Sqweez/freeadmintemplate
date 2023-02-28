@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|CartProduct ofProduct($product_id)
  * @method static \Illuminate\Database\Eloquent\Builder|CartProduct product($product_id)
+ * @property int $discount
+ * @method static \Illuminate\Database\Eloquent\Builder|CartProduct whereDiscount($value)
  */
 class CartProduct extends Model
 {
