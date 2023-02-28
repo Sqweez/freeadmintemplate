@@ -636,6 +636,7 @@
                 await this.$store.dispatch('GET_PREORDERS')
             ]);
             await this.$store.dispatch(ACTIONS.GET_STORES);
+            this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
             this.client = this.user.store.type_id === 3 ? {
                     id: -1,
                     client_name: 'Гость',
@@ -649,7 +650,7 @@
         },
         watch: {
             stores (value) {
-                this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
+                //this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
             },
             storeFilter() {
                 this.cart = [];
