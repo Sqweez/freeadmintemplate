@@ -97,6 +97,10 @@ use Illuminate\Support\Carbon;
  * @property-read MailingRecepient|null $lastMailing
  * @property-read Collection|MailingRecepient[] $recipients
  * @property-read int|null $recipients_count
+ * @property int $cached_balance
+ * @property int $cached_total_sale_amount
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereCachedBalance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereCachedTotalSaleAmount($value)
  */
 class Client extends Model
 {
@@ -199,7 +203,7 @@ class Client extends Model
     }
 
     public function getBalanceAttribute() {
-        return intval($this->transactions()->sum('amount'));
+        return intval($this->transactions->sum('amount'));
     }
 
     public function getTotalSalesAmountAttribute() {
@@ -233,7 +237,7 @@ class Client extends Model
     }
 
     public function calculateDiscountPercent() {
-        $total = $this->getTotalSalesAmountAttribute();
+        $total = $this->cached_total_sale_amount;
         $discountByAmount = collect(self::TOTAL_DISCOUNT)->filter(function ($item) use ($total) {
             return $total >= $item['amount'];
         })->first()['discount'] ?? 0;

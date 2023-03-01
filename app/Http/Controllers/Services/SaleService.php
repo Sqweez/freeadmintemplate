@@ -79,6 +79,9 @@ class SaleService {
                 'amount' => $amount
             ]);
 
+            $client->cached_total_sale_amount += $amount;
+            $client->save();
+
             $cashbackPercent = $payment_type === 3 ? 5 : $client->loyalty->cashback;
 
             $client->transactions()->create([
@@ -87,12 +90,17 @@ class SaleService {
                 'amount' => $amount * ($cashbackPercent / 100)
             ]);
 
+            $client->cached_balance += $amount * ($cashbackPercent / 100);
+            $client->save();
+
             if ($balance > 0) {
                 $client->transactions()->create([
                     'sale_id' => $sale_id,
                     'user_id' => $user_id,
                     'amount' => $balance * -1
                 ]);
+                $client->cached_balance -= $balance;
+                $client->save();
             }
         }
 
@@ -112,6 +120,9 @@ class SaleService {
                 'sale_id' => $sale_id,
                 'user_id' => $user_id
             ]);
+
+            $partner->cached_balance += $partnerCashback;
+            $partner->save();
         }
 
         if ($client) {
