@@ -29,7 +29,7 @@ class ClientController extends Controller {
     public function index(Request $request): AnonymousResourceCollection {
         return ClientResource::collection(
             Client::query()
-                ->with(['sales', 'transactions', 'city', 'loyalty'])
+                ->with([/*'sales', 'transactions', */'city', 'loyalty'])
                 ->when($request->has('wholesale'), function ($query) {
                     return $query
                         ->where('is_wholesale_buyer', true)
