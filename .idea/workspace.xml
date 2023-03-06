@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Client.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Client.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/SaleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/SaleService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ClientController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ClientResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ClientResource.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -310,7 +307,8 @@
       <workItem from="1676302926408" duration="2928000" />
       <workItem from="1677431912709" duration="7413000" />
       <workItem from="1677574019653" duration="7575000" />
-      <workItem from="1677672273553" duration="1580000" />
+      <workItem from="1677672273553" duration="2040000" />
+      <workItem from="1678103963128" duration="153000" />
     </task>
     <servers />
   </component>
