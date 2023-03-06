@@ -269,6 +269,9 @@ class ClientController extends Controller {
 
     public function addBalance(Request $request, Client $client) {
         ClientTransaction::create(['client_id' => $client->id, 'user_id' => 1, 'amount' => $request->get('sum'), 'sale_id' => -1]);
+        $client->update([
+            'cached_balance' => $client->cached_balance + $request->get('sum', 0),
+        ]);
         return new ClientResource($client);
     }
 
