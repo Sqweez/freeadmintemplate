@@ -243,6 +243,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::prefix('products')->group(function () {
             Route::get('generate-barcode/{id}', [ProductController::class, 'generateBarcode']);
             Route::get('iherb', [ProductController::class, 'getIherbProducts']);
+            Route::patch('iherb/price', [ProductController::class, 'updateIHerbPrices']);
             Route::delete('tags', [ProductController::class, 'deleteProductTag']);
             Route::post('tags', [ProductController::class, 'setProductTags']);
             Route::get('seller/earning', [ProductController::class, 'getProductSellerEarning']);

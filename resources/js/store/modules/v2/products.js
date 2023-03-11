@@ -217,9 +217,10 @@ const mutations = {
 };
 
 const actions = {
-    async GET_PRODUCTS_v2({commit, dispatch, getters}, payload) {
+    async GET_PRODUCTS_v2({commit, dispatch, getters}, payload = {}) {
         try {
-            const { data } = await getProducts();
+            const params = new URLSearchParams(payload);
+            const { data } =  await axios.get(`/api/v2/products?${params}`);
             commit('SET_PRODUCTS_v2', data.data);
         } catch (e) {
             console.log(e.response);

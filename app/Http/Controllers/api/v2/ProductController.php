@@ -19,7 +19,7 @@ use App\ProductBatch;
 use App\v2\Models\ProductSaleEarning;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
-use Illuminate\Database\Query\Builder;
+use App\Http\Controllers\Services\ProductService as ProductServiceStatic;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -36,8 +36,8 @@ class ProductController extends Controller
      * Получение всех товаров
      * */
 
-    public function index(Request $request) {
-        return ProductsResource::collection(ProductService::all());
+    public function index(Request $request, ProductServiceStatic $service) {
+        return ProductsResource::collection($service->all($request));
     }
 
     /*
@@ -375,6 +375,16 @@ class ProductController extends Controller
             ->get();
 
         return BestBeforeResource::collection($products);
+    }
+
+    public function updateIHerbPrices (Request $request) {
+        foreach ($request->get('products') as $item) {
+            // @TODO 2023-03-11T21:02:38 ugly as fuck
+            Product::whereKey($item['product_id'])->update([
+                'product_price' => $item['product_price'],
+                'product_price_rub' => $item['product_price_rub']
+            ]);
+        }
     }
 
     public function generateBarcode($id): string {

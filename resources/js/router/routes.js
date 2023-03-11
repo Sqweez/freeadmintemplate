@@ -79,6 +79,7 @@ import PromocodesCreate from '@/views/Promocodes/PromocodesCreate';
 import MatrixIndex from '@/views/Matrix/MatrixIndex';
 import MatrixCreate from '@/views/Matrix/MatrixCreate';
 import MatrixEdit from '@/views/Matrix/MatrixEdit';
+import IherbProductsPage from '@/views/IHerb/IherbProductsPage';
 
 const routes = [
     {
@@ -731,8 +732,12 @@ const routes = [
         component: ProductSubcategories
     },
     {
-        path: '/products/iherb',
+        path: '/products/iherb/price',
         component: IherbIndexPage
+    },
+    {
+        path: '/products/iherb',
+        component: IherbProductsPage
     },
     {
         path: '/products/best-before',
