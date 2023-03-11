@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\Exception;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -511,10 +512,40 @@ class WaybillController extends Controller
         $excelSheet = $excelFile->getActiveSheet();
         $documentName = 'Прайс-лист IHERB от ' . now_format();
         $INITIAL_ROW = 4;
-        foreach ($cart as $key => $item) {
+        $mappedCart = collect($cart)->map(function ($item, $key) {
+            $currentIndex = $key + 4;
+            return [
+                'key' => $key + 1,
+                'name' => $item['excel_name'],
+                'quantity_name' => 'шт.',
+                'quantity' => $item['total_quantity'],
+                'client_quantity' => 0,
+                'price' => intval($item['final_price']),
+                'formula' => "=PRODUCT(E$currentIndex * F$currentIndex)"
+            ];
+        })->toArray();
+
+        $excelSheet->fromArray($mappedCart, null, 'A4', true);
+
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN
+                ]
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+        ];
+
+
+        $excelSheet->getStyle('A4:G' . (count($mappedCart) + $INITIAL_ROW - 1))
+            ->applyFromArray($styleArray);
+
+        foreach ([] as $key => $item) {
             $currentIndex = $key + $INITIAL_ROW;
             try {
-                $excelSheet->insertNewRowBefore($currentIndex, 1);
+                //$excelSheet->insertNewRowBefore($currentIndex, 1);
             } catch (Exception $e) {
                 //
             }
@@ -534,12 +565,12 @@ class WaybillController extends Controller
             }
 
 
-            $excelSheet->setCellValue('A' . ($currentIndex), $key + 1);
-            $excelSheet->setCellValue('B' . ($currentIndex), $item['excel_name']);
-            $excelSheet->setCellValue('O' . ($currentIndex), 'шт.');
-            $excelSheet->setCellValue('R' . ($currentIndex), $item['total_quantity']);
+            #$excelSheet->setCellValue('A' . ($currentIndex), $key + 1);
+            #$excelSheet->setCellValue('B' . ($currentIndex), $item['excel_name']);
+            #$excelSheet->setCellValue('O' . ($currentIndex), 'шт.');
+            #$excelSheet->setCellValue('R' . ($currentIndex), $item['total_quantity']);
             // Ячейка клиента
-            $excelSheet->setCellValue('W' . ($currentIndex), 0);
+            #$excelSheet->setCellValue('W' . ($currentIndex), 0);
             /*$validation = $excelSheet->getCell('W' . $currentIndex)->getDataValidation();
             $validation->setType( DataValidation::TYPE_WHOLE );
             $validation->setErrorStyle( DataValidation::STYLE_STOP );
@@ -552,19 +583,28 @@ class WaybillController extends Controller
             $validation->setPrompt('Допускаются числа от 0 до ' . $item['total_quantity']);
             $validation->setFormula1(0);
             $validation->setFormula2($item['total_quantity']);*/
-            $excelSheet->setCellValue('AA' . ($currentIndex), intval($item['final_price']));
+            #$excelSheet->setCellValue('AA' . ($currentIndex), intval($item['final_price']));
 
-            $formula = "=PRODUCT(AA$currentIndex * W$currentIndex)";
+            #$formula = "=PRODUCT(AA$currentIndex * W$currentIndex)";
             //$internalFormula = Calculation::getInstance()->_translateFormulaToEnglish($formula);
-            $excelSheet->setCellValue('AG' . ($currentIndex), $formula);
+            #$excelSheet->setCellValue('AG' . ($currentIndex), $formula);
         }
 
-        $TOTAL_INDEX = $INITIAL_ROW + count($cart);
+        $TOTAL_INDEX = $INITIAL_ROW + count($mappedCart);
         $LAST_INDEX = $TOTAL_INDEX - 1;
-        $formula = "=SUM(W$INITIAL_ROW:W$LAST_INDEX)";
-        $excelSheet->setCellValue('T' . $TOTAL_INDEX, $formula);
-        $formula = "=SUM(AG$INITIAL_ROW:AG$LAST_INDEX)";
-        $excelSheet->setCellValue('AC' . $TOTAL_INDEX, $formula);
+        $excelSheet->setCellValue('D' . $TOTAL_INDEX, 'Итого');
+        $formula = "=SUM(E$INITIAL_ROW:E$LAST_INDEX)";
+        $excelSheet->setCellValue('E' . $TOTAL_INDEX, $formula);
+        $formula = "=SUM(G$INITIAL_ROW:G$LAST_INDEX)";
+        $excelSheet->setCellValue('G' . $TOTAL_INDEX, $formula);
+
+        $excelSheet->getStyle("D$TOTAL_INDEX:G$TOTAL_INDEX")
+            ->applyFromArray($styleArray);
+
+        foreach (range('A', 'G') as $letter) {
+            $excelSheet->getColumnDimension($letter)->setAutoSize(true);
+        }
+
         $excelWriter = new Xlsx($excelFile);
 
         $fileName =  'ПРАЙС-IHERB' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';

@@ -17,8 +17,13 @@ use Illuminate\Support\Facades\DB;
 
 class ProductService {
 
-    public function all() {
+    public function all(Request $request) {
         return (ProductSku::with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)
+            ->when($request->has('iherb'), function ($query) {
+                return $query->whereHas('product', function ($subQuery) {
+                    return $subQuery->where('is_iherb', true);
+                });
+            })
             ->orderBy('product_id')
             ->orderBy('id')
             ->get()

@@ -89,10 +89,6 @@ const navigationModule = {
                         url: '/preorders/index'
                     },
                     {
-                        title: 'Товары IHerb',
-                        url: '/products/iherb'
-                    },
-                    {
                         title: 'Сроки годности',
                         url: '/products/best-before'
                     },
@@ -101,6 +97,22 @@ const navigationModule = {
                         url: '/matrixes'
                     }
                 ],
+            },
+            {
+                title: 'IHerb',
+                url: '#',
+                icon: 'work',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/products/iherb'
+                    },
+                    {
+                        title: 'Прайс-лист',
+                        url: '/products/iherb/price'
+                    },
+                ]
             },
             {
                 title: 'Экономика',
@@ -499,10 +511,6 @@ const navigationModule = {
                         url: '/preorders/index'
                     },
                     {
-                        title: 'Товары IHerb',
-                        url: '/products/iherb'
-                    },
-                    {
                         title: 'Сроки годности',
                         url: '/products/best-before'
                     },
@@ -511,6 +519,22 @@ const navigationModule = {
                         url: '/matrixes'
                     }
                 ],
+            },
+            {
+                title: 'IHerb',
+                url: '#',
+                icon: 'work',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/products/iherb'
+                    },
+                    {
+                        title: 'Прайс-лист',
+                        url: '/products/iherb/price'
+                    },
+                ]
             },
             {
                 title: 'Экономика',
