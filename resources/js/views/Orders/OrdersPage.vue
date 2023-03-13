@@ -149,7 +149,7 @@
                             <v-list-item v-for="(product, index) of item.products" :key="index">
                                 <v-list-item-content>
                                     <v-list-item-title>{{ product.product_name }}</v-list-item-title>
-                                    <v-list-item-subtitle>{{ product.attributes.map(a => a.attribute_value).join(", ") }}<span v-if="product.manufacturer">,</span> {{ product.manufacturer }}</v-list-item-subtitle>
+                                    <v-list-item-subtitle>{{ product.attributes.map(a => a.attribute_value).join(", ") }}<span v-if="product.manufacturer">,</span> {{ product.manufacturer.manufacturer_name }}</v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-action>
                                     <span>{{ product.count }} шт.</span>
