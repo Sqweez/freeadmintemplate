@@ -25,6 +25,7 @@ class BannerResource extends JsonResource
             'description' => $this->description,
             'order' => $this->order,
             'is_active' => $this->is_active,
+            'website' => $this->website,
         ];
     }
 }
