@@ -187,6 +187,10 @@
                             Редактировать заказ
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
+                        <br>
+                        <v-btn text color="success" v-if="[0, 1].includes(item.status)" @click="createPaymentInvoice(item)">
+                            Счет на оплату <v-icon>mdi-printer</v-icon>
+                        </v-btn>
                     </template>
                     <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                         {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -226,6 +230,8 @@
     import ConfirmationModal from "@/components/Modal/ConfirmationModal";
     import uploadFile from "@/api/upload";
     import OrderModal from "@/components/v2/Modal/OrderModal";
+    import {__deepClone} from '@/utils/helpers';
+    import axios from 'axios';
 
     export default {
         components: {OrderModal, ConfirmationModal},
@@ -302,6 +308,22 @@
             ]
         }),
         methods: {
+            async createPaymentInvoice (report) {
+                this.$loading.enable();
+                const _report = __deepClone(report);
+                const cart = _report.products.map(r => {
+                    r.attributes = r._attributes;
+                    return r;
+                });
+                const { data } = await axios.post(`/api/v2/documents/invoice-payment`, {
+                    cart,
+                    customer: report.client_name,
+                })
+                const link = document.createElement('a');
+                link.href = `${window.location.origin}/${data.path}`;
+                link.click();
+                this.$loading.disable();
+            },
             async restoreOrder() {
                 await this.$store.dispatch('RESTORE_ORDER', this.orderId);
                 this.orderId = null;
