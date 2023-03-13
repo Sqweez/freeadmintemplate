@@ -28,6 +28,7 @@ class OrderProductsResource extends JsonResource
             'store' => $this->batch->store,
             'order_item_id' => $this->id,
             'id' => $this->id,
+            'discount' => 0
         ];
     }
 }
