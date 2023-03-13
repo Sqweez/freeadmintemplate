@@ -38,7 +38,7 @@ class CartProductResource extends JsonResource
             'subcategory' => $this->product->subcategory->subcategory_name,
             'is_site_visible' => $this->product->is_site_visible,
             'product_price' => $this->product->product->stock_price,
-            'iherb_price' => $this->product->product->iherb_price,
+            'iherb_price' => $this->product->product->iherb_price ?: $this->product->product->product_price,
             'product_name_slug' => Str::slug($this->product->product_name, '-'),
             'product_id' => $this->product->product_id,
             'discount' => $this->discount,
