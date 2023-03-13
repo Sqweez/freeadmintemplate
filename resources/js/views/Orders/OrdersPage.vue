@@ -312,7 +312,7 @@
                 this.$loading.enable();
                 const _report = __deepClone(report);
                 const cart = _report.products.map(r => {
-                    r.attributes = r._attributes;
+                    //r.attributes = r._attributes;
                     return r;
                 });
                 const { data } = await axios.post(`/api/v2/documents/invoice-payment`, {
