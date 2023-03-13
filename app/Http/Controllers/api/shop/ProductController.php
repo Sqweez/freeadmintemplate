@@ -235,7 +235,7 @@ class ProductController extends Controller {
         $user_token = $request->get('user_token');
         $productQuery = Product::query()
             ->whereIsSiteVisible(true)
-            ->whereIsHit(true)
+            ->whereIsIherbHit(true)
             ->where('is_iherb', true);
 
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks', 'category', 'batches']);
