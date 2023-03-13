@@ -32,6 +32,7 @@ class ProductResource extends JsonResource
             'self_price' => $this->self_price,
             'product_barcode' => $this->product_barcode,
             'is_hit' => $this->is_hit,
+            'is_iherb_hit' => $this->product->is_iherb_hit,
             'is_site_visible' => $this->is_site_visible,
             'category' => $this->category->id,
             'subcategory' => $this->subcategory->id,

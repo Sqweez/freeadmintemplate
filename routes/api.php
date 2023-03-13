@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\ArrivalController;
 use App\Http\Controllers\api\TransferController;
+use App\Http\Controllers\api\v2\IHerbController;
 use App\Http\Controllers\api\v2\MailingController;
 use App\Http\Controllers\api\v2\MatrixController;
 use App\Http\Controllers\api\v2\ProductController;
@@ -97,6 +98,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('promocode/search/{promocode}', [PromocodeController::class, 'searchPromocode']);
         Route::get('partners', [AnalyticsController::class, 'getTopPartners']);
         Route::get('footer', [SiteController::class, 'getFooter']);
+        Route::get('iherb/price', [IHerbController::class, 'getPriceList']);
     });
 
     // RevisionController

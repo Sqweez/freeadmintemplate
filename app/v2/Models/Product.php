@@ -204,7 +204,8 @@ class Product extends Model
         'category_id' => 'integer',
         'subcategory_id' => 'integer',
         'manufacturer_id' => 'integer',
-        'is_iherb' => 'boolean'
+        'is_iherb' => 'boolean',
+        'is_iherb_hit' => 'boolean',
     ];
 
     public $timestamps = true;

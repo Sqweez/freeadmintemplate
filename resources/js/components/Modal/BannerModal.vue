@@ -58,6 +58,13 @@
                         hint="Отвечает за отображение на сайте"
                         v-model="banner.is_active"
                     />
+                    <v-select
+                        label="Сайт"
+                        v-model="banner.website"
+                        :items="websites"
+                        item-value="value"
+                        item-text="title"
+                    />
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -86,8 +93,19 @@
                 mobile_image: null,
                 description: '',
                 is_active: true,
-                order: 0
-            }
+                order: 0,
+                website: 1
+            },
+            websites: [
+                {
+                    title: 'Основной',
+                    value: 1,
+                },
+                {
+                    title: 'IHerb',
+                    value: 2
+                }
+            ]
         }),
         methods: {
             onCancel() {
@@ -131,7 +149,8 @@
                         image: null,
                         description: '',
                         is_active: true,
-                        order: 0
+                        order: 0,
+                        website: 1,
                     };
                 }
             }
