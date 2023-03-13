@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Order/OrderProductsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Order/OrderProductsResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/views/Orders/OrdersPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Orders/OrdersPage.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -319,7 +320,7 @@
       <workItem from="1678111687109" duration="602000" />
       <workItem from="1678541520313" duration="6770000" />
       <workItem from="1678719835527" duration="2261000" />
-      <workItem from="1678722430373" duration="2389000" />
+      <workItem from="1678722430373" duration="2603000" />
     </task>
     <servers />
   </component>

@@ -18,7 +18,7 @@ class OrderProductsResource extends JsonResource
     public function toArray($request): array {
         return [
             'product_name' => $this->product['product_name'],
-            'manufacturer' => $this->product['manufacturer']['manufacturer_name'],
+            'manufacturer' => $this->product['manufacturer'],
             'product_price' => ($this->product['product_price'] * ((100 - intval($this->product['discount'])) / 100)),
             'category' => $this->product['category']['category_name'],
             'subcategory' => $this->product['subcategory']['subcategory_name'],
