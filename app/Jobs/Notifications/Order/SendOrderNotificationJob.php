@@ -36,6 +36,7 @@ class SendOrderNotificationJob implements ShouldQueue
     public function handle(CreateOrderMessageAction $action, TelegramService $service)
     {
         $message = $action->handle($this->order);
-        return $service->send(config('telegram.TELEGRAM_KZ_CHAT_ID'), $message);
+        $chatId = $this->order->is_iherb ? config('telegram.TELEGRAM_IHERB_CHAT_ID') : config('telegram.TELEGRAM_KZ_CHAT_ID');
+        return $service->send($chatId, $message);
     }
 }
