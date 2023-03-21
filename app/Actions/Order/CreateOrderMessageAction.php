@@ -105,6 +105,7 @@ class CreateOrderMessageAction {
 
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/decline'>Отменить заказ❌</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/api/order/" . $order['id'] . "/accept'>Заказ выполнен✔️</a>" . "\n";
+        $message .= "<a href='https://ironadmin.ariesdev.kz/api/v2/orders/" . $order['id'] . "/payment-invoice'>Счет на оплату️</a>" . "\n";
         $message .= "<a href='https://ironadmin.ariesdev.kz/orders/" . $order['id'] . "/whatsapp'>Отправить в WA клиенту✔️</a>" . "\n";
 
         return urlencode($message);
