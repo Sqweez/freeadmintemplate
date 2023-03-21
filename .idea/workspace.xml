@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/OrderController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/OrderController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/shop/ProductsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/shop/ProductsResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/shop/ProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/shop/ProductResource.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +180,7 @@
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "dart.analysis.tool.window.visible": "false",
-    "last_opened_file_path": "C:/Code/Laravel/iron-crm",
+    "last_opened_file_path": "C:/Code/Laravel/IHerbAddicts",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -321,8 +320,7 @@
       <workItem from="1678541520313" duration="6770000" />
       <workItem from="1678719835527" duration="2261000" />
       <workItem from="1678722430373" duration="2990000" />
-      <workItem from="1679407160720" duration="5095000" />
-      <workItem from="1679420585843" duration="65000" />
+      <workItem from="1679407160720" duration="5731000" />
     </task>
     <servers />
   </component>
