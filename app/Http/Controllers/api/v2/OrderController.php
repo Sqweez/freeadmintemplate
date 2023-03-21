@@ -15,6 +15,7 @@ use App\Sale;
 use App\SaleProduct;
 use App\User;
 use App\v2\Models\Image;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -241,5 +242,33 @@ class OrderController extends Controller
         $order->image()->sync([$image_id]);
 
         return new OrderResource(Order::find($order->id));
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function getPaymentInvoice(Order $order, Request $request) {
+        $order = Order::query()
+            ->with(
+                [
+                    'store:id,name', 'items',
+                    'items.batch.store',
+                    'items.product', 'items.product.attributes',
+                    'items.product.product', 'items.product.product.attributes',
+                    'items.product.product.manufacturer', 'image'
+                ]
+            )
+            ->orderByDesc('created_at')
+            ->whereDate('created_at', '>=', now()->subDays(30))
+            ->whereKey($order->id)
+            ->first();
+
+        $orderResource = OrderResource::make($order)->toArray($request);
+        $client = new \GuzzleHttp\Client();
+        $response = $client->post(url('/') . 'api/v2/documents/invoice-payment', [
+            'cart' => $orderResource['products'],
+            'customer' => $orderResource['client_name']
+        ])->getBody();
+        return $response;
     }
 }

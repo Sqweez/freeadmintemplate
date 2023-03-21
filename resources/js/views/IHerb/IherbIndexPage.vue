@@ -30,11 +30,12 @@
                     <v-btn
                         id="menu-activator"
                         color="primary"
+                        @click="calculateFinalPrice(2)"
                     >
                         Расчет
                     </v-btn>
 
-                    <v-menu activator="#menu-activator">
+<!--                    <v-menu activator="#menu-activator">
                         <v-list>
                             <v-list-item
                                 v-for="(item, index) in items"
@@ -46,7 +47,7 @@
                                 </v-list-item-title>
                             </v-list-item>
                         </v-list>
-                    </v-menu>
+                    </v-menu>-->
                 </v-col>
             </v-row>
             <v-virtual-scroll
@@ -57,7 +58,7 @@
             >
                 <template v-slot:default="{ item, index }">
                     <v-row style="max-width: 100%;">
-                        <v-col cols="5">
+                        <v-col cols="4">
                             <v-list class="product__list" flat>
                                 <v-list-item>
                                     <v-list-item-content>
@@ -71,28 +72,34 @@
                                 </v-list-item>
                             </v-list>
                         </v-col>
-                        <v-col cols="2">
+                        <v-col cols="3">
                             <v-text-field
+                                :disabled="item.is_locked"
                                 label="Стоимость"
                                 type="number"
                                 v-model="item.product_price" />
                         </v-col>
-                        <v-col cols="2">
+                        <v-col cols="3">
                             <v-text-field
+                                :disabled="item.is_locked"
                                 label="Итоговая стоимость (в рублях)"
                                 type="number"
                                 v-model="item.product_price_rub"
+                                :append-outer-icon="item.is_locked ? 'mdi-lock' : ''"
                             />
                         </v-col>
-                        <v-col cols="2">
+<!--                        <v-col cols="2">
                             <v-text-field
                                 label="Итоговая стоимость (в тенге)"
                                 type="number"
                                 v-model="item.product_price"
                             />
-                        </v-col>
-                        <v-col cols="1">
+                        </v-col>-->
+                        <v-col cols="2">
                             <div style="width: 100%" class="d-flex justify-center">
+                                <v-btn icon color="success" title="Зафиксировать цену" @click="lockPrice(item, index)">
+                                    <v-icon>mdi-lock</v-icon>
+                                </v-btn>
                                 <v-btn icon color="error" @click="deleteList(index)">
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
@@ -140,7 +147,7 @@
                 </v-col>
                 <v-col cols="12" xl="4">
                     <v-btn color="success" @click="chooseAllProduct">
-                        Выбрать все товары <v-icon>mdi-plus</v-icon>
+                        Выбрать текущие товары <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
                 <v-col cols="12" xl="4">
@@ -271,6 +278,7 @@ import ACTIONS from '@/store/actions/index';
 import product_search from "@/mixins/product_search";
 import axios from 'axios';
 import axiosClient from '@/utils/axiosClient';
+import { db } from '@/db';
 
 const DATE_FILTERS = {
     ALL_TIME: 1,
@@ -412,8 +420,14 @@ export default {
         await this.init();
     },
     methods: {
+        async lockPrice (item, key) {
+            this.$set(this.cart, key, {
+                ...this.cart[key],
+                is_locked: !this.cart[key].is_locked
+            })
+        },
         async updatePrices () {
-            const products = this.cart.map(i => ({
+            const products = this.cart.filter(c => c.is_locked).map(i => ({
                 product_id: i.product_id,
                 product_price_rub: i.product_price_rub,
                 product_price: i.product_price,
@@ -443,8 +457,11 @@ export default {
                 this.$loading.disable();
             }
         },
-        calculateFinalPrice (mode) {
+        async calculateFinalPrice (mode) {
             this.cart = this.cart.map(item => {
+                if (item.is_locked) {
+                    return item;
+                }
                const price = item.base_price / this.moneyRate;
                if (mode === 1 || mode === 2) {
                    item.product_price_rub = Math.ceil(price * (this.ratio / 100));
@@ -455,16 +472,17 @@ export default {
                return item;
             });
         },
-        addToList(item) {
+        async addToList(item) {
             const findIndex = this.cart.findIndex(p => p.id === item.id);
             if (findIndex === -1) {
                 this.cart.push({
                     ...item,
                     tenge_price: item.product_price,
+                    is_locked: false,
                 });
             }
         },
-        deleteList(key) {
+        async deleteList(key) {
             this.cart.splice(key, 1);
         },
         closeModal() {
@@ -475,6 +493,17 @@ export default {
         async init() {
             this.loading = true;
             this.overlay = this.loading = false;
+            const response = await db.iherb.toArray();
+            if (response && response.length > 0) {
+                this.cart = [...response[0].cart];
+                await db.iherb.clear();
+            }
+            setInterval(async () => {
+                await db.iherb.clear();
+                db.iherb.add({
+                    cart: this.cart,
+                })
+            }, 2000)
         },
         async onConfirm() {
             this.closeModal();

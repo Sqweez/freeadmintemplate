@@ -10,4 +10,8 @@ db.version(3).stores({
     transfers: '++id, cart, storeFilter, child_store'
 })
 
+db.version(4).stores({
+    iherb: '++id, cart'
+})
+
 

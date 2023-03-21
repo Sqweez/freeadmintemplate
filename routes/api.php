@@ -319,6 +319,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/{id}', 'api\v2\OrderController@getOrder');
             Route::patch('/client/{order}', 'api\v2\OrderController@changeClient');
             Route::post('/products/{order}', 'api\v2\OrderController@changeProducts');
+            Route::get('/{order}/payment-invoice', 'api\v2\OrderController@getPaymentInvoice');
         });
 
         Route::prefix('news')->group(function () {
