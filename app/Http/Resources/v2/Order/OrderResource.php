@@ -47,8 +47,8 @@ class OrderResource extends JsonResource
             }, 0)  - $this->items->reduce(function($a, $c) {
                     return $a + intval($c['product_price']);
                 }, 0) * ($this->discount / 100)),
-            'products' => collect(OrderProductsResource::collection($items))->toArray(),
-            '_products' => collect(OrderProductsResource::collection($this->items))->toArray(),
+            'products' => collect(OrderProductsResource::collection($items)->toArray($request))->toArray(),
+            '_products' => collect(OrderProductsResource::collection($this->items)->toArray($request))->toArray(),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
             'is_paid_text' => $this->is_paid ? 'Оплачен' : 'Не оплачен',
             'is_paid' => $this->is_paid,

@@ -266,7 +266,10 @@ class OrderController extends Controller
         $orderResource = OrderResource::make($order)->toArray($request);
         $client = new \GuzzleHttp\Client();
         $response = $client->post(url('/') . '/api/v2/documents/invoice-payment', [
-            'cart' => $orderResource['products']->toArray(),
+            'cart' => collect($orderResource['products'])->map(function ($product) {
+                $product['attributes'] = collect($product['attributes'])->toArray();
+                return $product;
+            }),
             'customer' => $orderResource['client_name']
         ])->getBody();
         return $response;
