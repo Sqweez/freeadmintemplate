@@ -19,6 +19,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 use TelegramService;
 
 class OrderController extends Controller
@@ -73,15 +74,15 @@ class OrderController extends Controller
     public function changeProducts(Order $order, Request $request) {
         $products = $request->get('products');
         $old_products = collect($products)->filter(function ($product) {
-           return isset($product['order_item_id']);
+            return isset($product['order_item_id']);
         });
         $new_products = collect($products)->filter(function ($product) {
             return !isset($product['order_item_id']);
         });
         $order_products = OrderProduct::where('order_id', $order->id)->get()->each(function ($product) use ($old_products) {
             $exists = $old_products->filter(function ($a) use ($product) {
-                return $a['id'] === $product['id'];
-            })->count() > 0;
+                    return $a['id'] === $product['id'];
+                })->count() > 0;
             if (!$exists) {
                 $batch = ProductBatch::find($product['product_batch_id']);
                 $batch->quantity = $batch->quantity + 1;
@@ -263,12 +264,21 @@ class OrderController extends Controller
             ->whereKey($order->id)
             ->first();
 
-        $orderResource = OrderResource::make($order)->toArray($request);
+        $orderResource = (new OrderResource($order))->toArray($request);
         $client = new \GuzzleHttp\Client();
+        $products = $orderResource['products'];
+        $products = array_map(function ($product) {
+            $product['attributes'] = $product['attributes']->toArray();
+            $product['manufacturer'] = $product['manufacturer']->toArray();
+            return $product;
+        }, $products);
         $response = $client->post(url('/') . '/api/v2/documents/invoice-payment', [
-            'cart' => $orderResource['products']->toArray(),
-            'customer' => $orderResource['client_name']
-        ])->getBody();
-        return $response;
+            'form_params' => [
+                'cart' => $products,
+                'customer' => $orderResource['client_name']
+            ]
+        ])->getBody()->getContents();
+        $path = json_decode($response, true)['path'];
+        return Response::download($path);
     }
 }
