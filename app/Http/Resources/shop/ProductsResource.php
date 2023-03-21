@@ -48,6 +48,7 @@ class ProductsResource extends JsonResource
             'stock_price' => $this->stock_price,
             'has_stock' => $this->stock_price !== $this->product_price,
             'iherb_price' => $this->iherb_price ?: $this->product_price,
+            'product_price_rub' => $this->product_price_rub,
         ];
     }
 }
