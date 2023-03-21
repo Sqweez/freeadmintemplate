@@ -43,6 +43,7 @@ class CartProductResource extends JsonResource
             'product_id' => $this->product->product_id,
             'discount' => $this->discount,
             'final_price' => $this->product->product->stock_price - ($this->product->product->stock_price * $this->discount / 100),
+            'product_price_rub' => $this->product->product->product_price_rub,
             'manufacturer_id' => $this->product->manufacturer_id,
         ];
     }
