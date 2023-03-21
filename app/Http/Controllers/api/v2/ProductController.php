@@ -381,7 +381,7 @@ class ProductController extends Controller
         foreach ($request->get('products') as $item) {
             // @TODO 2023-03-11T21:02:38 ugly as fuck
             Product::whereKey($item['product_id'])->update([
-                'product_price' => $item['product_price'],
+                //'product_price' => $item['product_price'],
                 'product_price_rub' => $item['product_price_rub']
             ]);
         }
