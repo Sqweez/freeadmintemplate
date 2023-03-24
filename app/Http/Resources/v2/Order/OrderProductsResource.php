@@ -20,6 +20,7 @@ class OrderProductsResource extends JsonResource
             'product_name' => $this->product['product_name'],
             'manufacturer' => $this->product['manufacturer'],
             'product_price' => ($this->product['product_price'] * ((100 - intval($this->product['discount'])) / 100)),
+            'product_price_rub' => $this->product->product->product->product_price_rub,
             'category' => $this->product['category']['category_name'],
             'subcategory' => $this->product['subcategory']['subcategory_name'],
             'product_sku_id' => $this->product['id'],
