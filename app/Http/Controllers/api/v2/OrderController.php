@@ -270,6 +270,7 @@ class OrderController extends Controller
         $products = array_map(function ($product) {
             $product['attributes'] = $product['attributes']->toArray();
             $product['manufacturer'] = $product['manufacturer']->toArray();
+            $product['product_price'] = $product['product_price_rub'];
             return $product;
         }, $products);
         $response = $client->post(url('/') . '/api/v2/documents/invoice-payment', [
