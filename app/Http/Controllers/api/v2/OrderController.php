@@ -276,7 +276,8 @@ class OrderController extends Controller
         $response = $client->post(url('/') . '/api/v2/documents/invoice-payment', [
             'form_params' => [
                 'cart' => $products,
-                'customer' => $orderResource['client_name']
+                'customer' => $orderResource['client_name'],
+                'currency' => 'рублей'
             ]
         ])->getBody()->getContents();
         $path = json_decode($response, true)['path'];
