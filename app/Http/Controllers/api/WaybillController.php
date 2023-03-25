@@ -394,7 +394,7 @@ class WaybillController extends Controller
         }
 
         $excelSheet->setCellValue('AG' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), 'Итого: ' . $TOTAL_COST);
-        $excelSheet->setCellValue('B' . (28 + $PRODUCT_COUNT), 'Всего наименований ' . $TOTAL_COUNT . ', на сумму ' . $TOTAL_COST . ' тенге.');
+        $excelSheet->setCellValue('B' . (28 + $PRODUCT_COUNT), 'Всего наименований ' . $TOTAL_COUNT . ', на сумму ' . $TOTAL_COST . ' ' . $request->get('currency', 'тенге') . '.');
 
         $excelWriter = new Xlsx($excelTemplate);
         $fileName =  Document::DOCUMENT_TYPES[$documentType] . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
