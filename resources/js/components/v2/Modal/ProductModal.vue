@@ -221,6 +221,10 @@
                             v-model="is_iherb_hit"
                         />
                         <v-checkbox
+                            label="Дубайский товар"
+                            v-model="is_dubai"
+                        />
+                        <v-checkbox
                             label="Виден на сайте"
                             v-model="is_site_visible"
                         />
@@ -593,6 +597,7 @@ export default {
         is_iherb_hit: false,
         is_iherb: false,
         is_site_visible: true,
+        is_dubai: false,
         is_kaspi_visible: false,
         supplier_id: null,
         attributesSelect: [],
@@ -705,6 +710,7 @@ export default {
             this.is_kaspi_visible = this.product.is_kaspi_visible;
             this.supplier_id = this.product.supplier_id;
             this.iherb_price = this.product.iherb_price;
+            this.is_dubai = this.product.is_dubai;
             this.comments = this.product.comments;
             this.additionalSubcategories = this.product.additional_subcategories ? this.product.additional_subcategories : [];
             if (this.grouping_attribute_id === null) {
@@ -859,6 +865,7 @@ export default {
                 supplier_id: this.supplier_id,
                 meta_title: this.meta_title,
                 meta_description: this.meta_description,
+                is_dubai: this.is_dubai,
             };
         },
         validate(product) {

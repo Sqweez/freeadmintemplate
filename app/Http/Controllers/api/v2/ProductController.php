@@ -12,7 +12,6 @@ use App\Http\Resources\v2\Product\ProductsResource;
 use App\Http\Resources\v2\Product\ModeratorProducts;
 use App\Http\Resources\v2\Product\ProductResource;
 use App\MarginType;
-use App\Store;
 use App\v2\Models\BestBefore;
 use App\v2\Models\Product;
 use App\ProductBatch;

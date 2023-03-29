@@ -72,6 +72,7 @@ class ProductResource extends JsonResource
             'product_name_web' => $this->product->product_name_web,
             'comments' => CommentController::parseComments($this->product->comments),
             'iherb_price' => $this->product->iherb_price,
+            'is_dubai' => $this->product->is_dubai,
         ];
     }
 }

@@ -53,6 +53,7 @@ class ProductsResource extends JsonResource
             'is_kaspi_visible' => $this->is_kaspi_visible,
             'is_iherb' => $this->is_iherb,
             'iherb_price' => $this->iherb_price,
+            'is_dubai' => $this->is_dubai,
         ];
     }
 }
