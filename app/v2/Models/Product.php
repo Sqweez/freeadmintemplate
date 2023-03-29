@@ -324,7 +324,11 @@ class Product extends Model
     }
 
     public function scopeOfBrand($query, $brands) {
-        return $query->whereIn('manufacturer_id', $brands);
+        return $query
+            ->whereIn('manufacturer_id', $brands)
+            ->when(in_array('99999', $brands), function ($subQ) {
+                return $subQ->where('is_dubai', true);
+            });
     }
 
     public function scopeOfPrice($query, $prices) {
