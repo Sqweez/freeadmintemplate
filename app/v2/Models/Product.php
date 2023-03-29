@@ -327,6 +327,7 @@ class Product extends Model
         return $query
             ->whereIn('manufacturer_id', $brands)
             ->when(in_array(99999, $brands), function ($subQ) {
+                \Log::info('is_dub');
                 return $subQ->where('is_dubai', true);
             });
     }
