@@ -93,6 +93,8 @@ class ProductController extends Controller {
     private function getProductWithFilter($filters, $store_id, $user_token = null) {
         $productQuery = Product::query()->whereIsSiteVisible(true);
 
+        $isDubaiProductsNeed = count($filters[Product::FILTER_BRANDS]) > 0 && in_array(99999, $filters[Product::FILTER_BRANDS]);
+
         if (count ($filters[Product::FILTER_CATEGORIES]) > 0) {
             $productQuery->ofCategory($filters[Product::FILTER_CATEGORIES]);
         }
@@ -101,7 +103,7 @@ class ProductController extends Controller {
             $productQuery->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
         }
 
-        if (count ($filters[Product::FILTER_BRANDS]) > 0) {
+        if (!$isDubaiProductsNeed && count ($filters[Product::FILTER_BRANDS]) > 0) {
             $productQuery->ofBrand($filters[Product::FILTER_BRANDS]);
         }
 
@@ -117,7 +119,7 @@ class ProductController extends Controller {
             $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
         }
 
-        if (count($filters[Product::FILTER_BRANDS]) > 0 && in_array(99999, $filters[Product::FILTER_BRANDS])) {
+        if ($isDubaiProductsNeed) {
             $productQuery->where('is_dubai', true);
         }
 
