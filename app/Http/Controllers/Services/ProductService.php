@@ -236,7 +236,8 @@ class ProductService {
             Product::PRODUCT_NAME_WEB,
             Product::IS_IHERB,
             'iherb_price',
-            'is_iherb_hit'
+            'is_iherb_hit',
+            'is_dubai'
         ]);
 
         $product[Product::CATEGORY_ID] = $request->get(Product::CATEGORY);
