@@ -117,6 +117,10 @@ class ProductController extends Controller {
             $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
         }
 
+        if (count($filters[Product::FILTER_BRANDS]) > 0 && in_array(99999, $filters[Product::FILTER_BRANDS])) {
+            $productQuery->where('is_dubai', true);
+        }
+
         $productQuery->when(\request()->has('iherb'), function ($query) {
             return $query->where('is_iherb', true);
         });
