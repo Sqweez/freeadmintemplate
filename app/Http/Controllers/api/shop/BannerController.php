@@ -20,7 +20,14 @@ class BannerController extends Controller
     public function index(Request $request)
     {
         if ($request->has('site')) {
-            $banners = Banner::where('is_active', true)->get();
+            $banners = Banner::where('is_active', true)
+                ->when($request->has('is_iherb'), function ($q) {
+                    return $q->where('website', 2);
+                })
+                ->when(!$request->has('is_iherb'), function ($q) {
+                    return $q->where('website', 1);
+                })
+                ->get();
             return BannerResource::collection(
                 $banners->sortBy('order')->map(function($i, $key) use ($banners) {
                     $count = $banners->count();
