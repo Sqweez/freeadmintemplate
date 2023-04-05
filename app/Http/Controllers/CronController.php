@@ -33,8 +33,7 @@ class CronController extends Controller
 
     public function revokeSellerToken() {
         $users = User::query()
-            ->where('role_id', 2)
-            ->orWhere('id', 29)
+            ->where('id', '!=', __hardcoded(32))
             ->get();
         return $users->each(function (User $user) {
             return $user->update(['token' => Str::random(60)]);
