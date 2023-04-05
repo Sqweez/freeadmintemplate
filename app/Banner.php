@@ -36,5 +36,5 @@ class Banner extends Model
         'order' => 'integer'
     ];
 
-    protected $fillable = ['image', 'is_active', 'order', 'description', 'mobile_image'];
+    protected $fillable = ['image', 'is_active', 'order', 'description', 'mobile_image', 'website'];
 }
