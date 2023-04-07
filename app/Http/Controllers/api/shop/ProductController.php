@@ -116,10 +116,6 @@ class ProductController extends Controller {
             $productQuery->isHit(Product::FILTER_IS_HIT);
         }
 
-        if ($filters[Product::FILTER_IS_IHERB_HIT] === 'true') {
-            $productQuery->where('is_iherb_hit', true);
-        }
-
         if (strlen($filters[Product::FILTER_SEARCH]) > 0) {
             $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
         }
@@ -130,6 +126,10 @@ class ProductController extends Controller {
 
         $productQuery->when(\request()->has('iherb'), function ($query) {
             return $query->where('is_iherb', true);
+        });
+
+        $productQuery->when(\request()->has('is_iherb_hit'), function ($query) {
+            return $query->where('is_iherb_hit', true);
         });
 
         $productQuery->whereHas('category', function ($q) {
