@@ -84,9 +84,10 @@ class ProductController extends Controller {
             Product::FILTER_BRANDS => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_BRANDS] ?? '')), 'strlen')),
             Product::FILTER_PRICES => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_PRICES] ?? '')), 'strlen')),
             Product::FILTER_IS_HIT => isset($query[Product::FILTER_IS_HIT]) ? ($query[Product::FILTER_IS_HIT] === 'true' ? 'true' : 'false') : 'false',
+            Product::FILTER_IS_IHERB_HIT => isset($query[Product::FILTER_IS_IHERB_HIT]) ? ($query[Product::FILTER_IS_IHERB_HIT] === 'true' ? 'true' : 'false') : 'false',
             // Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? $this->prepareSearchString($query[Product::FILTER_SEARCH]) : ''
             // @TODO 2022-04-17T22:12:44 maybe rework it
-            Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? str_replace(' ', '%', $query[Product::FILTER_SEARCH]) . "%" : ''
+            Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? str_replace(' ', '%', $query[Product::FILTER_SEARCH]) . "%" : '',
         ];
     }
 
@@ -113,6 +114,10 @@ class ProductController extends Controller {
 
         if ($filters[Product::FILTER_IS_HIT] === 'true') {
             $productQuery->isHit(Product::FILTER_IS_HIT);
+        }
+
+        if ($filters[Product::FILTER_IS_IHERB_HIT] === 'true') {
+            $productQuery->where('is_iherb_hit', true);
         }
 
         if (strlen($filters[Product::FILTER_SEARCH]) > 0) {
