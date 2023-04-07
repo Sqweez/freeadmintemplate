@@ -80,6 +80,7 @@ import MatrixIndex from '@/views/Matrix/MatrixIndex';
 import MatrixCreate from '@/views/Matrix/MatrixCreate';
 import MatrixEdit from '@/views/Matrix/MatrixEdit';
 import IherbProductsPage from '@/views/IHerb/IherbProductsPage';
+import IherbMassAssignment from '@/views/IHerb/IherbMassAssignment';
 
 const routes = [
     {
@@ -244,6 +245,10 @@ const routes = [
     {
         path: '/shop/orders',
         component: OrdersPage,
+    },
+    {
+        path: '/iherb/mass',
+        component: IherbMassAssignment
     },
     {
         path: '/shop/related',

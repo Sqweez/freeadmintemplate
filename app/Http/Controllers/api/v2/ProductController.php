@@ -412,4 +412,32 @@ class ProductController extends Controller
         $code .= (10 - ($sum % 10)) % 10;
         return $code;
     }
+
+    public function updateIherbProducts(Request $request) {
+        $productsIds = $request->get('products');
+        $option = intval($request->get('option', 1));
+        $update = [];
+        switch ($option) {
+            case 1:
+                $update = [
+                    'is_iherb' => true,
+                    'is_dubai' => 1
+                ];
+                break;
+            case 2:
+                $update = [
+                    'is_iherb' => true,
+                ];
+                break;
+            case 3:
+                $update = [
+                    'is_dubai' => true
+                ];
+                break;
+        }
+
+        Product::query()
+            ->whereIn('id', $productsIds)
+            ->update($update);
+    }
 }
