@@ -112,6 +112,10 @@ const navigationModule = {
                         title: 'Прайс-лист',
                         url: '/products/iherb/price'
                     },
+                    {
+                        title: 'Массовый редактор',
+                        url: '/iherb/mass'
+                    },
                 ]
             },
             {
@@ -533,6 +537,10 @@ const navigationModule = {
                     {
                         title: 'Прайс-лист',
                         url: '/products/iherb/price'
+                    },
+                    {
+                        title: 'Массовый редактор',
+                        url: '/iherb/mass'
                     },
                 ]
             },

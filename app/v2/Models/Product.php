@@ -207,6 +207,7 @@ class Product extends Model
         'manufacturer_id' => 'integer',
         'is_iherb' => 'boolean',
         'is_iherb_hit' => 'boolean',
+        'is_dubai' => 'boolean'
     ];
 
     public $timestamps = true;
