@@ -32,7 +32,7 @@ class ArrivalResource extends JsonResource
             'store' => $this->store->name,
             'store_id' => $this->store_id,
             'user_id' => $this->user_id,
-            'user' => $this->user->name,
+            'user' => $this->user ? $this->user->name: 'Удаленный пользователь',
             'is_completed' => $this->is_completed,
             'products' => $products,
             'position_count' => $this->products->count(),
