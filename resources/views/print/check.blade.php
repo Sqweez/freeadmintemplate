@@ -13,8 +13,8 @@
          style="display: flex;
                 align-items: center;
                 flex-direction: column;">
-        <img src="{{ asset('images/logo-check.png') }}" alt=""
-             style="width: 65px;
+        <img src="{{ asset('images/logo-check-new.png') }}" alt=""
+             style="width: 150px;
                     filter: grayscale(1);
                     height: auto;
                     margin-bottom: 10px;">
