@@ -89,6 +89,10 @@
                         label="Дубай"
                         v-model="isDubai"
                     />
+                    <v-checkbox
+                        label="Скрывать отсутствующие"
+                        v-model="hideNotInStock"
+                    />
                 </v-col>
             </v-row>
             <v-data-table
@@ -528,6 +532,9 @@ export default {
                 products = products.filter(p => p.is_iherb);
             }
 
+            if (this.hideNotInStock) {
+                products = products.filter(p => p.count > 0);
+            }
             return products;
         },
         is_seller() {
