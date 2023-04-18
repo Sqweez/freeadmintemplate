@@ -97,8 +97,8 @@ const clientModule = {
             await commit(MUTATIONS.SET_CLIENTS, payload);
         },
         async [ACTIONS.GET_PARTNERS] ({ commit }) {
-            const payload = await axiosClient.get(`/clients?is_partner=1`);
-            await commit(MUTATIONS.SET_CLIENTS, payload);
+            const { data: { data } } = await axiosClient.get(`/clients?is_partner=1`);
+            await commit(MUTATIONS.SET_CLIENTS, data);
         },
         async [ACTIONS.GET_WHOLESALE_CLIENTS] ({commit}) {
             const { data: { data } } = await axiosClient.get('/clients?wholesale=1');
