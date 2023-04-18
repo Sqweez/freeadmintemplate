@@ -234,13 +234,18 @@ import ACTIONS from '@/store/actions';
 export default {
     async created () {
         this.$loading.enable();
-        await Promise.all([
+        /*await Promise.all([
             await this.$store.dispatch('GET_PRODUCTS_v2'),
             await this.$store.dispatch('getPromocodeTypes'),
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES),
             await this.$store.dispatch(ACTIONS.GET_PARTNERS),
-        ]);
+        ]);*/
+        await this.$store.dispatch('GET_PRODUCTS_v2')
+            await this.$store.dispatch('getPromocodeTypes')
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS)
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES)
+            await this.$store.dispatch(ACTIONS.GET_PARTNERS)
         this.$loading.disable();
     },
     data: () => ({
