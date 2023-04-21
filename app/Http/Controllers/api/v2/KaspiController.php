@@ -83,6 +83,11 @@ class KaspiController extends Controller {
                     if ($kaspiStoreId === 16) {
                         $kaspiStoreId = '7';
                     }
+
+                    if ($kaspiStoreId === 19) {
+                        $kaspiStoreId = '9';
+                    }
+
                     return ['available' => collect($product['batches'])->filter(function ($item) use ($store) {
                         return $item['store_id'] === $store['id'];
                     })->count() > 0 ? 'yes' : 'no', 'storeId' => 'PP' . ($kaspiStoreId)];
