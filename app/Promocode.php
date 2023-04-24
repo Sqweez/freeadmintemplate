@@ -47,7 +47,10 @@ class Promocode extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'required_products' => 'array'
+        //'required_products' => 'array',
+        'promocode_cascade' => 'array',
+        'promocode_purpose_payload' => 'array',
+        'promocode_condition_payload' => 'array'
     ];
 
     const GOV_PROMOCODE_ID = 165;
@@ -55,9 +58,29 @@ class Promocode extends Model
     const TYPES = [
         1 => 'Процентный',
         2 => 'Фиксированный',
-        5 => 'Процентный каскад',
-        3 => 'Покупка определенных позиций',
-        4 => 'Покупка определенного бренда на сумму',
+        3 => 'Подарок',
+        4 => 'Каскадный процентный',
+        //4 => 'Покупка определенного бренда на сумму',
+    ];
+
+    const CONDITIONS = [
+        1 => 'Без условия',
+        2 => 'Минимальная сумма покупки',
+        3 => 'Покупка бренда на сумму X',
+        4 => 'Покупка категории на сумму X',
+        5 => 'Покупка определенных товаров',
+    ];
+
+    const PURPOSES = [
+        1 => 'Все товары',
+        2 => 'Список товаров',
+        3 => 'Категории',
+        4 => 'Бренды',
+    ];
+
+    const CASCADES = [
+        1 => 'От суммы',
+        2 => 'От количества позиций'
     ];
 
     public function partner() {

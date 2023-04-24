@@ -16,20 +16,50 @@ class PromocodeController extends Controller
     }
 
     public function getTypes(): array {
-        return collect(Promocode::TYPES)
-            ->map(function ($value, $key) {
-                return [
-                    'id' => $key,
-                    'name' => $value
-                ];
-            })
-            ->values()
-            ->toArray();
+
+        return [
+            'types' => collect(Promocode::TYPES)
+                ->map(function ($value, $key) {
+                    return [
+                        'id' => $key,
+                        'name' => $value
+                    ];
+                })
+                ->values()
+                ->toArray(),
+            'conditions' => collect(Promocode::CONDITIONS)
+                ->map(function ($value, $key) {
+                    return [
+                        'id' => $key,
+                        'name' => $value
+                    ];
+                })
+                ->values()
+                ->toArray(),
+            'purposes' => collect(Promocode::PURPOSES)
+                ->map(function ($value, $key) {
+                    return [
+                        'id' => $key,
+                        'name' => $value
+                    ];
+                })
+                ->values()
+                ->toArray(),
+            'cascades' => collect(Promocode::CASCADES)
+                ->map(function ($value, $key) {
+                    return [
+                        'id' => $key,
+                        'name' => $value
+                    ];
+                })
+                ->values()
+                ->toArray(),
+        ];
     }
 
-    public function store(CreatePromocodeRequest $request) {
+    public function store(Request $request) {
         try {
-            $promocode = Promocode::create($request->validated())->refresh();
+            $promocode = Promocode::create($request->all())->refresh();
             return new PromocodeResource($promocode);
         } catch (\Exception $exception) {
             return response()->json([
