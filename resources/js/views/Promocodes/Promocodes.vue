@@ -127,10 +127,10 @@
                     value: 'active_until',
                     text: 'Активен до'
                 },
-                {
+               /* {
                     value: 'min_total',
                     text: 'Минимальная сумма покупки'
-                },
+                },*/
                 {
                     value: 'actions',
                     text: 'Действие'
