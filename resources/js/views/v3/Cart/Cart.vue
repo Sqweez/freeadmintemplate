@@ -891,8 +891,8 @@
                     this.discountPercent = Math.max(this.discountPercent, promocode.discount);
                     this.currentPromocode = {...promocode};
                     this.promocodeSet = true;
-                    this.partner_id = data.partner.id;
-                    this.promocode_id = data.id;
+                    this.partner_id = promocode.partner.id;
+                    this.promocode_id = promocode.id;
                     return this.$toast.success('Промокод применен!');
                 }
                 if (promocode.promocode_type_id === 2) {
