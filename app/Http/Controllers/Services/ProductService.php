@@ -6,12 +6,13 @@ namespace App\Http\Controllers\Services;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\Price;
 use App\ProductBatch;
-use App\v2\Models\Product;
 use App\Tag;
 use App\v2\Models\AttributeValue;
 use App\v2\Models\Image;
+use App\v2\Models\Product;
 use App\v2\Models\ProductSku;
 use App\v2\Models\Thumb;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -35,6 +36,23 @@ class ProductService {
         return ProductSku::withCount('relativeSku')->whereId($id)->first();
     }
 
+    public function search(string $search) {
+        return (ProductSku::with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)
+            ->where(function ($q) use ($search) {
+                $q->whereHas('product', function ($query) use ($search) {
+                    return $query
+                        ->where('product_name', 'like', $search);
+                })
+                ->orWhere('product_barcode', 'like', $search);
+            })
+
+            ->orderBy('product_id')
+            ->orderBy('id')
+            ->get()
+            ->sortBy('product_name')
+        );
+    }
+
     public function create(array $_product, array $_attributes) {
         try {
             DB::beginTransaction();
@@ -42,7 +60,7 @@ class ProductService {
             $this->updateProductRelations($product, $_attributes);
             DB::commit();
             return $product;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
             return response()->json([
@@ -81,7 +99,7 @@ class ProductService {
             $product->update($_attributes);
             $this->updateProductRelations($product, $fields);
             DB::commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
                 'message' => $e->getMessage(),
@@ -101,7 +119,7 @@ class ProductService {
             $product_sku = ProductSku::find($product_sku->id);
             $product_sku->load('product');
             return new ProductsResource($product_sku);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
                 'message' => $e->getMessage(),
@@ -121,7 +139,7 @@ class ProductService {
             DB::commit();
             $productSku->fresh();
             return new ProductsResource($productSku);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
         }
     }

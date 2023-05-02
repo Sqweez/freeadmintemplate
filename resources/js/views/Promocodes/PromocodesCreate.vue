@@ -2,23 +2,23 @@
     <div>
         <i-card-page title="Создание промокода">
             <v-text-field
+                v-model="promocode.promocode"
                 label="Промокод"
                 type="text"
-                v-model="promocode.promocode"
             />
             <v-autocomplete
-                label="Партнер"
-                :items="partners"
-                item-value="id"
-                item-text="client_name"
                 v-model="promocode.client_id"
+                :items="partners"
+                item-text="client_name"
+                item-value="id"
+                label="Партнер"
             />
             <v-select
-                label="Тип промокода"
                 v-model="promocode.promocode_type_id"
                 :items="types"
                 item-text="name"
                 item-value="id"
+                label="Тип промокода"
             />
             <div v-show="promocode.promocode_type_id === 3">
                 <v-expansion-panels>
@@ -27,50 +27,92 @@
                             Подарок&nbsp;&nbsp;<span><v-icon>mdi-gift</v-icon></span>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
-                            <h5 v-if="freeProduct">
-                                Текущий подарок: {{ freeProduct.product_name }}
-                            </h5>
+                            <v-simple-table v-slot:default>
+                                <template>
+                                    <thead class="fz-18">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Товар</th>
+                                        <th>Цена</th>
+                                        <th>Удалить</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="background-iron-grey">
+                                    <tr v-for="(item, index) of freeProducts">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>
+                                            <v-list class="product__list" flat>
+                                                <v-list-item>
+                                                    <v-list-item-content>
+                                                        <v-list-item-title>
+                                                            {{ item.product_name }}
+                                                        </v-list-item-title>
+                                                        <v-list-item-subtitle>
+                                                            {{ item.manufacturer.manufacturer_name }} |
+                                                            {{ item.category.category_name }} | {{
+                                                                item.attributes.map(a => a.attribute_value).join(', ')
+                                                            }}
+                                                        </v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                </v-list-item>
+                                            </v-list>
+                                        </td>
+                                        <td>
+                                            {{ item.product_price | priceFilters }}
+                                        </td>
+                                        <td>
+                                            {{ item.count }} шт.
+                                        </td>
+                                        <td>
+                                            <v-btn color="error" icon @click="freeProducts.splice(index, 1)">
+                                                <v-icon>mdi-close</v-icon>
+                                            </v-btn>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
                             <v-text-field
+                                v-model="searchInput"
                                 class="mt-2"
-                                v-model="search"
-                                solo
                                 clearable
+                                hide-details
                                 label="Поиск товара"
                                 single-line
-                                hide-details
+                                solo
                             ></v-text-field>
                             <v-row class="d-flex align-center">
                                 <v-col cols="12" xl="4">
                                     <v-autocomplete
+                                        v-model="categoryId"
                                         :items="categoriesFilters"
                                         item-text="name"
-                                        v-model="categoryId"
                                         item-value="id"
                                         label="Категория"
                                     />
                                 </v-col>
                                 <v-col cols="12" xl="4">
                                     <v-autocomplete
+                                        v-model="manufacturerId"
                                         :items="manufacturersFilters"
                                         item-text="manufacturer_name"
-                                        v-model="manufacturerId"
                                         item-value="id"
                                         label="Бренд"
                                     />
                                 </v-col>
                             </v-row>
                             <v-data-table
-                                class="background-iron-grey fz-18"
-                                no-results-text="Нет результатов"
-                                no-data-text="Нет данных"
-                                :headers="product_headers"
-                                :search="search"
-                                loading-text="Идет загрузка товаров..."
-                                :items="products"
                                 :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
                         }"
+                                :headers="product_headers"
+                                :items="filteredProducts"
+                                :no-data-text="!search.length ? 'Начните что-нибудь искать 🤖' : 'Нет результатов 🥲'"
+                                class="background-iron-grey fz-18"
+                                loading-text="Идет загрузка товаров..."
+                                :loading="isSearching"
+                                no-results-text="Нет результатов"
                             >
                                 <template v-slot:item.product_name="{item}">
                                     <v-list flat>
@@ -80,21 +122,25 @@
                                                     {{ item.product_name }}
                                                 </v-list-item-title>
                                                 <v-list-item-subtitle>
-                                                    {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} | {{ item.attributes.map(a => a.attribute_value).join(', ') }}
+                                                    {{ item.manufacturer.manufacturer_name }} |
+                                                    {{ item.category.category_name }} |
+                                                    {{ item.attributes.map(a => a.attribute_value).join(', ') }}
                                                 </v-list-item-subtitle>
                                             </v-list-item-content>
                                         </v-list-item>
                                     </v-list>
                                 </template>
                                 <template v-slot:item.actions="{item}">
-                                    <div class="d-flex py-3" style="flex-direction: column; justify-content: center; row-gap: 16px;">
+                                    <div class="d-flex py-3"
+                                         style="flex-direction: column; justify-content: center; row-gap: 16px;">
                                         <v-btn
-                                            depressed
                                             color="success"
-                                            @click="freeProduct = {...item}"
+                                            depressed
                                             small
+                                            @click="freeProducts.push(item)"
                                         >
-                                            Подарок <v-icon>mdi-gift</v-icon>
+                                            Подарок
+                                            <v-icon>mdi-gift</v-icon>
                                         </v-btn>
                                     </div>
                                 </template>
@@ -108,39 +154,39 @@
             </div>
             <v-text-field
                 v-if="[1, 2].includes(promocode.promocode_type_id)"
-                label="Скидка"
                 v-model="promocode.discount"
+                label="Скидка"
                 type="number"
             />
             <v-select
-                label="Условие промокода"
                 v-model="promocode.promocode_condition_id"
+                :disabled="isCascadePromocodeTypeChosen"
                 :items="conditions"
                 item-text="name"
                 item-value="id"
-                :disabled="isCascadePromocodeTypeChosen"
+                label="Условие промокода"
             />
             <v-text-field
                 v-if="[2,3,4].includes(promocode.promocode_condition_id)"
-                label="Минимальная сумма покупки"
                 v-model="min_total"
+                label="Минимальная сумма покупки"
                 type="number"
             />
             <v-autocomplete
                 v-if="promocode.promocode_condition_id === 3"
-                label="Необходимый бренд"
-                :items="manufacturers"
-                item-value="id"
-                item-text="manufacturer_name"
                 v-model="conditionalBrandId"
+                :items="manufacturers"
+                item-text="manufacturer_name"
+                item-value="id"
+                label="Необходимый бренд"
             />
             <v-autocomplete
                 v-if="promocode.promocode_condition_id === 4"
-                label="Необходимая категория"
-                :items="categories"
-                item-value="id"
-                item-text="name"
                 v-model="conditionalCategoryId"
+                :items="categories"
+                item-text="name"
+                item-value="id"
+                label="Необходимая категория"
             />
             <div v-show="promocode.promocode_condition_id === 5">
                 <v-expansion-panels>
@@ -173,7 +219,10 @@
                                                                 {{ item.product_name }}
                                                             </v-list-item-title>
                                                             <v-list-item-subtitle>
-                                                                {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} | {{ item.attributes.map(a => a.attribute_value).join(', ') }}
+                                                                {{ item.manufacturer.manufacturer_name }} |
+                                                                {{ item.category.category_name }} | {{
+                                                                    item.attributes.map(a => a.attribute_value).join(', ')
+                                                                }}
                                                             </v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
@@ -186,7 +235,7 @@
                                                 {{ item.count }} шт.
                                             </td>
                                             <td>
-                                                <v-btn icon color="error" @click="deleteFromRequiredList(index)">
+                                                <v-btn color="error" icon @click="deleteFromRequiredList(index)">
                                                     <v-icon>mdi-close</v-icon>
                                                 </v-btn>
                                             </td>
@@ -196,46 +245,46 @@
                                 </v-simple-table>
                             </div>
                             <v-text-field
+                                v-model="searchInput"
                                 class="mt-2"
-                                v-model="search"
-                                solo
                                 clearable
-                                label="Поиск товара"
-                                single-line
                                 hide-details
-                            ></v-text-field>
+                                label="Начните что-нибудь искать 🤖"
+                                single-line
+                                solo
+                            />
                             <v-row class="d-flex align-center">
                                 <v-col cols="12" xl="4">
                                     <v-autocomplete
+                                        v-model="categoryId"
                                         :items="categoriesFilters"
                                         item-text="name"
-                                        v-model="categoryId"
                                         item-value="id"
                                         label="Категория"
                                     />
                                 </v-col>
                                 <v-col cols="12" xl="4">
                                     <v-autocomplete
+                                        v-model="manufacturerId"
                                         :items="manufacturersFilters"
                                         item-text="manufacturer_name"
-                                        v-model="manufacturerId"
                                         item-value="id"
                                         label="Бренд"
                                     />
                                 </v-col>
                             </v-row>
                             <v-data-table
-                                class="background-iron-grey fz-18"
-                                no-results-text="Нет результатов"
-                                no-data-text="Нет данных"
-                                :headers="product_headers"
-                                :search="search"
-                                loading-text="Идет загрузка товаров..."
-                                :items="products"
                                 :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
                         }"
+                                :headers="product_headers"
+                                :items="filteredProducts"
+                                :no-data-text="!search.length ? 'Начните что-нибудь искать 🤖' : 'Нет результатов 🥲'"
+                                class="background-iron-grey fz-18"
+                                loading-text="Идет загрузка товаров..."
+                                :loading="isSearching"
+                                no-results-text="Нет результатов"
                             >
                                 <template v-slot:item.product_name="{item}">
                                     <v-list flat>
@@ -245,21 +294,25 @@
                                                     {{ item.product_name }}
                                                 </v-list-item-title>
                                                 <v-list-item-subtitle>
-                                                    {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} | {{ item.attributes.map(a => a.attribute_value).join(', ') }}
+                                                    {{ item.manufacturer.manufacturer_name }} |
+                                                    {{ item.category.category_name }} |
+                                                    {{ item.attributes.map(a => a.attribute_value).join(', ') }}
                                                 </v-list-item-subtitle>
                                             </v-list-item-content>
                                         </v-list-item>
                                     </v-list>
                                 </template>
                                 <template v-slot:item.actions="{item}">
-                                    <div class="d-flex py-3" style="flex-direction: column; justify-content: center; row-gap: 16px;">
+                                    <div class="d-flex py-3"
+                                         style="flex-direction: column; justify-content: center; row-gap: 16px;">
                                         <v-btn
-                                            depressed
                                             color="success"
-                                            @click="addToRequiredList(item)"
+                                            depressed
                                             small
+                                            @click="addToRequiredList(item)"
                                         >
-                                            Обязателен к покупке <v-icon>mdi-check</v-icon>
+                                            Обязателен к покупке
+                                            <v-icon>mdi-check</v-icon>
                                         </v-btn>
                                     </div>
                                 </template>
@@ -272,11 +325,11 @@
                 </v-expansion-panels>
             </div>
             <v-select
-                label="Назначение промокода"
                 v-model="promocode.promocode_purpose_id"
                 :items="purposes"
                 item-text="name"
                 item-value="id"
+                label="Назначение промокода"
             />
             <div v-show="promocode.promocode_purpose_id === 2">
                 <v-expansion-panels>
@@ -308,7 +361,10 @@
                                                                 {{ item.product_name }}
                                                             </v-list-item-title>
                                                             <v-list-item-subtitle>
-                                                                {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} | {{ item.attributes.map(a => a.attribute_value).join(', ') }}
+                                                                {{ item.manufacturer.manufacturer_name }} |
+                                                                {{ item.category.category_name }} | {{
+                                                                    item.attributes.map(a => a.attribute_value).join(', ')
+                                                                }}
                                                             </v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
@@ -318,7 +374,7 @@
                                                 {{ item.product_price | priceFilters }}
                                             </td>
                                             <td>
-                                                <v-btn icon color="error" @click="purposeProducts.splice(index, 1)">
+                                                <v-btn color="error" icon @click="purposeProducts.splice(index, 1)">
                                                     <v-icon>mdi-close</v-icon>
                                                 </v-btn>
                                             </td>
@@ -328,46 +384,46 @@
                                 </v-simple-table>
                             </div>
                             <v-text-field
+                                v-model="searchInput"
                                 class="mt-2"
-                                v-model="search"
-                                solo
                                 clearable
-                                label="Поиск товара"
-                                single-line
                                 hide-details
-                            ></v-text-field>
+                                label="Начните что-нибудь искать 🤖"
+                                single-line
+                                solo
+                            />
                             <v-row class="d-flex align-center">
                                 <v-col cols="12" xl="4">
                                     <v-autocomplete
+                                        v-model="categoryId"
                                         :items="categoriesFilters"
                                         item-text="name"
-                                        v-model="categoryId"
                                         item-value="id"
                                         label="Категория"
                                     />
                                 </v-col>
                                 <v-col cols="12" xl="4">
                                     <v-autocomplete
+                                        v-model="manufacturerId"
                                         :items="manufacturersFilters"
                                         item-text="manufacturer_name"
-                                        v-model="manufacturerId"
                                         item-value="id"
                                         label="Бренд"
                                     />
                                 </v-col>
                             </v-row>
                             <v-data-table
-                                class="background-iron-grey fz-18"
-                                no-results-text="Нет результатов"
-                                no-data-text="Нет данных"
-                                :headers="product_headers"
-                                :search="search"
-                                loading-text="Идет загрузка товаров..."
-                                :items="products"
                                 :footer-props="{
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
                         }"
+                                :headers="product_headers"
+                                :items="filteredProducts"
+                                :no-data-text="!search.length ? 'Начните что-нибудь искать 🤖' : 'Нет результатов 🥲'"
+                                class="background-iron-grey fz-18"
+                                loading-text="Идет загрузка товаров..."
+                                :loading="isSearching"
+                                no-results-text="Нет результатов"
                             >
                                 <template v-slot:item.product_name="{item}">
                                     <v-list flat>
@@ -377,21 +433,25 @@
                                                     {{ item.product_name }}
                                                 </v-list-item-title>
                                                 <v-list-item-subtitle>
-                                                    {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} | {{ item.attributes.map(a => a.attribute_value).join(', ') }}
+                                                    {{ item.manufacturer.manufacturer_name }} |
+                                                    {{ item.category.category_name }} |
+                                                    {{ item.attributes.map(a => a.attribute_value).join(', ') }}
                                                 </v-list-item-subtitle>
                                             </v-list-item-content>
                                         </v-list-item>
                                     </v-list>
                                 </template>
                                 <template v-slot:item.actions="{item}">
-                                    <div class="d-flex py-3" style="flex-direction: column; justify-content: center; row-gap: 16px;">
+                                    <div class="d-flex py-3"
+                                         style="flex-direction: column; justify-content: center; row-gap: 16px;">
                                         <v-btn
-                                            depressed
                                             color="success"
-                                            @click="addToPurposeList(item)"
+                                            depressed
                                             small
+                                            @click="addToPurposeList(item)"
                                         >
-                                            Добавить в список <v-icon>mdi-check</v-icon>
+                                            Добавить в список
+                                            <v-icon>mdi-check</v-icon>
                                         </v-btn>
                                     </div>
                                 </template>
@@ -405,55 +465,57 @@
             </div>
             <v-autocomplete
                 v-if="promocode.promocode_purpose_id === 3"
-                label="Применимо к категориям"
-                :items="categories"
-                item-value="id"
-                item-text="name"
                 v-model="purposeCategories"
+                :items="categories"
+                item-text="name"
+                item-value="id"
+                label="Применимо к категориям"
                 multiple
             />
             <v-autocomplete
                 v-if="promocode.promocode_purpose_id === 4"
-                label="Применимо к брендам"
-                :items="manufacturers"
-                item-value="id"
-                item-text="manufacturer_name"
                 v-model="purposeBrands"
+                :items="manufacturers"
+                item-text="manufacturer_name"
+                item-value="id"
+                label="Применимо к брендам"
                 multiple
             />
             <div v-if="isCascadePromocodeTypeChosen">
                 <v-select
-                    label="Каскадный тип"
                     v-model="promocode_cascade.type"
                     :items="cascades"
                     item-text="name"
                     item-value="id"
+                    label="Каскадный тип"
                 />
                 <div>
-                    <div class="d-flex align-center align-items-center" v-for="(item, index) of promocode_cascade.payload" :key="`cascade-${index}`">
+                    <div v-for="(item, index) of promocode_cascade.payload"
+                         :key="`cascade-${index}`" class="d-flex align-center align-items-center">
                         <v-text-field
-                            label="Порог"
                             v-model="promocode_cascade.payload[index].amount"
+                            label="Порог"
                             type="number"
                         />
                         <v-text-field
-                            label="Скидка"
                             v-model="promocode_cascade.payload[index].discount"
+                            label="Скидка"
                             type="number"
                         />
-                        <v-btn icon color="success" @click="promocode_cascade.payload.push({amount: 1, discount: 0})">
+                        <v-btn color="success" icon @click="promocode_cascade.payload.push({amount: 1, discount: 0})">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
-                        <v-btn icon color="error" @click="promocode_cascade.payload.splice(index, 1)">
+                        <v-btn color="error" icon @click="promocode_cascade.payload.splice(index, 1)">
                             <v-icon>mdi-minus</v-icon>
                         </v-btn>
                     </div>
                 </div>
             </div>
             <v-card-actions>
-                <v-spacer />
-                <v-btn text color="success" @click="_onSubmit">
-                    Сохранить <v-icon>mdi-check</v-icon>
+                <v-spacer/>
+                <v-btn color="success" text @click="_onSubmit">
+                    Сохранить
+                    <v-icon>mdi-check</v-icon>
                 </v-btn>
             </v-card-actions>
         </i-card-page>
@@ -462,15 +524,17 @@
 
 <script>
 import ACTIONS from '@/store/actions';
-import {__hardcoded} from '@/utils/helpers';
+import {__debounce, __hardcoded} from '@/utils/helpers';
 import axiosClient from '@/utils/axiosClient';
 
 export default {
     data: () => ({
-        freeProduct: null,
+        freeProducts: [],
         categoryId: -1,
         manufacturerId: -1,
         search: '',
+        searchInput: '',
+        isSearching: false,
         min_total: 0,
         product_headers: [
             {
@@ -521,19 +585,21 @@ export default {
             ],
         },
         required_products: [],
+        products: [],
     }),
-    async mounted () {
+    async mounted() {
         this.$loading.enable();
-        await this.$store.dispatch('GET_PRODUCTS_v2')
-        await this.$store.dispatch('getPromocodeTypes')
-        await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS)
-        await this.$store.dispatch(ACTIONS.GET_CATEGORIES)
-        await this.$store.dispatch(ACTIONS.GET_PARTNERS)
+        await Promise.all([
+            this.$store.dispatch('getPromocodeTypes'),
+            this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+            this.$store.dispatch(ACTIONS.GET_CATEGORIES),
+            this.$store.dispatch(ACTIONS.GET_PARTNERS),
+        ]);
         this.$loading.disable();
     },
     computed: {
-        products() {
-            let products = this.$store.getters.MAIN_PRODUCTS_v2;
+        filteredProducts() {
+            let products = this.products;
             if (this.manufacturerId !== -1) {
                 products = products.filter(product => product.manufacturer.id === this.manufacturerId);
             }
@@ -542,19 +608,19 @@ export default {
             }
             return products;
         },
-        isCascadePromocodeTypeChosen () {
+        isCascadePromocodeTypeChosen() {
             return this.promocode.promocode_type_id === __hardcoded(4);
         },
-        types () {
+        types() {
             return this.$store.getters.PROMOCODE_TYPES.types;
         },
-        conditions () {
+        conditions() {
             return this.$store.getters.PROMOCODE_TYPES.conditions;
         },
-        purposes () {
+        purposes() {
             return this.$store.getters.PROMOCODE_TYPES.purposes;
         },
-        cascades () {
+        cascades() {
             return this.$store.getters.PROMOCODE_TYPES.cascades;
         },
         partners() {
@@ -570,7 +636,7 @@ export default {
         manufacturers() {
             return this.$store.getters.manufacturers;
         },
-        categoriesFilters () {
+        categoriesFilters() {
             return [
                 {
                     id: -1,
@@ -583,7 +649,7 @@ export default {
         },
     },
     methods: {
-        async _onSubmit () {
+        async _onSubmit() {
             if (!this._validateForm()) {
                 return false;
             }
@@ -598,7 +664,7 @@ export default {
                 this.$loading.disable();
             }
         },
-        _validateForm () {
+        _validateForm() {
             if (!this.promocode.promocode) {
                 return this.$toast.error('Введите значение промокода');
             }
@@ -614,7 +680,7 @@ export default {
             }
 
             if (this.promocode.promocode_type_id === 3) {
-                if (!this.freeProduct) {
+                if (this.freeProducts.length === 0) {
                     return this.$toast.error('Выберите подарок');
                 }
             }
@@ -625,11 +691,11 @@ export default {
                 }
             }
 
-            if (this.promocode.promocode_condition_id === 2) {
+            /*if (this.promocode.promocode_condition_id === 2) {
                 if (!this.required_products.length) {
-                    return this.$toast.error('Выберите необходимые товары');
+                    return this.$toast.error('Выберите необходимые товары1');
                 }
-            }
+            }*/
 
             if (this.promocode.promocode_condition_id === 3) {
                 if (!this.conditionalBrandId) {
@@ -645,13 +711,13 @@ export default {
 
             if (this.promocode.promocode_condition_id === 5) {
                 if (!this.required_products.length) {
-                    return this.$toast.error('Выберите необходимые товары');
+                    return this.$toast.error('Выберите необходимые товары2');
                 }
             }
 
             if (this.promocode.promocode_purpose_id === 2) {
                 if (!this.purposeProducts.length) {
-                    return this.$toast.error('Выберите необходимые товары');
+                    return this.$toast.error('Выберите необходимые товары3');
                 }
             }
 
@@ -669,7 +735,7 @@ export default {
 
             return true;
         },
-        _transformPayload () {
+        _transformPayload() {
             let payload = {
                 promocode_type_id: this.promocode.promocode_type_id,
                 promocode_purpose_id: this.promocode.promocode_purpose_id,
@@ -680,6 +746,7 @@ export default {
                 client_id: this.promocode.client_id,
                 discount: null,
                 promocode_cascade: null,
+                promocode_gifts: null,
             };
 
             if ([1, 2].includes(this.promocode.promocode_type_id)) {
@@ -687,7 +754,10 @@ export default {
             }
 
             if (this.promocode.promocode_type_id === 3) {
-                payload.discount = this.freeProduct.product_id;
+                payload.promocode_gifts = this.freeProducts.map(f => ({
+                    id: f.product_id,
+                    count: 1,
+                }))
             }
 
             if ([2, 3, 4].includes(this.promocode.promocode_condition_id)) {
@@ -734,7 +804,7 @@ export default {
 
             return payload;
         },
-        addToPurposeList (product) {
+        addToPurposeList(product) {
             const findIndex = this.purposeProducts.findIndex(p => p.product_id === product.product_id);
             if (findIndex === -1) {
                 this.purposeProducts.push({
@@ -743,7 +813,7 @@ export default {
                 });
             }
         },
-        addToRequiredList (product) {
+        addToRequiredList(product) {
             const findIndex = this.required_products.findIndex(p => p.product_id === product.product_id);
             if (findIndex === -1) {
                 this.required_products.push({
@@ -751,25 +821,43 @@ export default {
                     count: 1
                 });
             } else {
-                this.$set(this.required_products, findIndex, {...this.required_products[findIndex], count: this.required_products[findIndex].count + 1})
+                this.$set(this.required_products, findIndex, {
+                    ...this.required_products[findIndex],
+                    count: this.required_products[findIndex].count + 1
+                })
             }
         },
-        deleteFromRequiredList (index) {
+        deleteFromRequiredList(index) {
             this.required_products.splice(index, 1);
-        }
+        },
+        async _searchProducts(search) {
+            const { data: { data } } = await axiosClient.get(`/v2/products/search/${search}`);
+            this.products = data;
+        },
     },
     watch: {
-        isCascadePromocodeTypeChosen (value) {
+        isCascadePromocodeTypeChosen(value) {
             if (value) {
                 this.$nextTick(() => {
                     this.promocode.promocode_condition_id = __hardcoded(1);
                 })
             }
+        },
+        searchInput: __debounce(function (newValue) {
+            this.search = newValue;
+        }),
+        async search(value) {
+            if (!value || value.length < 3 || this.isSearching) {
+                return null;
+            }
+            this.isSearching = true;
+            await this._searchProducts(value);
+            this.isSearching = false;
         }
     },
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

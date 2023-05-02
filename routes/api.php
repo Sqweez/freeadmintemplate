@@ -1,36 +1,36 @@
 <?php
 
+use App\Http\Controllers\api\AnalyticsController;
 use App\Http\Controllers\api\ArrivalController;
+use App\Http\Controllers\api\ClientController;
+use App\Http\Controllers\api\PromocodeController;
+use App\Http\Controllers\api\SaleController;
+use App\Http\Controllers\api\StoreController;
 use App\Http\Controllers\api\TransferController;
+use App\Http\Controllers\api\v2\BookingController;
+use App\Http\Controllers\api\v2\BrandMotivationController;
+use App\Http\Controllers\api\v2\CertificateController;
+use App\Http\Controllers\api\v2\CommentController;
+use App\Http\Controllers\api\v2\CompanionController;
+use App\Http\Controllers\api\v2\EducationController;
+use App\Http\Controllers\api\v2\FavoriteController;
 use App\Http\Controllers\api\v2\IHerbController;
+use App\Http\Controllers\api\v2\KaspiController;
+use App\Http\Controllers\api\v2\LoyaltyController;
 use App\Http\Controllers\api\v2\MailingController;
 use App\Http\Controllers\api\v2\MatrixController;
+use App\Http\Controllers\api\v2\PreorderController;
 use App\Http\Controllers\api\v2\ProductController;
-use App\Http\Controllers\api\v2\CertificateController;
-use App\Http\Controllers\api\v2\CompanionController;
 use App\Http\Controllers\api\v2\ReportController;
 use App\Http\Controllers\api\v2\SeoController;
-use App\Http\Controllers\api\v2\WithDrawalController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\AuthorizationMiddleware;
-use App\Http\Controllers\api\v2\FavoriteController;
-use App\Http\Controllers\api\v2\KaspiController;
-use App\Http\Controllers\api\ClientController;
-use App\Http\Controllers\api\WaybillController;
-use App\Http\Controllers\api\PromocodeController;
-use App\Http\Controllers\api\v2\TaskController;
-use App\Http\Controllers\api\v2\EducationController;
-use App\Http\Controllers\api\AnalyticsController;
-use App\Http\Controllers\api\v2\PreorderController;
 use App\Http\Controllers\api\v2\ShiftController;
-use App\Http\Controllers\api\v2\BrandMotivationController;
-use App\Http\Controllers\api\v2\LoyaltyController;
-use App\Http\Controllers\CronController;
-use App\Http\Controllers\api\SaleController;
-use App\Http\Controllers\api\v2\BookingController;
 use App\Http\Controllers\api\v2\SiteController;
 use App\Http\Controllers\api\v2\StockController;
-use App\Http\Controllers\api\v2\CommentController;
+use App\Http\Controllers\api\v2\TaskController;
+use App\Http\Controllers\api\WaybillController;
+use App\Http\Controllers\CronController;
+use App\Http\Middleware\AuthorizationMiddleware;
+use Illuminate\Support\Facades\Route;
 
 // Authorization
 
@@ -209,7 +209,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::apiResource('arrivals', 'api\ArrivalController');
 
     // AnalyticsController
-    Route::prefix('analytics')->group(function() {
+    Route::prefix('analytics')->group(function () {
         Route::get('partners', [AnalyticsController::class, 'partners']);
         Route::get('partner/sales', [AnalyticsController::class, 'getClientPartnerSales']);
         Route::get('partners/{id}', [AnalyticsController::class, 'partnerStats']);
@@ -243,6 +243,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::prefix('products')->group(function () {
+            Route::get('search/{search}', [ProductController::class, 'search']);
             Route::post('mass-iherb', [ProductController::class, 'updateIherbProducts']);
             Route::get('generate-barcode/{id}', [ProductController::class, 'generateBarcode']);
             Route::get('iherb', [ProductController::class, 'getIherbProducts']);
@@ -341,7 +342,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('analytics', [ClientController::class, 'getClientAnalytics']);
         });
 
-        Route::get('cities', [\App\Http\Controllers\api\StoreController::class, 'getCities']);
+        Route::get('cities', [StoreController::class, 'getCities']);
 
         Route::prefix('tasks')->group(function () {
             Route::get('/', [TaskController::class, 'index']);
@@ -352,7 +353,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::delete('/{id}', [TaskController::class, 'destroy']);
         });
 
-        Route::prefix('educations')->group(function() {
+        Route::prefix('educations')->group(function () {
             Route::get('/', [EducationController::class, 'index']);
             Route::post('/', [EducationController::class, 'store']);
             Route::patch('/{id}', [EducationController::class, 'update']);
@@ -361,7 +362,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
         Route::get('brands/analytics', [AnalyticsController::class, 'getBrandSales']);
 
-        Route::prefix('preorder')->group(function() {
+        Route::prefix('preorder')->group(function () {
             Route::get('/', [PreorderController::class, 'index']);
             Route::get('/report', [PreorderController::class, 'getPreOrderReport']);
             Route::post('/', [PreorderController::class, 'store']);
@@ -381,7 +382,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/', [ShiftController::class, 'getShifts']);
         });
 
-        Route::prefix('booking')->group(function() {
+        Route::prefix('booking')->group(function () {
             Route::post('/sale', [BookingController::class, 'createSale']);
             Route::post('/', [BookingController::class, 'store']);
             Route::get('/', [BookingController::class, 'index']);

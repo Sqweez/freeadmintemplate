@@ -171,7 +171,7 @@ class Sale extends Model
     }
 
     public function promocode(): BelongsTo {
-        return $this->belongsTo(Promocode::class)->withDefault([
+        return $this->belongsTo(Promocode::class)->select(['id', 'promocode', 'client_id'])->withDefault([
             'promocode' => '-'
         ]);
     }
@@ -219,7 +219,7 @@ class Sale extends Model
         return $q->with(['client:id,client_name,is_wholesale_buyer', 'user:id,name,store_id', 'store:id,name,type_id','products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate', 'preorder'])
-            ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes']);
+            ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes', 'promocode.partner:id,client_name']);
     }
 
     public function scopeReportSupplier($q, $supplierProducts) {

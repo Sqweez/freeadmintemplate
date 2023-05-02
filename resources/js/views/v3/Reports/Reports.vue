@@ -378,6 +378,12 @@
                                 <v-list-item-subtitle style="white-space: normal;">Промокод</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-list-item v-if="item.promocode.client_id">
+                            <v-list-item-content>
+                                <v-list-item-title style="white-space: normal;">{{ item.promocode.partner.client_name }}</v-list-item-title>
+                                <v-list-item-subtitle style="white-space: normal;">Тренер</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
                         <v-list-item v-if="item.is_booking">
                             <v-list-item-content>
                                 <v-list-item-title>
