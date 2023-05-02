@@ -84,10 +84,10 @@ class StoreController extends Controller
 
         return $stores->map(function (Store $store) {
             return [
-                'id' => $this->id,
-                'city' => $this->city_name->name,
-                'city_id' => $this->city_id,
-                'name' => $this->name,
+                'id' => $store->id,
+                'city' => $store->city_name->name,
+                'city_id' => $store->city_id,
+                'name' => $store->name,
             ];
         });
     }
