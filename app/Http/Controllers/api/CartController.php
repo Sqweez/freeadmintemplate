@@ -4,24 +4,20 @@ namespace App\Http\Controllers\api;
 
 use App\Cart;
 use App\CartProduct;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\shop\CartResource;
-use App\Http\Resources\v2\Order\OrderResource;
-use App\Jobs\Notifications\Order\SendOrderNotificationJob;
-use App\Order;
-use App\OrderProduct;
-use App\Promocode;
-use App\User;
-use App\v2\Models\OrderMessage;
-use App\v2\Models\ProductSku;
-use App\ProductBatch;
-use App\Sale;
-use App\SaleProduct;
-use App\Store;
-use Illuminate\Http\Request;
 use App\Client;
 use App\ClientSale;
 use App\ClientTransaction;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\shop\CartResource;
+use App\Jobs\Notifications\Order\SendOrderNotificationJob;
+use App\Order;
+use App\OrderProduct;
+use App\ProductBatch;
+use App\Sale;
+use App\Store;
+use App\User;
+use App\v2\Models\ProductSku;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use TelegramService;
 
@@ -63,7 +59,11 @@ class CartController extends Controller {
                 ->with([
                     'products', 'products.product',
                     'products.product.product.stocks',
-                    'products.product.attributes', 'products.product.product.attributes'])
+                    'products.product.product.manufacturer',
+                    'products.product.product.subcategory',
+                    'products.product.attributes',
+                    'products.product.product.attributes'
+                    ])
                 ->with(['products.product.batches' => function ($q) use ($store_id) {
                     if (intval($store_id) === -1) {
                         return $q->whereIn('store_id', [1, 6])->where('quantity', '>', 0);
