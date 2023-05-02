@@ -92,13 +92,15 @@ class PromocodeController extends BaseApiController
         return new PromocodeResource($_promocode);
     }
 
-    public function checkPromocode(Request $request) {
+    public function checkPromocode(Request $request): \Illuminate\Http\JsonResponse {
         $cart = $request->get('cart');
         $code = $request->get('promocode');
-        $promocodeAction = CheckPromocodeAction::i();
-        $promocode = $promocodeAction->handle($code, $cart);
+        $promocode = CheckPromocodeAction::i()
+            ->handle($code, $cart);
         return $this->respondSuccess([
             'success' => $promocode['success'],
+            'cart' => $promocode['cart'] ?? null,
+            'promocode' => $promocode['promocode'] ?? null,
         ], $promocode['message']);
     }
 }

@@ -161,9 +161,17 @@ class CartController extends Controller {
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
         $customer_info = $request->get('customer_info');
-        $other_discount = $request->has('discount') ? intval($request->get('discount')) : 0;
+        # $other_discount = $request->has('discount') ? intval($request->get('discount')) : 0;
         $is_iherb = $request->has('iherb');
         $promocode = $request->get('promocode', null);
+        $products = $request->get('products', []);
+
+        // TODO @2023-05-03T00:52:06 UGLY REWORK!!!
+        foreach ($products as $item) {
+            CartProduct::query()
+                ->where('id', $item['cart_product_id'])
+                ->update(['discount' => $item['discount']]);
+        }
 
         $client_id = -1;
         $discount = 0;
@@ -192,8 +200,6 @@ class CartController extends Controller {
             $client_id = $client->id;
         }
 
-        $discount = max($discount, $other_discount);
-
         try {
             DB::beginTransaction();
             $order = $this->createOrder($user_token, $store_id, $customer_info, $client_id, $discount, $is_iherb, $promocode);
@@ -201,16 +207,7 @@ class CartController extends Controller {
             $this->createOrderProducts($order, $store_id, $products);
             CartProduct::where('cart_id', $cart)->delete();
             SendOrderNotificationJob::dispatch($order);
-
-           /* OrderMessage::create([
-                'order_id' => $order['id'],
-                'chat_id' => env('TELEGRAM_KZ_CHAT_ID'),
-                'is_delivered' => false
-            ]);*/
-
-
             DB::commit();
-
             return response()->json([
                 'order' => intval($order->id)
             ], 200);
