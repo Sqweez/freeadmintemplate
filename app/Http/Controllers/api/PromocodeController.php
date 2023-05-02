@@ -97,10 +97,8 @@ class PromocodeController extends BaseApiController
         $code = $request->get('promocode');
         $promocodeAction = CheckPromocodeAction::i();
         $promocode = $promocodeAction->handle($code, $cart);
-        if ($promocode['success']) {
-            return $this->respondSuccess([]);
-        } else {
-            return $this->respondError($promocode['message']);
-        }
+        return $this->respondSuccess([
+            'success' => $promocode['success'],
+        ], $promocode['message']);
     }
 }
