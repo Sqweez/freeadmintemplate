@@ -5,16 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js.LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js.LICENSE.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Promocode.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Promocode.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/ArrivalInfoModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/ArrivalInfoModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/TransferModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/TransferModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +34,40 @@
     </option>
   </component>
   <component name="FormatOnSaveOptions">
-    <option name="myRunOnSave" value="true" />
+    <option name="myAllFileTypesSelected" value="false" />
+    <option name="mySelectedFileTypes">
+      <set>
+        <option value="Angular2Html" />
+        <option value="Blade" />
+        <option value="CSS" />
+        <option value="CoffeeScript" />
+        <option value="Cucumber" />
+        <option value="Dart" />
+        <option value="EditorConfig" />
+        <option value="HTML" />
+        <option value="HTTP Request" />
+        <option value="Haml" />
+        <option value="Ini" />
+        <option value="JSON" />
+        <option value="JavaScript" />
+        <option value="Less" />
+        <option value="Markdown" />
+        <option value="RNG Compact" />
+        <option value="ReST" />
+        <option value="SCSS" />
+        <option value="SQL" />
+        <option value="Sass" />
+        <option value="Shell Script" />
+        <option value="Smarty" />
+        <option value="Svelte" />
+        <option value="Twig" />
+        <option value="TypeScript" />
+        <option value="Vue.js" />
+        <option value="XHTML" />
+        <option value="XML" />
+        <option value="YAML" />
+      </set>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -194,16 +227,14 @@
     "WebServerToolWindowPanel.toolwindow.show.date": "false",
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "code.cleanup.on.save": "true",
     "dart.analysis.tool.window.visible": "false",
-    "last_opened_file_path": "C:/Code/Laravel/iron-crm",
+    "last_opened_file_path": "C:/Code/Vue/topstar-crm",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
     "prettierjs.PrettierConfiguration.Package": "C:\\Code\\Laravel\\iron-crm\\node_modules\\prettier",
-    "rearrange.code.on.save": "true",
     "settings.editor.selected.configurable": "actions.on.save",
     "ts.external.directory.path": "C:\\Users\\Sqweez\\AppData\\Local\\JetBrains\\Toolbox\\apps\\PhpStorm\\ch-0\\222.4459.28\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
@@ -266,14 +297,17 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.prod" />
         <item itemvalue="npm.hot" />
+        <item itemvalue="npm.prod" />
         <item itemvalue="npm.watch-poll" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="" />
@@ -362,7 +396,8 @@
       <workItem from="1681802148756" duration="732000" />
       <workItem from="1682087233326" duration="186000" />
       <workItem from="1682341948505" duration="8319000" />
-      <workItem from="1682603871943" duration="3961000" />
+      <workItem from="1682603871943" duration="4172000" />
+      <workItem from="1683040987707" duration="2197000" />
     </task>
     <servers />
   </component>
