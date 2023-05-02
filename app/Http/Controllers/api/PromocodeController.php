@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Promocode\CreatePromocodeRequest;
 use App\Http\Resources\PromocodeResource;
-use App\Product;
 use App\Promocode;
 use Illuminate\Http\Request;
 
@@ -92,5 +90,11 @@ class PromocodeController extends Controller
             ])->setStatusCode(404);
         }
         return new PromocodeResource($_promocode);
+    }
+
+    public function checkPromocode(Request $request) {
+        $promocode = $request->get('promocode');
+        $cart = $request->get('cart');
+        return $cart;
     }
 }

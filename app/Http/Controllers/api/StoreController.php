@@ -75,4 +75,20 @@ class StoreController extends Controller
     public function getCities() {
         return City::all();
     }
+
+    public function getStoresForApplication() {
+        $stores = Store::query()
+            ->select(['id', 'name', 'city_id'])
+            ->with('city_name')
+            ->get();
+
+        return $stores->map(function (Store $store) {
+            return [
+                'id' => $this->id,
+                'city' => $this->city_name->name,
+                'city_id' => $this->city_id,
+                'name' => $this->name,
+            ];
+        });
+    }
 }
