@@ -5,6 +5,7 @@ namespace App\Http\Resources\shop;
 use App\CartProduct;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
+
 /* @mixin CartProduct */
 class CartProductResource extends JsonResource
 {
@@ -44,7 +45,9 @@ class CartProductResource extends JsonResource
             'discount' => $this->discount,
             'final_price' => $this->product->product->stock_price - ($this->product->product->stock_price * $this->discount / 100),
             'product_price_rub' => $this->product->product->product_price_rub,
-            'manufacturer_id' => $this->product->manufacturer_id,
+            'manufacturer_id' => $this->product->product->manufacturer_id,
+            'category_id' => $this->product->product->category_id,
+            'cart_product_id' => $this->id,
         ];
     }
 }
