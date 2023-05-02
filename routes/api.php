@@ -96,9 +96,11 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::get('favorite', [FavoriteController::class, 'index']);
         Route::get('hits', [\App\Http\Controllers\api\shop\ProductController::class, 'getHitProducts']);
         Route::get('promocode/search/{promocode}', [PromocodeController::class, 'searchPromocode']);
+        Route::post('promocode/check', [PromocodeController::class, 'checkPromocode']);
         Route::get('partners', [AnalyticsController::class, 'getTopPartners']);
         Route::get('footer', [SiteController::class, 'getFooter']);
         Route::get('iherb/price', [IHerbController::class, 'getPriceList']);
+        Route::get('stores', [StoreController::class, 'getStoresForApplication']);
     });
 
     // RevisionController
@@ -222,6 +224,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
     // Promocode
     Route::get('promocode/search/{promocode}', 'api\PromocodeController@searchPromocode');
+    Route::post('promocode/check', 'api\PromocodeController@checkPromocode');
     Route::get('promocode/types', [PromocodeController::class, 'getTypes']);
     Route::resource('promocode', 'api\PromocodeController');
 

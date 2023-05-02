@@ -6,14 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Promocode.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Promocode.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/helpers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/PromocodeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/PromocodeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/StoreController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/StoreController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -297,8 +291,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.hot" />
         <item itemvalue="npm.prod" />
+        <item itemvalue="npm.hot" />
         <item itemvalue="npm.watch-poll" />
         <item itemvalue="npm.dev" />
       </list>
@@ -397,7 +391,7 @@
       <workItem from="1682087233326" duration="186000" />
       <workItem from="1682341948505" duration="8319000" />
       <workItem from="1682603871943" duration="4172000" />
-      <workItem from="1683040987707" duration="2197000" />
+      <workItem from="1683040987707" duration="3089000" />
     </task>
     <servers />
   </component>
