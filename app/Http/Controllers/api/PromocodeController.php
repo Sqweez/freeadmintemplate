@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
+use App\Actions\Promocode\CheckPromocodeAction;
 use App\Http\Resources\PromocodeResource;
 use App\Promocode;
 use Illuminate\Http\Request;
 
-class PromocodeController extends Controller
+class PromocodeController extends BaseApiController
 {
     public function index() {
         return PromocodeResource::collection(Promocode::with('partner')->get());
@@ -93,8 +93,14 @@ class PromocodeController extends Controller
     }
 
     public function checkPromocode(Request $request) {
-        $promocode = $request->get('promocode');
         $cart = $request->get('cart');
-        return $cart;
+        $code = $request->get('promocode');
+        $promocodeAction = CheckPromocodeAction::i();
+        $promocode = $promocodeAction->handle($code, $cart);
+        if ($promocode['success']) {
+            return $this->respondSuccess([]);
+        } else {
+            return $this->respondError($promocode['message']);
+        }
     }
 }
