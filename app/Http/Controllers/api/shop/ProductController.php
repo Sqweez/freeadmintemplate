@@ -342,9 +342,11 @@ class ProductController extends Controller {
         $store_id = intval($request->get('store_id', 16));
         $arrival = Arrival::query()
             ->where('is_completed', 1)
-            ->latest();
+            ->latest()
+            ->first();
 
         $productsIds = $arrival->products->pluck('product_id');
+
         $products = Product::query()
             ->whereHas('sku', function ($query) use ($productsIds) {
                 return $query->whereIn('id', $productsIds);
@@ -359,8 +361,8 @@ class ProductController extends Controller {
                 }
             })
             ->get();
-        
-        ProductsResource::collection(
+
+        return ProductsResource::collection(
             $products
         );
     }
