@@ -58,6 +58,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::post('analytics/search', 'api\AnalyticsController@storeSearch');
         Route::get('stores', 'api\StoreController@indexStores');
         Route::get('categories', 'api\CategoryController@indexShop');
+        Route::get('products/last-arrival', 'api\shop\ProductController@getLastArrivalProducts');
         Route::get('products', 'api\shop\ProductController@getProducts');
         Route::get('stocks/products', 'api\shop\ProductController@getStockProducts');
         Route::get('stocks', [StockController::class, 'getShopActiveStock']);

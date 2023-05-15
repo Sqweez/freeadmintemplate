@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\api\shop;
 
+use App\Arrival;
 use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\shop\ProductsResource;
 use App\Manufacturer;
-use App\v2\Models\ProductSku;
 use App\v2\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller {
 
@@ -338,4 +338,30 @@ class ProductController extends Controller {
         })->values()->sortBy('id')->values();
     }
 
+    public function getLastArrivalProducts(Request $request) {
+        $store_id = intval($request->get('store_id', 16));
+        $arrival = Arrival::query()
+            ->where('is_completed', 1)
+            ->latest();
+
+        $productsIds = $arrival->products->pluck('product_id');
+        $products = Product::query()
+            ->whereHas('sku', function ($query) use ($productsIds) {
+                return $query->whereIn('id', $productsIds);
+            })
+            ->whereIsSiteVisible(true)
+            ->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks'])
+            ->whereHas('batches', function ($q) use ($store_id) {
+                if ($store_id === -1) {
+                    return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
+                } else {
+                    return $q->where('quantity', '>', 0)->where('store_id', $store_id);
+                }
+            })
+            ->get();
+        
+        ProductsResource::collection(
+            $products
+        );
+    }
 }

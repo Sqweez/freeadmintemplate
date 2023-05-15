@@ -31,7 +31,7 @@ class CheckPromocodeAction {
             'success' => true,
             'message' => 'Успех',
             'cart' => $recalculatedCart,
-            'promocode' => $this->promocode->only(['id', 'promocode', 'discount', 'promocode_type_id']),
+            'promocode' => $this->promocode->only(['id', 'promocode', 'discount', 'promocode_type_id', 'promocode_gifts']),
         ];
     }
 
@@ -140,6 +140,16 @@ class CheckPromocodeAction {
         if ($this->promocode->promocode_type_id === __hardcoded(2)) {
             return $this->recalculateFixedDiscount($cart);
         }
+
+        if ($this->promocode->promocode_type_id === __hardcoded(3)) {
+            return $cart;
+        }
+
+        if ($this->promocode->promocode_type_id === __hardcoded(4)) {
+            return $this->recalculateCascadeDiscount($cart);
+        }
+
+        return $cart;
     }
 
     private function recalculatePercentageDiscount($cart) {
@@ -149,7 +159,7 @@ class CheckPromocodeAction {
                     $discount = max($item['discount'], $this->promocode->discount);
                     unset($item['discount']);
                     $item['discount'] = $discount;
-                    $item['final_price'] = $item['product_price'] - $item['product_price'] * $discount / 100;
+                    $item['final_price'] = ceil($item['product_price'] - $item['product_price'] * $discount / 100);
                     return $item;
                 });
         }
@@ -161,7 +171,7 @@ class CheckPromocodeAction {
                         $discount = max($item['discount'], $this->promocode->discount);
                         unset($item['discount']);
                         $item['discount'] = $discount;
-                        $item['final_price'] = $item['product_price'] - $item['product_price'] * $discount / 100;
+                        $item['final_price'] = ceil($item['product_price'] - $item['product_price'] * $discount / 100);
                     }
                     return $item;
                 });
@@ -174,7 +184,7 @@ class CheckPromocodeAction {
                         $discount = max($item['discount'], $this->promocode->discount);
                         unset($item['discount']);
                         $item['discount'] = $discount;
-                        $item['final_price'] = $item['product_price'] - $item['product_price'] * $discount / 100;
+                        $item['final_price'] = ceil($item['product_price'] - $item['product_price'] * $discount / 100);
                     }
                     return $item;
                 });
@@ -187,11 +197,57 @@ class CheckPromocodeAction {
                         $discount = max($item['discount'], $this->promocode->discount);
                         unset($item['discount']);
                         $item['discount'] = $discount;
-                        $item['final_price'] = $item['product_price'] - $item['product_price'] * $discount / 100;
+                        $item['final_price'] = ceil($item['product_price'] - $item['product_price'] * $discount / 100);
                     }
                     return $item;
                 });
         }
+
+        return $cart;
+    }
+
+    private function recalculateCascadeDiscount($cart) {
+        if ($this->promocode->promocode_cascade['type'] == __hardcoded(1)) {
+            return $this->recalculateCascadeDiscountBySum($cart);
+        }
+        if ($this->promocode->promocode_cascade['type'] == __hardcoded(2)) {
+            return $this->recalculateCascadeDiscountByPosition($cart);
+        }
+        return $cart;
+    }
+
+    private function recalculateCascadeDiscountBySum($cart) {
+        $cartTotal = $this->getCartTotal($cart);
+        $cascadePayload = collect($this->promocode->promocode_cascade['payload']);
+        $cascadePayload = $cascadePayload->filter(function ($payload) use ($cartTotal) {
+            return $cartTotal >= $payload['amount'];
+        })->values();
+
+        return $this->calculateCascadeWithDiscount($cascadePayload, $cart);
+    }
+
+    private function getCartTotal($cart) {
+        $cartItems = $this->collectCartItemsByPromocodePurpose($cart);
+        return collect($cartItems)->reduce(function ($a, $c) {
+            return $a + $c['product_price'] * $c['count'];
+        }, 0);
+    }
+
+    private function recalculateCascadeDiscountByPosition($cart) {
+        $cartTotal = $this->getCartTotalCount($cart);
+        $cascadePayload = collect($this->promocode->promocode_cascade['payload']);
+        $cascadePayload = $cascadePayload->filter(function ($payload) use ($cartTotal) {
+            return $cartTotal >= $payload['amount'];
+        })->values();
+
+        return $this->calculateCascadeWithDiscount($cascadePayload, $cart);
+    }
+
+    private function getCartTotalCount($cart) {
+        $cartItems = $this->collectCartItemsByPromocodePurpose($cart);
+        return collect($cartItems)->reduce(function ($a, $c) {
+            return $a + $c['count'];
+        }, 0);
     }
 
     private function recalculateFixedDiscount ($cart) {
@@ -203,5 +259,89 @@ class CheckPromocodeAction {
             'success' => false,
             'message' => $message
         ];
+    }
+
+    /**
+     * @param \Illuminate\Support\Collection $cascadePayload
+     * @param $cart
+     * @return \Illuminate\Support\Collection|mixed
+     */
+    private function calculateCascadeWithDiscount(\Illuminate\Support\Collection $cascadePayload, $cart) {
+        if ($cascadePayload->count() === 0) {
+            return $cart;
+        }
+        $discount = $cascadePayload->last()['discount'];
+
+        if ($this->promocode->promocode_purpose_id === __hardcoded(1)) {
+            return collect($cart)->map(function ($item) use ($discount) {
+                    $discount = max($item['discount'], $discount);
+                    unset($item['discount']);
+                    $item['discount'] = $discount;
+                    $item['final_price'] = ceil($item['product_price'] - $item['product_price'] * $discount / 100);
+                    return $item;
+                });
+        }
+
+        if ($this->promocode->promocode_purpose_id === __hardcoded(2)) {
+            return collect($cart)->map(function ($item) use ($discount) {
+                    if (in_array($item['product_id'], $this->promocode->promocode_purpose_payload)) {
+                        $discount = max($item['discount'], $discount);
+                        unset($item['discount']);
+                        $item['discount'] = $discount;
+                        $item['final_price'] = ceil($item['product_price'] - $item['product_price'] * $discount / 100);
+                    }
+                    return $item;
+                });
+        }
+
+        if ($this->promocode->promocode_purpose_id === __hardcoded(3)) {
+            return collect($cart)->map(function ($item) use ($discount) {
+                    if (in_array($item['category_id'], $this->promocode->promocode_purpose_payload)) {
+                        $discount = max($item['discount'], $discount);
+                        unset($item['discount']);
+                        $item['discount'] = $discount;
+                        $item['final_price'] = ceil($item['product_price'] - $item['product_price'] * $discount / 100);
+                    }
+                    return $item;
+                });
+        }
+
+        if ($this->promocode->promocode_purpose_id === __hardcoded(4)) {
+            return collect($cart)->map(function ($item) use ($discount) {
+                    if (in_array($item['manufacturer_id'], $this->promocode->promocode_purpose_payload)) {
+                        $discount = max($item['discount'], $discount);
+                        unset($item['discount']);
+                        $item['discount'] = $discount;
+                        $item['final_price'] = ceil($item['product_price'] - $item['product_price'] * $discount / 100);
+                    }
+                    return $item;
+                });
+        }
+
+        return $cart;
+    }
+
+    /**
+     * @param $cart
+     * @return \Illuminate\Support\Collection
+     */
+    private function collectCartItemsByPromocodePurpose($cart): \Illuminate\Support\Collection {
+        $cartItems = collect($cart);
+        if ($this->promocode->promocode_purpose_id === __hardcoded(2)) {
+            $cartItems = $cartItems->filter(function ($item) {
+                    return in_array($item['product_id'], $this->promocode->promocode_purpose_payload);
+                });
+        }
+        if ($this->promocode->promocode_purpose_id === __hardcoded(3)) {
+            $cartItems = $cartItems->filter(function ($item) {
+                    return in_array($item['category_id'], $this->promocode->promocode_purpose_payload);
+                });
+        }
+        if ($this->promocode->promocode_purpose_id === __hardcoded(4)) {
+            $cartItems = $cartItems->filter(function ($item) {
+                    return in_array($item['manufacturer_id'], $this->promocode->promocode_purpose_payload);
+                });
+        }
+        return $cartItems;
     }
 }

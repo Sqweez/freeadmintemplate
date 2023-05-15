@@ -82,13 +82,13 @@ class StoreController extends Controller
             ->with('city_name')
             ->get();
 
-        return $stores->map(function (Store $store) {
+        return ['data' => $stores->map(function (Store $store) {
             return [
                 'id' => $store->id,
                 'city' => $store->city_name->name,
                 'city_id' => $store->city_id,
                 'name' => $store->name,
             ];
-        });
+        })];
     }
 }
