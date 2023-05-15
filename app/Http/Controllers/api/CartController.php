@@ -165,12 +165,23 @@ class CartController extends Controller {
         $is_iherb = $request->has('iherb');
         $promocode = $request->get('promocode', null);
         $products = $request->get('products', []);
+        $gifts = $request->get('gifts', []);
 
         // TODO @2023-05-03T00:52:06 UGLY REWORK!!!
         foreach ($products as $item) {
             CartProduct::query()
                 ->where('id', $item['cart_product_id'])
                 ->update(['discount' => $item['discount']]);
+        }
+
+        foreach ($gifts as $gift) {
+            CartProduct::query()
+                ->create([
+                    'cart_id' => $cart,
+                    'product_id' => $gift,
+                    'discount' => 100,
+                    'count' => 1,
+                ]);
         }
 
         $client_id = -1;
