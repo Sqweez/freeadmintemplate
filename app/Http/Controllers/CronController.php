@@ -112,7 +112,7 @@ class CronController extends Controller
     }
 
     public function storePriceList(Request $request) {
-        $products = ProductsResource::collection(ProductService::all())->toArray($request);
+        $products = ProductsResource::collection(ProductService::all($request))->toArray($request);
         $batches = ProductBatch::query()
             ->whereIn('store_id', [1, 6])
             ->where('quantity', '>', 0)

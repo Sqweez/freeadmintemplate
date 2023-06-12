@@ -144,7 +144,7 @@
                                 label="Способ оплаты"
                                 v-model="payment_type"
                                 :items="payment_types"
-                                :disabled="isRed || isSplitPayment"
+                                :disabled="isRed || isSplitPayment || IS_STOREKEEPER"
                                 item-text="name"
                                 outlined
                                 class="w-150px"
@@ -504,7 +504,7 @@
                             v-model="storeFilter"
                             item-value="id"
                             label="Склад"
-                            :disabled="!(is_admin || IS_BOSS)"
+                            :disabled="!(is_admin || IS_BOSS || IS_STOREKEEPER)"
                         />
                     </v-col>
                 </v-row>
@@ -603,21 +603,22 @@
 </template>
 
 <script>
-    import ClientCart from "@/components/Modal/ClientCart";
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import WayBillModal from "@/components/Modal/WayBillModal";
-    import {TOAST_TYPE} from "@/config/consts";
-    import ACTIONS from "@/store/actions";
-    import {mapActions} from 'vuex';
-    import CheckModal from "@/components/Modal/CheckModal";
-    import axios from "axios";
-    import product from "@/mixins/product";
-    import product_search from "@/mixins/product_search";
-    import cart from "@/mixins/cart";
-    import CertificateModal from "@/components/Modal/CertificateModal";
-    import PreordersListModal from "@/components/Modal/PreordersListModal";
-    import moment from 'moment';
-    export default {
+import ClientCart from "@/components/Modal/ClientCart";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import WayBillModal from "@/components/Modal/WayBillModal";
+import {TOAST_TYPE} from "@/config/consts";
+import ACTIONS from "@/store/actions";
+import {mapActions} from 'vuex';
+import CheckModal from "@/components/Modal/CheckModal";
+import axios from "axios";
+import product from "@/mixins/product";
+import product_search from "@/mixins/product_search";
+import cart from "@/mixins/cart";
+import CertificateModal from "@/components/Modal/CertificateModal";
+import PreordersListModal from "@/components/Modal/PreordersListModal";
+import moment from 'moment';
+
+export default {
         components: {
             PreordersListModal,
             CertificateModal,
@@ -637,6 +638,9 @@
             ]);
             await this.$store.dispatch(ACTIONS.GET_STORES);
             this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
+            if (this.IS_STOREKEEPER) {
+                this.payment_type = 4;
+            }
             this.client = this.user.store.type_id === 3 ? {
                     id: -1,
                     client_name: 'Гость',
