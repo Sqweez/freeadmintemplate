@@ -78,6 +78,7 @@ class StoreController extends Controller
 
     public function getStoresForApplication() {
         $stores = Store::query()
+            ->where('type_id', 1)
             ->select(['id', 'name', 'city_id'])
             ->with('city_name')
             ->get();

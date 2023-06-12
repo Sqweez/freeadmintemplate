@@ -4,7 +4,7 @@ import Stores from "@/views/Stores/Stores";
 import Control from "@/views/Control/Control";
 import Clients from "@/views/Clients/Clients";
 import Transfers from "@/views/Transfers/Transfers";
-import Hits from '@/views/Hits/Hits';
+import Hits from "@/views/Hits/Hits";
 import Login from "@/views/Login/Login";
 import Goals from "@/views/Goals/Goals";
 import Sportsmen from "@/views/Sportsmen/Sportsmen";
@@ -16,13 +16,13 @@ import Arrivals from "@/views/Arrivals/Arrivals";
 import ObserverPage from "@/views/ObserverPage/ObserverPage";
 import Promocodes from "@/views/Promocodes/Promocodes";
 import PartnersStats from "@/views/PartnersStats/PartnersStats";
-import ProductsV2 from '@/views/v2/Products/Products';
-import ProductsV3 from '@/views/v3/Products/Products';
-import CartV3 from '@/views/v3/Cart/Cart';
-import CartPartner from '@/views/v3/Cart/CartPartner';
+import ProductsV2 from "@/views/v2/Products/Products";
+import ProductsV3 from "@/views/v3/Products/Products";
+import CartV3 from "@/views/v3/Cart/Cart";
+import CartPartner from "@/views/v3/Cart/CartPartner";
 import Banner from "@/views/Banners/Banner";
-import ReportsV3 from '@/views/v3/Reports/Reports';
-import RelatedProducts from '@/views/v3/RelatedProducts/RelatedProducts';
+import ReportsV3 from "@/views/v3/Reports/Reports";
+import RelatedProducts from "@/views/v3/RelatedProducts/RelatedProducts";
 import KaspiProducts from "@/views/Kaspi/KaspiProducts";
 import KaspiOrders from "@/views/Kaspi/KaspiOrders";
 import OrdersPage from "@/views/Orders/OrdersPage";
@@ -70,56 +70,54 @@ import ProductSubcategories from "@/views/Moderator/ProductSubcategories";
 import IherbIndexPage from "@/views/IHerb/IherbIndexPage";
 import BestBeforeIndex from "@/views/BestBefore/BestBeforeIndex";
 import WithDrawalIndex from "@/views/WithDrawal/WithDrawalIndex";
-import TerminalIndex from "@/views/Terminal/TerminalIndex";
 import SettingsIndex from "@/views/Settings/SettingsIndex";
-import WholesaleClients from '@/views/Clients/WholesaleClients';
-import MailingIndex from '@/views/Mailing/MailingIndex';
-import SingleSaleReport from '@/views/v3/Reports/SingleSaleReport';
-import PromocodesCreate from '@/views/Promocodes/PromocodesCreate';
-import MatrixIndex from '@/views/Matrix/MatrixIndex';
-import MatrixCreate from '@/views/Matrix/MatrixCreate';
-import MatrixEdit from '@/views/Matrix/MatrixEdit';
-import IherbProductsPage from '@/views/IHerb/IherbProductsPage';
-import IherbMassAssignment from '@/views/IHerb/IherbMassAssignment';
+import WholesaleClients from "@/views/Clients/WholesaleClients";
+import MailingIndex from "@/views/Mailing/MailingIndex";
+import SingleSaleReport from "@/views/v3/Reports/SingleSaleReport";
+import PromocodesCreate from "@/views/Promocodes/PromocodesCreate";
+import MatrixIndex from "@/views/Matrix/MatrixIndex";
+import MatrixCreate from "@/views/Matrix/MatrixCreate";
+import MatrixEdit from "@/views/Matrix/MatrixEdit";
+import IherbProductsPage from "@/views/IHerb/IherbProductsPage";
+import IherbMassAssignment from "@/views/IHerb/IherbMassAssignment";
 
 const routes = [
     {
-        path: '/',
-        component: Dashboard,
+        path: "/",
+        component: Dashboard
     },
     {
-        path: '/users',
+        path: "/users",
         component: Users,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
-            },
+                IS_BOSS: true
+            }
         }
     },
     {
-        path: '/stores',
+        path: "/stores",
         component: Stores,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
-            },
+                IS_BOSS: true
+            }
         }
-
     },
     {
-        path: '/categories',
+        path: "/categories",
         component: Control,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
-            },
+                IS_BOSS: true
+            }
         }
     },
     {
-        path: '/clients',
+        path: "/clients",
         component: Clients,
         meta: {
             CAN_ENTER: {
@@ -128,12 +126,12 @@ const routes = [
                 IS_SENIORSELLER: true,
                 IS_BOSS: true,
                 IS_MARKETOLOG: true,
-                IS_FRANCHISE: true,
+                IS_FRANCHISE: true
             }
         }
     },
     {
-        path: '/clients/wholesale',
+        path: "/clients/wholesale",
         component: WholesaleClients,
         meta: {
             CAN_ENTER: {
@@ -141,12 +139,12 @@ const routes = [
                 IS_SELLER: true,
                 IS_SENIORSELLER: true,
                 IS_BOSS: true,
-                IS_FRANCHISE: true,
+                IS_FRANCHISE: true
             }
         }
     },
     {
-        path: '/clients/:id',
+        path: "/clients/:id",
         component: ClientView,
         meta: {
             CAN_ENTER: {
@@ -160,7 +158,7 @@ const routes = [
         }
     },
     {
-        path: '/analytics/clients/sales',
+        path: "/analytics/clients/sales",
         component: ClientSalesDate,
         meta: {
             CAN_ENTER: {
@@ -171,67 +169,67 @@ const routes = [
         }
     },
     {
-        path: '/plan',
+        path: "/plan",
         component: Plan,
         meta: {
             CAN_ENTER: {
-                IS_BOSS: true,
-            },
+                IS_BOSS: true
+            }
         }
     },
     {
-        path: '/transfer',
+        path: "/transfer",
         component: Transfers
     },
     {
-        path: '/transfers/update/:id',
+        path: "/transfers/update/:id",
         component: TransferUpdate
     },
     {
-        path: '/shop/products',
+        path: "/shop/products",
         component: Hits
     },
     {
-        path: '/shop/goals',
+        path: "/shop/goals",
         component: Goals
     },
     {
-        path: '/shop/sportsmen',
+        path: "/shop/sportsmen",
         component: Sportsmen
     },
     {
-        path: '/login',
-        name: 'Login',
+        path: "/login",
+        name: "Login",
         component: Login,
         meta: {
             CAN_ENTER: {
                 IS_GUEST: true
-            },
+            }
         }
     },
     {
-        path: '/stats/mvp_products',
+        path: "/stats/mvp_products",
         component: MVPProducts,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
-            },
+                IS_BOSS: true
+            }
         }
     },
     {
-        path: '/shop/rating',
+        path: "/shop/rating",
         component: Rating,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true,
                 IS_MARKETOLOG: true
-            },
+            }
         }
     },
     {
-        path: '/shop/banners',
+        path: "/shop/banners",
         component: Banner,
         meta: {
             CAN_ENTER: {
@@ -239,19 +237,19 @@ const routes = [
                 IS_MODERATOR: true,
                 IS_BOSS: true,
                 IS_MARKETOLOG: true
-            },
+            }
         }
     },
     {
-        path: '/shop/orders',
-        component: OrdersPage,
+        path: "/shop/orders",
+        component: OrdersPage
     },
     {
-        path: '/iherb/mass',
+        path: "/iherb/mass",
         component: IherbMassAssignment
     },
     {
-        path: '/shop/related',
+        path: "/shop/related",
         component: RelatedProducts,
         meta: {
             CAN_ENTER: {
@@ -263,19 +261,19 @@ const routes = [
         }
     },
     {
-        path: '/revision',
+        path: "/revision",
         component: Revision,
         meta: {
             CAN_ENTER: {
                 IS_SELLER: true,
                 IS_ADMIN: true,
                 IS_BOSS: true,
-                IS_SENIORSELLER: true,
+                IS_SENIORSELLER: true
             }
         }
     },
     {
-        path: '/arrivals',
+        path: "/arrivals",
         component: Arrivals,
         meta: {
             CAN_ENTER: {
@@ -284,24 +282,23 @@ const routes = [
                 IS_STOREKEEPER: true,
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
-                IS_MARKETOLOG: true,
-            },
+                IS_MARKETOLOG: true
+            }
         }
     },
     {
-        path: '/observer',
+        path: "/observer",
         component: ObserverPage,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_OBSERVER: true,
-                IS_BOSS: true,
-
-            },
+                IS_BOSS: true
+            }
         }
     },
     {
-        path: '/promocode',
+        path: "/promocode",
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
@@ -310,12 +307,12 @@ const routes = [
                 IS_SENIORSELLER: true,
                 IS_MARKETOLOG: true,
                 IS_FRANCHISE: true
-            },
+            }
         },
         component: Promocodes
     },
     {
-        path: '/promocodes/create',
+        path: "/promocodes/create",
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
@@ -324,32 +321,32 @@ const routes = [
                 IS_SENIORSELLER: true,
                 IS_MARKETOLOG: true,
                 IS_FRANCHISE: true
-            },
+            }
         },
         component: PromocodesCreate
     },
     {
-        path: '/stats/partners',
+        path: "/stats/partners",
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
-            },
+                IS_BOSS: true
+            }
         },
         component: PartnersStats
     },
     {
-        path: '/v2/products',
+        path: "/v2/products",
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
-            },
+                IS_BOSS: true
+            }
         },
         component: ProductsV2
     },
     {
-        path: '/products',
+        path: "/products",
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
@@ -359,13 +356,13 @@ const routes = [
                 IS_SENIORSELLER: true,
                 IS_SELLER: true,
                 IS_MODERATOR: true,
-                IS_FRANCHISE: true,
-            },
+                IS_FRANCHISE: true
+            }
         },
         component: ProductsV3
     },
     {
-        path: '/products/balance',
+        path: "/products/balance",
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
@@ -377,7 +374,7 @@ const routes = [
         component: ProductBalance
     },
     {
-        path: '/cart',
+        path: "/cart",
         component: CartV3,
         meta: {
             CAN_ENTER: {
@@ -385,12 +382,13 @@ const routes = [
                 IS_SELLER: true,
                 IS_BOSS: true,
                 IS_SENIORSELLER: true,
-                IS_FRANCHISE: true
+                IS_FRANCHISE: true,
+                IS_STOREKEEPER: true
             }
         }
     },
     {
-        path: '/cart/partner',
+        path: "/cart/partner",
         component: CartPartner,
         meta: {
             CAN_ENTER: {
@@ -401,25 +399,25 @@ const routes = [
         }
     },
     {
-        path: '/reports',
+        path: "/reports",
         component: ReportsV3
     },
     {
-        path: '/reports/:id',
+        path: "/reports/:id",
         component: SingleSaleReport
     },
     {
-        path: '/kaspi/products',
+        path: "/kaspi/products",
         component: KaspiProducts,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true
-            },
-        },
+            }
+        }
     },
     {
-        path: '/kaspi/orders',
+        path: "/kaspi/orders",
         component: KaspiOrders,
         meta: {
             CAN_ENTER: {
@@ -429,7 +427,7 @@ const routes = [
         }
     },
     {
-        path: '/moderator/products',
+        path: "/moderator/products",
         component: ModeratorProducts,
         meta: {
             CAN_ENTER: {
@@ -439,7 +437,7 @@ const routes = [
         }
     },
     {
-        path: '/moderator/news',
+        path: "/moderator/news",
         component: NewsPage,
         meta: {
             CAN_ENTER: {
@@ -449,7 +447,7 @@ const routes = [
         }
     },
     {
-        path: '/reports/products',
+        path: "/reports/products",
         component: ProductReports,
         meta: {
             CAN_ENTER: {
@@ -459,7 +457,7 @@ const routes = [
         }
     },
     {
-        path: '/supplier/reports',
+        path: "/supplier/reports",
         component: SupplierReports,
         meta: {
             CAN_ENTER: {
@@ -470,18 +468,18 @@ const routes = [
         }
     },
     {
-        path: '/companions/transfer',
+        path: "/companions/transfer",
         component: CompanionTransferIndex,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_PARTNER_SELLERS: true,
-                IS_BOSS: true,
+                IS_BOSS: true
             }
         }
     },
     {
-        path: '/companion/products',
+        path: "/companion/products",
         component: CompanionProducts,
         meta: {
             CAN_ENTER: {
@@ -492,7 +490,7 @@ const routes = [
         }
     },
     {
-        path: '/documents',
+        path: "/documents",
         component: CreateDocuments,
         meta: {
             CAN_ENTER: {
@@ -503,29 +501,29 @@ const routes = [
         }
     },
     {
-        path: '/documents/list',
+        path: "/documents/list",
         component: DocumentsList,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
+                IS_BOSS: true
                 // IS_SELLER: true
             }
         }
     },
     {
-        path: '/documents/price/list',
+        path: "/documents/price/list",
         component: PriceList,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
+                IS_BOSS: true
                 //IS_SELLER: true
             }
         }
     },
     {
-        path: '/analytics/clients',
+        path: "/analytics/clients",
         component: AnalyticsClients,
         meta: {
             CAN_ENTER: {
@@ -535,7 +533,7 @@ const routes = [
         }
     },
     {
-        path: '/analytics/brands',
+        path: "/analytics/brands",
         component: Brands,
         meta: {
             CAN_ENTER: {
@@ -545,7 +543,7 @@ const routes = [
         }
     },
     {
-        path: '/analytics/sales/brands',
+        path: "/analytics/sales/brands",
         component: SaleAnalyticsByBrand,
         meta: {
             CAN_ENTER: {
@@ -556,7 +554,7 @@ const routes = [
         }
     },
     {
-        path: '/analytics/sales/brands/sellers',
+        path: "/analytics/sales/brands/sellers",
         component: SaleAnalyticsBySellerAndProducts,
         meta: {
             CAN_ENTER: {
@@ -567,7 +565,7 @@ const routes = [
         }
     },
     {
-        path: '/analytics/sales/schedule',
+        path: "/analytics/sales/schedule",
         component: SalesSchedule,
         meta: {
             CAN_ENTER: {
@@ -578,7 +576,7 @@ const routes = [
         }
     },
     {
-        path: '/kaspi/analytics',
+        path: "/kaspi/analytics",
         component: KaspiAnalytics,
         meta: {
             CAN_ENTER: {
@@ -588,7 +586,7 @@ const routes = [
         }
     },
     {
-        path: '/tasks/index',
+        path: "/tasks/index",
         component: TasksIndex,
         meta: {
             CAN_ENTER: {
@@ -599,45 +597,45 @@ const routes = [
         }
     },
     {
-        path: '/education/index',
-        component: EducationIndex,
+        path: "/education/index",
+        component: EducationIndex
     },
     {
-        path: '/products/stock/out',
+        path: "/products/stock/out",
         component: ProductsOutOfStock,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
-                IS_BOSS: true,
+                IS_BOSS: true
             }
         }
     },
     {
-        path: '/preorders/index',
+        path: "/preorders/index",
         component: PreordersIndex
     },
     {
-        path: '/shifts/settings',
+        path: "/shifts/settings",
         component: ShiftSettings
     },
     {
-        path: '/shifts/penalty',
+        path: "/shifts/penalty",
         component: ShiftPenalty
     },
     {
-        path: '/shifts/index',
+        path: "/shifts/index",
         component: ShiftsList
     },
     {
-        path: '/analytics/sales',
+        path: "/analytics/sales",
         component: SaleAnalytics
     },
     {
-        path: '/analytics/arrivals',
+        path: "/analytics/arrivals",
         component: ArrivalAnalytics
     },
     {
-        path: '/economy/seller/earnings',
+        path: "/economy/seller/earnings",
         component: ProductEarning,
         meta: {
             CAN_ENTER: {
@@ -646,7 +644,7 @@ const routes = [
         }
     },
     {
-        path: '/economy/margin/types',
+        path: "/economy/margin/types",
         component: ProductMarginTypes,
         meta: {
             CAN_ENTER: {
@@ -657,23 +655,23 @@ const routes = [
         }
     },
     {
-        path: '/products/tags',
-        component: ProductTags,
+        path: "/products/tags",
+        component: ProductTags
     },
     {
-        path: '/booking',
-        component: BookingIndex,
+        path: "/booking",
+        component: BookingIndex
     },
     {
-        path: '/booking/create',
-        component: CurrentArrivals,
+        path: "/booking/create",
+        component: CurrentArrivals
     },
     {
-        path: '/booking/:id',
-        component: BookingCart,
+        path: "/booking/:id",
+        component: BookingCart
     },
     {
-        path: '/site/footer',
+        path: "/site/footer",
         component: SiteFooter,
         meta: {
             CAN_ENTER: {
@@ -685,7 +683,7 @@ const routes = [
         }
     },
     {
-        path: '/stocks/index',
+        path: "/stocks/index",
         component: StocksIndex,
         meta: {
             CAN_ENTER: {
@@ -696,7 +694,7 @@ const routes = [
         }
     },
     {
-        path: '/stocks/create',
+        path: "/stocks/create",
         component: StocksCreate,
         meta: {
             CAN_ENTER: {
@@ -707,7 +705,7 @@ const routes = [
         }
     },
     {
-        path: '/analytics/trainer/rating',
+        path: "/analytics/trainer/rating",
         component: TrainerSales,
         meta: {
             CAN_ENTER: {
@@ -718,7 +716,7 @@ const routes = [
         }
     },
     {
-        path: '/analytics/partners/rating',
+        path: "/analytics/partners/rating",
         component: PartnerSales,
         meta: {
             CAN_ENTER: {
@@ -729,49 +727,49 @@ const routes = [
         }
     },
     {
-        path: '/seo/category',
+        path: "/seo/category",
         component: SeoCategory
     },
     {
-        path: '/products/subcategories',
+        path: "/products/subcategories",
         component: ProductSubcategories
     },
     {
-        path: '/products/iherb/price',
+        path: "/products/iherb/price",
         component: IherbIndexPage
     },
     {
-        path: '/products/iherb',
+        path: "/products/iherb",
         component: IherbProductsPage
     },
     {
-        path: '/products/best-before',
+        path: "/products/best-before",
         component: BestBeforeIndex
     },
     {
-        path: '/with-drawal',
+        path: "/with-drawal",
         component: WithDrawalIndex
     },
     {
-        path: '/settings',
+        path: "/settings",
         component: SettingsIndex
     },
     {
-        path: '/mailing',
+        path: "/mailing",
         component: MailingIndex
     },
     {
-        path: '/matrixes',
-        component: MatrixIndex,
+        path: "/matrixes",
+        component: MatrixIndex
     },
     {
-        path: '/matrixes/create',
-        component: MatrixCreate,
+        path: "/matrixes/create",
+        component: MatrixCreate
     },
     {
-        path: '/matrixes/:id',
-        component: MatrixEdit,
-    },
+        path: "/matrixes/:id",
+        component: MatrixEdit
+    }
 ];
 
 export default routes;

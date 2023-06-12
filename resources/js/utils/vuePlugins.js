@@ -3,25 +3,25 @@ import LoadingService from "@/utils/loadingService";
 import ColorService from "@/utils/colorService";
 import FileService from "@/utils/fileService";
 import DatePlugin from "@/utils/datePlugin";
-import BarcodeService from '@/utils/barcodeService';
+import BarcodeService from "@/utils/barcodeService";
 import store from "@/store";
-import {mapGetters} from "vuex";
-import EconomyService from '@/utils/economyService';
+import { mapGetters } from "vuex";
+import EconomyService from "@/utils/economyService";
 
 export default {
     install(Vue, options) {
         Vue.mixin({
             methods: {
-                $evaluate: param => eval('this.'+param)
+                $evaluate: param => eval("this." + param)
             },
             computed: {
                 ...mapGetters({
-                    $stores: 'stores',
-                    $storeFilters: 'store_filters',
-                    $users: 'users',
-                    $userFilters: 'user_filters'
+                    $stores: "stores",
+                    $storeFilters: "store_filters",
+                    $users: "users",
+                    $userFilters: "user_filters"
                 }),
-                $barcode () {
+                $barcode() {
                     return new BarcodeService();
                 },
                 $toast() {
@@ -31,9 +31,9 @@ export default {
                     return new DatePlugin();
                 },
                 $loading() {
-                    return new LoadingService(store)
+                    return new LoadingService(store);
                 },
-                $economy () {
+                $economy() {
                     return new EconomyService();
                 },
                 $color() {
@@ -42,7 +42,7 @@ export default {
                 $file() {
                     return new FileService();
                 },
-                $user () {
+                $user() {
                     return this.$store.getters.USER;
                 },
                 isSeller() {
@@ -60,8 +60,11 @@ export default {
                 IS_SUPERUSER() {
                     return this.IS_BOSS || this.isAdmin || this.IS_MARKETOLOG;
                 },
-                IS_MARKETOLOG () {
+                IS_MARKETOLOG() {
                     return this.$store.getters.IS_MARKETOLOG;
+                },
+                IS_STOREKEEPER() {
+                    return this.$store.getters.IS_STOREKEEPER;
                 },
                 IS_SENIOR_SELLER() {
                     return this.$store.getters.IS_SENIOR_SELLER;
@@ -72,13 +75,13 @@ export default {
                 IS_LOADING() {
                     return this.$store.getters.IS_LOADING;
                 },
-                IS_MODERATOR () {
+                IS_MODERATOR() {
                     return this.$store.getters.IS_MODERATOR;
                 },
-                IS_FRANCHISE () {
+                IS_FRANCHISE() {
                     return this.$store.getters.IS_FRANCHISE;
                 }
             }
-        })
+        });
     }
-}
+};

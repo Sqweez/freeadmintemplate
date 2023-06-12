@@ -127,7 +127,7 @@
                         v-model="child_store"
                         item-value="id"
                         label="Склад"
-                        :disabled="!IS_SUPERUSER"
+                        :disabled="!IS_SUPERUSER && !IS_STOREKEEPER"
                     />
                 </v-col>
                 <v-col cols="12" lg="3">
@@ -195,7 +195,7 @@
                             v-model="storeFilter"
                             item-value="id"
                             label="Склад"
-                            :disabled="!IS_SUPERUSER"
+                            :disabled="!IS_SUPERUSER && !IS_STOREKEEPER"
                         />
                     </v-col>
                 </v-row>
@@ -259,18 +259,18 @@
 </template>
 
 <script>
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import WayBillModal from "@/components/Modal/WayBillModal";
-    import ACTIONS from "@/store/actions";
-    import axios from 'axios';
-    import uploadFile, {deleteFile} from "@/api/upload";
-    import product from "@/mixins/product";
-    import product_search from "@/mixins/product_search";
-    import cart from "@/mixins/cart";
-    import {__hardcoded} from '@/utils/helpers';
-    import axiosClient from '@/utils/axiosClient';
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import WayBillModal from "@/components/Modal/WayBillModal";
+import ACTIONS from "@/store/actions";
+import axios from 'axios';
+import uploadFile, {deleteFile} from "@/api/upload";
+import product from "@/mixins/product";
+import product_search from "@/mixins/product_search";
+import cart from "@/mixins/cart";
+import {__hardcoded} from '@/utils/helpers';
+import axiosClient from '@/utils/axiosClient';
 
-    export default {
+export default {
         components: {
             ConfirmationModal,
             WayBillModal

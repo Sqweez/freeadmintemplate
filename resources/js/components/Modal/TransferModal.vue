@@ -195,7 +195,7 @@ export default {
             return !!this.transfer.filter(t => t.accepted).length
         },
         canEdit() {
-            return this.IS_SUPERUSER && this.confirmMode;
+            return (this.IS_SUPERUSER || this.IS_STOREKEEPER) && this.confirmMode;
         }
     }
 }
