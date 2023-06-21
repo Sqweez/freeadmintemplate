@@ -6,17 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CronController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CronController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/StoreController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/StoreController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/TransferModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/TransferModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/NewTransferSegment.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/NewTransferSegment.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/router/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/router/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/utils/vuePlugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/vuePlugins.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/KaspiController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/KaspiController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -405,7 +395,10 @@
       <workItem from="1684163352770" duration="65000" />
       <workItem from="1684227699716" duration="70000" />
       <workItem from="1685094317247" duration="1969000" />
-      <workItem from="1686594478733" duration="797000" />
+      <workItem from="1686594478733" duration="962000" />
+      <workItem from="1687177781443" duration="432000" />
+      <workItem from="1687178723020" duration="542000" />
+      <workItem from="1687349117914" duration="57000" />
     </task>
     <servers />
   </component>
