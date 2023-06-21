@@ -8,9 +8,9 @@ use App\Sale;
 use App\SaleProduct;
 use App\Store;
 use App\v2\Models\ProductSku;
-use Illuminate\Http\Response;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class KaspiController extends Controller {
 
@@ -85,6 +85,10 @@ class KaspiController extends Controller {
                     }
 
                     if ($kaspiStoreId === 19) {
+                        $kaspiStoreId = '9';
+                    }
+
+                    if ($kaspiStoreId === 23) {
                         $kaspiStoreId = '9';
                     }
 
