@@ -28,6 +28,8 @@ use Illuminate\Support\Carbon;
  * @mixin \Eloquent
  * @property string $mobile_image
  * @method static \Illuminate\Database\Eloquent\Builder|Banner whereMobileImage($value)
+ * @property int $website
+ * @method static \Illuminate\Database\Eloquent\Builder|Banner whereWebsite($value)
  */
 class Banner extends Model
 {

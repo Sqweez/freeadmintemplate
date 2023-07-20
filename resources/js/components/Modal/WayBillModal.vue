@@ -13,6 +13,13 @@
                 </v-btn>
             </v-card-title>
             <v-card-text>
+                <v-select
+                    label="Юридическое лицо"
+                    v-model="entityId"
+                    :items="entities"
+                    item-text="name"
+                    item-value="id"
+                />
                 <v-text-field
                     label="Организация-получатель"
                     v-model="organization"
@@ -23,7 +30,7 @@
                     Отмена
                 </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn text color="success" @click="$emit('submit', organization)">
+                <v-btn text color="success" @click="$emit('submit', { organization, entityId })">
                     Печать накладной <v-icon>mdi-check</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -35,9 +42,14 @@
     export default {
         data: () => ({
             organization: '',
+            entityId: null,
         }),
         methods: {},
-        computed: {},
+        computed: {
+            entities () {
+                return this.$store.getters.legal_entities;
+            },
+        },
         props: {
             state: {
                 type: Boolean,

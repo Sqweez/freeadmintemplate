@@ -4,9 +4,32 @@
             <v-card-title class="justify-space-between">
                 <span>Корзина</span>
                 <div>
-                    <v-btn depressed color="error" class="top-button" @click="waybillModal = true;">
-                        Сформировать накладную
-                    </v-btn>
+                    <v-menu
+                        transition="scale-transition"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                color="error"
+                                v-on="on"
+                            >
+                                Сформировать документ
+                            </v-btn>
+                        </template>
+
+                        <v-list>
+                            <v-list-item
+                                v-for="(item, i) in doc_types"
+                                :key="i"
+                            >
+                                <v-list-item-title>
+                                    <v-btn text depressed @click="_onCreateDocumentClick(i)" style="width: 100%!important;">
+                                        {{ item.title }}
+                                    </v-btn>
+                                </v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+
                 </div>
             </v-card-title>
             <v-card-text style="padding: 0;">
@@ -242,8 +265,8 @@
                         <tr>
                             <td>{{ client.client_name }}</td>
                             <td>{{ client.client_phone }}</td>
-                            <td>{{ client.total_sum | priceFilters}}</td>
-                            <td>{{ client.client_balance | priceFilters}}</td>
+                            <td>{{ client.total_sum | priceFilters }}</td>
+                            <td>{{ client.client_balance | priceFilters }}</td>
                             <td>{{ client.client_discount }}%</td>
                             <td>
                                 <v-btn depressed icon @click="cancelClient">
@@ -270,7 +293,7 @@
                     <v-list-item>
                         <v-list-item-content>
                             <v-list-item-subtitle class="client__table-heading">Сумма покупок</v-list-item-subtitle>
-                            <v-list-item-title>{{ client.total_sum | priceFilters}}</v-list-item-title>
+                            <v-list-item-title>{{ client.total_sum | priceFilters }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item>
@@ -351,7 +374,8 @@
                                                 {{ item.product_name }}
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
-                                                {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                                {{ item.attributes.map(a => a.attribute_value).join(', ') }},
+                                                {{ item.manufacturer.manufacturer_name }}
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
@@ -363,7 +387,10 @@
                                     <v-btn depressed text icon color="error" @click="decreaseCartCount(index)">
                                         <v-icon>mdi-minus</v-icon>
                                     </v-btn>
-                                    <v-text-field v-model="item.count" type="number" style="min-width: 40px; max-width: 40px; text-align: center"  @change="updateCount($event, item)" @input="updateCount($event, item)"/>
+                                    <v-text-field v-model="item.count" type="number"
+                                                  style="min-width: 40px; max-width: 40px; text-align: center"
+                                                  @change="updateCount($event, item)"
+                                                  @input="updateCount($event, item)"/>
                                     <v-btn depressed text icon color="success" @click="increaseCartCount(index)">
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
@@ -384,7 +411,7 @@
                             </td>
                             <td>
                                 <span v-if="!isFullWholesalePurchase">
-                                    {{ item.product_price | priceFilters}}
+                                    {{ item.product_price | priceFilters }}
                                 </span>
                                 <div v-else class="d-flex align-center">
                                     <v-btn icon @click.prevent="item.product_price = item.initial_price">
@@ -424,10 +451,10 @@
                         <tbody class="background-iron-grey fz-18">
                         <tr class="pt-5">
                             <td class="text-center">{{ cartCount }} шт.</td>
-                            <td class="text-center">{{ subtotal | priceFilters}}</td>
+                            <td class="text-center">{{ subtotal | priceFilters }}</td>
                             <td class="text-center" v-if="!isDiscountDisabled">{{ discount }}%</td>
-                            <td class="text-center" v-if="!isDiscountDisabled">{{ discountTotal | priceFilters}}</td>
-                            <td class="text-center" v-if="preorder">{{ preorder.amount | priceFilters}}</td>
+                            <td class="text-center" v-if="!isDiscountDisabled">{{ discountTotal | priceFilters }}</td>
+                            <td class="text-center" v-if="preorder">{{ preorder.amount | priceFilters }}</td>
                             <td class="text-center green--text darken-1">{{ finalPrice | priceFilters }}</td>
                             <td class="green-text darken-1 text-center" v-if="isCashPayment">
                                 <v-text-field
@@ -443,7 +470,8 @@
                     </template>
                 </v-simple-table>
                 <div class="background-iron-grey pa-10">
-                    <v-btn depressed color="error" block style="font-size: 16px" @click="clientCartModal = true" v-if="!client">
+                    <v-btn depressed color="error" block style="font-size: 16px" @click="clientCartModal = true"
+                           v-if="!client">
                         Выбрать клиента
                     </v-btn>
                     <v-btn depressed color="error" block style="font-size: 16px" @click="onSale" v-else>
@@ -459,7 +487,7 @@
             <v-card-title>
                 Товары
             </v-card-title>
-            <v-card-text >
+            <v-card-text>
                 <v-row>
                     <v-col cols="12" xl="10">
                         <v-text-field
@@ -544,7 +572,8 @@
                                         {{ item.product_name }}
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
-                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}, {{ item.manufacturer.manufacturer_name }}
+                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }},
+                                        {{ item.manufacturer.manufacturer_name }}
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
@@ -557,7 +586,8 @@
                         <v-btn depressed icon @click="addToCart(item)" color="success">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
-                        <v-btn depressed icon @click="addToCart(item, true)" color="success"  v-if="cart.find(c => c.id === item.id)">
+                        <v-btn depressed icon @click="addToCart(item, true)" color="success"
+                               v-if="cart.find(c => c.id === item.id)">
                             <span>+1</span>
                         </v-btn>
                     </template>
@@ -599,6 +629,26 @@
             @cancel="preorderModal = false;"
             @preorder="onPreorderChosen"
         />
+        <WayBillModal
+            :state="showWaybillModal"
+            @cancel="showWaybillModal = false;"
+            @submit="_onWaybillCreate"
+        />
+        <InvoiceModal
+            :state="showInvoiceModal"
+            @cancel="showInvoiceModal = false"
+            @submit="_onInvoiceCreate"
+        />
+        <InvoicePaymentModal
+            :state="showInvoicePaymentModal"
+            @cancel="showInvoicePaymentModal = false"
+            @submit="_onInvoicePaymentCreate"
+        />
+        <ProductCheckModal
+            :state="showProductCheckModal"
+            @cancel="showProductCheckModal = false"
+            @submit="_onProductCheckCreate"
+        />
     </div>
 </template>
 
@@ -617,653 +667,703 @@ import cart from "@/mixins/cart";
 import CertificateModal from "@/components/Modal/CertificateModal";
 import PreordersListModal from "@/components/Modal/PreordersListModal";
 import moment from 'moment';
+import DocumentsPage from '@/components/Documents/DocumentsPage';
+import InvoiceModal from '@/components/Modal/InvoiceModal';
+import InvoicePaymentModal from '@/components/Modal/InvoicePaymentModal';
+import ProductCheckModal from '@/components/Modal/ProductCheckModal';
 
 export default {
-        components: {
-            PreordersListModal,
-            CertificateModal,
-            CheckModal,
-            ConfirmationModal,
-            ClientCart,
-            WayBillModal
+    extends: DocumentsPage,
+    components: {
+        ProductCheckModal,
+        InvoicePaymentModal,
+        InvoiceModal,
+        PreordersListModal,
+        CertificateModal,
+        CheckModal,
+        ConfirmationModal,
+        ClientCart,
+        WayBillModal
+    },
+    async created() {
+        this.$loading.enable();
+        await Promise.all([
+            await this.$store.dispatch('GET_PRODUCTS_v2'),
+            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+            await this.$store.dispatch(ACTIONS.GET_CATEGORIES),
+            await this.$store.dispatch('GET_CERTIFICATES'),
+            await this.$store.dispatch('GET_PREORDERS'),
+            await this.$store.dispatch('getLegalEntities'),
+        ]);
+        await this.$store.dispatch(ACTIONS.GET_STORES);
+        this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
+        if (this.IS_STOREKEEPER) {
+            this.payment_type = 4;
+        }
+        this.client = this.user.store.type_id === 3 ? {
+            id: -1,
+            client_name: 'Гость',
+            sale_sum: 0,
+            client_balance: 0,
+            client_discount: 0,
+            total_sum: 0,
+        } : null;
+        this.$loading.disable();
+        await this.$store.dispatch(ACTIONS.GET_CLIENTS);
+        this.loading = false;
+    },
+    watch: {
+        stores(value) {
+            //this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
         },
-        async created() {
-            this.$loading.enable();
-            await Promise.all([
-                await this.$store.dispatch('GET_PRODUCTS_v2'),
-                await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
-                await this.$store.dispatch(ACTIONS.GET_CATEGORIES),
-                await this.$store.dispatch('GET_CERTIFICATES'),
-                await this.$store.dispatch('GET_PREORDERS')
-            ]);
-            await this.$store.dispatch(ACTIONS.GET_STORES);
-            this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
-            if (this.IS_STOREKEEPER) {
-                this.payment_type = 4;
-            }
-            this.client = this.user.store.type_id === 3 ? {
-                    id: -1,
-                    client_name: 'Гость',
-                    sale_sum: 0,
-                    client_balance: 0,
-                    client_discount: 0,
-                    total_sum: 0,
-                } : null;
-            this.$loading.disable();
-            await this.$store.dispatch(ACTIONS.GET_CLIENTS);
+        storeFilter() {
+            this.cart = [];
         },
-        watch: {
-            stores (value) {
-                //this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
-            },
-            storeFilter() {
-                this.cart = [];
-            },
-            discountPercent(value) {
-                this.$nextTick(() => {
-                    if (this.discountPercent > 99) {
-                        this.discountPercent = 100;
-                    }
-                    if (value.toString().length > 3) {
-                        this.discountPercent = +(value.toString().slice(0, 3));
-                    }
-                    this.isFree = this.discountPercent === 100;
-                })
-            },
-            balance() {
-                this.$nextTick(() => {
-                    this.balance = Math.min(this.client.client_balance, Math.max(0, this.balance));
-                })
-            },
-            isFree(value) {
-                if (value) {
+        discountPercent(value) {
+            this.$nextTick(() => {
+                if (this.discountPercent > 99) {
                     this.discountPercent = 100;
-                } else {
-                    this.discountPercent = 0;
                 }
-            },
-            isRed(value) {
-                if (value) {
-                    this.payment_type = 2;
-                    this.discountPercent = 0;
-                    this.isFree = false;
-                    this.cart = this.cart.map(c => ({...c, discount: 0}))
-                } else {
-                    this.payment_type = 0;
+                if (value.toString().length > 3) {
+                    this.discountPercent = +(value.toString().slice(0, 3));
                 }
-            },
-            isSplitPayment(value) {
-                if (value) {
-                    this.payment_type = 5;
-                } else {
-                    this.payment_type = 0;
-                }
-            },
-            searchQuery(value) {
-                if (value.toString().length > 4 && /^\d+$/.test(value)) {
-                    this.categoryId = this.manufacturerId = -1;
-                }
-            },
-            payment_type(value) {
-                this.isRed = value === 2;
-                this.isSplitPayment = value === 5;
-            },
-            isFullWholesalePurchase (value) {
-                this.cart = this.cart.map(c => ({ ...c, product_price: c.initial_price, discount: 0 }));
-            },
-            isOpt (value) {
-                if (value) {
-                    this.balance = 0;
-                }
-            }
+                this.isFree = this.discountPercent === 100;
+            })
         },
-        mixins: [product, product_search, cart],
-        data: () => ({
-            promocode_id: null,
-            customSaleDateMenu: null,
-            customSaleDate: moment().format('YYYY-MM-DD'),
-            isTodaySale: true,
-            banknoteNominal: 0,
-            isSendTelegram: false,
-            isOpt: false,
-            isDelivery: false,
-            awaitingForKaspiPayment: false,
-            preorderModal: false,
-            preorder: null,
-            comment: '',
-            waybillModal: false,
-            certificateModal: false,
-            loading: true,
-            cart: [],
-            certificate: null,
-            used_certificate: null,
-            isRed: false,
-            isFree: false,
-            isSplitPayment: false,
-            splitPayment: [],
-            payment_type: 0,
-            promocodeSet: false,
-            partner_id: null,
-            discountPercent: 0,
-            promocode: "",
-            clientCartModal: false,
-            printCheckModal: false,
-            wayBillModal: false,
-            client: null,
-            overlay: false,
-            sale_id: null,
-            balance: 0,
-            showCheckModal: false,
-            currentItems: [],
-            is_paid: false,
-            headers: [
-                {
-                    text: 'Наименование',
-                    value: 'product_name',
-                    sortable: false,
-                    align: ' fz-18'
-                },
-                {
-                    text: 'Атрибуты',
-                    value: 'attributes',
-                    align: ' d-none'
-                },
-                {
-                    value: 'manufacturer.manufacturer_name',
-                    text: 'Производитель',
-                    align: ' d-none'
-                },
-                {
-                    text: 'Остаток',
-                    value: 'quantity'
-                },
-                {
-                    text: 'Стоимость',
-                    value: 'product_price'
-                },
-                {
-                    text: 'Добавить',
-                    value: 'actions'
-                },
-                {
-                    text: 'Штрих-код',
-                    value: 'product_barcode',
-                    align: ' d-none'
-                }
-            ],
-            kaspiProcessId: null,
-            kaspiTransactionId: null,
-            currentPromocode: null,
-        }),
-        methods: {
-            ...mapActions([
-                ACTIONS.GET_PRODUCT,
-                ACTIONS.GET_CLIENTS,
-                ACTIONS.GET_STORES,
-            ]),
-            calculateProductFinalPrice (product) {
-                const priceWithoutDiscount = product.product_price * product.count;
-                if (this.isRed || this.isProductPriceChangedManually) {
-                    return priceWithoutDiscount;
-                }
-                const discountPercent = !this.isRed ? (Math.max(this.discountPercent, product.discount) / 100) : 0;
-                return priceWithoutDiscount - discountPercent * priceWithoutDiscount;
-            },
-            onPreorderChosen(preorder) {
-                this.preorderModal = false;
-                const preorderProducts = preorder.products.map(p => p.product_id);
-                const products = this.products.filter(p => {
-                    return preorderProducts.findIndex(pr => pr === p.id) !== -1;
-                });
-                if (products.length !== preorderProducts.length) {
-                    this.$toast.error('На складе не хватает выбранных товаров');
-                    return;
-                }
-                products.forEach(item => {
-                    this.addToCart(item);
-                });
-
-
-                if (preorder.client_id !== -1) {
-                    this.client = this.clients.find(c => c.id === preorder.client_id);
-                }
-
-                this.preorder = {...preorder};
-
-            },
-            async sendTelegram(saleId) {
-                this.$loading.enable();
-                await axios.get(`/api/sales/telegram/${saleId}`);
-                this.$loading.disable();
-            },
-            async createCertificate(certificate) {
-                this.certificateModal = false;
-                try {
-                    this.$loading.enable();
-                    const { data } = await axios.post(`/api/v2/certificates`, certificate);
-                    this.certificate = data;
-                } catch (e) {
-                    this.$toast.error('При создании сертификата произошла ошибка');
-                } finally {
-                    this.$loading.disable();
-                }
-            },
-            getFiltered(e) {
-                if (e.length === 1 && e[0].product_barcode === this.searchQuery) {
-                    this.addToCart(e[0], false);
-                    this.searchQuery = "";
-                    this.searchValue = "";
-                }
-            },
-            async deleteCertificate() {
-                try {
-                    this.$loading.enable();
-                    await axios.delete(`/api/v2/certificates/${this.certificate.id}`);
-                    this.certificate = null;
-                }
-                catch (e) {
-                    this.$toast.error('Произошла ошибка!');
-                } finally {
-                    this.$loading.disable();
-                }
-            },
-            cancelClient() {
-                this.client = null;
-                this.partner_id = null;
-                this.promocode = '';
+        balance() {
+            this.$nextTick(() => {
+                this.balance = Math.min(this.client.client_balance, Math.max(0, this.balance));
+            })
+        },
+        isFree(value) {
+            if (value) {
+                this.discountPercent = 100;
+            } else {
                 this.discountPercent = 0;
-                this.promocode_id = null;
-                this.promocodeSet = false;
-            },
-            async searchPromocode() {
-                this.$loading.enable();
-                try {
-                    const { data: { data } } = await axios.get(`/api/promocode/search/${this.promocode}`);
-                    this.checkPromocodeRules(data);
-                } catch (e) {
-                    console.log(e);
-                    this.$toast.error(e.response.data.error)
-                } finally {
-                    this.$loading.disable();
-                }
-            },
-            checkPromocodeRules (promocode) {
-                if (promocode.min_total > 0 && this.subtotal < promocode.min_total) {
-                    return this.$toast.error(`Для применения это промокода сумма покупки должна быть как минимум ${promocode.min_total} тенге!`)
-                }
-                if (promocode.promocode_type_id === 1) {
-                    this.discountPercent = Math.max(this.discountPercent, promocode.discount);
-                    this.currentPromocode = {...promocode};
-                    this.promocodeSet = true;
-                    this.partner_id = promocode.partner.id;
-                    this.promocode_id = promocode.id;
-                    return this.$toast.success('Промокод применен!');
-                }
-                if (promocode.promocode_type_id === 2) {
-                    this.currentPromocode = {...promocode};
-                    this.promocodeSet = true;
-                    this.partner_id = data.partner.id;
-                    this.promocode_id = data.id;
-                    return this.$toast.success('Промокод применен!');
-                }
-                if (promocode.promocode_type_id === 3) {
-                    const hasAllProducts = promocode.required_products.every(r => {
-                        const element = this.cart.find(c => c.product_id === r.product_id);
-                        return element && element.count >= r.count;
-                    })
-                    if (!hasAllProducts) {
-                        return this.$toast.error('Не все товары из условия добавлены в корзину!');
-                    }
-                    const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
-                    if (freeProductIndex === -1) {
-                        return this.$toast.error('Добавьте подарочный товар в корзину!');
-                    }
-                    this.$set(this.cart[freeProductIndex], 'discount', 100);
-                    this.partner_id = promocode.partner.id;
-                    this.promocode_id = promocode.id;
-                    this.promocodeSet = true;
-                    return this.$toast.success('Промокод применен!');
-                }
-
-                if (promocode.promocode_type_id === 4) {
-                    const productsInCart = this.cart.filter(c => {
-                        console.log(c);
-                       return c.product_id !== promocode.free_product_id && c.manufacturer_id === promocode.brand_id;
-                    });
-                    const totalPrice = productsInCart.reduce((a, c) => {
-                        return a + c.quantity * c.product_price;
-                    }, 0);
-                    if (promocode.min_total > 0 && totalPrice < promocode.min_total) {
-                        return this.$toast.error(`Для применения это промокода сумма покупки выбранного бренда должна быть как минимум ${promocode.min_total} тенге!`)
-                    }
-                    const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
-                    if (freeProductIndex === -1) {
-                        return this.$toast.error('Добавьте подарочный товар в корзину!');
-                    }
-                    this.$set(this.cart[freeProductIndex], 'discount', 100);
-                    this.partner_id = promocode.partner.id;
-                    this.promocode_id = promocode.id;
-                    this.promocodeSet = true;
-                    return this.$toast.success('Промокод применен!');
-                }
-            },
-            async refreshProducts() {
-                this.loading = true;
-                await this.$store.dispatch('GET_PRODUCTS_v2');
-                const store_id = this.IS_SUPERUSER ? null : this.user.store_id;
-                await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
-                await this.$store.dispatch(ACTIONS.GET_CLIENTS);
-                this.$toast.success('Список товаров обновлен!');
-                await this.getProductQuantities(this.storeFilter);
-                this.loading = false;
-            },
-            toggleInput(index) {
-                this.$set(this.cart[index], 'inputMode', !this.cart[index].inputMode);
-            },
-            changeCount(item, index) {
-                this.$set(this.cart[index], 'count', Math.min(this.cart[index]._count, item.quantity));
-                this.toggleInput(index);
-            },
-            checkAvailability(item = {}) {
-                return !((this.getQuantity(item.quantity) - this.getCartCount(item.id)) === 0);
-            },
-            onClientChosen(client) {
-                this.clientCartModal = false;
-                this.client = client;
-                if (client.is_wholesale_buyer) {
-                    this.isOpt = true;
-                }
-            },
-            async createKaspiResponse() {
-                const kaspiTerminalIp = localStorage.getItem('kaspi_terminal_ip');
-                if (!kaspiTerminalIp) {
-                    return false;
-                }
-                const url = `http://${kaspiTerminalIp}:8080/payment`;
-                const amount = this.isSplitPayment ? this.splitPayment
-                    .filter(s => (s.payment_type === 1 || s.payment_type === 2))
-                    .reduce((a, c) => {
-                        return a + c.amount;
-                    }, 0) : this.finalPrice;
-                const queryParams = new URLSearchParams({
-                    type: 'card',
-                    amount
-                });
-                const link = `${url}?${queryParams}`;
-                this.awaitingForKaspiPayment = true;
-                try {
-                    let popup = await window.open(link, Date.now().toString(), 'width=300,height=300,status=no,scrollbar=no,location=no');
-                    window.focus();
-                } catch (e) {
-                    console.log(e);
-                }
-            },
-            async onSale() {
-                const split_payment = this.isSplitPayment ? this.splitPayment.filter(p => p.amount > 0) : null;
-                if (split_payment !== null && !split_payment.length) {
-                    this.$toast.error('Раздельная оплата не заполнена');
-                    return;
-                }
-                if (split_payment !== null) {
-                    const total = split_payment.reduce((a, c) => {
-                        return a + c.amount;
-                    }, 0)
-                    if (total !== this.finalPrice) {
-                        this.$toast.error('Суммарная раздельная оплата не совпадает с итоговой суммой');
-                        return;
-                    }
-                }
-                const sale = {
-                    cart: this.cart.map(c => {
-                        return {id: c.id, product_price: c.product_price, count: c.count, discount: c.discount};
-                    }),
-                    store_id: this.storeFilter,
-                    user_id: !this.isDelivery ?  this.user.id : 1,
-                    client_id: this.client.id,
-                    discount: this.discount,
-                    kaspi_red: this.isRed && !this.isFree,
-                    balance: this.balance,
-                    partner_id: this.partner_id,
-                    payment_type: this.payment_type,
-                    certificate: this.certificate,
-                    used_certificate: this.used_certificate,
-                    split_payment: split_payment,
-                    comment: this.comment,
-                    preorder: this.preorder,
-                    is_delivery: this.isDelivery,
-                    is_paid: this.is_paid,
-                    is_opt: this.isOpt,
-                    promocode_id: this.promocode_id,
-                };
-
-                if (!this.isTodaySale && this.customSaleDate) {
-                    sale.custom_sale_date = this.customSaleDate;
-                }
-
-                try {
-                    this.overlay = true;
-                    if (this.isKaspiTerminalEnabled) {
-                        await this.createKaspiResponse();
-                    }
-                    await this.createSale(sale);
-                } catch (e) {
-                    this.$toast.error('Произошла ошибка', TOAST_TYPE.ERROR);
-                } finally {
-                    this.overlay = false;
-                }
-            },
-            async createSale(sale) {
-                try {
-                    this.sale_id = await this.$store.dispatch('MAKE_SALE_v2', sale);
-                    if (this.isSendTelegram) {
-                        await this.sendTelegram(this.sale_id);
-                    }
-                    if (this.isFullWholesalePurchase) {
-                        this.$toast.success('Продажа отправлена на одобрение!');
-                    } else {
-                        this.$toast.success('Продажа совершена успешно!');
-                        this.printCheckModal = true;
-                    }
-                    this.cart = [];
-                    this.client = null;
-                    this.discountPercent = '';
-                    this.isRed = false;
-                    this.isFree = false;
-                    this.balance = 0;
-                    this.payment_type = 0;
-                    this.partner_id = false;
-                    this.certificate = null;
-                    this.used_certificate = null;
-                    this.comment = '';
-                    this.preorder = null;
-                    this.isSplitPayment = false;
-                    this.isDelivery = false;
-                    this.isOpt = false;
-                    this.isSendTelegram = false;
-                    this.is_paid = false;
-                    this.banknoteNominal = 0;
-                    this.isTodaySale = true;
-                    this.customSaleDate = moment().format('YYYY-MM-DD');
-                    this.promocode_id = null;
-                    this.promocode = '';
-                } catch (e) {
-                    throw e;
-                }
-            },
-            printCheck() {
-                this.confirmationModal = false;
-                window.open(`/print/check/${this.sale_id}`, '_blank');
-            },
-            async getWayBill() {
-                this.waybillModal = false;
-                try {
-                    this.overlay = true;
-                    const { data } = await axios.post('/api/excel/transfer/waybill?type=sale', {
-                        child_store: this.storeFilter,
-                        parent_store: this.storeFilter,
-                        cart: this.cart,
-                    });
-                    const link = document.createElement('a');
-                    link.href = `${window.location.origin}/${data.path}`;
-                    link.click();
-                } catch (e) {
-                    this.$toast.error('При создании накладной произошла ошибка!');
-                } finally {
-                    this.overlay = false;
-                }
-            },
-            async searchProducts() {
-            },
-        },
-        computed: {
-            isProductPriceChangedManually () {
-                return this.cart.some(c => c.product_price !== c.initial_price);
-            },
-            isFullWholesalePurchase () {
-                return this.client && this.client.is_wholesale_buyer && this.isOpt;
-            },
-            amountOfChange () {
-                if (!this.isCashPayment) {
-                    return 0;
-                }
-                if (this.payment_type === 0) {
-                    return this.banknoteNominal - this.finalPrice;
-                }
-                return this.banknoteNominal - this.splitPayment[0].amount;
-            },
-            isCashPayment () {
-                return this.payment_type === 0 || (this.isSplitPayment && this.splitPayment[0].amount > 0);
-            },
-            isDiscountDisabled () {
-                return this.isRed || this.isProductPriceChangedManually;
-            },
-            partners() {
-                return this.$store.getters.PARTNERS;
-            },
-            certificates() {
-                return this.$store.getters.CERTIFICATES;
-            },
-            is_admin() {
-                return this.$store.getters.IS_ADMIN;
-            },
-            discountTotal() {
-                return !this.isDiscountDisabled ? this.cart.reduce((a, c) => {
-                    return a + Math.max(this.discount, c.discount) / 100 * c.product_price * c.count;
-                }, 0) : 0;
-            },
-            total() {
-                return this.subtotal - this.discountTotal;
-            },
-            discount() {
-                if (this.isRed || this.isProductPriceChangedManually) {
-                    return 0;
-                }
-                if (this.isFree) {
-                    return 100;
-                }
-                if (!this.client) {
-                    return Math.min(this.discountPercent, 100);
-                }
-                return Math.min(Math.max(this.discountPercent, (!this.isRed ? this.client.client_discount : 0), 0), 100);
-            },
-            payment_types() {
-                return this.$store.getters.payment_types;
-            },
-            payment_types_without_split() {
-                const payments = this.$store.getters.payment_types.filter(p => p.id !== 5);
-                this.splitPayment = payments.map(p => ({payment_type: p.id, amount: 0}));
-                return payments;
-            },
-            clientChosen() {
-                return this.client && this.client.id !== -1;
-            },
-            finalPrice() {
-                let total = this.total;
-                if (this.balance > 0) {
-                    total -= this.balance;
-                }
-                if (this.used_certificate) {
-                    total -= this.used_certificate.amount;
-                }
-
-                if (this.preorder) {
-                    total -= this.preorder.amount;
-                }
-
-                if (this.currentPromocode && this.currentPromocode.promocode_type_id === 2) {
-                    total -= this.currentPromocode.discount;
-                }
-
-                return Math.max(0, Math.ceil(total));
-            },
-            splitPrice() {
-                return this.finalPrice - this.splitPayment.reduce((a, c) => {
-                    return a + +c.amount;
-                }, 0);
-            },
-            clients() {
-                return this.$store.getters.clients;
-            },
-            currentStore() {
-                return this.stores.find(s => s.id === this.storeFilter)
-            },
-            isKaspiTerminalEnabled() {
-                return (this.currentStore.has_kaspi_terminal || localStorage.getItem('kaspi_terminal_ip'))
-                    && (this.payment_type === 1
-                        || this.payment_type === 2
-                        || this.splitPayment.filter(s => (s.payment_type === 1 || s.payment_type === 2) && s.amount > 0).length > 0);
             }
         },
-    }
+        isRed(value) {
+            if (value) {
+                this.payment_type = 2;
+                this.discountPercent = 0;
+                this.isFree = false;
+                this.cart = this.cart.map(c => ({...c, discount: 0}))
+            } else {
+                this.payment_type = 0;
+            }
+        },
+        isSplitPayment(value) {
+            if (value) {
+                this.payment_type = 5;
+            } else {
+                this.payment_type = 0;
+            }
+        },
+        searchQuery(value) {
+            if (value.toString().length > 4 && /^\d+$/.test(value)) {
+                this.categoryId = this.manufacturerId = -1;
+            }
+        },
+        payment_type(value) {
+            this.isRed = value === 2;
+            this.isSplitPayment = value === 5;
+        },
+        isFullWholesalePurchase(value) {
+            this.cart = this.cart.map(c => ({...c, product_price: c.initial_price, discount: 0}));
+        },
+        isOpt(value) {
+            if (value) {
+                this.balance = 0;
+            }
+        }
+    },
+    mixins: [product, product_search, cart],
+    data: () => ({
+        doc_types: [
+            {
+                title: 'Накладная'
+            },
+            {
+                title: 'Счет-фактура'
+            },
+            {
+                title: 'Счет на оплату'
+            },
+            {
+                title: 'Товарный чек'
+            }
+        ],
+        promocode_id: null,
+        customSaleDateMenu: null,
+        customSaleDate: moment().format('YYYY-MM-DD'),
+        isTodaySale: true,
+        banknoteNominal: 0,
+        isSendTelegram: false,
+        isOpt: false,
+        isDelivery: false,
+        awaitingForKaspiPayment: false,
+        preorderModal: false,
+        preorder: null,
+        comment: '',
+        waybillModal: false,
+        certificateModal: false,
+        loading: true,
+        cart: [],
+        certificate: null,
+        used_certificate: null,
+        isRed: false,
+        isFree: false,
+        isSplitPayment: false,
+        splitPayment: [],
+        payment_type: 0,
+        promocodeSet: false,
+        partner_id: null,
+        discountPercent: 0,
+        promocode: "",
+        clientCartModal: false,
+        printCheckModal: false,
+        wayBillModal: false,
+        client: null,
+        overlay: false,
+        sale_id: null,
+        balance: 0,
+        showCheckModal: false,
+        currentItems: [],
+        is_paid: false,
+        headers: [
+            {
+                text: 'Наименование',
+                value: 'product_name',
+                sortable: false,
+                align: ' fz-18'
+            },
+            {
+                text: 'Атрибуты',
+                value: 'attributes',
+                align: ' d-none'
+            },
+            {
+                value: 'manufacturer.manufacturer_name',
+                text: 'Производитель',
+                align: ' d-none'
+            },
+            {
+                text: 'Остаток',
+                value: 'quantity'
+            },
+            {
+                text: 'Стоимость',
+                value: 'product_price'
+            },
+            {
+                text: 'Добавить',
+                value: 'actions'
+            },
+            {
+                text: 'Штрих-код',
+                value: 'product_barcode',
+                align: ' d-none'
+            }
+        ],
+        kaspiProcessId: null,
+        kaspiTransactionId: null,
+        currentPromocode: null,
+    }),
+    methods: {
+        ...mapActions([
+            ACTIONS.GET_PRODUCT,
+            ACTIONS.GET_CLIENTS,
+            ACTIONS.GET_STORES,
+        ]),
+        calculateProductFinalPrice(product) {
+            const priceWithoutDiscount = product.product_price * product.count;
+            if (this.isRed || this.isProductPriceChangedManually) {
+                return priceWithoutDiscount;
+            }
+            const discountPercent = !this.isRed ? (Math.max(this.discountPercent, product.discount) / 100) : 0;
+            return priceWithoutDiscount - discountPercent * priceWithoutDiscount;
+        },
+        onPreorderChosen(preorder) {
+            this.preorderModal = false;
+            const preorderProducts = preorder.products.map(p => p.product_id);
+            const products = this.products.filter(p => {
+                return preorderProducts.findIndex(pr => pr === p.id) !== -1;
+            });
+            if (products.length !== preorderProducts.length) {
+                this.$toast.error('На складе не хватает выбранных товаров');
+                return;
+            }
+            products.forEach(item => {
+                this.addToCart(item);
+            });
+
+
+            if (preorder.client_id !== -1) {
+                this.client = this.clients.find(c => c.id === preorder.client_id);
+            }
+
+            this.preorder = {...preorder};
+
+        },
+        async sendTelegram(saleId) {
+            this.$loading.enable();
+            await axios.get(`/api/sales/telegram/${saleId}`);
+            this.$loading.disable();
+        },
+        async createCertificate(certificate) {
+            this.certificateModal = false;
+            try {
+                this.$loading.enable();
+                const {data} = await axios.post(`/api/v2/certificates`, certificate);
+                this.certificate = data;
+            } catch (e) {
+                this.$toast.error('При создании сертификата произошла ошибка');
+            } finally {
+                this.$loading.disable();
+            }
+        },
+        getFiltered(e) {
+            if (e.length === 1 && e[0].product_barcode === this.searchQuery) {
+                this.addToCart(e[0], false);
+                this.searchQuery = "";
+                this.searchValue = "";
+            }
+        },
+        async deleteCertificate() {
+            try {
+                this.$loading.enable();
+                await axios.delete(`/api/v2/certificates/${this.certificate.id}`);
+                this.certificate = null;
+            } catch (e) {
+                this.$toast.error('Произошла ошибка!');
+            } finally {
+                this.$loading.disable();
+            }
+        },
+        cancelClient() {
+            this.client = null;
+            this.partner_id = null;
+            this.promocode = '';
+            this.discountPercent = 0;
+            this.promocode_id = null;
+            this.promocodeSet = false;
+        },
+        async searchPromocode() {
+            this.$loading.enable();
+            try {
+                const {data: {data}} = await axios.get(`/api/promocode/search/${this.promocode}`);
+                this.checkPromocodeRules(data);
+            } catch (e) {
+                console.log(e);
+                this.$toast.error(e.response.data.error)
+            } finally {
+                this.$loading.disable();
+            }
+        },
+        checkPromocodeRules(promocode) {
+            if (promocode.min_total > 0 && this.subtotal < promocode.min_total) {
+                return this.$toast.error(`Для применения это промокода сумма покупки должна быть как минимум ${promocode.min_total} тенге!`)
+            }
+            if (promocode.promocode_type_id === 1) {
+                this.discountPercent = Math.max(this.discountPercent, promocode.discount);
+                this.currentPromocode = {...promocode};
+                this.promocodeSet = true;
+                this.partner_id = promocode.partner.id;
+                this.promocode_id = promocode.id;
+                return this.$toast.success('Промокод применен!');
+            }
+            if (promocode.promocode_type_id === 2) {
+                this.currentPromocode = {...promocode};
+                this.promocodeSet = true;
+                this.partner_id = data.partner.id;
+                this.promocode_id = data.id;
+                return this.$toast.success('Промокод применен!');
+            }
+            if (promocode.promocode_type_id === 3) {
+                const hasAllProducts = promocode.required_products.every(r => {
+                    const element = this.cart.find(c => c.product_id === r.product_id);
+                    return element && element.count >= r.count;
+                })
+                if (!hasAllProducts) {
+                    return this.$toast.error('Не все товары из условия добавлены в корзину!');
+                }
+                const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
+                if (freeProductIndex === -1) {
+                    return this.$toast.error('Добавьте подарочный товар в корзину!');
+                }
+                this.$set(this.cart[freeProductIndex], 'discount', 100);
+                this.partner_id = promocode.partner.id;
+                this.promocode_id = promocode.id;
+                this.promocodeSet = true;
+                return this.$toast.success('Промокод применен!');
+            }
+
+            if (promocode.promocode_type_id === 4) {
+                const productsInCart = this.cart.filter(c => {
+                    console.log(c);
+                    return c.product_id !== promocode.free_product_id && c.manufacturer_id === promocode.brand_id;
+                });
+                const totalPrice = productsInCart.reduce((a, c) => {
+                    return a + c.quantity * c.product_price;
+                }, 0);
+                if (promocode.min_total > 0 && totalPrice < promocode.min_total) {
+                    return this.$toast.error(`Для применения это промокода сумма покупки выбранного бренда должна быть как минимум ${promocode.min_total} тенге!`)
+                }
+                const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
+                if (freeProductIndex === -1) {
+                    return this.$toast.error('Добавьте подарочный товар в корзину!');
+                }
+                this.$set(this.cart[freeProductIndex], 'discount', 100);
+                this.partner_id = promocode.partner.id;
+                this.promocode_id = promocode.id;
+                this.promocodeSet = true;
+                return this.$toast.success('Промокод применен!');
+            }
+        },
+        async refreshProducts() {
+            this.loading = true;
+            await this.$store.dispatch('GET_PRODUCTS_v2');
+            const store_id = this.IS_SUPERUSER ? null : this.user.store_id;
+            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+            await this.$store.dispatch(ACTIONS.GET_CLIENTS);
+            this.$toast.success('Список товаров обновлен!');
+            await this.getProductQuantities(this.storeFilter);
+            this.loading = false;
+        },
+        toggleInput(index) {
+            this.$set(this.cart[index], 'inputMode', !this.cart[index].inputMode);
+        },
+        changeCount(item, index) {
+            this.$set(this.cart[index], 'count', Math.min(this.cart[index]._count, item.quantity));
+            this.toggleInput(index);
+        },
+        checkAvailability(item = {}) {
+            return !((this.getQuantity(item.quantity) - this.getCartCount(item.id)) === 0);
+        },
+        onClientChosen(client) {
+            this.clientCartModal = false;
+            this.client = client;
+            if (client.is_wholesale_buyer) {
+                this.isOpt = true;
+            }
+        },
+        async createKaspiResponse() {
+            const kaspiTerminalIp = localStorage.getItem('kaspi_terminal_ip');
+            if (!kaspiTerminalIp) {
+                return false;
+            }
+            const url = `http://${kaspiTerminalIp}:8080/payment`;
+            const amount = this.isSplitPayment ? this.splitPayment
+                .filter(s => (s.payment_type === 1 || s.payment_type === 2))
+                .reduce((a, c) => {
+                    return a + c.amount;
+                }, 0) : this.finalPrice;
+            const queryParams = new URLSearchParams({
+                type: 'card',
+                amount
+            });
+            const link = `${url}?${queryParams}`;
+            this.awaitingForKaspiPayment = true;
+            try {
+                let popup = await window.open(link, Date.now().toString(), 'width=300,height=300,status=no,scrollbar=no,location=no');
+                window.focus();
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        async onSale() {
+            const split_payment = this.isSplitPayment ? this.splitPayment.filter(p => p.amount > 0) : null;
+            if (split_payment !== null && !split_payment.length) {
+                this.$toast.error('Раздельная оплата не заполнена');
+                return;
+            }
+            if (split_payment !== null) {
+                const total = split_payment.reduce((a, c) => {
+                    return a + c.amount;
+                }, 0)
+                if (total !== this.finalPrice) {
+                    this.$toast.error('Суммарная раздельная оплата не совпадает с итоговой суммой');
+                    return;
+                }
+            }
+            const sale = {
+                cart: this.cart.map(c => {
+                    return {id: c.id, product_price: c.product_price, count: c.count, discount: c.discount};
+                }),
+                store_id: this.storeFilter,
+                user_id: !this.isDelivery ? this.user.id : 1,
+                client_id: this.client.id,
+                discount: this.discount,
+                kaspi_red: this.isRed && !this.isFree,
+                balance: this.balance,
+                partner_id: this.partner_id,
+                payment_type: this.payment_type,
+                certificate: this.certificate,
+                used_certificate: this.used_certificate,
+                split_payment: split_payment,
+                comment: this.comment,
+                preorder: this.preorder,
+                is_delivery: this.isDelivery,
+                is_paid: this.is_paid,
+                is_opt: this.isOpt,
+                promocode_id: this.promocode_id,
+            };
+
+            if (!this.isTodaySale && this.customSaleDate) {
+                sale.custom_sale_date = this.customSaleDate;
+            }
+
+            try {
+                this.overlay = true;
+                if (this.isKaspiTerminalEnabled) {
+                    await this.createKaspiResponse();
+                }
+                await this.createSale(sale);
+            } catch (e) {
+                this.$toast.error('Произошла ошибка', TOAST_TYPE.ERROR);
+            } finally {
+                this.overlay = false;
+            }
+        },
+        async createSale(sale) {
+            try {
+                this.sale_id = await this.$store.dispatch('MAKE_SALE_v2', sale);
+                if (this.isSendTelegram) {
+                    await this.sendTelegram(this.sale_id);
+                }
+                if (this.isFullWholesalePurchase) {
+                    this.$toast.success('Продажа отправлена на одобрение!');
+                } else {
+                    this.$toast.success('Продажа совершена успешно!');
+                    this.printCheckModal = true;
+                }
+                this.cart = [];
+                this.client = null;
+                this.discountPercent = '';
+                this.isRed = false;
+                this.isFree = false;
+                this.balance = 0;
+                this.payment_type = 0;
+                this.partner_id = false;
+                this.certificate = null;
+                this.used_certificate = null;
+                this.comment = '';
+                this.preorder = null;
+                this.isSplitPayment = false;
+                this.isDelivery = false;
+                this.isOpt = false;
+                this.isSendTelegram = false;
+                this.is_paid = false;
+                this.banknoteNominal = 0;
+                this.isTodaySale = true;
+                this.customSaleDate = moment().format('YYYY-MM-DD');
+                this.promocode_id = null;
+                this.promocode = '';
+            } catch (e) {
+                throw e;
+            }
+        },
+        printCheck() {
+            this.confirmationModal = false;
+            window.open(`/print/check/${this.sale_id}`, '_blank');
+        },
+        async getWayBill() {
+            this.waybillModal = false;
+            try {
+                this.overlay = true;
+                const {data} = await axios.post('/api/excel/transfer/waybill?type=sale', {
+                    child_store: this.storeFilter,
+                    parent_store: this.storeFilter,
+                    cart: this.cart,
+                });
+                const link = document.createElement('a');
+                link.href = `${window.location.origin}/${data.path}`;
+                link.click();
+            } catch (e) {
+                this.$toast.error('При создании накладной произошла ошибка!');
+            } finally {
+                this.overlay = false;
+            }
+        },
+        async searchProducts() {
+        },
+        _onCreateDocumentClick(index) {
+            switch (index) {
+                case 0:
+                    this._createWaybill();
+                    break;
+                case 1:
+                    this._createInvoice();
+                    break;
+                case 2:
+                    this._createPaymentInvoice();
+                    break;
+                case 3:
+                    this._createProductCheck();
+                    break;
+                default:
+                    break;
+            }
+        }
+    },
+    computed: {
+        isProductPriceChangedManually() {
+            return this.cart.some(c => c.product_price !== c.initial_price);
+        },
+        isFullWholesalePurchase() {
+            return this.client && this.client.is_wholesale_buyer && this.isOpt;
+        },
+        amountOfChange() {
+            if (!this.isCashPayment) {
+                return 0;
+            }
+            if (this.payment_type === 0) {
+                return this.banknoteNominal - this.finalPrice;
+            }
+            return this.banknoteNominal - this.splitPayment[0].amount;
+        },
+        isCashPayment() {
+            return this.payment_type === 0 || (this.isSplitPayment && this.splitPayment[0].amount > 0);
+        },
+        isDiscountDisabled() {
+            return this.isRed || this.isProductPriceChangedManually;
+        },
+        partners() {
+            return this.$store.getters.PARTNERS;
+        },
+        certificates() {
+            return this.$store.getters.CERTIFICATES;
+        },
+        is_admin() {
+            return this.$store.getters.IS_ADMIN;
+        },
+        discountTotal() {
+            return !this.isDiscountDisabled ? this.cart.reduce((a, c) => {
+                return a + Math.max(this.discount, c.discount) / 100 * c.product_price * c.count;
+            }, 0) : 0;
+        },
+        total() {
+            return this.subtotal - this.discountTotal;
+        },
+        discount() {
+            if (this.isRed || this.isProductPriceChangedManually) {
+                return 0;
+            }
+            if (this.isFree) {
+                return 100;
+            }
+            if (!this.client) {
+                return Math.min(this.discountPercent, 100);
+            }
+            return Math.min(Math.max(this.discountPercent, (!this.isRed ? this.client.client_discount : 0), 0), 100);
+        },
+        payment_types() {
+            return this.$store.getters.payment_types;
+        },
+        payment_types_without_split() {
+            const payments = this.$store.getters.payment_types.filter(p => p.id !== 5);
+            this.splitPayment = payments.map(p => ({payment_type: p.id, amount: 0}));
+            return payments;
+        },
+        clientChosen() {
+            return this.client && this.client.id !== -1;
+        },
+        finalPrice() {
+            let total = this.total;
+            if (this.balance > 0) {
+                total -= this.balance;
+            }
+            if (this.used_certificate) {
+                total -= this.used_certificate.amount;
+            }
+
+            if (this.preorder) {
+                total -= this.preorder.amount;
+            }
+
+            if (this.currentPromocode && this.currentPromocode.promocode_type_id === 2) {
+                total -= this.currentPromocode.discount;
+            }
+
+            return Math.max(0, Math.ceil(total));
+        },
+        splitPrice() {
+            return this.finalPrice - this.splitPayment.reduce((a, c) => {
+                return a + +c.amount;
+            }, 0);
+        },
+        clients() {
+            return this.$store.getters.clients;
+        },
+        currentStore() {
+            return this.stores.find(s => s.id === this.storeFilter)
+        },
+        isKaspiTerminalEnabled() {
+            return (this.currentStore.has_kaspi_terminal || localStorage.getItem('kaspi_terminal_ip'))
+                && (this.payment_type === 1
+                    || this.payment_type === 2
+                    || this.splitPayment.filter(s => (s.payment_type === 1 || s.payment_type === 2) && s.amount > 0).length > 0);
+        }
+    },
+}
 </script>
 
 <style lang="scss">
-    .background-iron-grey {
-        background-color: #444444;
-    }
-    .background-iron-darkgrey {
-        background-color: #333333;
-    }
-    .fz-18 > tr > td, th {
-        font-size: 16px!important;
-    }
-    .margin-28 {
-        margin-top: 28px;
-    }
-    .w-50px {
-        width: 50px;
-    }
-    .cart__parameters__checkboxes {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 10px;
-        padding: 15px 25px;
-    }
-    .cart__parameters {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 10px;
-        padding: 15px 25px;
-    }
-    .cart__parameters > div:nth-child(2n+1):last-child {
-        grid-column: 1 / 3;
-    }
-    .client__table-heading {
-        padding-bottom: 10px;
-    }
-    .product__list {
-        background-color: #444444!important;
-    }
+.background-iron-grey {
+    background-color: #444444;
+}
 
-    .split__payment {
-        padding: 15px 25px;
+.background-iron-darkgrey {
+    background-color: #333333;
+}
 
-        div {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            grid-gap: 10px;
-            align-content: center;
-            align-items: center;
-        }
+.fz-18 > tr > td, th {
+    font-size: 16px !important;
+}
+
+.margin-28 {
+    margin-top: 28px;
+}
+
+.w-50px {
+    width: 50px;
+}
+
+.cart__parameters__checkboxes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+    padding: 15px 25px;
+}
+
+.cart__parameters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    padding: 15px 25px;
+}
+
+.cart__parameters > div:nth-child(2n+1):last-child {
+    grid-column: 1 / 3;
+}
+
+.client__table-heading {
+    padding-bottom: 10px;
+}
+
+.product__list {
+    background-color: #444444 !important;
+}
+
+.split__payment {
+    padding: 15px 25px;
+
+    div {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        grid-gap: 10px;
+        align-content: center;
+        align-items: center;
     }
+}
 </style>

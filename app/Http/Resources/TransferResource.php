@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Product;
-use App\ProductBatch;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -51,7 +49,7 @@ class TransferResource extends JsonResource
             'child_store' => $this->child_store->name,
             'child_store_id' => intval($this->child_store->id),
             'parent_store_id' => $this->parent_store_id,
-            'user' => 'Администратор',
+            'user' => $this->whenLoaded('user') ? $this->user->name : 'Администратор',
             'product_count' => $this->batches->count(),
             'position_count' => $this->batches->unique('product_id')->count(),
             'total_cost' => $this->batches->reduce(function ($a, $c) {

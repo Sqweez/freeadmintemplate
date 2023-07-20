@@ -97,6 +97,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Product whereIsIherb($value)
  * @property int|null $iherb_price
  * @method static Builder|Product whereIherbPrice($value)
+ * @property int|null $product_price_rub
+ * @property int $is_iherb_hit
+ * @property int $is_dubai
+ * @method static Builder|Product whereIsDubai($value)
+ * @method static Builder|Product whereIsIherbHit($value)
+ * @method static Builder|Product whereProductPriceRub($value)
  */
 class Product extends Model {
 

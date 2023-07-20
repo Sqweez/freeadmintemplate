@@ -15,6 +15,7 @@
         "cross-env": "^6.0",
         "laravel-mix": "^5.0.1",
         "lodash": "^4.17.13",
+        "prettier": "3.0.0",
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.15.2",
         "sass-loader": "^8.0.0",
@@ -47,5 +48,8 @@
         "vuex": "^3.1.2",
         "vuex-persistedstate": "^4.0.0-beta.1",
         "xlsx": "^0.17.3"
+    },
+    "prettier": {
+        "singleQuote": true
     }
 }

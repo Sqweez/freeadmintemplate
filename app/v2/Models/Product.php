@@ -134,6 +134,12 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereIsIherb($value)
  * @property int|null $iherb_price
  * @method static Builder|Product whereIherbPrice($value)
+ * @property int|null $product_price_rub
+ * @property bool $is_iherb_hit
+ * @property bool $is_dubai
+ * @method static Builder|Product whereIsDubai($value)
+ * @method static Builder|Product whereIsIherbHit($value)
+ * @method static Builder|Product whereProductPriceRub($value)
  */
 class Product extends Model
 {

@@ -189,7 +189,10 @@ class CartController extends Controller {
 
         if (isset($customer_info['client_id'])) {
             $client_id = $customer_info['client_id'];
-            $discount = Client::find($client_id)['client_discount'];
+            $__client = Client::find($client_id);
+            if ($__client) {
+                $discount = $__client->client_discount;
+            }
         };
 
         $phone = unmask_phone($customer_info['phone']);

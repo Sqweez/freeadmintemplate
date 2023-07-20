@@ -169,15 +169,43 @@
             </template>
             <template v-slot:item.actions="{item}">
                 <v-flex v-if="!editMode">
-                    <v-btn icon color="primary" @click="transferId = item.id; infoModal = true">
-                        <v-icon>mdi-information-outline</v-icon>
-                    </v-btn>
-                    <v-btn icon color="error" @click="transferId = item.id; cancelModal = true">
-                        <v-icon>mdi-cancel</v-icon>
-                    </v-btn>
-                    <v-btn icon color="success" @click="printWaybill(item.id)">
-                        <v-icon>mdi-file-excel</v-icon>
-                    </v-btn>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                icon
+                                color="primary"
+                                @click="transferId = item.id; infoModal = true"
+                                title="Подробная информация"
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                <v-icon>mdi-information-outline</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Подробная информация</span>
+                    </v-tooltip>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                v-bind="attrs"
+                                v-on="on"
+                                icon
+                                color="error"
+                                @click="transferId = item.id; cancelModal = true"
+                            >
+                                <v-icon>mdi-cancel</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Отмена</span>
+                    </v-tooltip>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn v-bind="attrs" v-on="on" icon color="success" @click="printWaybill(item.id)">
+                                <v-icon>mdi-file-excel</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Печать накладной</span>
+                    </v-tooltip>
                     <v-btn icon color="primary" @click="showPhotoModal(item.photos)">
                         <v-icon>mdi-camera</v-icon>
                     </v-btn>
@@ -226,14 +254,14 @@
 </template>
 
 <script>
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import TransferPhotoModal from "@/components/Modal/TransferPhotoModal";
-    import TransferModal from "@/components/Modal/TransferModal";
-    import {declineTransfer} from "@/api/transfers";
-    import axios from "axios";
-    import moment from "moment";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import TransferPhotoModal from "@/components/Modal/TransferPhotoModal";
+import TransferModal from "@/components/Modal/TransferModal";
+import {declineTransfer} from "@/api/transfers";
+import axios from "axios";
+import moment from "moment";
 
-    export default {
+export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'current'});
             this.loading = false;

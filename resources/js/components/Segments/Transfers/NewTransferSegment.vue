@@ -391,7 +391,7 @@ export default {
                     child_store_id: this.child_store,
                     photos: JSON.stringify(this.photos),
                     discount: 0,
-                    is_accepted: !!this.IS_SUPERUSER
+                    is_accepted: true
                 };
 
                 await this.$store.dispatch(ACTIONS.MAKE_TRANSFER, sale);
