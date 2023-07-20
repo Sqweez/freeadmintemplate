@@ -44,6 +44,18 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Promocode whereMinTotal($value)
  * @method static Builder|Promocode wherePromocodeTypeId($value)
  * @method static Builder|Promocode whereRequiredProducts($value)
+ * @property int $promocode_condition_id
+ * @property int $promocode_purpose_id
+ * @property array|null $promocode_condition_payload
+ * @property array|null $promocode_purpose_payload
+ * @property array|null $promocode_cascade
+ * @property array|null $promocode_gifts
+ * @method static Builder|Promocode wherePromocodeCascade($value)
+ * @method static Builder|Promocode wherePromocodeConditionId($value)
+ * @method static Builder|Promocode wherePromocodeConditionPayload($value)
+ * @method static Builder|Promocode wherePromocodeGifts($value)
+ * @method static Builder|Promocode wherePromocodePurposeId($value)
+ * @method static Builder|Promocode wherePromocodePurposePayload($value)
  */
 class Promocode extends Model {
     const GOV_PROMOCODE_ID = 165;

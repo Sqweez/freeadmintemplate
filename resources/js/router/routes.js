@@ -80,6 +80,9 @@ import MatrixCreate from "@/views/Matrix/MatrixCreate";
 import MatrixEdit from "@/views/Matrix/MatrixEdit";
 import IherbProductsPage from "@/views/IHerb/IherbProductsPage";
 import IherbMassAssignment from "@/views/IHerb/IherbMassAssignment";
+import LegalEntityIndex from "@/views/LegalEntity/LegalEntityIndex";
+import LegalEntityCreate from "@/views/LegalEntity/LegalEntityCreate";
+import LegalEntityUpdate from "@/views/LegalEntity/LegalEntityUpdate";
 
 const routes = [
     {
@@ -769,6 +772,18 @@ const routes = [
     {
         path: "/matrixes/:id",
         component: MatrixEdit
+    },
+    {
+        path: "/legal-entity",
+        component: LegalEntityIndex
+    },
+    {
+        path: "/legal-entity/create",
+        component: LegalEntityCreate
+    },
+    {
+        path: "/legal-entity/:id",
+        component: LegalEntityUpdate
     }
 ];
 

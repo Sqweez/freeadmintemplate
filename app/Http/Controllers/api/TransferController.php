@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Client;
 use App\CompanionSale;
 use App\CompanionSaleProduct;
 use App\CompanionTransaction;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ClientResource;
-use App\Http\Resources\ProductResource;
 use App\Http\Resources\SingleTransferResource;
 use App\Http\Resources\TransferResource;
-use App\Product;
 use App\ProductBatch;
 use App\Transfer;
 use App\TransferBatch;
-use App\v2\Models\ProductSku;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -46,6 +41,7 @@ class TransferController extends Controller {
             ->whereHas('batches.product')
             ->whereHas('batches.product.product')
             ->with(['parent_store', 'child_store', 'companionSale'])
+            ->with(['user:id,name'])
             ->with(
                 [
                     'batches', 'batches.productBatch:id,purchase_price',

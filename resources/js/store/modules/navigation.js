@@ -147,6 +147,10 @@ const navigationModule = {
                     {
                         title: "Типы маржинальности",
                         url: "/economy/margin/types"
+                    },
+                    {
+                        title: 'Юридические лица',
+                        url: '/legal-entity'
                     }
                 ]
             },
@@ -558,6 +562,10 @@ const navigationModule = {
                     {
                         title: "Типы маржинальности",
                         url: "/economy/margin/types"
+                    },
+                    {
+                        title: 'Юридические лица',
+                        url: '/legal-entity'
                     }
                 ]
             },

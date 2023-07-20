@@ -13,6 +13,13 @@
                 </v-btn>
             </v-card-title>
             <v-card-text>
+                <v-select
+                    label="Юридическое лицо"
+                    v-model="entityId"
+                    :items="entities"
+                    item-text="name"
+                    item-value="id"
+                />
                 <v-text-field
                     label="Договор (контракт) на поставку товаров (работ, услуг):"
                     v-model="contract"
@@ -52,7 +59,7 @@
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn text color="success" @click="$emit('submit', {
-                    contract, location, waybill, consignee, recipient, BINLocation, IIK, product
+                    contract, location, waybill, consignee, recipient, BINLocation, IIK, product, entityId
                 })">
                     Печать счет-фактуры <v-icon>mdi-check</v-icon>
                 </v-btn>
@@ -72,9 +79,14 @@
             BINLocation: '-',
             IIK: '-',
             product: 'Спортивные Витамины в ассортименте',
+            entityId: null,
         }),
         methods: {},
-        computed: {},
+        computed: {
+            entities () {
+                return this.$store.getters.legal_entities;
+            },
+        },
         props: {
             state: {
                 type: Boolean,
@@ -92,6 +104,7 @@
                     this.BINLocation =  '-';
                     this.IIK =  '-';
                     this.product = 'Спортивные Витамины в ассортименте';
+                    this.entityId = null;
                 }
             }
         }

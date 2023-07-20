@@ -434,5 +434,18 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/', [MatrixController::class, 'index']);
             Route::post('/', [MatrixController::class, 'store']);
         });
+
+        Route::apiResource('legal-entity', 'api\v2\LegalEntityController');
+    });
+
+    // Роуты v2
+
+    Route::prefix('v3')->group(function () {
+        Route::prefix('documents')->group(function () {
+            Route::post('waybill', [\App\Http\Controllers\api\v3\WaybillController::class, 'createWaybill']);
+            Route::post('invoice', [\App\Http\Controllers\api\v3\WaybillController::class, 'createInvoice']);
+            Route::post('invoice-payment', [\App\Http\Controllers\api\v3\WaybillController::class, 'createPaymentInvoice']);
+            Route::post('products/check', [\App\Http\Controllers\api\v3\WaybillController::class, 'getProductCheck']);
+        });
     });
 });

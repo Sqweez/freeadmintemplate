@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Transfer
@@ -48,21 +51,30 @@ class Transfer extends Model
     const PARTNER_SELLER_ID = 3;
 
 
-    public function parent_store() {
+    public function parent_store(): BelongsTo
+    {
         return $this->belongsTo('App\Store', 'parent_store_id');
     }
 
-    public function child_store() {
+    public function child_store(): BelongsTo
+    {
         return $this->belongsTo('App\Store', 'child_store_id');
     }
 
-    public function batches() {
+    public function batches(): HasMany
+    {
         return $this->hasMany('App\TransferBatch', 'transfer_id');
     }
 
-    public function companionSale() {
+    public function companionSale(): HasOne
+    {
         return $this->hasOne('App\CompanionSale', 'transfer_id')->withDefault([
             'is_consignment' => false
         ]);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

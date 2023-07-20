@@ -36,3 +36,10 @@ export function toFormData(payload) {
 export function createObjectURL(file) {
     return window.URL.createObjectURL(file);
 }
+
+export function fileDownload(path) {
+    const link = document.createElement("a");
+    link.href = `${window.location.origin}/${path}`;
+    link.click();
+    link.remove();
+}
