@@ -75,6 +75,7 @@ class TransferController extends Controller {
      */
     public function store(Request $request) {
         $_transfer = $request->except(['cart', 'discount', 'is_consignment']);
+        $_transfer['is_accepted'] = true;
         $transfer = Transfer::create($_transfer);
         $store_id = $request->get('parent_store_id');
         $cart = $request->get('cart');

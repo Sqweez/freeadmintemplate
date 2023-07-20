@@ -76,6 +76,11 @@ class User extends Authenticatable
         return in_array($this->role_id, [UserRole::ADMIN_ROLE_ID, UserRole::BOSS_ROLE_ID]);
     }
 
+    public function isFranchise()
+    {
+        return $this->role_id === __hardcoded(11);
+    }
+
     public function scopeLogin($q, $login) {
         $q->where('login', $login);
     }

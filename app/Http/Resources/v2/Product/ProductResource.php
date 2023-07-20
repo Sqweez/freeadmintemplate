@@ -3,8 +3,6 @@
 namespace App\Http\Resources\v2\Product;
 
 use App\Http\Controllers\api\v2\CommentController;
-use App\Http\Resources\AttributeResource;
-use App\Product;
 use App\v2\Models\ProductSku;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -73,6 +71,7 @@ class ProductResource extends JsonResource
             'comments' => CommentController::parseComments($this->product->comments),
             'iherb_price' => $this->product->iherb_price,
             'is_dubai' => $this->product->is_dubai,
+            'margin_type_id' => $this->margin_type_id,
         ];
     }
 }

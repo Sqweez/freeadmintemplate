@@ -28,7 +28,7 @@
                         @image-added="handleImageAdded"
                         :editor-options="editorSettings"
                         v-model="product_description" v-if="IS_SUPERUSER || IS_MODERATOR"
-                    ></vue-editor>
+                    />
                     <div v-if="IS_SUPERUSER">
                         <div v-if="product_images.length">
                             <h4>Изображения для общих товаров:</h4>
@@ -157,13 +157,15 @@
                         label="Стоимость в Kaspi Магазине"
                         :disabled="!IS_SUPERUSER"
                         v-model.number="kaspi_product_price"
-                        type="number"/>
+                        type="number"
+                    />
                     <v-text-field
                         label="Стоимость Iherb"
                         :disabled="!IS_SUPERUSER"
                         v-model.number="iherb_price"
                         type="number"/>
-                    <div class="d-flex align-center"  v-if="!isEditing || (grouping_attribute_id === 0 || grouping_attribute_id === null)">
+                    <div class="d-flex align-center"
+                         v-if="!isEditing || (grouping_attribute_id === 0 || grouping_attribute_id === null)">
                         <v-text-field
 
                             label="Штрихкод"
@@ -183,6 +185,13 @@
                         no-data-text="Нет данных"
                         :append-outer-icon="'mdi-plus'"
                         @click:append-outer="manufacturerModal = true"
+                    />
+                    <v-select
+                        v-model="margin_type_id"
+                        label="Категория маржинальности"
+                        :items="margin_types"
+                        item-value="id"
+                        item-text="title"
                     />
                     <div v-if="IS_SUPERUSER || IS_MODERATOR">
                         <h5>Теги:</h5>
@@ -375,7 +384,8 @@
                                         <v-btn icon color="error" @click="deleteComment(item.id)">
                                             <v-icon>mdi-close</v-icon>
                                         </v-btn>
-                                        <v-btn icon color="primary" @click="commentId = commentId == item.id ? null : item.id">
+                                        <v-btn icon color="primary"
+                                               @click="commentId = commentId == item.id ? null : item.id">
                                             <v-icon>mdi-reply</v-icon>
                                         </v-btn>
                                     </v-list-item-title>
@@ -390,7 +400,8 @@
                                                     <v-btn icon color="error" @click="deleteComment(_item.id)">
                                                         <v-icon>mdi-close</v-icon>
                                                     </v-btn>
-                                                    <v-btn icon color="primary" @click="commentId = commentId == _item.id ? null : _item.id">
+                                                    <v-btn icon color="primary"
+                                                           @click="commentId = commentId == _item.id ? null : _item.id">
                                                         <v-icon>mdi-reply</v-icon>
                                                     </v-btn>
                                                 </v-list-item-title>
@@ -404,9 +415,10 @@
                         <v-textarea
                             :placeholder="currentComment ? `В ответ: ${currentComment.name}` : 'Комментарий'"
                             label="Комментарий"
-                            v-model="commentText" />
+                            v-model="commentText"/>
                         <v-btn color="primary" @click="createComment">
-                            Отправить комментарий <v-icon>mdi-send</v-icon>
+                            Отправить комментарий
+                            <v-icon>mdi-send</v-icon>
                         </v-btn>
                     </div>
                 </v-form>
@@ -436,7 +448,7 @@
 import {VSelect} from 'vuetify/lib'
 import ManufacturerModal from "@/components/Modal/ManufacturerModal";
 import uploadFile, {deleteFile} from "@/api/upload";
-import {VueEditor, Quill} from "vue2-editor";
+import {Quill, VueEditor} from "vue2-editor";
 import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
 import {generateThumb} from "@/api/image";
 import axios from 'axios';
@@ -555,6 +567,9 @@ export default {
         },
         suppliers() {
             return this.$store.getters.SUPPLIERS;
+        },
+        margin_types () {
+            return this.$store.getters.MARGIN_TYPES;
         }
     },
     data: () => ({
@@ -617,21 +632,23 @@ export default {
         commentText: '',
         commentId: null,
         additionalSubcategories: [],
+        margin_type_id: null,
     }),
     methods: {
-        async generateBarcode () {
+        async generateBarcode() {
             this.$nextTick(async () => {
                 this.product_barcode = await this.$barcode.generate(this.id);
             });
         },
-        addSubcategoriesSelect () {},
+        addSubcategoriesSelect() {
+        },
         async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
             const response = await this.$file.upload(file, 'uploads', 'file');
             const photo = `${window.location.protocol}//${window.location.hostname}/storage/${response.data}`;
             Editor.insertEmbed(cursorLocation, "image", photo);
             resetUploader();
         },
-        async createComment () {
+        async createComment() {
             if (this.commentText.trim().length === 0) {
                 return this.$toast.error('Введите комментарий!');
             }
@@ -687,8 +704,10 @@ export default {
             this.meta_description = '';
             this.additionalSubcategories = [];
             this.iherb_price = 0;
+            this.margin_type_id = null;
         },
         assignFields() {
+            this.margin_type_id = this.product.margin_type_id;
             this.product_name = this.product.product_name;
             this.product_name_web = this.product.product_name_web;
             this.product_description = this.product.product_description;
@@ -866,6 +885,7 @@ export default {
                 meta_title: this.meta_title,
                 meta_description: this.meta_description,
                 is_dubai: this.is_dubai,
+                margin_type_id: this.margin_type_id
             };
         },
         validate(product) {
@@ -904,6 +924,11 @@ export default {
             }
             if (!product.manufacturer) {
                 showErrorToast('Производитель');
+                return false;
+            }
+
+            if (!product.margin_type_id) {
+                showErrorToast('Категория маржинальности');
                 return false;
             }
 

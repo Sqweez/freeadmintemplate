@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BatchResource extends JsonResource
@@ -33,6 +32,7 @@ class BatchResource extends JsonResource
             'manufacturer' => $this->product->manufacturer,
             'product_price' => $this->product->product_price,
             'count' => $this->count,
+            'transfer_count' => $this->transfer_count,
         ];
     }
 }

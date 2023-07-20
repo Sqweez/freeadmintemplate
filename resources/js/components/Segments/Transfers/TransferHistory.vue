@@ -239,10 +239,10 @@
                         }"
         >
             <template v-slot:item.total_cost="{item}">
-                {{ new Intl.NumberFormat('ru-RU').format(item.total_cost) }}₸
+                {{ item.total_cost | priceFilters }}
             </template>
             <template v-slot:item.total_purchase_cost="{item}">
-                {{ new Intl.NumberFormat('ru-RU').format(item.total_purchase_cost) }}₸
+                {{ item.total_purchase_cost | priceFilters }}
             </template>
             <template v-slot:item.product_count="{item}">
                 {{ item.product_count }} шт.
@@ -276,6 +276,7 @@
             :id="transferId"
             v-on:cancel="transferId = null; infoModal = false"
             :search="search"
+            :is_transferred="true"
         />
         <TransferPhotoModal
             :state="photoModal"
@@ -286,12 +287,13 @@
 </template>
 
 <script>
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import TransferModal from "@/components/Modal/TransferModal";
-    import axios from 'axios';
-    import TransferPhotoModal from "@/components/Modal/TransferPhotoModal";
-    import moment from 'moment';
-    export default {
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import TransferModal from "@/components/Modal/TransferModal";
+import axios from 'axios';
+import TransferPhotoModal from "@/components/Modal/TransferPhotoModal";
+import moment from 'moment';
+
+export default {
         async mounted() {
             await this.$store.dispatch('getTransfers', {mode: 'history'});
             this.loading = false;
