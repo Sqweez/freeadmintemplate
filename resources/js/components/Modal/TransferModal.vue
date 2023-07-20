@@ -30,10 +30,10 @@
                         <tr v-for="(item, idx) of transfer" :key="idx">
                             <td v-if="canEdit">
                                 <v-checkbox
-                                    v-model="item.accepted"
+                                    v-model="transfer[idx].accepted"
                                 />
                             </td>
-                            <td>
+                            <td class="d-flex" style="column-gap: 10px; align-items: center;">
                                 <v-list flat>
                                     <v-list-item>
                                         <v-list-item-content>
@@ -47,6 +47,26 @@
                                         </v-list-item-content>
                                     </v-list-item>
                                 </v-list>
+                                <div v-if="is_transferred">
+                                    <v-chip
+                                        color="red darken-2"
+                                        v-if="item.transfer_count === 0"
+                                        small>
+                                        Не перемещен
+                                    </v-chip>
+                                    <v-chip
+                                        color="blue darken-2"
+                                        v-if="item.transfer_count !== item.count && item.transfer_count !== 0"
+                                        small>
+                                        Перемещено {{ item.transfer_count }}/{{ item.count }} единицы
+                                    </v-chip>
+                                    <v-chip
+                                        color="green darken-2"
+                                        v-if="item.transfer_count === item.count"
+                                        small>
+                                        Полностью перемещен
+                                    </v-chip>
+                                </div>
                             </td>
                             <td>
 
@@ -109,6 +129,10 @@ export default {
         search: {
             type: String,
             default: ''
+        },
+        is_transferred: {
+            type: Boolean,
+            default: false,
         }
     },
     watch: {
@@ -168,7 +192,10 @@ export default {
                         product_id: t.product_id,
                     };
                 });
-            const response = await acceptTransfer(accepted, this.id);
+
+            console.log(accepted);
+
+            await acceptTransfer(accepted, this.id);
             this.loading = false;
             this.$toast.success('Перемещение подтверждено!');
             this.$emit('confirmed');

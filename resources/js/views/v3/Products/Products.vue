@@ -28,12 +28,9 @@
                                 class="mt-2"
                                 v-on:input="searchInput"
                                 v-model="searchValue"
-                                solo
                                 clearable
                                 label="Поиск товара"
-                                single-line
-                                hide-details
-                            ></v-text-field>
+                           />
                         </v-col>
                         <v-col cols="12" xl="4">
                             <v-select
@@ -337,20 +334,20 @@
 </template>
 
 <script>
-    import ProductRangeModal from "@/components/Modal/ProductRangeModal";
-    import ProductModal from "@/components/v2/Modal/ProductModal";
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import ProductQuantityModal from "@/components/Modal/ProductQuantityModal";
-    import ACTIONS from "@/store/actions";
-    import axios from 'axios';
-    import PriceTagModal from "@/components/Modal/PriceTagModal";
-    import product from "@/mixins/product";
-    import product_search from "@/mixins/product_search";
-    import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
-    import SkuModal from "@/components/v2/Modal/SkuModal";
-    import ProductPrintModal from '@/components/Modal/ProductPrintModal';
+import ProductRangeModal from "@/components/Modal/ProductRangeModal";
+import ProductModal from "@/components/v2/Modal/ProductModal";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import ProductQuantityModal from "@/components/Modal/ProductQuantityModal";
+import ACTIONS from "@/store/actions";
+import axios from 'axios';
+import PriceTagModal from "@/components/Modal/PriceTagModal";
+import product from "@/mixins/product";
+import product_search from "@/mixins/product_search";
+import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
+import SkuModal from "@/components/v2/Modal/SkuModal";
+import ProductPrintModal from '@/components/Modal/ProductPrintModal';
 
-    export default {
+export default {
         components: {
             ProductPrintModal,
             SkuModal,

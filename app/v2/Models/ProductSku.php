@@ -96,6 +96,7 @@ class ProductSku extends Model
 
     const PRODUCT_SKU_IMAGES = 'product_sku_images';
     const PRODUCT_SKU_THUMBS = 'product_sku_images';
+    const MARGIN_TYPE_ID = 'margin_type_id';
 
     protected $casts = [
         'id' => 'integer',

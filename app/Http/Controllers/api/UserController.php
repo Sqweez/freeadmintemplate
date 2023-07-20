@@ -9,7 +9,6 @@ use App\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -21,7 +20,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::with(['store.city_name', 'role'])->get());
+        /* @var User $user */
+        $user = auth()->user();
+        return
+            UserResource::collection(
+                User::query()
+                    ->when($user->isFranchise(), function ($query) use ($user) {
+                        return $query->where('store_id', $user->store_id);
+                    })
+                    ->with(['store.city_name', 'role'])
+                    ->get()
+            );
     }
 
     public function indexRoles() {

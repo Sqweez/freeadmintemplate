@@ -133,7 +133,8 @@ class ProductService {
         try {
             DB::beginTransaction();
             $productSku->update([
-                'product_barcode' => $_attributes['product_barcode']
+                'product_barcode' => $_attributes['product_barcode'],
+                'margin_type_id' => $_attributes['margin_type_id']
             ]);
             $this->updateProductSkuRelations($productSku, $_attributes, $productSku->grouping_attribute_id);
             DB::commit();
@@ -272,7 +273,8 @@ class ProductService {
             Product::PRODUCT_THUMBS,
             Product::PRICE,
             Product::PRODUCT_BARCODE,
-            'additional_subcategories'
+            'additional_subcategories',
+            ProductSku::MARGIN_TYPE_ID
 
          /*   ProductSku::PRODUCT_SKU_IMAGES,
             ProductSku::PRODUCT_SKU_THUMBS*/
@@ -284,7 +286,8 @@ class ProductService {
             Product::ATTRIBUTES,
             Product::PRODUCT_BARCODE,
             ProductSku::PRODUCT_SKU_IMAGES,
-            ProductSku::PRODUCT_SKU_THUMBS
+            ProductSku::PRODUCT_SKU_THUMBS,
+            ProductSku::MARGIN_TYPE_ID,
         ]);
     }
 

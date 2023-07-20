@@ -173,7 +173,7 @@
                     >
                     </v-select>
                     <v-select
-                        v-if="IS_SUPERUSER"
+                        v-if="IS_SUPERUSER || IS_FRANCHISE"
                         :items="sellers"
                         label="Продавец:"
                         v-model="currentSeller"
@@ -464,48 +464,6 @@
                                     Сделать оптовой <v-icon class="ml-2">mdi-check</v-icon>
                                 </v-btn>
                             </v-list-item>
-                            <v-expansion-panels style="min-width: 284px;" flat>
-                                <v-expansion-panel>
-                                    <v-expansion-panel-header ripple>
-                                        <span
-                                            class="text-button"
-                                            style="
-                                            padding-left: 5px;
-                                            font-size: 12px!important;
-                                            color: #43a047;"
-                                        >
-                                            Документы
-                                        </span>
-                                    </v-expansion-panel-header>
-                                    <v-expansion-panel-content>
-                                        <v-list-item>
-                                            <v-btn small depressed color="success" text :href="'/print/check/' + item.id" target="_blank">
-                                                Чек <v-icon class="ml-2">mdi-printer</v-icon>
-                                            </v-btn>
-                                        </v-list-item>
-                                        <v-list-item>
-                                            <v-btn small depressed color="success" text @click="createWaybill(item)">
-                                                Накладная <v-icon class="ml-2">mdi-printer</v-icon>
-                                            </v-btn>
-                                        </v-list-item>
-                                        <v-list-item>
-                                            <v-btn small depressed color="success" text @click="createInvoice(item)">
-                                                Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
-                                            </v-btn>
-                                        </v-list-item>
-                                        <v-list-item>
-                                            <v-btn small depressed color="success" text @click="createPaymentInvoice(item)">
-                                                Счет на оплату <v-icon class="ml-2">mdi-printer</v-icon>
-                                            </v-btn>
-                                        </v-list-item>
-                                        <v-list-item v-if="IS_SUPERUSER">
-                                            <v-btn small depressed color="success" text @click="sendTelegram(item.id)">
-                                                Отправить в телегу <v-icon class="ml-2">mdi-email</v-icon>
-                                            </v-btn>
-                                        </v-list-item>
-                                    </v-expansion-panel-content>
-                                </v-expansion-panel>
-                            </v-expansion-panels>
                         </v-list>
                         <v-list v-if="editMode && report.id === item.id">
                             <v-list-item>
@@ -527,6 +485,51 @@
                                 Подтвердить <v-icon class="ml-2">mdi-check</v-icon>
                             </v-btn>
                         </v-list-item>
+                    </v-list>
+                    <v-list>
+                        <v-expansion-panels style="min-width: 284px;" flat>
+                            <v-expansion-panel>
+                                <v-expansion-panel-header ripple>
+                                        <span
+                                            class="text-button"
+                                            style="
+                                            padding-left: 5px;
+                                            font-size: 12px!important;
+                                            color: #43a047;"
+                                        >
+                                            Документы
+                                        </span>
+                                </v-expansion-panel-header>
+                                <v-expansion-panel-content>
+                                    <v-list-item>
+                                        <v-btn small depressed color="success" text :href="'/print/check/' + item.id" target="_blank">
+                                            Чек <v-icon class="ml-2">mdi-printer</v-icon>
+                                        </v-btn>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-btn small depressed color="success" text @click="createWaybill(item)">
+                                            Накладная <v-icon class="ml-2">mdi-printer</v-icon>
+                                        </v-btn>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-btn small depressed color="success" text @click="createInvoice(item)">
+                                            Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
+                                        </v-btn>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-btn small depressed color="success" text @click="createPaymentInvoice(item)">
+                                            Счет на оплату <v-icon class="ml-2">mdi-printer</v-icon>
+                                        </v-btn>
+                                    </v-list-item>
+                                    <v-list-item v-if="IS_SUPERUSER">
+                                        <v-btn small depressed color="success" text @click="sendTelegram(item.id)">
+                                            Отправить в телегу <v-icon class="ml-2">mdi-email</v-icon>
+                                        </v-btn>
+                                    </v-list-item>
+                                </v-expansion-panel-content>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+
                     </v-list>
                 </template>
                 <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
