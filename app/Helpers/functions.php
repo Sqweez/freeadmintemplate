@@ -183,3 +183,13 @@ if (!function_exists('unmask_phone')) {
         return str_replace(['(', ')', '-', ' '], '', $phone);
     }
 }
+
+if (!function_exists('_divide')) {
+    function _divide ($args) {
+        try {
+            return $args;
+        } catch (Exception $e) {
+            return 0;
+        }
+    }
+}
