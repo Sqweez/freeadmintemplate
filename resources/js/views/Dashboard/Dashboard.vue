@@ -10,6 +10,9 @@
             <v-col sm="9" lg="9" md="9" v-if="CAN_SALE || IS_OBSERVER || !IS_FRANCHISE">
                 <SalesRating/>
             </v-col>
+            <v-col sm="12" lg="12" md="12" v-if="CAN_SALE">
+                <SellerOwnRatingWidget />
+            </v-col>
             <v-col sm="12" v-if="CAN_SALE && !IS_FRANCHISE">
                 <TasksWidget />
             </v-col>
@@ -37,24 +40,26 @@
 </template>
 
 <script>
-    import Weather from "@/components/Widgets/Weather";
-    import SalesRating from "@/components/Widgets/SalesRating";
-    import PlanWidget from "@/components/Widgets/PlanWidget";
-    import {mapGetters} from 'vuex';
-    import SalesRatingWidget from "@/components/v2/Widgets/SalesRatingWidget";
-    import DashboardCompanion from "@/components/Widgets/DashboardCompanion";
-    import TasksWidget from "@/components/Widgets/TasksWidget";
-    import BrandsWidget from "@/components/Widgets/BrandsWidget";
-    import BrandsRatingWidget from '@/components/Widgets/BrandsRatingWidget';
-    import PaymentTypeRating from '@/components/Widgets/PaymentTypeRating';
-    import SellerByMarginTypesRating from '@/components/Widgets/SellerByMarginTypesRating';
-    import ProductSalesRating from '@/components/Widgets/ProductSalesRating';
+import Weather from "@/components/Widgets/Weather";
+import SalesRating from "@/components/Widgets/SalesRating";
+import PlanWidget from "@/components/Widgets/PlanWidget";
+import {mapGetters} from 'vuex';
+import SalesRatingWidget from "@/components/v2/Widgets/SalesRatingWidget";
+import DashboardCompanion from "@/components/Widgets/DashboardCompanion";
+import TasksWidget from "@/components/Widgets/TasksWidget";
+import BrandsWidget from "@/components/Widgets/BrandsWidget";
+import BrandsRatingWidget from '@/components/Widgets/BrandsRatingWidget';
+import PaymentTypeRating from '@/components/Widgets/PaymentTypeRating';
+import SellerByMarginTypesRating from '@/components/Widgets/SellerByMarginTypesRating';
+import ProductSalesRating from '@/components/Widgets/ProductSalesRating';
+import SellerOwnRatingWidget from '@/components/Widgets/SellerOwnRatingWidget';
 
-    export default {
+export default {
         data: () => ({
             items: ['Сегодня', 'Текущая неделя', 'Текущий месяц', 'Последние 3 месяца'],
         }),
         components: {
+            SellerOwnRatingWidget,
             ProductSalesRating,
             SellerByMarginTypesRating,
             PaymentTypeRating,

@@ -12,6 +12,7 @@ use App\Http\Controllers\api\v2\BrandMotivationController;
 use App\Http\Controllers\api\v2\CertificateController;
 use App\Http\Controllers\api\v2\CommentController;
 use App\Http\Controllers\api\v2\CompanionController;
+use App\Http\Controllers\api\v2\DashboardController;
 use App\Http\Controllers\api\v2\EducationController;
 use App\Http\Controllers\api\v2\FavoriteController;
 use App\Http\Controllers\api\v2\IHerbController;
@@ -436,6 +437,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
 
         Route::apiResource('legal-entity', 'api\v2\LegalEntityController');
+
+        Route::prefix('dashboard')->group(function () {
+            Route::get('my/margins', [DashboardController::class, 'getMyMonthlyMarginSales']);
+        });
     });
 
     // Роуты v2
