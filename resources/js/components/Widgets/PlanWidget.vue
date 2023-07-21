@@ -126,11 +126,6 @@
             loading: true,
             storeFilter: null,
         }),
-        async created() {
-            this.loading = true;
-            this.storeFilter = this.IS_SUPERUSER ? this.$stores[0]?.id : this.$user.store_id;
-            this.loading = false;
-        },
         computed: {
             plan () {
                 return this.$store.getters.PLAN_REPORTS;
@@ -144,6 +139,11 @@
                 const daysInMonth = new Date(year, month, 0).getDate();
                 return Math.ceil(store.month_plan / daysInMonth);
             },
+            _init () {
+                this.loading = true;
+                this.storeFilter = this.IS_SUPERUSER ? this.$stores[0]?.id : this.$user.store_id;
+                this.loading = false;
+            },
         },
         watch: {
             async storeFilter (value) {
@@ -151,6 +151,14 @@
                     this.loading = true;
                     await this.$store.dispatch('getPlanReports', value);
                     this.loading = false;
+                }
+            },
+            $stores: {
+                immediate: true,
+                handler: function (value) {
+                    if (value && value.length) {
+                        this._init();
+                    }
                 }
             }
         }
