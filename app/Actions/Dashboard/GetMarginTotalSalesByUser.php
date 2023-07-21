@@ -49,7 +49,7 @@ class GetMarginTotalSalesByUser
                 'id' => $type->id,
                 'title' => sprintf('Категория %s', $type->title),
                 'total' => $currentTotal,
-                'percent' => 100 * $currentTotal / $total,
+                'percent' => $total === 0 ? 0 : 100 * $currentTotal / $total,
             ];
         });
     }
