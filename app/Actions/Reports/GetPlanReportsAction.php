@@ -24,6 +24,7 @@ class GetPlanReportsAction {
             $plan = new Plan();
             $plan->month_plan = 0;
             $plan->week_plan = 0;
+            $plan->prize = 0;
         }
 
         $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)
