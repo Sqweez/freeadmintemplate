@@ -20,6 +20,12 @@ class GetPlanReportsAction {
         $startOfMonth = $today->startOf('month')->toDateString();
         $plan = Plan::where('store_id', $store_id)->first();
 
+        if (!$plan) {
+            $plan = new Plan();
+            $plan->month_plan = 0;
+            $plan->week_plan = 0;
+        }
+
         $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)
             ->where('store_id', $store_id)
             ->where('user_id', '!=', 2)
