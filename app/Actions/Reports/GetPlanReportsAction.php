@@ -58,7 +58,7 @@ class GetPlanReportsAction {
         return [
             'amount' => $amount,
             'plan' => $planAmount,
-            'percent' => floor(_divide(100 * $amount / $planAmount))
+            'percent' => $planAmount ? floor(100 * $amount / $planAmount) : 0
         ];
     }
 
@@ -68,16 +68,14 @@ class GetPlanReportsAction {
         return [
             'amount' => $amount,
             'plan' => $planAmount,
-            'percent' => floor(
-                _divide(100 * $amount / $planAmount)
-            )
+            'percent' => $planAmount ? floor(100 * $amount / $planAmount) : 0
         ];
     }
 
     private function calculateMonthlyPlanExecution (Plan $plan, $sales): array {
         $amount = $this->calculateTotal->handle($sales);
         $planAmount = $plan->month_plan;
-        $percent = _divide(floor(100 * $amount / $planAmount));
+        $percent = $planAmount ? floor(100 * $amount / $planAmount) : 0;
         return [
             'amount' => $amount,
             'plan' => $planAmount,
