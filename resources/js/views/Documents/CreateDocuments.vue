@@ -241,20 +241,20 @@
 </template>
 
 <script>
-    import ACTIONS from "@/store/actions";
-    import {mapActions} from 'vuex';
-    import CheckModal from "@/components/Modal/CheckModal";
-    import axios from "axios";
-    import product from "@/mixins/product";
-    import product_search from "@/mixins/product_search";
-    import cart from "@/mixins/cart";
-    import CertificateModal from "@/components/Modal/CertificateModal";
-    import WayBillModal from "@/components/Modal/WayBillModal";
-    import InvoiceModal from "@/components/Modal/InvoiceModal";
-    import InvoicePaymentModal from "@/components/Modal/InvoicePaymentModal";
-    import ProductCheckModal from "@/components/Modal/ProductCheckModal";
+import ACTIONS from "@/store/actions";
+import {mapActions} from 'vuex';
+import CheckModal from "@/components/Modal/CheckModal";
+import axios from "axios";
+import product from "@/mixins/product";
+import product_search from "@/mixins/product_search";
+import cart from "@/mixins/cart";
+import CertificateModal from "@/components/Modal/CertificateModal";
+import WayBillModal from "@/components/Modal/WayBillModal";
+import InvoiceModal from "@/components/Modal/InvoiceModal";
+import InvoicePaymentModal from "@/components/Modal/InvoicePaymentModal";
+import ProductCheckModal from "@/components/Modal/ProductCheckModal";
 
-    export default {
+export default {
         components: {
             ProductCheckModal,
             InvoicePaymentModal,
@@ -265,11 +265,15 @@
         },
         async created() {
             this.loading = this.products.length === 0 || false;
-            await this.$store.dispatch('GET_PRODUCTS_v2');
-            await this.$store.dispatch(ACTIONS.GET_STORES, null);
+            await Promise.all([
+                this.$store.dispatch('GET_PRODUCTS_v2'),
+                this.$store.dispatch(ACTIONS.GET_STORES, null),
+                this.$store.dispatch('getLegalEntities'),
+                this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+                this.$store.dispatch(ACTIONS.GET_CATEGORIES)
+            ])
+
             this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
-            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
-            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
             this.loading = false;
         },
         watch: {
@@ -455,8 +459,8 @@
                 this.productCheckModal = false;
                 try {
                     this.overlay = true;
-                    const { data } = await axios.post(`/api/v2/documents/products/check`, {
-                        customer: organization,
+                    const { data } = await axios.post(`/api/v3/documents/products/check`, {
+                        ...organization,
                         cart: this.cart.map(c => {
                             c.formatted_product_price = new Intl.NumberFormat('ru-RU').format(Math.ceil(c.product_price));
                             c.discount = Math.max(c.discount, this.discountPercent);
@@ -476,8 +480,9 @@
                 this.waybillModal = false;
                 try {
                     this.overlay = true;
-                    const {data} = await axios.post(`/api/v2/documents/waybill`, {
-                        organization,
+                    console.log(organization);
+                    const {data} = await axios.post(`/api/v3/documents/waybill`, {
+                        ...organization,
                         cart: this.cart.map(c => {
                             c.formatted_product_price = new Intl.NumberFormat('ru-RU').format(Math.ceil(c.product_price));
                             c.discount = Math.max(c.discount, this.discountPercent);
@@ -497,7 +502,7 @@
                 this.invoiceModal = false;
                 try {
                     this.overlay = true;
-                    const {data} = await axios.post(`/api/v2/documents/invoice`, {
+                    const {data} = await axios.post(`/api/v3/documents/invoice`, {
                         ...invoiceData,
                         cart: this.cart.map(c => {
                             c.discount = Math.max(c.discount, this.discountPercent);
@@ -517,8 +522,8 @@
                 this.invoicePaymentModal = false;
                 try {
                     this.overlay = true;
-                    const {data} = await axios.post(`/api/v2/documents/invoice-payment`, {
-                        customer: val,
+                    const {data} = await axios.post(`/api/v3/documents/invoice-payment`, {
+                        ...val,
                         cart: this.cart.map(c => {
                             c.discount = Math.max(c.discount, this.discountPercent);
                             return c;

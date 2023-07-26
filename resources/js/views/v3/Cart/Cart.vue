@@ -688,12 +688,12 @@ export default {
     async created() {
         this.$loading.enable();
         await Promise.all([
-            await this.$store.dispatch('GET_PRODUCTS_v2'),
-            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
-            await this.$store.dispatch(ACTIONS.GET_CATEGORIES),
-            await this.$store.dispatch('GET_CERTIFICATES'),
-            await this.$store.dispatch('GET_PREORDERS'),
-            await this.$store.dispatch('getLegalEntities'),
+            this.$store.dispatch('GET_PRODUCTS_v2'),
+            this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+            this.$store.dispatch(ACTIONS.GET_CATEGORIES),
+            this.$store.dispatch('GET_CERTIFICATES'),
+            this.$store.dispatch('GET_PREORDERS'),
+            this.$store.dispatch('getLegalEntities'),
         ]);
         await this.$store.dispatch(ACTIONS.GET_STORES);
         this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
