@@ -40,7 +40,8 @@ class ReportService
             }
 
             if ($authUser->isStoreKeeper()) {
-                $saleQuery->where('payment_type', __hardcoded(4));
+                $saleQuery
+                    ->where('payment_type', __hardcoded(4));
             }
 
             $sales = $saleQuery->get();

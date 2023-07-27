@@ -1,12 +1,11 @@
 import {
     cancelSale,
-    createBrandsMotivation, editSaleList,
+    editSaleList,
     getBrandsMotivation,
-    getPlanReports,
     getReports,
     getStoreReports,
-    updateSale
-} from '@/api/sale'
+    updateSale,
+} from '@/api/sale';
 import ACTIONS from '../actions/index';
 import moment from 'moment';
 import axiosClient from '@/utils/axiosClient';
@@ -19,37 +18,42 @@ const reportsModule = {
         brandsMotivation: [],
     },
     getters: {
-        STORES_REPORTS: state => state.storesReports,
-        REPORTS: state => state.reports.map(report => {
-            report.search = report.products.map(product => {
-                return `${product.product_name } ${product.manufacturer.manufacturer_name} ${product.attributes.join(' ')}`;
-            }).join(' ');
-            return report;
-        }),
-        PLAN_REPORTS: state => state.planReports,
-        BRANDS_MOTIVATION: s => s.brandsMotivation
+        STORES_REPORTS: (state) => state.storesReports,
+        REPORTS: (state) =>
+            state.reports.map((report) => {
+                report.search = report.products
+                    .map((product) => {
+                        return `${product.product_name} ${
+                            product.manufacturer.manufacturer_name
+                        } ${product.attributes.join(' ')}`;
+                    })
+                    .join(' ');
+                return report;
+            }),
+        PLAN_REPORTS: (state) => state.planReports,
+        BRANDS_MOTIVATION: (s) => s.brandsMotivation,
     },
     mutations: {
         setStoresReport(state, payload) {
             state.storesReports = payload;
         },
         setReports(state, payload) {
-            state.reports = payload.map(p => {
+            state.reports = payload.map((p) => {
                 p._products = [...p.products];
                 return p;
             });
         },
         cancelSale(state, id) {
-            state.reports = state.reports.filter(s => s.id !== id);
+            state.reports = state.reports.filter((s) => s.id !== id);
         },
         changeSale(state, payload) {
-            state.reports = state.reports.map(r => {
+            state.reports = state.reports.map((r) => {
                 if (r.id == payload.id) {
                     r = payload;
                     r._products = [...payload.products];
                 }
                 return r;
-            })
+            });
         },
         setPlanReports(state, payload) {
             state.planReports = payload;
@@ -57,27 +61,39 @@ const reportsModule = {
         setBrandsMotivation(state, payload) {
             state.brandsMotivation = payload;
         },
-        markAsOpt (state, id) {
-            state.reports = state.reports.map(r => {
+        markAsOpt(state, id) {
+            state.reports = state.reports.map((r) => {
                 if (r.id === id) {
                     r.is_opt = true;
                 }
                 return r;
-            })
-        }
+            });
+        },
     },
     actions: {
-        async getStoresReport({commit, getters}, payload = moment().format('YYYY-MM-DD')) {
+        async getStoresReport(
+            { commit, getters },
+            payload = moment().format('YYYY-MM-DD'),
+        ) {
             const _payload = {
                 date_filter: payload,
                 role: getters.CURRENT_ROLE,
-                store_id: getters.USER.store_id
+                store_id: getters.USER.store_id,
             };
-            const {data} = await getStoreReports(_payload);
+            const { data } = await getStoreReports(_payload);
             commit('setStoresReport', data);
         },
-        async [ACTIONS.GET_REPORTS] ({commit, getters}, payload) {
-            if (!(getters.IS_ADMIN || getters.IS_BOSS || getters.IS_SENIOR_SELLER || getters.IS_MARKETOLOG || getters.IS_FRANCHISE)) {
+        async [ACTIONS.GET_REPORTS]({ commit, getters }, payload) {
+            if (
+                !(
+                    getters.IS_ADMIN ||
+                    getters.IS_BOSS ||
+                    getters.IS_SENIOR_SELLER ||
+                    getters.IS_MARKETOLOG ||
+                    getters.IS_FRANCHISE ||
+                    getters.IS_STOREKEEPER
+                )
+            ) {
                 payload.user_id = getters.USER.id;
             }
             if (getters.IS_SUPPLIER) {
@@ -91,7 +107,7 @@ const reportsModule = {
             const data = await getReports(payload);
             commit('setReports', data);
         },
-        async [ACTIONS.CANCEL_SALE] ({commit}, payload) {
+        async [ACTIONS.CANCEL_SALE]({ commit }, payload) {
             const { data } = await cancelSale(payload.canceled, payload.id);
             if (!data) {
                 commit('cancelSale', payload.id);
@@ -99,19 +115,21 @@ const reportsModule = {
                 commit('changeSale', data.data);
             }
         },
-        async getPlanReports ({ commit }, store_id) {
-            const { data } = await axiosClient.get(`/v2/reports/plan?store_id=${store_id}`)
+        async getPlanReports({ commit }, store_id) {
+            const { data } = await axiosClient.get(
+                `/v2/reports/plan?store_id=${store_id}`,
+            );
             commit('setPlanReports', data);
         },
-        async updateSale({commit}, payload) {
+        async updateSale({ commit }, payload) {
             const data = await updateSale(payload);
             commit('changeSale', data);
         },
-        async getBrandsMotivation({commit}) {
+        async getBrandsMotivation({ commit }) {
             const data = await getBrandsMotivation();
             commit('setBrandsMotivation', data);
         },
-        async [ACTIONS.EDIT_SALE_LIST]({commit}, payload) {
+        async [ACTIONS.EDIT_SALE_LIST]({ commit }, payload) {
             try {
                 this.$loading.enable();
                 const report = await editSaleList(payload);
@@ -121,8 +139,8 @@ const reportsModule = {
             } finally {
                 this.$loading.disable();
             }
-        }
-    }
+        },
+    },
 };
 
 export default reportsModule;
