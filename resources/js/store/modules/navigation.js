@@ -2,745 +2,750 @@ const navigationModule = {
     state: {
         bossMenu: [
             {
-                title: "Главная страница",
-                url: "/",
-                icon: "dashboard"
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: "Пользователи",
-                url: "/users",
-                icon: "person"
+                title: 'Пользователи',
+                url: '/users',
+                icon: 'person',
             },
             {
-                title: "Клиенты",
-                url: "/clients",
-                icon: "person"
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person',
             },
             {
-                title: "Оптовые клиенты",
-                url: "/clients/wholesale",
-                icon: "person"
+                title: 'Оптовые клиенты',
+                url: '/clients/wholesale',
+                icon: 'person',
             },
             {
-                title: "Изъятия",
-                url: "/with-drawal",
-                icon: "report"
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report',
             },
             {
-                title: "Документооборот",
-                url: "#",
-                icon: "article",
+                title: 'Документооборот',
+                url: '#',
+                icon: 'article',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Создать документ",
-                        url: "/documents"
+                        title: 'Создать документ',
+                        url: '/documents',
                     },
                     {
-                        title: "Список документов",
-                        url: "/documents/list"
+                        title: 'Список документов',
+                        url: '/documents/list',
                     },
                     {
-                        title: "Прайс-лист",
-                        url: "/documents/price/list"
-                    }
-                ]
+                        title: 'Прайс-лист',
+                        url: '/documents/price/list',
+                    },
+                ],
             },
             {
-                title: "Склад",
-                url: "#",
-                icon: "work",
+                title: 'Склад',
+                url: '#',
+                icon: 'work',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Все склады",
-                        url: "/stores"
+                        title: 'Все склады',
+                        url: '/stores',
                     },
                     {
-                        title: "Категории",
-                        url: "/categories"
+                        title: 'Категории',
+                        url: '/categories',
                     },
                     {
-                        title: "Товары",
-                        url: "/products"
+                        title: 'Товары',
+                        url: '/products',
                     },
                     {
-                        title: "Корзина",
-                        url: "/cart"
+                        title: 'Корзина',
+                        url: '/cart',
                     },
                     {
-                        title: "Бронирование товара",
-                        url: "/booking"
+                        title: 'Бронирование товара',
+                        url: '/booking',
                     },
                     {
-                        title: "Перемещения",
-                        url: "/transfer"
+                        title: 'Перемещения',
+                        url: '/transfer',
                     },
                     {
-                        title: "Поступления",
-                        url: "/arrivals"
+                        title: 'Поступления',
+                        url: '/arrivals',
                     },
                     {
-                        title: "Заканчивающиеся товары",
-                        url: "/products/stock/out"
+                        title: 'Заканчивающиеся товары',
+                        url: '/products/stock/out',
                     },
                     {
-                        title: "Предзаказы",
-                        url: "/preorders/index"
+                        title: 'Предзаказы',
+                        url: '/preorders/index',
                     },
                     {
-                        title: "Сроки годности",
-                        url: "/products/best-before"
+                        title: 'Сроки годности',
+                        url: '/products/best-before',
                     },
                     {
-                        title: "Товарные матрицы",
-                        url: "/matrixes"
-                    }
-                ]
+                        title: 'Товарные матрицы',
+                        url: '/matrixes',
+                    },
+                ],
             },
             {
-                title: "IHerb",
-                url: "#",
-                icon: "work",
+                title: 'IHerb',
+                url: '#',
+                icon: 'work',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Товары",
-                        url: "/products/iherb"
+                        title: 'Товары',
+                        url: '/products/iherb',
                     },
                     {
-                        title: "Прайс-лист",
-                        url: "/products/iherb/price"
+                        title: 'Прайс-лист',
+                        url: '/products/iherb/price',
                     },
                     {
-                        title: "Массовый редактор",
-                        url: "/iherb/mass"
-                    }
-                ]
+                        title: 'Массовый редактор',
+                        url: '/iherb/mass',
+                    },
+                ],
             },
             {
-                title: "Экономика",
-                url: "#",
+                title: 'Экономика',
+                url: '#',
                 hasDropdown: true,
-                icon: "account_balance_wallet",
+                icon: 'account_balance_wallet',
                 children: [
                     {
-                        title: "Список смен",
-                        url: "/shifts/index"
+                        title: 'Список смен',
+                        url: '/shifts/index',
                     },
                     {
-                        title: "Настройки смен",
-                        url: "/shifts/settings"
+                        title: 'Настройки смен',
+                        url: '/shifts/settings',
                     },
                     {
-                        title: "Штрафы/Вознаграждения",
-                        url: "/shifts/penalty"
+                        title: 'Штрафы/Вознаграждения',
+                        url: '/shifts/penalty',
                     },
                     {
-                        title: "План продаж",
-                        url: "/plan"
+                        title: 'План продаж',
+                        url: '/plan',
                     },
                     {
-                        title: "Проценты от продаж",
-                        url: "/economy/seller/earnings"
+                        title: 'Проценты от продаж',
+                        url: '/economy/seller/earnings',
                     },
                     {
-                        title: "Типы маржинальности",
-                        url: "/economy/margin/types"
+                        title: 'Типы маржинальности',
+                        url: '/economy/margin/types',
                     },
                     {
                         title: 'Юридические лица',
-                        url: '/legal-entity'
-                    }
-                ]
+                        url: '/legal-entity',
+                    },
+                ],
             },
             {
-                title: "Продавцы",
-                url: "#",
+                title: 'Продавцы',
+                url: '#',
                 hasDropdown: true,
-                icon: "persons",
+                icon: 'persons',
                 children: [
                     {
-                        title: "Задания",
-                        url: "/tasks/index"
+                        title: 'Задания',
+                        url: '/tasks/index',
                     },
                     {
-                        title: "Обучение",
-                        url: "/education/index"
-                    }
-                ]
-            },
-            {
-                title: "Статистика",
-                icon: "analytics",
-                url: "#",
-                hasDropdown: true,
-                children: [
-                    {
-                        title: "Баланс товаров",
-                        url: "/products/balance"
+                        title: 'Обучение',
+                        url: '/education/index',
                     },
-                    {
-                        title: "Клиенты",
-                        url: "/analytics/clients"
-                    },
-                    {
-                        title: "Бренды",
-                        url: "/analytics/brands"
-                    },
-                    {
-                        title: "Аналитика продаж",
-                        url: "/analytics/sales"
-                    },
-                    {
-                        title: "Аналитика поступлений",
-                        url: "/analytics/arrivals"
-                    },
-                    {
-                        title: "Аналитика продаж бренды",
-                        url: "/analytics/sales/brands"
-                    },
-                    {
-                        url: "/analytics/sales/brands/sellers",
-                        title: "Аналитика продаж продавцы"
-                    },
-                    {
-                        url: "/analytics/sales/schedule",
-                        title: "График продаж"
-                    }
-                ]
+                ],
             },
             {
-                title: "Настройки",
-                url: "/settings",
-                icon: "settings"
-            },
-            {
-                title: "Отчеты по продажам",
-                url: "/reports",
-                icon: "report"
-            },
-            {
-                title: "Отчеты по товарам",
-                url: "/reports/products",
-                icon: "report"
-            },
-            {
-                title: "Отчеты по тренерам",
-                url: "/analytics/trainer/rating",
-                icon: "report"
-            },
-            {
-                title: "Отчеты по партнерам",
-                url: "/analytics/partners/rating",
-                icon: "report"
-            },
-            {
-                title: "Отчеты по клиентам",
-                url: "/analytics/clients/sales",
-                icon: "report"
-            },
-            {
-                title: "Рассылка",
-                url: "/mailing",
-                icon: "mail"
-            },
-            {
-                title: "Kaspi",
-                url: "#",
-                icon: "home",
+                title: 'Статистика',
+                icon: 'analytics',
+                url: '#',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Товары",
-                        url: "/kaspi/products"
+                        title: 'Баланс товаров',
+                        url: '/products/balance',
                     },
                     {
-                        title: "Заказы",
-                        url: "/kaspi/orders"
+                        title: 'Клиенты',
+                        url: '/analytics/clients',
                     },
                     {
-                        title: "Аналитика",
-                        url: "/kaspi/analytics"
-                    }
-                ]
+                        title: 'Бренды',
+                        url: '/analytics/brands',
+                    },
+                    {
+                        title: 'Аналитика продаж',
+                        url: '/analytics/sales',
+                    },
+                    {
+                        title: 'Аналитика поступлений',
+                        url: '/analytics/arrivals',
+                    },
+                    {
+                        title: 'Аналитика продаж бренды',
+                        url: '/analytics/sales/brands',
+                    },
+                    {
+                        url: '/analytics/sales/brands/sellers',
+                        title: 'Аналитика продаж продавцы',
+                    },
+                    {
+                        url: '/analytics/sales/schedule',
+                        title: 'График продаж',
+                    },
+                ],
             },
             {
-                title: "Партнеры",
-                url: "#",
-                hasDropdown: true,
-                icon: "supervised_user_circle",
-                children: [
-                    {
-                        title: "Закупы",
-                        url: "/companions/transfer"
-                    }
-                ]
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings',
             },
             {
-                title: "Модератор",
-                url: "#",
-                icon: "dashboard",
-                hasDropdown: true,
-                children: [
-                    {
-                        title: "Товары",
-                        url: "/moderator/products"
-                    },
-                    {
-                        title: "Новости",
-                        url: "/moderator/news"
-                    },
-                    {
-                        title: "Теги",
-                        url: "/products/tags"
-                    },
-                    {
-                        title: "SEO-категории",
-                        url: "/seo/category"
-                    },
-                    {
-                        title: "Доп категории",
-                        url: "/products/subcategories"
-                    }
-                ]
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
             },
             {
-                title: "Интернет-магазин",
-                url: "#",
-                icon: "home",
+                title: 'Отчеты по товарам',
+                url: '/reports/products',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по тренерам',
+                url: '/analytics/trainer/rating',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по партнерам',
+                url: '/analytics/partners/rating',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по клиентам',
+                url: '/analytics/clients/sales',
+                icon: 'report',
+            },
+            {
+                title: 'Рассылка',
+                url: '/mailing',
+                icon: 'mail',
+            },
+            {
+                title: 'Kaspi',
+                url: '#',
+                icon: 'home',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Акции",
-                        url: "/stocks/index"
+                        title: 'Товары',
+                        url: '/kaspi/products',
                     },
                     {
-                        title: "Цели",
-                        url: "/shop/goals"
+                        title: 'Заказы',
+                        url: '/kaspi/orders',
                     },
                     {
-                        title: "Атлеты",
-                        url: "/shop/sportsmen"
+                        title: 'Аналитика',
+                        url: '/kaspi/analytics',
+                    },
+                ],
+            },
+            {
+                title: 'Партнеры',
+                url: '#',
+                hasDropdown: true,
+                icon: 'supervised_user_circle',
+                children: [
+                    {
+                        title: 'Закупы',
+                        url: '/companions/transfer',
+                    },
+                ],
+            },
+            {
+                title: 'Модератор',
+                url: '#',
+                icon: 'dashboard',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Товары',
+                        url: '/moderator/products',
                     },
                     {
-                        title: "Рейтинг продавцов",
-                        url: "/shop/rating"
+                        title: 'Новости',
+                        url: '/moderator/news',
                     },
                     {
-                        title: "Промокоды",
-                        url: "/promocode"
+                        title: 'Теги',
+                        url: '/products/tags',
                     },
                     {
-                        title: "Баннеры",
-                        url: "/shop/banners"
+                        title: 'SEO-категории',
+                        url: '/seo/category',
                     },
                     {
-                        title: "Связанные товары",
-                        url: "/shop/related"
+                        title: 'Доп категории',
+                        url: '/products/subcategories',
+                    },
+                ],
+            },
+            {
+                title: 'Интернет-магазин',
+                url: '#',
+                icon: 'home',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Акции',
+                        url: '/stocks/index',
                     },
                     {
-                        title: "Заказы",
-                        url: "/shop/orders"
+                        title: 'Цели',
+                        url: '/shop/goals',
                     },
                     {
-                        title: "Футер",
-                        url: "/site/footer"
-                    }
-                ]
-            }
+                        title: 'Атлеты',
+                        url: '/shop/sportsmen',
+                    },
+                    {
+                        title: 'Рейтинг продавцов',
+                        url: '/shop/rating',
+                    },
+                    {
+                        title: 'Промокоды',
+                        url: '/promocode',
+                    },
+                    {
+                        title: 'Баннеры',
+                        url: '/shop/banners',
+                    },
+                    {
+                        title: 'Связанные товары',
+                        url: '/shop/related',
+                    },
+                    {
+                        title: 'Заказы',
+                        url: '/shop/orders',
+                    },
+                    {
+                        title: 'Футер',
+                        url: '/site/footer',
+                    },
+                ],
+            },
         ],
         partner_sellersMenu: [
             {
-                title: "Главная",
-                icon: "dashboard",
-                url: "/"
+                title: 'Главная',
+                icon: 'dashboard',
+                url: '/',
             },
             {
-                title: "Корзина",
-                icon: "store",
-                url: "/cart/partner"
+                title: 'Корзина',
+                icon: 'store',
+                url: '/cart/partner',
             },
             {
-                title: "Товары",
-                icon: "dashboard",
-                url: "/companion/products"
-            }
+                title: 'Товары',
+                icon: 'dashboard',
+                url: '/companion/products',
+            },
         ],
         moderatorMenu: [
             {
-                title: "Главная страница",
-                url: "/",
-                icon: "dashboard"
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: "Товары",
-                url: "/products",
-                icon: "dashboard"
+                title: 'Товары',
+                url: '/products',
+                icon: 'dashboard',
             },
             {
-                title: "Баннеры",
-                url: "/shop/banners",
-                icon: "dashboard"
+                title: 'Баннеры',
+                url: '/shop/banners',
+                icon: 'dashboard',
             },
             {
-                icon: "dashboard",
-                title: "Теги",
-                url: "/products/tags"
+                icon: 'dashboard',
+                title: 'Теги',
+                url: '/products/tags',
             },
             {
-                icon: "dashboard",
-                title: "SEO-категории",
-                url: "/seo/category"
+                icon: 'dashboard',
+                title: 'SEO-категории',
+                url: '/seo/category',
             },
             {
-                icon: "dashboard",
-                title: "Доп категории",
-                url: "/products/subcategories"
-            }
+                icon: 'dashboard',
+                title: 'Доп категории',
+                url: '/products/subcategories',
+            },
         ],
         supplierMenu: [
             {
-                title: "Отчеты по продажам",
-                url: "/supplier/reports",
-                icon: "dashboard"
-            }
+                title: 'Отчеты по продажам',
+                url: '/supplier/reports',
+                icon: 'dashboard',
+            },
         ],
         storekeeperMenu: [
             {
-                title: "Перемещения",
-                url: "/transfer",
-                icon: "work"
+                title: 'Перемещения',
+                url: '/transfer',
+                icon: 'work',
             },
             {
-                title: "Поступления",
-                url: "/arrivals",
-                icon: "work"
+                title: 'Поступления',
+                url: '/arrivals',
+                icon: 'work',
             },
             {
-                title: "Товары",
-                url: "/products",
-                icon: "dashboard"
+                title: 'Товары',
+                url: '/products',
+                icon: 'dashboard',
             },
             {
-                title: "Корзина",
-                url: "/cart",
-                icon: "report"
-            }
+                title: 'Корзина',
+                url: '/cart',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
+            },
         ],
         adminMenu: [
             {
-                title: "Главная страница",
-                url: "/",
-                icon: "dashboard"
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: "Пользователи",
-                url: "/users",
-                icon: "person",
-                isAdmin: true
+                title: 'Пользователи',
+                url: '/users',
+                icon: 'person',
+                isAdmin: true,
             },
             {
-                title: "Клиенты",
-                url: "/clients",
-                icon: "person"
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person',
             },
             {
-                title: "Оптовые клиенты",
-                url: "/clients/wholesale",
-                icon: "person"
+                title: 'Оптовые клиенты',
+                url: '/clients/wholesale',
+                icon: 'person',
             },
             {
-                title: "Изъятия",
-                url: "/with-drawal",
-                icon: "report"
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report',
             },
             {
-                title: "Документооборот",
-                url: "#",
-                icon: "article",
+                title: 'Документооборот',
+                url: '#',
+                icon: 'article',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Создать документ",
-                        url: "/documents",
-                        isAdmin: true
+                        title: 'Создать документ',
+                        url: '/documents',
+                        isAdmin: true,
                     },
                     {
-                        title: "Список документов",
-                        url: "/documents/list",
-                        isAdmin: true
+                        title: 'Список документов',
+                        url: '/documents/list',
+                        isAdmin: true,
                     },
                     {
-                        title: "Прайс-лист",
-                        url: "/documents/price/list"
-                    }
-                ]
+                        title: 'Прайс-лист',
+                        url: '/documents/price/list',
+                    },
+                ],
             },
             {
-                title: "Склад",
-                url: "#",
-                icon: "work",
+                title: 'Склад',
+                url: '#',
+                icon: 'work',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Все склады",
-                        url: "/stores",
-                        isAdmin: true
+                        title: 'Все склады',
+                        url: '/stores',
+                        isAdmin: true,
                     },
                     {
-                        title: "Категории",
-                        url: "/categories",
-                        isAdmin: true
+                        title: 'Категории',
+                        url: '/categories',
+                        isAdmin: true,
                     },
                     {
-                        title: "Товары",
-                        url: "/products"
+                        title: 'Товары',
+                        url: '/products',
                     },
                     {
-                        title: "Корзина",
-                        url: "/cart"
+                        title: 'Корзина',
+                        url: '/cart',
                     },
                     {
-                        title: "Бронирование товара",
-                        url: "/booking"
+                        title: 'Бронирование товара',
+                        url: '/booking',
                     },
                     {
-                        title: "Перемещения",
-                        url: "/transfer"
+                        title: 'Перемещения',
+                        url: '/transfer',
                     },
                     {
-                        title: "Поступления",
-                        url: "/arrivals",
-                        isAdmin: true
+                        title: 'Поступления',
+                        url: '/arrivals',
+                        isAdmin: true,
                     },
                     {
-                        title: "Заканчивающиеся товары",
-                        url: "/products/stock/out",
-                        isAdmin: true
+                        title: 'Заканчивающиеся товары',
+                        url: '/products/stock/out',
+                        isAdmin: true,
                     },
                     {
-                        title: "Предзаказы",
-                        url: "/preorders/index"
+                        title: 'Предзаказы',
+                        url: '/preorders/index',
                     },
                     {
-                        title: "Сроки годности",
-                        url: "/products/best-before"
+                        title: 'Сроки годности',
+                        url: '/products/best-before',
                     },
                     {
-                        title: "Товарные матрицы",
-                        url: "/matrixes"
-                    }
-                ]
+                        title: 'Товарные матрицы',
+                        url: '/matrixes',
+                    },
+                ],
             },
             {
-                title: "IHerb",
-                url: "#",
-                icon: "work",
+                title: 'IHerb',
+                url: '#',
+                icon: 'work',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Товары",
-                        url: "/products/iherb"
+                        title: 'Товары',
+                        url: '/products/iherb',
                     },
                     {
-                        title: "Прайс-лист",
-                        url: "/products/iherb/price"
+                        title: 'Прайс-лист',
+                        url: '/products/iherb/price',
                     },
                     {
-                        title: "Массовый редактор",
-                        url: "/iherb/mass"
-                    }
-                ]
+                        title: 'Массовый редактор',
+                        url: '/iherb/mass',
+                    },
+                ],
             },
             {
-                title: "Экономика",
-                url: "#",
+                title: 'Экономика',
+                url: '#',
                 hasDropdown: true,
-                icon: "account_balance_wallet",
+                icon: 'account_balance_wallet',
                 children: [
                     {
-                        title: "Типы маржинальности",
-                        url: "/economy/margin/types"
+                        title: 'Типы маржинальности',
+                        url: '/economy/margin/types',
                     },
                     {
                         title: 'Юридические лица',
-                        url: '/legal-entity'
-                    }
-                ]
+                        url: '/legal-entity',
+                    },
+                ],
             },
             {
-                title: "Продавцы",
-                url: "#",
+                title: 'Продавцы',
+                url: '#',
                 hasDropdown: true,
-                icon: "persons",
+                icon: 'persons',
                 children: [
                     {
-                        title: "Задания",
-                        url: "/tasks/index"
+                        title: 'Задания',
+                        url: '/tasks/index',
                     },
                     {
-                        title: "Обучение",
-                        url: "/education/index"
-                    }
-                ]
-            },
-            {
-                title: "Настройки",
-                url: "/settings",
-                icon: "settings"
-            },
-            {
-                title: "Отчеты по продажам",
-                url: "/reports",
-                icon: "report"
-            },
-            {
-                title: "Отчеты по товарам",
-                url: "/reports/products",
-                icon: "report"
-            },
-            {
-                title: "Отчеты по тренерам",
-                url: "/analytics/trainer/rating",
-                icon: "report"
-            },
-            {
-                title: "Отчеты по партнерам",
-                url: "/analytics/partners/rating",
-                icon: "report"
-            },
-            {
-                title: "Отчеты по клиентам",
-                url: "/analytics/clients/sales",
-                icon: "report"
-            },
-            {
-                title: "Рассылка",
-                url: "/mailing",
-                icon: "mail"
-            },
-            {
-                title: "Аналитика продаж бренды",
-                url: "/analytics/sales/brands"
-            },
-            {
-                title: "Аналитика продаж продавцы",
-                url: "/analytics/sales/brands/sellers"
-            },
-            {
-                url: "/analytics/sales/schedule",
-                title: "График продаж"
-            },
-            {
-                title: "Kaspi",
-                url: "#",
-                icon: "home",
-                hasDropdown: true,
-                isAdmin: true,
-                children: [
-                    {
-                        title: "Товары",
-                        url: "/kaspi/products"
+                        title: 'Обучение',
+                        url: '/education/index',
                     },
-                    {
-                        title: "Заказы",
-                        url: "/kaspi/orders"
-                    },
-                    {
-                        title: "Аналитика",
-                        url: "/kaspi/analytics"
-                    }
-                ]
+                ],
             },
             {
-                title: "Партнеры",
-                url: "#",
-                isAdmin: true,
-                hasDropdown: true,
-                icon: "supervised_user_circle",
-                children: [
-                    {
-                        title: "Закупы",
-                        url: "/companions/transfer"
-                    }
-                ]
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings',
             },
             {
-                title: "Модератор",
-                url: "#",
-                icon: "dashboard",
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по товарам',
+                url: '/reports/products',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по тренерам',
+                url: '/analytics/trainer/rating',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по партнерам',
+                url: '/analytics/partners/rating',
+                icon: 'report',
+            },
+            {
+                title: 'Отчеты по клиентам',
+                url: '/analytics/clients/sales',
+                icon: 'report',
+            },
+            {
+                title: 'Рассылка',
+                url: '/mailing',
+                icon: 'mail',
+            },
+            {
+                title: 'Аналитика продаж бренды',
+                url: '/analytics/sales/brands',
+            },
+            {
+                title: 'Аналитика продаж продавцы',
+                url: '/analytics/sales/brands/sellers',
+            },
+            {
+                url: '/analytics/sales/schedule',
+                title: 'График продаж',
+            },
+            {
+                title: 'Kaspi',
+                url: '#',
+                icon: 'home',
                 hasDropdown: true,
                 isAdmin: true,
                 children: [
                     {
-                        title: "Товары",
-                        url: "/moderator/products"
+                        title: 'Товары',
+                        url: '/kaspi/products',
                     },
                     {
-                        title: "Новости",
-                        url: "/moderator/news"
+                        title: 'Заказы',
+                        url: '/kaspi/orders',
                     },
                     {
-                        icon: "dashboard",
-                        title: "Теги",
-                        url: "/products/tags"
+                        title: 'Аналитика',
+                        url: '/kaspi/analytics',
                     },
-                    {
-                        title: "SEO-категории",
-                        url: "/seo/category"
-                    },
-                    {
-                        title: "Доп категории",
-                        url: "/products/subcategories"
-                    }
-                ]
+                ],
             },
             {
-                title: "Интернет-магазин",
-                url: "#",
-                icon: "home",
+                title: 'Партнеры',
+                url: '#',
+                isAdmin: true,
+                hasDropdown: true,
+                icon: 'supervised_user_circle',
+                children: [
+                    {
+                        title: 'Закупы',
+                        url: '/companions/transfer',
+                    },
+                ],
+            },
+            {
+                title: 'Модератор',
+                url: '#',
+                icon: 'dashboard',
                 hasDropdown: true,
                 isAdmin: true,
                 children: [
                     {
-                        title: "Акции",
-                        url: "/stocks/index"
+                        title: 'Товары',
+                        url: '/moderator/products',
                     },
                     {
-                        title: "Цели",
-                        url: "/shop/goals"
+                        title: 'Новости',
+                        url: '/moderator/news',
                     },
                     {
-                        title: "Атлеты",
-                        url: "/shop/sportsmen"
+                        icon: 'dashboard',
+                        title: 'Теги',
+                        url: '/products/tags',
                     },
                     {
-                        title: "Рейтинг продавцов",
-                        url: "/shop/rating"
+                        title: 'SEO-категории',
+                        url: '/seo/category',
                     },
                     {
-                        title: "Промокоды",
-                        url: "/promocode"
+                        title: 'Доп категории',
+                        url: '/products/subcategories',
+                    },
+                ],
+            },
+            {
+                title: 'Интернет-магазин',
+                url: '#',
+                icon: 'home',
+                hasDropdown: true,
+                isAdmin: true,
+                children: [
+                    {
+                        title: 'Акции',
+                        url: '/stocks/index',
                     },
                     {
-                        title: "Баннеры",
-                        url: "/shop/banners"
+                        title: 'Цели',
+                        url: '/shop/goals',
                     },
                     {
-                        title: "Связанные товары",
-                        url: "/shop/related"
+                        title: 'Атлеты',
+                        url: '/shop/sportsmen',
                     },
                     {
-                        title: "Заказы",
-                        url: "/shop/orders"
+                        title: 'Рейтинг продавцов',
+                        url: '/shop/rating',
                     },
                     {
-                        title: "Футер",
-                        url: "/site/footer"
-                    }
-                ]
-            }
+                        title: 'Промокоды',
+                        url: '/promocode',
+                    },
+                    {
+                        title: 'Баннеры',
+                        url: '/shop/banners',
+                    },
+                    {
+                        title: 'Связанные товары',
+                        url: '/shop/related',
+                    },
+                    {
+                        title: 'Заказы',
+                        url: '/shop/orders',
+                    },
+                    {
+                        title: 'Футер',
+                        url: '/site/footer',
+                    },
+                ],
+            },
             /*         {
                          title: 'Статистика',
                          url: '#',
@@ -804,108 +809,108 @@ const navigationModule = {
         ],
         seniorSellerMenu: [
             {
-                title: "Главная страница",
-                url: "/",
-                icon: "dashboard"
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: "Клиенты",
-                url: "/clients",
-                icon: "person"
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person',
             },
             {
-                title: "Изъятия",
-                url: "/with-drawal",
-                icon: "report"
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report',
             },
             {
-                title: "Склад",
-                url: "#",
-                icon: "home",
+                title: 'Склад',
+                url: '#',
+                icon: 'home',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Товары",
-                        url: "/products"
+                        title: 'Товары',
+                        url: '/products',
                     },
                     {
-                        title: "Корзина",
-                        url: "/cart"
+                        title: 'Корзина',
+                        url: '/cart',
                     },
                     {
-                        title: "Бронирование товара",
-                        url: "/booking"
+                        title: 'Бронирование товара',
+                        url: '/booking',
                     },
                     {
-                        title: "Перемещения",
-                        url: "/transfer"
+                        title: 'Перемещения',
+                        url: '/transfer',
                     },
                     {
-                        title: "Предзаказы",
-                        url: "/preorders/index"
+                        title: 'Предзаказы',
+                        url: '/preorders/index',
                     },
                     {
-                        title: "Поступления",
-                        url: "/arrivals"
+                        title: 'Поступления',
+                        url: '/arrivals',
                     },
                     {
-                        title: "Сроки годности",
-                        url: "/products/best-before"
-                    }
-                ]
+                        title: 'Сроки годности',
+                        url: '/products/best-before',
+                    },
+                ],
             },
             {
-                title: "Настройки",
-                url: "/settings",
-                icon: "settings"
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings',
             },
             {
-                title: "Отчеты по продажам",
-                url: "/reports",
-                icon: "report"
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
             },
             {
-                title: "Интернет-магазин",
-                url: "/shop/orders",
-                icon: "store"
+                title: 'Интернет-магазин',
+                url: '/shop/orders',
+                icon: 'store',
             },
             {
-                title: "Обучение",
-                url: "/education/index",
-                icon: "grading"
+                title: 'Обучение',
+                url: '/education/index',
+                icon: 'grading',
             },
             {
-                title: "Промокоды",
-                url: "/promocode",
-                icon: "receipt"
-            }
+                title: 'Промокоды',
+                url: '/promocode',
+                icon: 'receipt',
+            },
         ],
         sellerMenu: [
             {
-                title: "Главная страница",
-                url: "/",
-                icon: "dashboard"
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: "Изъятия",
-                url: "/with-drawal",
-                icon: "report"
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report',
             },
             {
-                title: "Клиенты",
-                url: "/clients",
-                icon: "person"
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person',
             },
             {
-                title: "Документооборот",
-                url: "#",
-                icon: "article",
+                title: 'Документооборот',
+                url: '#',
+                icon: 'article',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Создать документ",
-                        url: "/documents"
-                    }
+                        title: 'Создать документ',
+                        url: '/documents',
+                    },
                     /*{
                         title: 'Список документов',
                         url: '/documents/list',
@@ -914,326 +919,326 @@ const navigationModule = {
                         title: 'Прайс-лист',
                         url: '/documents/price/list'
                     }*/
-                ]
+                ],
             },
             {
-                title: "Склад",
-                url: "#",
-                icon: "home",
+                title: 'Склад',
+                url: '#',
+                icon: 'home',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Товары",
-                        url: "/products"
+                        title: 'Товары',
+                        url: '/products',
                     },
                     {
-                        title: "Корзина",
-                        url: "/cart"
+                        title: 'Корзина',
+                        url: '/cart',
                     },
                     {
-                        title: "Бронирование товара",
-                        url: "/booking"
+                        title: 'Бронирование товара',
+                        url: '/booking',
                     },
                     {
-                        title: "Перемещения",
-                        url: "/transfer"
+                        title: 'Перемещения',
+                        url: '/transfer',
                     },
                     {
-                        title: "Предзаказы",
-                        url: "/preorders/index"
+                        title: 'Предзаказы',
+                        url: '/preorders/index',
                     },
                     {
-                        title: "Поступления",
-                        url: "/arrivals"
+                        title: 'Поступления',
+                        url: '/arrivals',
                     },
                     {
-                        title: "Сроки годности",
-                        url: "/products/best-before"
-                    }
-                ]
+                        title: 'Сроки годности',
+                        url: '/products/best-before',
+                    },
+                ],
             },
             {
-                title: "Настройки",
-                url: "/settings",
-                icon: "settings"
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings',
             },
             {
-                title: "Отчеты по продажам",
-                url: "/reports",
-                icon: "report"
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
             },
             {
-                title: "Интернет-магазин",
-                url: "/shop/orders",
-                icon: "store"
+                title: 'Интернет-магазин',
+                url: '/shop/orders',
+                icon: 'store',
             },
             {
-                title: "Обучение",
-                url: "/education/index",
-                icon: "grading"
+                title: 'Обучение',
+                url: '/education/index',
+                icon: 'grading',
             },
             {
-                title: "Промокоды",
-                url: "/promocode",
-                icon: "receipt"
-            }
+                title: 'Промокоды',
+                url: '/promocode',
+                icon: 'receipt',
+            },
         ],
         observerMenu: [
             {
-                title: "Главная страница",
-                url: "/",
-                icon: "dashboard"
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: "Баланс товаров",
-                url: "/products/balance",
-                icon: "analytics"
-            }
+                title: 'Баланс товаров',
+                url: '/products/balance',
+                icon: 'analytics',
+            },
         ],
         marketologMenu: [
             {
-                title: "Главная страница",
-                url: "/",
-                icon: "dashboard"
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: "Клиенты",
-                url: "/clients",
-                icon: "person"
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person',
             },
             {
-                title: "Продавцы",
-                url: "#",
+                title: 'Продавцы',
+                url: '#',
                 hasDropdown: true,
-                icon: "persons",
+                icon: 'persons',
                 children: [
                     {
-                        title: "Задания",
-                        url: "/tasks/index"
+                        title: 'Задания',
+                        url: '/tasks/index',
                     },
                     {
-                        title: "Обучение",
-                        url: "/education/index"
-                    }
-                ]
+                        title: 'Обучение',
+                        url: '/education/index',
+                    },
+                ],
             },
             {
-                title: "Статистика",
-                icon: "analytics",
-                url: "#",
+                title: 'Статистика',
+                icon: 'analytics',
+                url: '#',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Аналитика продаж",
-                        url: "/analytics/sales"
+                        title: 'Аналитика продаж',
+                        url: '/analytics/sales',
                     },
                     {
-                        title: "Аналитика поступлений",
-                        url: "/analytics/arrivals"
+                        title: 'Аналитика поступлений',
+                        url: '/analytics/arrivals',
                     },
                     {
-                        title: "Аналитика продаж бренды",
-                        url: "/analytics/sales/brands"
+                        title: 'Аналитика продаж бренды',
+                        url: '/analytics/sales/brands',
                     },
                     {
-                        url: "/analytics/sales/brands/sellers",
-                        title: "Аналитика продаж продавцы"
+                        url: '/analytics/sales/brands/sellers',
+                        title: 'Аналитика продаж продавцы',
                     },
                     {
-                        url: "/analytics/sales/schedule",
-                        title: "График продаж"
-                    }
-                ]
+                        url: '/analytics/sales/schedule',
+                        title: 'График продаж',
+                    },
+                ],
             },
             {
-                title: "Отчеты по продажам",
-                url: "/reports",
-                icon: "report"
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
             },
             {
-                title: "Отчеты по тренерам",
-                url: "/analytics/trainer/rating",
-                icon: "report"
+                title: 'Отчеты по тренерам',
+                url: '/analytics/trainer/rating',
+                icon: 'report',
             },
             {
-                title: "Отчеты по партнерам",
-                url: "/analytics/partners/rating",
-                icon: "report"
+                title: 'Отчеты по партнерам',
+                url: '/analytics/partners/rating',
+                icon: 'report',
             },
             {
-                title: "Отчеты по клиентам",
-                url: "/analytics/clients/sales",
-                icon: "report"
+                title: 'Отчеты по клиентам',
+                url: '/analytics/clients/sales',
+                icon: 'report',
             },
             {
-                title: "Типы маржинальности",
-                url: "/economy/margin/types",
-                icon: "article"
+                title: 'Типы маржинальности',
+                url: '/economy/margin/types',
+                icon: 'article',
             },
             {
-                title: "Поступления",
-                url: "/arrivals",
-                icon: "moped"
+                title: 'Поступления',
+                url: '/arrivals',
+                icon: 'moped',
             },
 
             {
-                icon: "dashboard",
-                title: "Теги",
-                url: "/products/tags"
+                icon: 'dashboard',
+                title: 'Теги',
+                url: '/products/tags',
             },
             {
-                icon: "dashboard",
-                title: "Доп категории",
-                url: "/products/subcategories"
+                icon: 'dashboard',
+                title: 'Доп категории',
+                url: '/products/subcategories',
             },
             {
-                title: "Интернет-магазин",
-                url: "#",
-                icon: "home",
+                title: 'Интернет-магазин',
+                url: '#',
+                icon: 'home',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Акции",
-                        url: "/stocks/index"
+                        title: 'Акции',
+                        url: '/stocks/index',
                     },
                     {
-                        title: "Цели",
-                        url: "/shop/goals"
+                        title: 'Цели',
+                        url: '/shop/goals',
                     },
                     {
-                        title: "Атлеты",
-                        url: "/shop/sportsmen"
+                        title: 'Атлеты',
+                        url: '/shop/sportsmen',
                     },
                     {
-                        title: "Рейтинг продавцов",
-                        url: "/shop/rating"
+                        title: 'Рейтинг продавцов',
+                        url: '/shop/rating',
                     },
                     {
-                        title: "Промокоды",
-                        url: "/promocode"
+                        title: 'Промокоды',
+                        url: '/promocode',
                     },
                     {
-                        title: "Баннеры",
-                        url: "/shop/banners"
+                        title: 'Баннеры',
+                        url: '/shop/banners',
                     },
                     {
-                        title: "Связанные товары",
-                        url: "/shop/related"
+                        title: 'Связанные товары',
+                        url: '/shop/related',
                     },
                     {
-                        title: "Футер",
-                        url: "/site/footer"
-                    }
-                ]
-            }
+                        title: 'Футер',
+                        url: '/site/footer',
+                    },
+                ],
+            },
         ],
         franchiseMenu: [
             {
-                title: "Главная страница",
-                url: "/",
-                icon: "dashboard"
+                title: 'Главная страница',
+                url: '/',
+                icon: 'dashboard',
             },
             {
-                title: "Пользователи",
-                url: "/users",
-                icon: "person",
-                isAdmin: true
+                title: 'Пользователи',
+                url: '/users',
+                icon: 'person',
+                isAdmin: true,
             },
             {
-                title: "Изъятия",
-                url: "/with-drawal",
-                icon: "report"
+                title: 'Изъятия',
+                url: '/with-drawal',
+                icon: 'report',
             },
             {
-                title: "Клиенты",
-                url: "/clients",
-                icon: "person"
+                title: 'Клиенты',
+                url: '/clients',
+                icon: 'person',
             },
             {
-                title: "Склад",
-                url: "#",
-                icon: "work",
+                title: 'Склад',
+                url: '#',
+                icon: 'work',
                 hasDropdown: true,
                 children: [
                     {
-                        title: "Все склады",
-                        url: "/stores",
-                        isAdmin: true
+                        title: 'Все склады',
+                        url: '/stores',
+                        isAdmin: true,
                     },
                     {
-                        title: "Категории",
-                        url: "/categories",
-                        isAdmin: true
+                        title: 'Категории',
+                        url: '/categories',
+                        isAdmin: true,
                     },
                     {
-                        title: "Товары",
-                        url: "/products"
+                        title: 'Товары',
+                        url: '/products',
                     },
                     {
-                        title: "Корзина",
-                        url: "/cart"
+                        title: 'Корзина',
+                        url: '/cart',
                     },
                     {
-                        title: "Бронирование товара",
-                        url: "/booking"
+                        title: 'Бронирование товара',
+                        url: '/booking',
                     },
                     {
-                        title: "Перемещения",
-                        url: "/transfer"
+                        title: 'Перемещения',
+                        url: '/transfer',
                     },
                     {
-                        title: "Поступления",
-                        url: "/arrivals",
-                        isAdmin: true
+                        title: 'Поступления',
+                        url: '/arrivals',
+                        isAdmin: true,
                     },
                     {
-                        title: "Заканчивающиеся товары",
-                        url: "/products/stock/out",
-                        isAdmin: true
+                        title: 'Заканчивающиеся товары',
+                        url: '/products/stock/out',
+                        isAdmin: true,
                     },
                     {
-                        title: "Предзаказы",
-                        url: "/preorders/index"
+                        title: 'Предзаказы',
+                        url: '/preorders/index',
                     },
                     {
-                        title: "Сроки годности",
-                        url: "/products/best-before"
-                    }
-                ]
+                        title: 'Сроки годности',
+                        url: '/products/best-before',
+                    },
+                ],
             },
             {
-                title: "Настройки",
-                url: "/settings",
-                icon: "settings"
+                title: 'Настройки',
+                url: '/settings',
+                icon: 'settings',
             },
             {
-                title: "Отчеты по продажам",
-                url: "/reports",
-                icon: "report"
+                title: 'Отчеты по продажам',
+                url: '/reports',
+                icon: 'report',
             },
             {
-                title: "Баланс товаров",
-                url: "/products/balance",
-                icon: "report"
+                title: 'Баланс товаров',
+                url: '/products/balance',
+                icon: 'report',
             },
             {
-                title: "Интернет-магазин",
-                url: "/shop/orders",
-                icon: "report"
+                title: 'Интернет-магазин',
+                url: '/shop/orders',
+                icon: 'report',
             },
             {
-                title: "Промокоды",
-                url: "/promocode",
-                icon: "report"
-            }
-        ]
+                title: 'Промокоды',
+                url: '/promocode',
+                icon: 'report',
+            },
+        ],
     },
     getters: {
         navigations: (state, getters) => {
             const ROLE = getters.CURRENT_ROLE;
             return state[`${ROLE}Menu`];
-        }
-    }
+        },
+    },
 };
 
 export default navigationModule;

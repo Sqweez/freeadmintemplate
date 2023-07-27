@@ -6,9 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/User.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Documents/CreateDocuments.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Documents/CreateDocuments.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -291,8 +293,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.prod" />
         <item itemvalue="npm.hot" />
+        <item itemvalue="npm.prod" />
         <item itemvalue="npm.watch-poll" />
         <item itemvalue="npm.dev" />
       </list>
@@ -413,7 +415,8 @@
       <workItem from="1689832394548" duration="81000" />
       <workItem from="1689832488625" duration="18484000" />
       <workItem from="1689923223671" duration="7681000" />
-      <workItem from="1690360569396" duration="877000" />
+      <workItem from="1690360569396" duration="1235000" />
+      <workItem from="1690442968549" duration="444000" />
     </task>
     <servers />
   </component>
