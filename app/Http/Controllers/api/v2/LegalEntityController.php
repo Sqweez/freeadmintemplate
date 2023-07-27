@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v2;
 
 use App\Http\Controllers\api\BaseApiController;
 use App\LegalEntity;
+use App\Models\v2\BankAccount;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,7 +19,7 @@ class LegalEntityController extends BaseApiController
     public function index(): JsonResponse
     {
         return $this->respondSuccess([
-            'entities' => LegalEntity::all(),
+            'entities' => LegalEntity::with('bank_accounts')->get(),
         ]);
     }
 
@@ -54,6 +55,22 @@ class LegalEntityController extends BaseApiController
 
         return $this->respondSuccess([
             'entity' => LegalEntity::whereKey($id)->first()
+        ]);
+    }
+
+    public function createBankAccount(Request $request): JsonResponse
+    {
+        $bankAccount = BankAccount::create($request->all());
+        return $this->respondSuccess([
+            'account' => $bankAccount
+        ]);
+    }
+
+    public function updateBankAccount(Request $request, BankAccount $account)
+    {
+        $account->update($request->all());
+        return $this->respondSuccess([
+            'account' => BankAccount::whereKey($account->id)->first()
         ]);
     }
 

@@ -103,10 +103,10 @@
 </template>
 
 <script>
-    import uploadFile, {deleteFile} from "@/api/upload";
-    import {generateThumb} from "@/api/image";
+import uploadFile, {deleteFile} from "@/api/upload";
+import {generateThumb} from "@/api/image";
 
-    export default {
+export default {
         data: () => ({
             loading: false,
             self_price: 0,
@@ -195,7 +195,10 @@
             async updateProductSku(product) {
                 const payload = {
                     id: this.id,
-                    product,
+                    product: {
+                        ...product,
+                        margin_type_id: this.product.margin_type_id,
+                    }
                 };
                 await this.$store.dispatch('UPDATE_PRODUCT_SKU', payload);
             },

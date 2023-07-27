@@ -17,6 +17,7 @@ use App\Http\Controllers\api\v2\EducationController;
 use App\Http\Controllers\api\v2\FavoriteController;
 use App\Http\Controllers\api\v2\IHerbController;
 use App\Http\Controllers\api\v2\KaspiController;
+use App\Http\Controllers\api\v2\LegalEntityController;
 use App\Http\Controllers\api\v2\LoyaltyController;
 use App\Http\Controllers\api\v2\MailingController;
 use App\Http\Controllers\api\v2\MatrixController;
@@ -436,6 +437,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::post('/', [MatrixController::class, 'store']);
         });
 
+        Route::post('legal-entity/bank-account', [LegalEntityController::class, 'createBankAccount']);
+        Route::patch('legal-entity/bank-account/{account}', [LegalEntityController::class, 'updateBankAccount']);
         Route::apiResource('legal-entity', 'api\v2\LegalEntityController');
 
         Route::prefix('dashboard')->group(function () {
