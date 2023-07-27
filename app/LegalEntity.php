@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\Models\v2\BankAccount;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * App\LegalEntity
@@ -13,8 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $address
  * @property string $iik
  * @property string $bik
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|LegalEntity newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LegalEntity newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LegalEntity query()
@@ -31,4 +34,9 @@ use Illuminate\Database\Eloquent\Model;
 class LegalEntity extends Model
 {
     protected $guarded = [];
+
+    public function bank_accounts(): HasMany
+    {
+        return $this->hasMany(BankAccount::class, 'legal_entity_id');
+    }
 }

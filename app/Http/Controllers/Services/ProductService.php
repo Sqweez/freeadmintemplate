@@ -141,6 +141,7 @@ class ProductService {
             $productSku->fresh();
             return new ProductsResource($productSku);
         } catch (Exception $exception) {
+            \Log::info($exception->getMessage());
             DB::rollBack();
         }
     }
