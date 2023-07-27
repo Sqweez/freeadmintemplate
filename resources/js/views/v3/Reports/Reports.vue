@@ -181,6 +181,7 @@
                         item-text="name">
                     </v-select>
                     <v-select
+                        v-if="!IS_STOREKEEPER"
                         :items="payment_types"
                         label="Способ оплаты:"
                         v-model="currentType"
