@@ -1,16 +1,17 @@
 <template>
-    <div>
-
-    </div>
+    <div />
 </template>
 
 <script>
 import WayBillModal from '@/components/Modal/WayBillModal';
+import InvoiceModal from '@/components/Modal/InvoiceModal';
+import InvoicePaymentModal from '@/components/Modal/InvoicePaymentModal';
+import ProductCheckModal from '@/components/Modal/ProductCheckModal';
 import axios from 'axios';
 import {fileDownload} from '@/utils/helpers';
 
 export default {
-    components: {WayBillModal},
+    components: {WayBillModal, InvoiceModal, InvoicePaymentModal, ProductCheckModal},
     data: () => ({
         showWaybillModal: false,
         showInvoiceModal: false,
@@ -34,6 +35,12 @@ export default {
             this.showProductCheckModal = true;
         },
         async _onInvoicePaymentCreate (customer) {
+            if (!customer.entityId) {
+                return this.$toast.error('Выберите юридическое лицо!');
+            }
+            if (!customer.bankAccountId) {
+                return this.$toast.error('Выберите банковский счет!');
+            }
             try {
                 this.showInvoicePaymentModal = false;
                 this.$loading.enable();
@@ -52,6 +59,9 @@ export default {
             }
         },
         async _onProductCheckCreate (customer) {
+            if (!customer.entityId) {
+                return this.$toast.error('Выберите юридическое лицо!');
+            }
             try {
                 this.showProductCheckModal = false;
                 this.$loading.enable();
@@ -71,6 +81,9 @@ export default {
             }
         },
         async _onWaybillCreate (payload) {
+            if (!payload.entityId) {
+                return this.$toast.error('Выберите юридическое лицо!');
+            }
             try {
                 this.showWaybillModal = false;
                 this.$loading.enable();
@@ -90,6 +103,12 @@ export default {
             }
         },
         async _onInvoiceCreate (invoiceData) {
+            if (!invoiceData.entityId) {
+                return this.$toast.error('Выберите юридическое лицо!');
+            }
+            if (!invoiceData.bankAccountId) {
+                return this.$toast.error('Выберите банковский счет!');
+            }
             try {
                 this.showInvoiceModal = false;
                 this.$loading.enable();

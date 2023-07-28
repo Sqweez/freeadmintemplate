@@ -21,7 +21,8 @@
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-content>
-                                <v-list-item-title class="font-weight-black">Общая сумма бронирований:</v-list-item-title>
+                                <v-list-item-title class="font-weight-black">Общая сумма бронирований:
+                                </v-list-item-title>
                                 <v-list-item-title>{{ bookingTotal | priceFilters }}</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
@@ -249,7 +250,10 @@
                         <v-list-item v-for="(product, index) of item.products" :key="index">
                             <v-list-item-content>
                                 <v-list-item-title>{{ product.product_name }}</v-list-item-title>
-                                <v-list-item-subtitle>{{ product.attributes.join(", ") }}<span v-if="product.manufacturer.manufacturer_name">,</span> {{ product.manufacturer.manufacturer_name }}</v-list-item-subtitle>
+                                <v-list-item-subtitle>{{ product.attributes.join(", ") }}<span
+                                    v-if="product.manufacturer.manufacturer_name">,</span>
+                                    {{ product.manufacturer.manufacturer_name }}
+                                </v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>
                                 <span>{{ product.count }} шт</span>
@@ -264,7 +268,8 @@
                             <v-list-item-content>
                                 <v-list-item-title>
                                     {{ item.client.client_name }}
-                                    <v-btn :to="`/clients/${item.client.id}`" icon text target="_blank" v-if="item.client.id !== -1">
+                                    <v-btn :to="`/clients/${item.client.id}`" icon text target="_blank"
+                                           v-if="item.client.id !== -1">
                                         <v-icon>mdi-eye</v-icon>
                                     </v-btn>
                                 </v-list-item-title>
@@ -294,20 +299,20 @@
                 <template v-slot:item.economy="{item}">
                     <v-list>
                         <v-list-item v-if="IS_BOSS">
-                            <v-list-item-content >
-                                <v-list-item-title>{{ item.purchase_price | priceFilters}}</v-list-item-title>
+                            <v-list-item-content>
+                                <v-list-item-title>{{ item.purchase_price | priceFilters }}</v-list-item-title>
                                 <v-list-item-subtitle>Закупочная стоимость</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-content>
-                                <v-list-item-title>{{ item.fact_price | priceFilters}}</v-list-item-title>
+                                <v-list-item-title>{{ item.fact_price | priceFilters }}</v-list-item-title>
                                 <v-list-item-subtitle>Фактическая стоимость</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-content>
-                                <v-list-item-title>{{ item.final_price | priceFilters}}</v-list-item-title>
+                                <v-list-item-title>{{ item.final_price | priceFilters }}</v-list-item-title>
                                 <v-list-item-subtitle>Финальная стоимость</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
@@ -319,7 +324,11 @@
                         </v-list-item>
                         <v-list-item v-if="IS_BOSS">
                             <v-list-item-content>
-                                <v-list-item-title>{{ item.margin | priceFilters}} (<span v-if="item.final_price > 0" :class="Math.ceil(item.margin * 100 / item.final_price) > 0 ? 'green--text' : 'red--text'">{{ Math.ceil(item.margin * 100 / item.final_price) }}%</span>)</v-list-item-title>
+                                <v-list-item-title>{{ item.margin | priceFilters }} (<span v-if="item.final_price > 0"
+                                                                                           :class="Math.ceil(item.margin * 100 / item.final_price) > 0 ? 'green--text' : 'red--text'">{{
+                                        Math.ceil(item.margin * 100 / item.final_price)
+                                    }}%</span>)
+                                </v-list-item-title>
                                 <v-list-item-subtitle>Прибыль</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
@@ -349,18 +358,19 @@
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-content>
-                                <v-list-item-title>{{ item.balance | priceFilters}}</v-list-item-title>
+                                <v-list-item-title>{{ item.balance | priceFilters }}</v-list-item-title>
                                 <v-list-item-subtitle>Списано с баланса</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item v-if="item.certificate">
                             <v-list-item-content>
-                                <v-list-item-title>{{ item.certificate.amount | priceFilters}}</v-list-item-title>
+                                <v-list-item-title>{{ item.certificate.amount | priceFilters }}</v-list-item-title>
                                 <v-list-item-subtitle>Оплачено сертификатом</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <div v-if="item.split_payment">
-                            <v-list-item v-for="payment of item.split_payment" :key="`split_payment-${item.id}-${payment.payment_text}`">
+                            <v-list-item v-for="payment of item.split_payment"
+                                         :key="`split_payment-${item.id}-${payment.payment_text}`">
                                 <v-list-item-content>
                                     <v-list-item-title>{{ payment.amount | priceFilters }}</v-list-item-title>
                                     <v-list-item-subtitle>{{ payment.payment_text }}</v-list-item-subtitle>
@@ -375,13 +385,19 @@
                         </v-list-item>
                         <v-list-item v-if="item.promocode.id">
                             <v-list-item-content>
-                                <v-list-item-title style="white-space: normal;">{{ item.promocode.promocode }}</v-list-item-title>
+                                <v-list-item-title style="white-space: normal;">{{
+                                        item.promocode.promocode
+                                    }}
+                                </v-list-item-title>
                                 <v-list-item-subtitle style="white-space: normal;">Промокод</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item v-if="item.promocode.client_id">
                             <v-list-item-content>
-                                <v-list-item-title style="white-space: normal;">{{ item.promocode.partner.client_name }}</v-list-item-title>
+                                <v-list-item-title style="white-space: normal;">{{
+                                        item.promocode.partner.client_name
+                                    }}
+                                </v-list-item-title>
                                 <v-list-item-subtitle style="white-space: normal;">Тренер</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
@@ -446,29 +462,36 @@
                     <div v-if="item.is_confirmed">
                         <v-list v-if="report.id !== item.id && !item.sale_type">
                             <v-list-item v-if="IS_SUPERUSER">
-                                <v-btn small depressed color="error" text @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
-                                    Отмена <v-icon class="ml-2">mdi-cancel</v-icon>
+                                <v-btn small depressed color="error" text
+                                       @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
+                                    Отмена
+                                    <v-icon class="ml-2">mdi-cancel</v-icon>
                                 </v-btn>
                             </v-list-item>
                             <v-list-item>
                                 <v-btn small depressed color="primary" text @click="report = item; editMode = true;">
-                                    Способ оплаты <v-icon class="ml-2">mdi-pencil</v-icon>
+                                    Способ оплаты
+                                    <v-icon class="ml-2">mdi-pencil</v-icon>
                                 </v-btn>
                             </v-list-item>
                             <v-list-item v-if="IS_SUPERUSER">
-                                <v-btn small depressed color="primary" text @click="report = {...item}; editModal = true;">
-                                    Заказ <v-icon class="ml-2">mdi-pencil</v-icon>
+                                <v-btn small depressed color="primary" text
+                                       @click="report = {...item}; editModal = true;">
+                                    Заказ
+                                    <v-icon class="ml-2">mdi-pencil</v-icon>
                                 </v-btn>
                             </v-list-item>
                             <v-list-item v-if="!item.is_full_wholesale_purchase && IS_SUPERUSER">
                                 <v-btn small depressed color="primary" text @click="markAsOpt(item)">
-                                    Сделать оптовой <v-icon class="ml-2">mdi-check</v-icon>
+                                    Сделать оптовой
+                                    <v-icon class="ml-2">mdi-check</v-icon>
                                 </v-btn>
                             </v-list-item>
                         </v-list>
                         <v-list v-if="editMode && report.id === item.id">
                             <v-list-item>
-                                <v-btn depressed color="error" text @click="report = {}; editMode = false">Отмена</v-btn>
+                                <v-btn depressed color="error" text @click="report = {}; editMode = false">Отмена
+                                </v-btn>
                             </v-list-item>
                             <v-list-item>
                                 <v-btn depressed color="success" text @click="changeSale">Подтвердить</v-btn>
@@ -477,13 +500,17 @@
                     </div>
                     <v-list v-else>
                         <v-list-item>
-                            <v-btn small depressed color="error" text @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
-                                Отмена <v-icon class="ml-2">mdi-cancel</v-icon>
+                            <v-btn small depressed color="error" text
+                                   @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
+                                Отмена
+                                <v-icon class="ml-2">mdi-cancel</v-icon>
                             </v-btn>
                         </v-list-item>
                         <v-list-item>
-                            <v-btn small depressed color="success" text @click="report = {...item}; wholeSaleConfirmationModal = true;">
-                                Подтвердить <v-icon class="ml-2">mdi-check</v-icon>
+                            <v-btn small depressed color="success" text
+                                   @click="report = {...item}; wholeSaleConfirmationModal = true;">
+                                Подтвердить
+                                <v-icon class="ml-2">mdi-check</v-icon>
                             </v-btn>
                         </v-list-item>
                     </v-list>
@@ -503,28 +530,34 @@
                                 </v-expansion-panel-header>
                                 <v-expansion-panel-content>
                                     <v-list-item>
-                                        <v-btn small depressed color="success" text :href="'/print/check/' + item.id" target="_blank">
-                                            Чек <v-icon class="ml-2">mdi-printer</v-icon>
+                                        <v-btn small depressed color="success" text :href="'/print/check/' + item.id"
+                                               target="_blank">
+                                            Чек
+                                            <v-icon class="ml-2">mdi-printer</v-icon>
                                         </v-btn>
                                     </v-list-item>
                                     <v-list-item>
                                         <v-btn small depressed color="success" text @click="createWaybill(item)">
-                                            Накладная <v-icon class="ml-2">mdi-printer</v-icon>
+                                            Накладная
+                                            <v-icon class="ml-2">mdi-printer</v-icon>
                                         </v-btn>
                                     </v-list-item>
                                     <v-list-item>
                                         <v-btn small depressed color="success" text @click="createInvoice(item)">
-                                            Счет-фактура <v-icon class="ml-2">mdi-printer</v-icon>
+                                            Счет-фактура
+                                            <v-icon class="ml-2">mdi-printer</v-icon>
                                         </v-btn>
                                     </v-list-item>
                                     <v-list-item>
                                         <v-btn small depressed color="success" text @click="createPaymentInvoice(item)">
-                                            Счет на оплату <v-icon class="ml-2">mdi-printer</v-icon>
+                                            Счет на оплату
+                                            <v-icon class="ml-2">mdi-printer</v-icon>
                                         </v-btn>
                                     </v-list-item>
                                     <v-list-item v-if="IS_SUPERUSER">
                                         <v-btn small depressed color="success" text @click="sendTelegram(item.id)">
-                                            Отправить в телегу <v-icon class="ml-2">mdi-email</v-icon>
+                                            Отправить в телегу
+                                            <v-icon class="ml-2">mdi-email</v-icon>
                                         </v-btn>
                                     </v-list-item>
                                 </v-expansion-panel-content>
@@ -555,6 +588,26 @@
             :report="report"
             @cancel="wholeSaleConfirmationModal = false; report = {}"
         />
+        <WayBillModal
+            :state="showWaybillModal"
+            @cancel="showWaybillModal = false;"
+            @submit="_onWaybillCreate"
+        />
+        <InvoiceModal
+            :state="showInvoiceModal"
+            @cancel="showInvoiceModal = false"
+            @submit="_onInvoiceCreate"
+        />
+        <InvoicePaymentModal
+            :state="showInvoicePaymentModal"
+            @cancel="showInvoicePaymentModal = false"
+            @submit="_onInvoicePaymentCreate"
+        />
+        <ProductCheckModal
+            :state="showProductCheckModal"
+            @cancel="showProductCheckModal = false"
+            @submit="_onProductCheckCreate"
+        />
     </v-card>
 </template>
 
@@ -566,489 +619,456 @@ import ACTIONS from '@/store/actions/index';
 import axios from 'axios';
 import SaleEditModal from "@/components/Modal/SaleEditModal";
 import WholeSaleConfirmation from '@/components/Modal/WholeSaleConfirmation';
+import DocumentsPage from '@/components/Documents/DocumentsPage';
 import {__deepClone} from '@/utils/helpers';
 
 const DATE_FILTERS = {
-        ALL_TIME: 1,
-        CURRENT_MONTH: 2,
-        TODAY: 3,
-        CUSTOM_FILTER: 4,
-        LAST_3_DAYS: 5,
-    };
+    ALL_TIME: 1,
+    CURRENT_MONTH: 2,
+    TODAY: 3,
+    CUSTOM_FILTER: 4,
+    LAST_3_DAYS: 5,
+};
 
-    const DATE_FORMAT = 'YYYY-MM-DD';
+const DATE_FORMAT = 'YYYY-MM-DD';
 
-    export default {
-        components: {WholeSaleConfirmation, SaleEditModal, ReportCancelModal, ConfirmationModal},
-        data: () => ({
-            searchPromocode: '',
-            showOnlyUnconfirmed: false,
-            wholeSaleConfirmationModal: false,
-            manufacturerId: -1,
-            discountFrom: 0,
-            discountTo: 100,
-            editModal: false,
-            bookings: [],
-            search: '',
-            overlay: false,
-            loading: false,
-            cancelModal: false,
-            purchaseId: null,
-            currentProducts: [],
-            currentStoreType: -1,
-            startMenu: null,
-            report: {},
-            editMode: false,
-            start: null,
-            finishMenu: null,
-            today: moment(),
-            finish: null,
-            currentDate:  [
-                moment().format(DATE_FORMAT),
-                moment().format(DATE_FORMAT),
-            ],
-            currentCity: -1,
-            currentSeller: -1,
-            currentType: -1,
-            dateFilters: [
-                {
-                    name: 'Сегодня',
-                    value: [
-                        moment().format(DATE_FORMAT),
-                        moment().format(DATE_FORMAT),
-                    ],
-                },
-                {
-                    name: 'Вчера',
-                    value: [
-                        moment().subtract(1, 'days').format(DATE_FORMAT),
-                        moment().subtract(1, 'days').format(DATE_FORMAT),
-                    ],
-                },
-                {
-                    name: 'Последние 3 дня',
-                    value: [
-                        moment().subtract(3, 'days').format(DATE_FORMAT),
-                        moment().format(DATE_FORMAT),
-                    ],
-                },
-                {
-                    name: 'За текущий месяц',
-                    value: [
-                        moment().startOf('month').format(DATE_FORMAT),
-                        moment().format(DATE_FORMAT),
-                    ],
-                },
-                {
-                    name: 'За все время',
-                    value: [
-                        moment.unix(1).format(DATE_FORMAT),
-                        moment().format(DATE_FORMAT)
-                    ],
-                },
-                {
-                    name: 'Произвольно',
-                    value: DATE_FILTERS.CUSTOM_FILTER
-                },
-            ],
-            headers: [
-                {text: 'Список проданных товаров', value: 'products', align: ' min-w-250 w-30'},
-                {text: 'Дата', value: 'date', align: ' font-weight-black'},
-                {text: 'Способ оплаты', value: 'payment_type_text', align: ' font-weight-bold'},
-                {text: 'Данные', value: 'sale_data'},
-                {text: 'Экономические показатели', value: 'economy'},
-                {text: 'Дополнительные данные', value: 'additional_data'},
-                {
-                    text: 'Действие', value: 'action'
-                },
-                {text: 'Поиск', value: 'search', align: ' d-none'},
-            ],
-            searchComment: '',
-        }),
-        async mounted() {
-            await this.init();
+export default {
+    extends: DocumentsPage,
+    components: {WholeSaleConfirmation, SaleEditModal, ReportCancelModal, ConfirmationModal},
+    data: () => ({
+        searchPromocode: '',
+        showOnlyUnconfirmed: false,
+        wholeSaleConfirmationModal: false,
+        manufacturerId: -1,
+        discountFrom: 0,
+        discountTo: 100,
+        editModal: false,
+        bookings: [],
+        search: '',
+        overlay: false,
+        loading: false,
+        cancelModal: false,
+        purchaseId: null,
+        currentProducts: [],
+        currentStoreType: -1,
+        startMenu: null,
+        report: {},
+        editMode: false,
+        start: null,
+        finishMenu: null,
+        today: moment(),
+        finish: null,
+        currentDate: [
+            moment().format(DATE_FORMAT),
+            moment().format(DATE_FORMAT),
+        ],
+        currentCity: -1,
+        currentSeller: -1,
+        currentType: -1,
+        dateFilters: [
+            {
+                name: 'Сегодня',
+                value: [
+                    moment().format(DATE_FORMAT),
+                    moment().format(DATE_FORMAT),
+                ],
+            },
+            {
+                name: 'Вчера',
+                value: [
+                    moment().subtract(1, 'days').format(DATE_FORMAT),
+                    moment().subtract(1, 'days').format(DATE_FORMAT),
+                ],
+            },
+            {
+                name: 'Последние 3 дня',
+                value: [
+                    moment().subtract(3, 'days').format(DATE_FORMAT),
+                    moment().format(DATE_FORMAT),
+                ],
+            },
+            {
+                name: 'За текущий месяц',
+                value: [
+                    moment().startOf('month').format(DATE_FORMAT),
+                    moment().format(DATE_FORMAT),
+                ],
+            },
+            {
+                name: 'За все время',
+                value: [
+                    moment.unix(1).format(DATE_FORMAT),
+                    moment().format(DATE_FORMAT)
+                ],
+            },
+            {
+                name: 'Произвольно',
+                value: DATE_FILTERS.CUSTOM_FILTER
+            },
+        ],
+        headers: [
+            {text: 'Список проданных товаров', value: 'products', align: ' min-w-250 w-30'},
+            {text: 'Дата', value: 'date', align: ' font-weight-black'},
+            {text: 'Способ оплаты', value: 'payment_type_text', align: ' font-weight-bold'},
+            {text: 'Данные', value: 'sale_data'},
+            {text: 'Экономические показатели', value: 'economy'},
+            {text: 'Дополнительные данные', value: 'additional_data'},
+            {
+                text: 'Действие', value: 'action'
+            },
+            {text: 'Поиск', value: 'search', align: ' d-none'},
+        ],
+        searchComment: '',
+    }),
+    async mounted() {
+        await this.init();
+    },
+    watch: {
+        discountFrom(value) {
+            this.$nextTick(() => {
+                if (this.discountFrom > 99) {
+                    this.discountFrom = 100;
+                }
+                if (value.toString().length > 3) {
+                    this.discountFrom = +(value.toString().slice(0, 3));
+                }
+                if (this.discountFrom < 0) {
+                    this.discountFrom = 0;
+                }
+            })
         },
-        watch: {
-            discountFrom(value) {
-                this.$nextTick(() => {
-                    if (this.discountFrom > 99) {
-                        this.discountFrom = 100;
-                    }
-                    if (value.toString().length > 3) {
-                        this.discountFrom = +(value.toString().slice(0, 3));
-                    }
-                    if (this.discountFrom < 0) {
-                        this.discountFrom = 0;
-                    }
-                })
-            },
-            discountTo(value) {
-                this.$nextTick(() => {
-                    if (this.discountTo > 99) {
-                        this.discountTo = 100;
-                    }
-                    if (value.toString().length > 3) {
-                        this.discountTo = +(value.toString().slice(0, 3));
-                    }
-                    if (this.discountTo < 0) {
-                        this.discountTo = 0;
-                    }
-                })
-            },
-            async manufacturerId (value) {
-                this.$loading.enable();
+        discountTo(value) {
+            this.$nextTick(() => {
+                if (this.discountTo > 99) {
+                    this.discountTo = 100;
+                }
+                if (value.toString().length > 3) {
+                    this.discountTo = +(value.toString().slice(0, 3));
+                }
+                if (this.discountTo < 0) {
+                    this.discountTo = 0;
+                }
+            })
+        },
+        async manufacturerId(value) {
+            this.$loading.enable();
+            await this.loadReport();
+            this.$loading.disable();
+        }
+    },
+    methods: {
+        async markAsOpt(item) {
+            this.$loading.enable();
+            await this.$store.dispatch('updateSale', {
+                id: item.id,
+                is_opt: true
+            });
+            this.$loading.disable();
+        },
+        async changeSale() {
+            this.overlay = true;
+            await this.$store.dispatch('updateSale', {
+                id: this.report.id,
+                payment_type: this.report.payment_type
+            });
+            this.report = {};
+            this.overlay = false;
+            this.editMode = false;
+        },
+        closeModal() {
+            this.currentProducts = [];
+            this.purchaseId = null;
+            this.cancelModal = false;
+        },
+        async init() {
+            this.loading = true;
+            await this.$store.dispatch(ACTIONS.GET_REPORTS, {
+                start: this.currentDate[0],
+                finish: this.currentDate[1],
+            });
+            await this.$store.dispatch('GET_PREORDERS_REPORT', {
+                start: this.currentDate[0],
+                finish: this.currentDate[1],
+            })
+            const {data} = await axios.get(`/api/v2/booking?start=${this.currentDate[0]}&finish=${this.currentDate[1]}`);
+            await this.$store.dispatch('getLegalEntities');
+            this.bookings = data.data;
+            this.overlay = this.loading = false;
+        },
+        async onConfirm() {
+            this.closeModal();
+        },
+        printCheck(id) {
+            window.open(`/check/${id}`, '_blank');
+        },
+        async loadReport() {
+            if (this.currentDate === DATE_FILTERS.CUSTOM_FILTER) {
+                if (!(this.start || this.finish)) {
+                    return;
+                }
+            }
+            this.overlay = true;
+            this.loading = true;
+            const dateObject = {
+                start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
+                finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1],
+            };
+            if (this.manufacturerId !== -1) {
+                dateObject.manufacturer_id = this.manufacturerId;
+            }
+            await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
+            await this.$store.dispatch('GET_PREORDERS_REPORT', dateObject);
+            const {data} = await axios.get(`/api/v2/booking?start=${dateObject.start}&finish=${dateObject.finish}`);
+            this.bookings = data.data;
+            this.overlay = false;
+            this.loading = false;
+
+        },
+        async changeCustomDate() {
+            this.$refs.startMenu.save(this.start);
+            this.$refs.finishMenu.save(this.finish);
+
+            if (this.start && this.finish) {
                 await this.loadReport();
-                this.$loading.disable();
             }
+
         },
-        methods: {
-            async markAsOpt (item) {
-                this.$loading.enable();
-                await this.$store.dispatch('updateSale', {
-                    id: item.id,
-                    is_opt: true
-                });
-                this.$loading.disable();
-            },
-            async changeSale() {
-                this.overlay = true;
-                await this.$store.dispatch('updateSale', {
-                    id: this.report.id,
-                    payment_type: this.report.payment_type
-                });
-                this.report = {};
-                this.overlay = false;
-                this.editMode = false;
-            },
-            closeModal() {
-                this.currentProducts = [];
-                this.purchaseId = null;
-                this.cancelModal = false;
-            },
-            async init() {
-                this.loading = true;
-                await this.$store.dispatch(ACTIONS.GET_REPORTS, {
-                    start: this.currentDate[0],
-                    finish: this.currentDate[1],
-                });
-                await this.$store.dispatch('GET_PREORDERS_REPORT', {
-                    start: this.currentDate[0],
-                    finish: this.currentDate[1],
-                })
-                const { data } = await axios.get(`/api/v2/booking?start=${this.currentDate[0]}&finish=${this.currentDate[1]}`);
-                this.bookings = data.data;
-                this.overlay = this.loading = false;
-            },
-            async onConfirm() {
-                this.closeModal();
-            },
-            printCheck(id) {
-                window.open(`/check/${id}`, '_blank');
-            },
-            async loadReport() {
-                if (this.currentDate === DATE_FILTERS.CUSTOM_FILTER) {
-                    if (!(this.start || this.finish)) {
-                        return;
-                    }
-                }
-                this.overlay = true;
-                this.loading = true;
-                const dateObject = {
-                    start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
-                    finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1],
-                };
-                if (this.manufacturerId !== -1) {
-                    dateObject.manufacturer_id = this.manufacturerId;
-                }
-                await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
-                await this.$store.dispatch('GET_PREORDERS_REPORT', dateObject);
-                const { data } = await axios.get(`/api/v2/booking?start=${dateObject.start}&finish=${dateObject.finish}`);
-                this.bookings = data.data;
-                this.overlay = false;
-                this.loading = false;
-
-            },
-            async changeCustomDate() {
-                this.$refs.startMenu.save(this.start);
-                this.$refs.finishMenu.save(this.finish);
-
-                if (this.start && this.finish) {
-                    await this.loadReport();
-                }
-
-            },
-            async createWaybill(report) {
-                this.$loading.enable();
-                const _report = JSON.parse(JSON.stringify(report));
-                const { data } = await axios.post(`/api/v2/documents/waybill`, {
-                    cart: _report.products.map(r => {
-                        r.attributes = r._attributes;
-                        return r;
-                    }),
-                    organization: report.client.client_name,
-                })
-                const link = document.createElement('a');
-                link.href = `${window.location.origin}/${data.path}`;
-                link.click();
-                this.$loading.disable();
-            },
-            async createInvoice(report) {
-                this.$loading.enable();
-                const _report = JSON.parse(JSON.stringify(report));
-                const cart = _report.products.map(r => {
-                    r.attributes = r._attributes;
-                    return r;
-                });
-                const { data } = await axios.post(`/api/v2/documents/invoice`, {
-                    cart,
-                    organization: report.client.client_name,
-                    contract: '',
-                    location: '',
-                    waybill: '',
-                    consignee: '',
-                    recipient: '',
-                    IIK: '',
-                    BINLocation: '',
-                    product: cart.length > 1 ? 'Спортивные витамины в ассортименте'
-                        : `${cart[0].product_name} ${cart[0].attributes.map(a => a.attribute_value).join(' ')} ${cart[0].manufacturer.manufacturer_name}`,
-                })
-                const link = document.createElement('a');
-                link.href = `${window.location.origin}/${data.path}`;
-                link.click();
-                this.$loading.disable();
-            },
-            async createPaymentInvoice (report) {
-                this.$loading.enable();
-                const _report = __deepClone(report);
-                const cart = _report.products.map(r => {
-                    r.attributes = r._attributes;
-                    return r;
-                });
-                const { data } = await axios.post(`/api/v2/documents/invoice-payment`, {
-                    cart,
-                    customer: report.client.client_name,
-                })
-                const link = document.createElement('a');
-                link.href = `${window.location.origin}/${data.path}`;
-                link.click();
-                this.$loading.disable();
-            },
-            async sendTelegram(saleId) {
-                this.$loading.enable();
-                await axios.get(`/api/sales/telegram/${saleId}`);
-                this.$loading.disable();
-            }
+        async createWaybill(report) {
+            this.cart = __deepClone(report).products.map(r => {
+                r.attributes = r._attributes;
+                return r;
+            });
+            this.showWaybillModal = true;
         },
-        computed: {
-            manufacturers() {
-                return [
-                    {
-                        id: -1,
-                        manufacturer_name: 'Все'
-                    }, ...this.$store.getters.manufacturers];
-            },
-            is_admin() {
-                return this.$store.getters.CURRENT_ROLE === 'admin';
-            },
-            is_seller() {
-                return this.$store.getters.CURRENT_ROLE === 'seller';
-            },
-            sellers() {
-                return [{id: -1, name: 'Все'}, ...this.$store.getters.users];
-            },
-            payment_types() {
-                return [{id: -1, name: 'Все'}, ...this.$store.getters.payment_types, {id: -2, name: 'Оплачено сертификатом'}];
-            },
-            _payment_types() {
-                return this.$store.getters.payment_types;
-            },
-            shops() {
-                return [{id: -1, name: 'Все'}, ...this.$store.getters.shops];
-            },
-            store_types() {
-                return [{id: -1, type: 'Все'}, ...this.$store.getters.store_types];
-            },
-            _bookings() {
-                return this.bookings.filter(b => {
-                    if (this.currentSeller === -1) {
-                        return b
-                    } else {
-                        return b.user.id === this.currentSeller;
+        async createInvoice(report) {
+            this.cart = __deepClone(report).products.map(r => {
+                r.attributes = r._attributes;
+                return r;
+            });
+            this.showInvoiceModal = true;
+        },
+        async createPaymentInvoice(report) {
+            this.cart = __deepClone(report).products.map(r => {
+                r.attributes = r._attributes;
+                return r;
+            });
+            this.showInvoicePaymentModal = true;
+        },
+        async sendTelegram(saleId) {
+            this.$loading.enable();
+            await axios.get(`/api/sales/telegram/${saleId}`);
+            this.$loading.disable();
+        }
+    },
+    computed: {
+        manufacturers() {
+            return [
+                {
+                    id: -1,
+                    manufacturer_name: 'Все'
+                }, ...this.$store.getters.manufacturers];
+        },
+        is_admin() {
+            return this.$store.getters.CURRENT_ROLE === 'admin';
+        },
+        is_seller() {
+            return this.$store.getters.CURRENT_ROLE === 'seller';
+        },
+        sellers() {
+            return [{id: -1, name: 'Все'}, ...this.$store.getters.users];
+        },
+        payment_types() {
+            return [{id: -1, name: 'Все'}, ...this.$store.getters.payment_types, {
+                id: -2,
+                name: 'Оплачено сертификатом'
+            }];
+        },
+        _payment_types() {
+            return this.$store.getters.payment_types;
+        },
+        shops() {
+            return [{id: -1, name: 'Все'}, ...this.$store.getters.shops];
+        },
+        store_types() {
+            return [{id: -1, type: 'Все'}, ...this.$store.getters.store_types];
+        },
+        _bookings() {
+            return this.bookings.filter(b => {
+                if (this.currentSeller === -1) {
+                    return b
+                } else {
+                    return b.user.id === this.currentSeller;
+                }
+            }).filter(s => {
+                if (this.currentCity === -1) {
+                    return s;
+                } else {
+                    return s.store.id === this.currentCity;
+                }
+            })
+        },
+        bookingTotal() {
+            return this._bookings.reduce((a, c) => {
+                return a + c.paid_sum
+            }, 0)
+        },
+        totalSales() {
+            return this.confirmedSalesReport
+                .reduce((a, c) => {
+                    if (this.currentType === -2) {
+                        return a + c.certificate.amount;
                     }
-                }).filter(s => {
-                    if (this.currentCity === -1) {
-                        return s;
+
+                    const certificateAmount = c.certificate ? c.certificate.amount : 0;
+
+                    if (c.split_payment === null || this.currentType === -1) {
+                        let finalPrice = a + c.final_price;
+                        if (this.currentType !== -1) {
+                            finalPrice -= certificateAmount;
+                        }
+                        return finalPrice;
                     } else {
-                        return s.store.id === this.currentCity;
+                        return a + +c.split_payment.find(s => s.payment_type == this.currentType).amount - certificateAmount;
                     }
-                })
-            },
-            bookingTotal() {
-                return this._bookings.reduce((a, c) => {
-                    return a + c.paid_sum
-                }, 0)
-            },
-            totalSales() {
-                return this.confirmedSalesReport
-                    .reduce((a, c) => {
-                        if (this.currentType === -2) {
-                            return a + c.certificate.amount;
+                }, 0) + this.bookingTotal;
+        },
+        totalMargin() {
+            return this.confirmedSalesReport
+                .reduce((a, c) => {
+                    return a + c.margin
+                }, 0);
+        },
+        totalSaleCount() {
+            return this.confirmedSalesReport.length;
+        },
+        averageCheck() {
+            return this.totalSaleCount === 0 ? 0 : this.totalSales / this.totalSaleCount;
+        },
+        totalRedCommission() {
+            return this.confirmedSalesReport.reduce((a, c) => {
+                return a + c.kaspi_red_commission;
+            }, 0)
+        },
+        salesReport() {
+            return [...this.$store.getters.REPORTS, ...this.$store.getters.PREORDERS] || [];
+        },
+        _salesReport() {
+            try {
+                return this.salesReport
+                    .filter(s => {
+                        return s.comment.toLowerCase().includes(this.searchComment.toLowerCase());
+                    })
+                    .filter(s => {
+                        if (this.currentSeller === -1) {
+                            return s
+                        } else {
+                            return s.user.id === this.currentSeller;
                         }
-
-                        const certificateAmount = c.certificate ? c.certificate.amount : 0;
-
-                        if (c.split_payment === null || this.currentType === -1) {
-                            let finalPrice =  a + c.final_price;
-                            if (this.currentType !== -1) {
-                                finalPrice -= certificateAmount;
-                            }
-                            return finalPrice;
-                        }
-
-                        else {
-                            return a + +c.split_payment.find(s => s.payment_type == this.currentType).amount - certificateAmount;
-                        }
-                    }, 0) + this.bookingTotal;
-            },
-            totalMargin() {
-                return this.confirmedSalesReport
-                    .reduce((a, c) => {
-                        return a + c.margin
-                    }, 0);
-            },
-            totalSaleCount() {
-                return this.confirmedSalesReport.length;
-            },
-            averageCheck() {
-                return this.totalSaleCount === 0 ? 0 : this.totalSales / this.totalSaleCount;
-            },
-            totalRedCommission () {
-                return this.confirmedSalesReport.reduce((a, c) => {
-                    return a + c.kaspi_red_commission;
-                }, 0)
-            },
-            salesReport() {
-                return [...this.$store.getters.REPORTS, ...this.$store.getters.PREORDERS] || [];
-            },
-            _salesReport() {
-                try {
-                    return this.salesReport
-                        .filter(s => {
-                            return s.comment.toLowerCase().includes(this.searchComment.toLowerCase());
-                        })
-                        .filter(s => {
-                            if (this.currentSeller === -1) {
-                                return s
-                            } else {
-                                return s.user.id === this.currentSeller;
-                            }
-                        })
-                        .filter(s => {
-                            if (this.currentCity === -1) {
-                                return s;
-                            } else {
-                                return s.store.id === this.currentCity;
-                            }
-                        })
-                        .filter(s => {
-                            if (this.currentType == -1) {
-                                return s;
-                            }
-
-                            if (this.currentType === -2) {
-                                return s.certificate;
-                            }
-
-                            else {
-                                if (this.currentType == 5 && s.payment_type === 5) {
-                                    return true;
-                                }
-                                if (s.split_payment !== null) {
-                                    return s.split_payment.find(s => s.payment_type == this.currentType);
-                                }
-                                return s.payment_type == this.currentType;
-                            }
-                        })
-                        .filter(s => {
-                            if (this.currentStoreType === -1) {
-                                return s;
-                            }
-                            return s.store_type == this.currentStoreType;
-                        })
-                        .map(s => {
-                            if (!this.search) {
-                                s.products = [...s._products];
-                                return s;
-                            }
-                            s.products = [...s._products.filter(p => {
-                                return p.product_name.toLowerCase().includes(this.search.toLowerCase());
-                            })]
+                    })
+                    .filter(s => {
+                        if (this.currentCity === -1) {
                             return s;
-                        })
-                        .filter(s => {
-                            if (this.discountFrom === 0 && this.discountTo === 100) {
-                                return true;
-                            } else {
-                                return s.products.some(i => {
-                                    return i.discount >= this.discountFrom && i.discount <= this.discountTo;
-                                });
-                            }
-                        })
-                        .filter(s => {
-                            if (!this.showOnlyUnconfirmed) {
-                                return true;
-                            }
-                            return !s.is_confirmed;
-                        })
-                        .filter(s => {
-                            if (this.searchPromocode.length < 3) {
-                                return true;
-                            }
-                            return s.promocode.promocode.toLowerCase().includes(this.searchPromocode.toLowerCase());
-                        });
-                } catch (e) {
-                    console.log(e)
-                    return [];
-                }
+                        } else {
+                            return s.store.id === this.currentCity;
+                        }
+                    })
+                    .filter(s => {
+                        if (this.currentType == -1) {
+                            return s;
+                        }
 
-            },
-            confirmedSalesReport () {
-                return this._salesReport.filter(s => s.is_confirmed);
+                        if (this.currentType === -2) {
+                            return s.certificate;
+                        } else {
+                            if (this.currentType == 5 && s.payment_type === 5) {
+                                return true;
+                            }
+                            if (s.split_payment !== null) {
+                                return s.split_payment.find(s => s.payment_type == this.currentType);
+                            }
+                            return s.payment_type == this.currentType;
+                        }
+                    })
+                    .filter(s => {
+                        if (this.currentStoreType === -1) {
+                            return s;
+                        }
+                        return s.store_type == this.currentStoreType;
+                    })
+                    .map(s => {
+                        if (!this.search) {
+                            s.products = [...s._products];
+                            return s;
+                        }
+                        s.products = [...s._products.filter(p => {
+                            return p.product_name.toLowerCase().includes(this.search.toLowerCase());
+                        })]
+                        return s;
+                    })
+                    .filter(s => {
+                        if (this.discountFrom === 0 && this.discountTo === 100) {
+                            return true;
+                        } else {
+                            return s.products.some(i => {
+                                return i.discount >= this.discountFrom && i.discount <= this.discountTo;
+                            });
+                        }
+                    })
+                    .filter(s => {
+                        if (!this.showOnlyUnconfirmed) {
+                            return true;
+                        }
+                        return !s.is_confirmed;
+                    })
+                    .filter(s => {
+                        if (this.searchPromocode.length < 3) {
+                            return true;
+                        }
+                        return s.promocode.promocode.toLowerCase().includes(this.searchPromocode.toLowerCase());
+                    });
+            } catch (e) {
+                console.log(e)
+                return [];
             }
+
+        },
+        confirmedSalesReport() {
+            return this._salesReport.filter(s => s.is_confirmed);
         }
     }
+}
 </script>
 
 <style>
-    h5 {
-        font-size: 18px;
-    }
+h5 {
+    font-size: 18px;
+}
 
-    .min-w-250 {
-        width: 300px;
-    }
+.min-w-250 {
+    width: 300px;
+}
 
-    .v-data-table>.v-data-table__wrapper>table>tbody>tr>td, .v-data-table>.v-data-table__wrapper>table>tfoot>tr>td, .v-data-table>.v-data-table__wrapper>table>thead>tr>td {
-        height: auto!important;
-    }
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td, .v-data-table > .v-data-table__wrapper > table > thead > tr > td {
+    height: auto !important;
+}
 
-    @media (max-width: 550px) {
-        .v-data-table__mobile-row__cell {
-            text-align: left!important;
-        }
+@media (max-width: 550px) {
+    .v-data-table__mobile-row__cell {
+        text-align: left !important;
     }
+}
 
-    .w-30 {
-        width: 30%;
-    }
+.w-30 {
+    width: 30%;
+}
 
-    .v-data-table__mobile-row:last-child {
-        display: none;
-    }
+.v-data-table__mobile-row:last-child {
+    display: none;
+}
 
-    .v-data-table__mobile-row__header, .v-data-table__mobile-row__cell {
-        flex: 1;
-    }
+.v-data-table__mobile-row__header, .v-data-table__mobile-row__cell {
+    flex: 1;
+}
 
 
 </style>

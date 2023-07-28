@@ -30,10 +30,14 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|LegalEntity whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LegalEntity whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $boss
+ * @property-read \Illuminate\Database\Eloquent\Collection|BankAccount[] $bank_accounts
+ * @property-read int|null $bank_accounts_count
+ * @method static \Illuminate\Database\Eloquent\Builder|LegalEntity whereBoss($value)
  */
 class LegalEntity extends Model
 {
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     public function bank_accounts(): HasMany
     {

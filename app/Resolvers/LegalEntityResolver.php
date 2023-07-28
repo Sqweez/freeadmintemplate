@@ -4,6 +4,7 @@ namespace App\Resolvers;
 
 use App\Concerns\UseQuickBindings;
 use App\LegalEntity;
+use App\Models\v2\BankAccount;
 
 class LegalEntityResolver
 {
@@ -12,6 +13,8 @@ class LegalEntityResolver
     private string $name;
     private string $iin;
     private string $address;
+    private string $boss;
+    private $bankAccount;
 
     public function __construct($entityId)
     {
@@ -27,6 +30,7 @@ class LegalEntityResolver
                 $this->name = $entity->name;
                 $this->address = $entity->address;
                 $this->iin = $entity->iin;
+                $this->boss = $entity->boss;
             }
         }
     }
@@ -35,6 +39,18 @@ class LegalEntityResolver
         $this->name = config('legal.default_legal_name');
         $this->iin = config('legal.default_legal_iin');
         $this->address = config('legal.default_legal_address');
+        $this->boss = config('legal.default_legal_name');
+    }
+
+    public function setBankAccount($bankAccountId): LegalEntityResolver
+    {
+        $this->bankAccount = BankAccount::find($bankAccountId);
+        return $this;
+    }
+
+    public function getBankAccount(): BankAccount
+    {
+        return $this->bankAccount;
     }
 
     public function getAddress(): string
@@ -50,5 +66,10 @@ class LegalEntityResolver
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getBoss(): string
+    {
+        return $this->boss;
     }
 }
