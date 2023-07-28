@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property bool $is_accepted
  * @property-read \App\CompanionSale $companionSale
  * @method static \Illuminate\Database\Eloquent\Builder|Transfer whereIsAccepted($value)
+ * @property-read \App\User $user
  */
 class Transfer extends Model
 {

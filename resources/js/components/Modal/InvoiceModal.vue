@@ -20,6 +20,13 @@
                     item-text="name"
                     item-value="id"
                 />
+                <v-select
+                    label="Банковский счет"
+                    v-model="bankAccountId"
+                    :items="accounts"
+                    item-text="name"
+                    item-value="id"
+                />
                 <v-text-field
                     label="Договор (контракт) на поставку товаров (работ, услуг):"
                     v-model="contract"
@@ -59,9 +66,10 @@
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn text color="success" @click="$emit('submit', {
-                    contract, location, waybill, consignee, recipient, BINLocation, IIK, product, entityId
+                    contract, location, waybill, consignee, recipient, BINLocation, IIK, product, entityId, bankAccountId
                 })">
-                    Печать счет-фактуры <v-icon>mdi-check</v-icon>
+                    Печать счет-фактуры
+                    <v-icon>mdi-check</v-icon>
                 </v-btn>
             </v-card-actions>
         </v-card>
@@ -69,46 +77,58 @@
 </template>
 
 <script>
-    export default {
-        data: () => ({
-            contract: 'Договор на поставку  "Спортивных витаминов"  ',
-            location: '-',
-            waybill: '-',
-            consignee: '-',
-            recipient: '-',
-            BINLocation: '-',
-            IIK: '-',
-            product: 'Спортивные Витамины в ассортименте',
-            entityId: null,
-        }),
-        methods: {},
-        computed: {
-            entities () {
-                return this.$store.getters.legal_entities;
-            },
+export default {
+    data: () => ({
+        contract: 'Договор на поставку  "Спортивных витаминов"  ',
+        location: '-',
+        waybill: '-',
+        consignee: '-',
+        recipient: '-',
+        BINLocation: '-',
+        IIK: '-',
+        product: 'Спортивные Витамины в ассортименте',
+        entityId: null,
+        bankAccountId: null,
+    }),
+    methods: {},
+    computed: {
+        entities() {
+            return this.$store.getters.legal_entities;
         },
-        props: {
-            state: {
-                type: Boolean,
-                required: true,
-            }
-        },
-        watch: {
-            state(value) {
-                if(!value) {
-                    this.contract =  'Договор на поставку  "Спортивных витаминов"';
-                    this.location =  '-';
-                    this.waybill =  '-';
-                    this.consignee =  '-';
-                    this.recipient =  '-';
-                    this.BINLocation =  '-';
-                    this.IIK =  '-';
-                    this.product = 'Спортивные Витамины в ассортименте';
-                    this.entityId = null;
-                }
+        accounts() {
+            if (!this.entityId) {
+                return [];
+            } else {
+                return this.entities.find(e => e.id === this.entityId).bank_accounts;
             }
         }
+    },
+    props: {
+        state: {
+            type: Boolean,
+            required: true,
+        }
+    },
+    watch: {
+        state(value) {
+            if (!value) {
+                this.contract = 'Договор на поставку  "Спортивных витаминов"';
+                this.location = '-';
+                this.waybill = '-';
+                this.consignee = '-';
+                this.recipient = '-';
+                this.BINLocation = '-';
+                this.IIK = '-';
+                this.product = 'Спортивные Витамины в ассортименте';
+                this.entityId = null;
+                this.bankAccountId = null;
+            }
+        },
+        entityId(value) {
+            this.bankAccountId = null;
+        }
     }
+}
 </script>
 
 <style scoped>

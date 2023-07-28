@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -228,6 +229,7 @@ class WaybillController extends Controller
         $organization = $request->get('organization');
         $legalEntityResolver = new LegalEntityResolver($request->get('entityId', null));
         $excelSheet->setCellValue('N9', $legalEntityResolver->getName());
+        $excelSheet->setCellValue('A19', $legalEntityResolver->getName());
         $excelSheet->setCellValue('AQ9', $legalEntityResolver->getIIN());
         $excelSheet->setCellValue('L19', $organization);
         $excelSheet->setCellValue('AP13', $documentNumber);
@@ -295,6 +297,7 @@ class WaybillController extends Controller
         $recipient = $request->get('recipient');
         $BINLocation = $request->get('BINLocation');
         $legalEntityResolver = new LegalEntityResolver($request->get('entityId'));
+        $legalEntityResolver = $legalEntityResolver->setBankAccount($request->get('bankAccountId'));
         $IIK = $request->get('IIK');
         $cart = $request->get('cart');
         $product = $request->get('product');
@@ -331,6 +334,16 @@ class WaybillController extends Controller
                 $legalEntityResolver->getAddress()
             )
         );
+
+        $excelSheet->setCellValue(
+            'A8',
+            sprintf(
+                'ИИК поставщика: %s, в банке %s , БИК %s',
+                $legalEntityResolver->getBankAccount()->IIK,
+                $legalEntityResolver->getBankAccount()->title,
+                $legalEntityResolver->getBankAccount()->BIK
+            ));
+
         $excelSheet->setCellValue('C5', $documentDate);
         $excelSheet->setCellValue('A9', 'Договор (контракт) на поставку товаров (работ, услуг): ' . $contract);
         $excelSheet->setCellValue('A11', 'Пункт назначения поставляемых товаров (работ, услуг): ' . $location);
@@ -346,6 +359,8 @@ class WaybillController extends Controller
         $excelSheet->setCellValue('I27', $TOTAL_COST);
         $excelSheet->setCellValue('F28', $TOTAL_COST);
         $excelSheet->setCellValue('I28', $TOTAL_COST);
+
+        $excelSheet->setCellValue('A30', sprintf('Руководитель %s', $legalEntityResolver->getBoss()));
 
 
         $excelWriter = new Xlsx($excelTemplate);
@@ -363,9 +378,14 @@ class WaybillController extends Controller
         ]);
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function createPaymentInvoice(Request $request) {
         $customer = $request->get('customer');
         $legalEntityResolver = new LegalEntityResolver($request->get('entityId'));
+        $legalEntityResolver = $legalEntityResolver->setBankAccount($request->get('bankAccountId'));
         $cart = $request->get('cart');
         $documentType = Document::DOCUMENT_INVOICE_PAYMENT;
         $excelService = new ExcelService();
@@ -384,6 +404,14 @@ class WaybillController extends Controller
         $excelSheet->setCellValue('F19',
             sprintf('ИИН %s %s, %s', $legalEntityResolver->getIIN(), $legalEntityResolver->getName(), $legalEntityResolver->getAddress())
         );
+
+        $excelSheet->setCellValue('B7', $legalEntityResolver->getBankAccount()->title);
+        $excelSheet->setCellValue('W7', $legalEntityResolver->getBankAccount()->BIK);
+        $excelSheet->getCell('W8')
+            ->setValueExplicit(
+                $legalEntityResolver->getBankAccount()->IIK,
+                DataType::TYPE_STRING2
+            );
         $INITIAL_PRODUCT_ROW = 25;
         $PRODUCT_COUNT = count($cart);
         $TOTAL_COST = number_format(intval($this->getTotalCost($cart)), 2, ',', ' ');

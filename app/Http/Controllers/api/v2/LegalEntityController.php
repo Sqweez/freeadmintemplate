@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\v2;
 
 use App\Http\Controllers\api\BaseApiController;
+use App\Http\Requests\LegalEntity\LegalEntityRequest;
 use App\LegalEntity;
 use App\Models\v2\BankAccount;
 use Illuminate\Http\JsonResponse;
@@ -26,13 +27,13 @@ class LegalEntityController extends BaseApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param LegalEntityRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(LegalEntityRequest $request): JsonResponse
     {
         $legalEntity = LegalEntity::query()
-            ->create($request->all());
+            ->create($request->validated());
 
         return $this->respondSuccess([
             'entity' => $legalEntity
@@ -43,15 +44,15 @@ class LegalEntityController extends BaseApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param  int  $id
+     * @param LegalEntityRequest $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(LegalEntityRequest $request, $id): JsonResponse
     {
         LegalEntity::query()
             ->whereKey($id)
-            ->update($request->all());
+            ->update($request->validated());
 
         return $this->respondSuccess([
             'entity' => LegalEntity::whereKey($id)->first()

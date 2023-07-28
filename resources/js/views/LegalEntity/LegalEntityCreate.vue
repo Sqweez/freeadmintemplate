@@ -16,6 +16,11 @@
                 label="Юридический адрес"
             />
 
+            <v-text-field
+                v-model="entity.boss"
+                label="Руководитель"
+            />
+
             <v-divider />
 
 <!--            <div class="my-4">
@@ -74,6 +79,7 @@ export default {
             iin: '',
             iik: '',
             bik: '',
+            boss: '',
         },
         bank_accounts: [],
     }),
@@ -100,6 +106,14 @@ export default {
             }
             if (!this.entity.iin) {
                 return this.$toast.error('Поле ИИН/БИН должно быть заполнено');
+            }
+
+            if (!this.entity.boss) {
+                return this.$toast.error('Поле руководитель должно быть заполнено');
+            }
+
+            if (!this.entity.address) {
+                return this.$toast.error('Поле адрес должно быть заполнено');
             }
 
             return true;

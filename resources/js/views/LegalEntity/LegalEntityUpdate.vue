@@ -16,6 +16,11 @@
                 label="Юридический адрес"
             />
 
+            <v-text-field
+                v-model="entity.boss"
+                label="Руководитель"
+            />
+
             <v-btn color="primary" tile @click="_onSubmit">
                 Сохранить
             </v-btn>
@@ -33,6 +38,7 @@ export default {
             iin: '',
             iik: '',
             bik: '',
+            boss: '',
         }
     }),
     computed: {
@@ -67,6 +73,14 @@ export default {
             }
             if (!this.entity.iin) {
                 return this.$toast.error('Поле ИИН/БИН должно быть заполнено');
+            }
+
+            if (!this.entity.boss) {
+                return this.$toast.error('Поле руководитель должно быть заполнено');
+            }
+
+            if (!this.entity.address) {
+                return this.$toast.error('Поле адрес должно быть заполнено');
             }
 
             return true;

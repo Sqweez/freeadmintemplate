@@ -299,7 +299,8 @@
                         <v-pagination
                             v-model="pagination.page"
                             :total-visible="10"
-                            :length="pageCount"></v-pagination>
+                            :length="pageCount"
+                        />
                     </div>
                 </v-col>
             </v-row>

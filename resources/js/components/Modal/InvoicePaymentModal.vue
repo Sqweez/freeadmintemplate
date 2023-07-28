@@ -20,6 +20,13 @@
                     item-text="name"
                     item-value="id"
                 />
+                <v-select
+                    label="Банковский счет"
+                    v-model="bankAccountId"
+                    :items="accounts"
+                    item-text="name"
+                    item-value="id"
+                />
                 <v-text-field
                     label="Покупатель"
                     v-model="customer"
@@ -30,7 +37,7 @@
                     Отмена
                 </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn text color="success" @click="$emit('submit', {customer, entityId})">
+                <v-btn text color="success" @click="$emit('submit', {customer, entityId, bankAccountId})">
                     Печать накладной <v-icon>mdi-check</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -43,12 +50,20 @@
         data: () => ({
             customer: '',
             entityId: null,
+            bankAccountId: null,
         }),
         methods: {},
         computed: {
             entities () {
                 return this.$store.getters.legal_entities;
             },
+            accounts() {
+                if (!this.entityId) {
+                    return [];
+                } else {
+                    return this.entities.find(e => e.id === this.entityId).bank_accounts;
+                }
+            }
         },
         props: {
             state: {
@@ -61,6 +76,9 @@
                 if (!val) {
                     this.customer = '';
                 }
+            },
+            entityId(value) {
+                this.bankAccountId = null;
             }
         }
     }
