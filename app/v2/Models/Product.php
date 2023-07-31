@@ -4,22 +4,17 @@ namespace App\v2\Models;
 
 use App\AttributeProduct;
 use App\Category;
-use App\CategoryProduct;
-use App\Http\Resources\ProductCommentResource;
 use App\Manufacturer;
-use App\ManufacturerProducts;
 use App\Price;
 use App\ProductBatch;
 use App\ProductImage;
 use App\ProductQuantity;
-use App\ProductTag;
 use App\ProductThumb;
 use App\Subcategory;
-use App\SubcategoryProduct;
 use App\Tag;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -119,15 +114,15 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereMetaTitle($value)
  * @method static Builder|Product whereSupplierId($value)
  * @property-read \App\v2\Models\Favorite|null $favorite
- * @property-read Collection|\App\v2\Models\ProductSaleEarning[] $seller_earning
+ * @property-read Collection|ProductSaleEarning[] $seller_earning
  * @property-read int|null $seller_earning_count
  * @method static Builder|Product whereProductNameWeb($value)
  * @property-read Collection|Subcategory[] $additionalSubcategories
  * @property-read int|null $additional_subcategories_count
- * @property-read Collection|\App\v2\Models\ProductComment[] $comments
+ * @property-read Collection|ProductComment[] $comments
  * @property-read int|null $comments_count
  * @property-read mixed $stock_price
- * @property-read Collection|\App\v2\Models\StockProducts[] $stocks
+ * @property-read Collection|StockProducts[] $stocks
  * @property-read int|null $stocks_count
  * @method static Builder|Product ofStocks()
  * @property bool $is_iherb
