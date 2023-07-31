@@ -16,6 +16,9 @@
             <v-col sm="12" v-if="CAN_SALE && !IS_FRANCHISE">
                 <TasksWidget />
             </v-col>
+            <v-col sm="12" v-if="IS_SUPERUSER">
+                <WorkingScheduleWidget />
+            </v-col>
             <v-col sm="12" lg="6" md="6" v-if="CAN_SALE">
                 <PlanWidget/>
             </v-col>
@@ -53,12 +56,14 @@ import PaymentTypeRating from '@/components/Widgets/PaymentTypeRating';
 import SellerByMarginTypesRating from '@/components/Widgets/SellerByMarginTypesRating';
 import ProductSalesRating from '@/components/Widgets/ProductSalesRating';
 import SellerOwnRatingWidget from '@/components/Widgets/SellerOwnRatingWidget';
+import WorkingScheduleWidget from '@/components/Widgets/WorkingScheduleWidget';
 
 export default {
         data: () => ({
             items: ['Сегодня', 'Текущая неделя', 'Текущий месяц', 'Последние 3 месяца'],
         }),
         components: {
+            WorkingScheduleWidget,
             SellerOwnRatingWidget,
             ProductSalesRating,
             SellerByMarginTypesRating,

@@ -1,25 +1,25 @@
-import ToastService from "@/utils/toastService";
-import LoadingService from "@/utils/loadingService";
-import ColorService from "@/utils/colorService";
-import FileService from "@/utils/fileService";
-import DatePlugin from "@/utils/datePlugin";
-import BarcodeService from "@/utils/barcodeService";
-import store from "@/store";
-import { mapGetters } from "vuex";
-import EconomyService from "@/utils/economyService";
+import ToastService from '@/utils/toastService';
+import LoadingService from '@/utils/loadingService';
+import ColorService from '@/utils/colorService';
+import FileService from '@/utils/fileService';
+import DatePlugin from '@/utils/datePlugin';
+import BarcodeService from '@/utils/barcodeService';
+import store from '@/store';
+import { mapGetters } from 'vuex';
+import EconomyService from '@/utils/economyService';
 
 export default {
     install(Vue, options) {
         Vue.mixin({
             methods: {
-                $evaluate: param => eval("this." + param)
+                $evaluate: (param) => eval('this.' + param),
             },
             computed: {
                 ...mapGetters({
-                    $stores: "stores",
-                    $storeFilters: "store_filters",
-                    $users: "users",
-                    $userFilters: "user_filters"
+                    $stores: 'stores',
+                    $storeFilters: 'store_filters',
+                    $users: 'users',
+                    $userFilters: 'user_filters',
                 }),
                 $barcode() {
                     return new BarcodeService();
@@ -33,6 +33,13 @@ export default {
                 $loading() {
                     return new LoadingService(store);
                 },
+                /* $confirm(
+                    text = 'Подтвердите действие',
+                    title = 'Подтвердите действие',
+                    options = {},
+                ) {
+                    return $confirm(text, title, options);
+                },*/
                 $economy() {
                     return new EconomyService();
                 },
@@ -80,8 +87,8 @@ export default {
                 },
                 IS_FRANCHISE() {
                     return this.$store.getters.IS_FRANCHISE;
-                }
-            }
+                },
+            },
         });
-    }
+    },
 };

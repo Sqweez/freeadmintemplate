@@ -84,6 +84,7 @@ import LegalEntityIndex from '@/views/LegalEntity/LegalEntityIndex';
 import LegalEntityCreate from '@/views/LegalEntity/LegalEntityCreate';
 import LegalEntityUpdate from '@/views/LegalEntity/LegalEntityUpdate';
 import BankAccountCreate from '@/views/LegalEntity/BankAccountCreate';
+import WorkingScheduleIndex from '@/views/WorkingSchedule/WorkingScheduleIndex';
 
 const routes = [
     {
@@ -793,6 +794,10 @@ const routes = [
     {
         path: '/bank-account/:id/update/:account',
         component: BankAccountCreate,
+    },
+    {
+        path: '/working-schedule/index',
+        component: WorkingScheduleIndex,
     },
 ];
 

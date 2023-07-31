@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router/router';
-import vuetify from "./plugins/vuetify";
-import store from "./store";
+import vuetify from './plugins/vuetify';
+import store from './store';
 import GlobalComponents from '@/components/GlobalComponents';
 import 'froala-editor/js/plugins.pkgd.min.js';
 import 'froala-editor/js/third_party/embedly.min';
@@ -12,21 +12,22 @@ import 'froala-editor/js/third_party/image_tui.min';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import axios from 'axios';
 import './filters/filters';
-import loadingPlugin from "./utils/loadingPlugin";
-axios.defaults.withCredentials = true;
+import loadingPlugin from './utils/loadingPlugin';
 import Rollbar from 'rollbar';
-import VueFroala from 'vue-froala-wysiwyg'
-import { VueEditor } from "vue2-editor";
-import vuePlugins from "@/utils/vuePlugins";
+import VueFroala from 'vue-froala-wysiwyg';
+import { VueEditor } from 'vue2-editor';
+import vuePlugins from '@/utils/vuePlugins';
+import confirmationPlugin from '@/plugins/confirmationPlugin';
+
+axios.defaults.withCredentials = true;
 
 Vue.use(VueFroala);
 Vue.use(VueEditor);
 Vue.use(loadingPlugin);
 Vue.use(vuePlugins);
-
+Vue.use(confirmationPlugin);
 
 Vue.config.productionTip = false;
-
 
 GlobalComponents.connect();
 
@@ -39,8 +40,8 @@ if (process.env.VUE_APP_IS_DEVELOPMENT === 'true') {
             // Track your events to a specific version of code for better visibility into version health
             code_version: '1.0.0',
             // Add custom data to your events by adding custom key/value pairs like the one below
-            custom_data: 'foo'
-        }
+            custom_data: 'foo',
+        },
     });
 
     Vue.config.errorHandler = (err, vm, info) => {
@@ -54,7 +55,5 @@ const app = new Vue({
     router,
     store,
     vuetify,
-    components: {App}
+    components: { App },
 });
-
-

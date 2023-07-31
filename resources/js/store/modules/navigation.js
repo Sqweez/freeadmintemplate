@@ -119,6 +119,11 @@ const navigationModule = {
                 ],
             },
             {
+                title: 'Рабочий график',
+                url: '/working-schedule/index',
+                icon: 'view_timeline',
+            },
+            {
                 title: 'Экономика',
                 url: '#',
                 hasDropdown: true,
@@ -459,6 +464,11 @@ const navigationModule = {
                 title: 'Изъятия',
                 url: '/with-drawal',
                 icon: 'report',
+            },
+            {
+                title: 'Рабочий график',
+                url: '/working-schedule/index',
+                icon: 'view_timeline',
             },
             {
                 title: 'Документооборот',
@@ -860,6 +870,11 @@ const navigationModule = {
                 ],
             },
             {
+                title: 'Рабочий график',
+                url: '/working-schedule/index',
+                icon: 'view_timeline',
+            },
+            {
                 title: 'Настройки',
                 url: '/settings',
                 icon: 'settings',
@@ -900,6 +915,11 @@ const navigationModule = {
                 title: 'Клиенты',
                 url: '/clients',
                 icon: 'person',
+            },
+            {
+                title: 'Рабочий график',
+                url: '/working-schedule/index',
+                icon: 'view_timeline',
             },
             {
                 title: 'Документооборот',

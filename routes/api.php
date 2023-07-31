@@ -29,6 +29,7 @@ use App\Http\Controllers\api\v2\ShiftController;
 use App\Http\Controllers\api\v2\SiteController;
 use App\Http\Controllers\api\v2\StockController;
 use App\Http\Controllers\api\v2\TaskController;
+use App\Http\Controllers\api\v3\WorkingScheduleController;
 use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\CronController;
 use App\Http\Middleware\AuthorizationMiddleware;
@@ -454,6 +455,13 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::post('invoice', [\App\Http\Controllers\api\v3\WaybillController::class, 'createInvoice']);
             Route::post('invoice-payment', [\App\Http\Controllers\api\v3\WaybillController::class, 'createPaymentInvoice']);
             Route::post('products/check', [\App\Http\Controllers\api\v3\WaybillController::class, 'getProductCheck']);
+        });
+
+        Route::prefix('working-schedule')->group(function () {
+            Route::get('/my', [WorkingScheduleController::class, 'getMySchedule']);
+            Route::get('/list', [WorkingScheduleController::class, 'getScheduleList']);
+            Route::post('/', [WorkingScheduleController::class, 'store']);
+            Route::delete('/{schedule}', [WorkingScheduleController::class, 'destroy']);
         });
     });
 });
