@@ -22,7 +22,8 @@
                                 :key="i"
                             >
                                 <v-list-item-title>
-                                    <v-btn text depressed @click="_onCreateDocumentClick(i)" style="width: 100%!important;">
+                                    <v-btn text depressed @click="_onCreateDocumentClick(i)"
+                                           style="width: 100%!important;">
                                         {{ item.title }}
                                     </v-btn>
                                 </v-list-item-title>
@@ -146,7 +147,15 @@
                                 color="white darken-2"
                             />
                         </div>
-
+                        <div>
+                            <v-checkbox
+                                :disabled="!clientChosen || client.barter_balance_amount === 0"
+                                label="Бартер"
+                                v-model="isPaidByBarter"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
                     </div>
                     <div class="cart__parameters">
                         <div v-if="!isFree">
@@ -189,13 +198,23 @@
                                 @click:append-outer="used_certificate = null"
                             />
                         </div>
-                        <div v-if="clientChosen && !isFree && !isOpt">
+                        <div v-if="clientChosen && !isFree && !isOpt && !isPaidByBarter">
                             <v-text-field
                                 class="w-150px"
                                 type="number"
                                 color="white darken-2"
                                 v-model="balance"
-                                label="Списать с баланса"
+                                :label="`Списать с баланса`"
+                                outlined
+                            />
+                        </div>
+                        <div v-if="clientChosen && !isFree && !isOpt && isPaidByBarter">
+                            <v-text-field
+                                class="w-150px"
+                                type="number"
+                                color="white darken-2"
+                                v-model="barterBalance"
+                                :label="`Списать с бартерного баланса`"
                                 outlined
                             />
                         </div>
@@ -300,6 +319,12 @@
                         <v-list-item-content>
                             <v-list-item-subtitle class="client__table-heading">Баланс</v-list-item-subtitle>
                             <v-list-item-title>{{ client.client_balance | priceFilters }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-subtitle class="client__table-heading">Доступный бартер</v-list-item-subtitle>
+                            <v-list-item-title>{{ client.barter_balance_amount | priceFilters }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item>
@@ -579,6 +604,9 @@
                             </v-list-item>
                         </v-list>
                     </template>
+                    <template v-slot:item.product_price="{ item }">
+                        {{ item.product_price | priceFilters }}
+                    </template>
                     <template v-slot:item.attributes="{ item }">
                         {{ item.attributes.map(a => a.attribute_value).join(', ') }}
                     </template>
@@ -707,6 +735,7 @@ export default {
             client_balance: 0,
             client_discount: 0,
             total_sum: 0,
+            barter_balance_amount: 0,
         } : null;
         this.$loading.disable();
         await this.$store.dispatch(ACTIONS.GET_CLIENTS);
@@ -733,6 +762,11 @@ export default {
         balance() {
             this.$nextTick(() => {
                 this.balance = Math.min(this.client.client_balance, Math.max(0, this.balance));
+            })
+        },
+        barterBalance() {
+            this.$nextTick(() => {
+                this.barterBalance = Math.min(this.client.barter_balance_amount, Math.max(0, this.barterBalance));
             })
         },
         isFree(value) {
@@ -775,6 +809,17 @@ export default {
             if (value) {
                 this.balance = 0;
             }
+        },
+        isPaidByBarter(value) {
+            if (value) {
+                this.discountPercent = 0;
+                this.barterBalance = 0;
+                this.isFree = false;
+            }
+        },
+        client() {
+            this.isPaidByBarter = false;
+            this.barterBalance = 0;
         }
     },
     mixins: [product, product_search, cart],
@@ -827,6 +872,7 @@ export default {
         overlay: false,
         sale_id: null,
         balance: 0,
+        barterBalance: 0,
         showCheckModal: false,
         currentItems: [],
         is_paid: false,
@@ -868,6 +914,7 @@ export default {
         kaspiProcessId: null,
         kaspiTransactionId: null,
         currentPromocode: null,
+        isPaidByBarter: false,
     }),
     methods: {
         ...mapActions([
@@ -951,7 +998,7 @@ export default {
         async searchPromocode() {
             this.$loading.enable();
             try {
-                const {data: {data}} = await axios.get(`/api/promocode/search/${this.promocode}`);
+                const { data: { data } } = await axios.get(`/api/promocode/search/${this.promocode}`);
                 this.checkPromocodeRules(data);
             } catch (e) {
                 console.log(e);
@@ -1065,7 +1112,7 @@ export default {
             const link = `${url}?${queryParams}`;
             this.awaitingForKaspiPayment = true;
             try {
-                let popup = await window.open(link, Date.now().toString(), 'width=300,height=300,status=no,scrollbar=no,location=no');
+                await window.open(link, Date.now().toString(), 'width=300,height=300,status=no,scrollbar=no,location=no');
                 window.focus();
             } catch (e) {
                 console.log(e);
@@ -1107,6 +1154,8 @@ export default {
                 is_paid: this.is_paid,
                 is_opt: this.isOpt,
                 promocode_id: this.promocode_id,
+                paid_by_barter: this.isPaidByBarter,
+                barter_balance: this.barterBalance,
             };
 
             if (!this.isTodaySale && this.customSaleDate) {
@@ -1143,6 +1192,7 @@ export default {
                 this.isRed = false;
                 this.isFree = false;
                 this.balance = 0;
+                this.barterBalance = 0;
                 this.payment_type = 0;
                 this.partner_id = false;
                 this.certificate = null;
@@ -1159,6 +1209,7 @@ export default {
                 this.customSaleDate = moment().format('YYYY-MM-DD');
                 this.promocode_id = null;
                 this.promocode = '';
+                this.isPaidByBarter = false;
             } catch (e) {
                 throw e;
             }
@@ -1226,7 +1277,7 @@ export default {
             return this.payment_type === 0 || (this.isSplitPayment && this.splitPayment[0].amount > 0);
         },
         isDiscountDisabled() {
-            return this.isRed || this.isProductPriceChangedManually;
+            return this.isRed || this.isProductPriceChangedManually || this.isPaidByBarter;
         },
         partners() {
             return this.$store.getters.PARTNERS;
@@ -1246,7 +1297,7 @@ export default {
             return this.subtotal - this.discountTotal;
         },
         discount() {
-            if (this.isRed || this.isProductPriceChangedManually) {
+            if (this.isRed || this.isProductPriceChangedManually || this.isPaidByBarter) {
                 return 0;
             }
             if (this.isFree) {
@@ -1283,6 +1334,10 @@ export default {
 
             if (this.currentPromocode && this.currentPromocode.promocode_type_id === 2) {
                 total -= this.currentPromocode.discount;
+            }
+
+            if (this.barterBalance) {
+                total -= this.barterBalance;
             }
 
             return Math.max(0, Math.ceil(total));

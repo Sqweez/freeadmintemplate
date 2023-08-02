@@ -48,6 +48,7 @@ export default {
     EDIT_SPORTSMEN: 'editSportsmen',
     CREATE_SPORTSMEN: 'createSportsmen',
     ADD_BALANCE: 'addBalance',
+    ADD_BARTER_BALANCE: 'addBarterBalance',
     GET_PLANS: 'getPlans',
     SAVE_PLANS: 'savePlans',
     GET_MVP_PRODUCTS: 'getMVPProducts',
@@ -97,6 +98,4 @@ export default {
     GET_WHOLESALE_TYPES: 'GET_WHOLESALE_TYPES',
     CREATE_WHOLESALE_CLIENT: 'CREATE_WHOLESALE_CLIENT',
     EDIT_WHOLESALE_CLIENT: 'EDIT_WHOLESALE_CLIENT',
-}
-
-
+};

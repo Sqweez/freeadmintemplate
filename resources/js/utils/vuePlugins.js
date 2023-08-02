@@ -17,6 +17,7 @@ export default {
             computed: {
                 ...mapGetters({
                     $stores: 'stores',
+                    $shops: 'shops',
                     $storeFilters: 'store_filters',
                     $users: 'users',
                     $userFilters: 'user_filters',
