@@ -105,7 +105,7 @@
                             'items-per-page-text': 'Записей на странице',
                         }">
                             <template v-slot:item.client_balance="{item}">
-                                {{ item.client_balance }} ₸
+                                {{ item.client_balance | priceFilters }}
                             </template>
                             <template v-slot:item.client_discount="{item}">
                                 {{ item.client_discount }}%
@@ -117,6 +117,16 @@
                             </template>
                             <template v-slot:item.extra="{item}">
                                 <v-list>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.barter_balance_amount | priceFilters }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Бартерный баланс
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
                                     <v-list-item>
                                         <v-list-item-content>
                                             <v-list-item-title>
@@ -281,6 +291,15 @@
                                     <v-list-item>
                                         <v-list-item-content>
                                             <v-list-item-title>
+                                                <v-btn title="Пополнить бартерный баланс" icon @click="barterBalanceModal = true; userId = item.id;">
+                                                    <v-icon>mdi-account-cash</v-icon>
+                                                </v-btn>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
                                                 <v-btn icon @click="$router.push(`/clients/${item.id}`)">
                                                     <v-icon>
                                                         mdi-eye
@@ -334,21 +353,28 @@
             @cancel="exportModal = false;"
             :state="exportModal"
         />
+        <BarterBalanceModal
+            :state="barterBalanceModal"
+            @cancel="barterBalanceModal = false"
+            @submit="_handleBarterBalanceSubmit"
+        />
     </v-card>
 </template>
 
 <script>
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import UserModal from "@/components/Modal/UserModal";
-    import ACTIONS from "@/store/actions";
-    import ClientModal from "@/components/Modal/ClientModal";
-    import BalanceModal from "@/components/Modal/BalanceModal";
-    import ExportClientsModal from "@/components/Modal/Export/ExportClientsModal";
-    import GENDERS from "@/common/enums/genders";
-    import axiosClient from '@/utils/axiosClient';
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import UserModal from "@/components/Modal/UserModal";
+import ACTIONS from "@/store/actions";
+import ClientModal from "@/components/Modal/ClientModal";
+import BalanceModal from "@/components/Modal/BalanceModal";
+import ExportClientsModal from "@/components/Modal/Export/ExportClientsModal";
+import GENDERS from "@/common/enums/genders";
+import axiosClient from '@/utils/axiosClient';
+import BarterBalanceModal from '@/components/v2/Modal/BarterBalanceModal';
 
-    export default {
+export default {
         components: {
+            BarterBalanceModal,
             ExportClientsModal,
             BalanceModal,
             ClientModal,
@@ -432,7 +458,8 @@
                     value: 'actions',
                     text: 'Действие'
                 }
-            ]
+            ],
+            barterBalanceModal: false,
         }),
         computed: {
             loyalties() {
@@ -528,6 +555,18 @@
             sendWhatsapp(client) {
                 const message = '';
                 window.location.href = `https://api.whatsapp.com/send?phone=${client.client_phone}&text=${message}`;
+            },
+            async _handleBarterBalanceSubmit (payload) {
+                try {
+                    this.$loading.enable();
+                    await this.$store.dispatch(ACTIONS.ADD_BARTER_BALANCE, {...payload, client_id: this.userId});
+                    this.barterBalanceModal = false;
+                    this.$toast.success('Бартерный баланс успешно пополнен')
+                } catch (e) {
+                    this.$toast.error('Произошла ошибка...')
+                } finally {
+                    this.$loading.disable();
+                }
             },
         }
     }

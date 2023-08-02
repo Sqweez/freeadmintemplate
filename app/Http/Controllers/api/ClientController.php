@@ -6,13 +6,13 @@ use App\Cart;
 use App\CartProduct;
 use App\Client;
 use App\ClientTransaction;
-use App\Http\Controllers\Services\ReportService;
-use App\Sale;
-use App\Store;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Services\ReportService;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\shop\OrderResource;
 use App\Http\Resources\shop\SaleResource;
+use App\Sale;
+use App\Store;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
@@ -39,6 +39,9 @@ class ClientController extends Controller {
                     return $query
                         ->where('is_partner', true);
                 })
+                ->with(['barter_balance' => function ($query) {
+                    return $query->where('is_active', true);
+                }])
                 ->get()
         );
     }

@@ -356,10 +356,16 @@
                                 <v-list-item-subtitle>Доставка</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
-                        <v-list-item>
+                        <v-list-item v-if="item.balance">
                             <v-list-item-content>
                                 <v-list-item-title>{{ item.balance | priceFilters }}</v-list-item-title>
                                 <v-list-item-subtitle>Списано с баланса</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="item.paid_by_barter_balance">
+                            <v-list-item-content>
+                                <v-list-item-title>{{ item.paid_by_barter_balance | priceFilters }}</v-list-item-title>
+                                <v-list-item-subtitle>Списано по бартеру</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item v-if="item.certificate">

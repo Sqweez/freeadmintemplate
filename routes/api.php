@@ -29,6 +29,7 @@ use App\Http\Controllers\api\v2\ShiftController;
 use App\Http\Controllers\api\v2\SiteController;
 use App\Http\Controllers\api\v2\StockController;
 use App\Http\Controllers\api\v2\TaskController;
+use App\Http\Controllers\api\v3\BarterBalanceController;
 use App\Http\Controllers\api\v3\WorkingScheduleController;
 use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\CronController;
@@ -462,6 +463,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::get('/list', [WorkingScheduleController::class, 'getScheduleList']);
             Route::post('/', [WorkingScheduleController::class, 'store']);
             Route::delete('/{schedule}', [WorkingScheduleController::class, 'destroy']);
+        });
+
+        Route::prefix('barter')->group(function () {
+            Route::post('/', [BarterBalanceController::class, 'store']);
         });
     });
 });

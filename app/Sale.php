@@ -85,6 +85,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \App\Promocode|null $promocode
  * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePromocodeFixedAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePromocodeId($value)
+ * @property int $paid_by_barter_balance
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaidByBarterBalance($value)
  */
 class Sale extends Model
 {

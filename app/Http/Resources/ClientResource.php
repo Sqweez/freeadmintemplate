@@ -58,6 +58,9 @@ class ClientResource extends JsonResource
             'wholesale_status' => $this->wholesale_status,
             'wholesale_status_text' => $this->wholesale_status_text,
             'is_kaspi' => $this->is_kaspi,
+            'barter_balance_amount' => $this->barter_balance->reduce(function ($a, $c) {
+                return $a + $c->amount;
+            }, 0),
             //'last_mailing_date' => $this->lastMailing ? format_datetime($this->lastMailing->created_at) : 'Никогда'
         ];
     }

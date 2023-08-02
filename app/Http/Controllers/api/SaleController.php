@@ -9,12 +9,9 @@ use App\ClientTransaction;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ReportService;
 use App\Http\Controllers\Services\SaleService;
-use App\Http\Controllers\Services\TelegramService;
 use App\Http\Resources\ClientResource;
-use App\Http\Resources\ProductResource;
 use App\Http\Resources\ReportResource;
 use App\Http\Resources\v2\Report\ReportsResource;
-use App\Http\Resources\SaleByCityResource;
 use App\Jobs\Notifications\SendDeliveryNotificationJob;
 use App\Jobs\Notifications\SendWholesaleOrderNotificationJob;
 use App\Manufacturer;
@@ -22,16 +19,15 @@ use App\Product;
 use App\ProductBatch;
 use App\Sale;
 use App\SaleProduct;
-use App\Store;
 use App\User;
 use App\UserRole;
+use App\v2\Models\BarterBalance;
 use App\v2\Models\Booking;
 use App\v2\Models\BrandMotivation;
 use App\v2\Models\Certificate;
 use App\v2\Models\Preorder;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
-use Facade\FlareClient\Report;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -42,6 +38,7 @@ class SaleController extends Controller {
         try {
             \DB::beginTransaction();
             $cart = $request->get('cart');
+            $paid_by_barter = $request->get('paid_by_barter', 0);
             $store_id = $request->get('store_id');
             $client_id = $request->get('client_id');
             $discount = $request->get('discount');
@@ -52,7 +49,42 @@ class SaleController extends Controller {
             $used_certificate = $request->get('used_certificate', null);
             $promocode_id = $request->get('promocode_id', null);
             $preorder = $request->get('preorder', null);
-            $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate', 'preorder']));
+            $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate', 'preorder', 'paid_by_barter', 'barter_balance']));
+            $client = Client::find($client_id);
+
+            // @TODO 2023-08-02T14:23:33 rework sale controller
+            if ($paid_by_barter) {
+                $barterBalance = $request->get('barter_balance', 0);
+                $sale->update([
+                    'paid_by_barter_balance' => $barterBalance
+                ]);
+
+                $client->transactions()->create([
+                    'sale_id' => $sale->id,
+                    'user_id' => auth()->id(),
+                    'amount' => $barterBalance * -1
+                ]);
+
+                while ($barterBalance > 0) {
+                    $barterBalanceEntity = BarterBalance::whereClientId($client_id)
+                        ->where('amount', '>', 0)
+                        ->where('is_active', true)
+                        ->first();
+
+                    if (!$barterBalanceEntity) {
+                        $barterBalance = 0;
+                    } else {
+                        $amount = $barterBalanceEntity->amount;
+                        $remaining = $amount - $barterBalance;
+                        $barterBalanceEntity->update([
+                            'amount' => max(0, $remaining),
+                            'is_active' => $remaining > 0,
+                        ]);
+                        $barterBalance = $remaining * -1;
+                    }
+                }
+            }
+
             $saleService->createSaleProducts($sale, $store_id, $cart);
             $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id, $request->get('payment_type'));
             $saleService->createCompanionTransaction($sale, $request->header('user_id'));

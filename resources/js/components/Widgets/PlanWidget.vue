@@ -17,7 +17,7 @@
             <v-card-text>
                 <v-select
                     label="Магазин"
-                    :items="$stores"
+                    :items="$shops"
                     item-text="name"
                     item-value="id"
                     v-model="storeFilter"
@@ -141,7 +141,7 @@
             },
             _init () {
                 this.loading = true;
-                this.storeFilter = this.IS_SUPERUSER ? this.$stores[0]?.id : this.$user.store_id;
+                this.storeFilter = this.IS_SUPERUSER ? this.$shops[0]?.id : this.$user.store_id;
                 this.loading = false;
             },
         },
@@ -153,7 +153,7 @@
                     this.loading = false;
                 }
             },
-            $stores: {
+            $shops: {
                 immediate: true,
                 handler: function (value) {
                     if (value && value.length) {

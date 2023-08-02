@@ -3,7 +3,6 @@
 namespace App\Http\Resources\v2\Report;
 
 use App\Sale;
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -73,6 +72,7 @@ class ReportsResource extends JsonResource
             'is_confirmed' => $this->is_confirmed,
             'is_full_wholesale_purchase' => $this->is_opt,
             'promocode' => $this->promocode,
+            'paid_by_barter_balance' => $this->paid_by_barter_balance,
         ];
     }
 }

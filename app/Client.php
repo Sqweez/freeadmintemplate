@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\v2\Models\BarterBalance;
 use App\v2\Models\MailingRecepient;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -101,6 +103,8 @@ use Illuminate\Support\Carbon;
  * @property int $cached_total_sale_amount
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereCachedBalance($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereCachedTotalSaleAmount($value)
+ * @property-read Collection|BarterBalance[] $barter_balance
+ * @property-read int|null $barter_balance_count
  */
 class Client extends Model
 {
@@ -168,7 +172,8 @@ class Client extends Model
             ->latest();
     }
 
-    public function transactions() {
+    public function transactions(): HasMany
+    {
         return $this->hasMany('App\ClientTransaction', 'client_id');
     }
 
@@ -176,33 +181,40 @@ class Client extends Model
         return $this->hasMany('App\ClientSale', 'client_id');
     }
 
-    public function real_sales() {
+    public function real_sales(): HasMany
+    {
         return $this->hasMany('App\Sale')->orderByDesc('created_at');
     }
 
-    public function promocodes() {
+    public function promocodes(): HasMany
+    {
         return $this->hasMany('App\Promocode', 'client_id');
     }
 
-    public function orders() {
+    public function orders(): HasMany
+    {
         return $this->hasMany('App\Order', 'client_id');
     }
 
-    public function city() {
+    public function city(): BelongsTo
+    {
         return $this->belongsTo('App\v2\Models\City', 'client_city')->withDefault([
             'name' => 'Город не указан'
         ]);
     }
 
-    public function loyalty() {
+    public function loyalty(): BelongsTo
+    {
         return $this->belongsTo('App\v2\Models\Loyalty', 'loyalty_id');
     }
 
-    public function partner_sales() {
+    public function partner_sales(): HasMany
+    {
         return $this->hasMany('App\Sale', 'partner_id');
     }
 
-    public function getBalanceAttribute() {
+    public function getBalanceAttribute(): int
+    {
         return intval($this->transactions->sum('amount'));
     }
 
@@ -274,6 +286,11 @@ class Client extends Model
 
     public function setInstagramAttribute($value) {
         $this->attributes['instagram'] = $value !== null ?  $value : '';
+    }
+
+    public function barter_balance(): HasMany
+    {
+        return $this->hasMany(BarterBalance::class, 'client_id');
     }
 
     protected static function boot() {
