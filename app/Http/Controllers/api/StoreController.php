@@ -22,7 +22,10 @@ class StoreController extends Controller
         $storeQuery = Store::query()
             ->with('type')
             ->with(['transactions'])
-            ->with('city_name');
+            ->with('city_name')
+            ->when(auth()->user()->isFranchise(), function ($query) {
+                return $query->where('id', auth()->user()->store_id);
+            });
         if ($request->has('store_id')) {
             $storeQuery->where('id', $request->get('store_id'));
         }

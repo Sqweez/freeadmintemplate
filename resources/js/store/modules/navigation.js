@@ -575,6 +575,10 @@ const navigationModule = {
                 icon: 'account_balance_wallet',
                 children: [
                     {
+                        title: 'Список смен',
+                        url: '/shifts/index',
+                    },
+                    {
                         title: 'Типы маржинальности',
                         url: '/economy/margin/types',
                     },
@@ -1230,6 +1234,11 @@ const navigationModule = {
                 title: 'Настройки',
                 url: '/settings',
                 icon: 'settings',
+            },
+            {
+                title: 'Список смен',
+                url: '/shifts/index',
+                icon: 'report',
             },
             {
                 title: 'Отчеты по продажам',

@@ -135,7 +135,7 @@ class Sale extends Model
             'name' => 'Перевод на карту'
         ],
         4 => [
-            'name' => 'Kaspi Магазин'
+            'name' => 'Kaspi Магазин (ИП Соловьев)'
         ],
         5 => [
             'name' => 'Раздельная оплата'
@@ -145,7 +145,10 @@ class Sale extends Model
         ],
         7 => [
             'name' => 'Почта'
-        ]
+        ],
+        8 => [
+            'name' => 'Kaspi Магазин (ИП Соловьева)'
+        ],
     ];
 
     public function client() {

@@ -9,9 +9,15 @@ use App\Sale;
 use App\User;
 use App\v2\Models\Supplier;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ReportService
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public static function getReports(
         $start,
         $finish,
@@ -42,6 +48,10 @@ class ReportService
             if ($authUser->isStoreKeeper()) {
                 $saleQuery
                     ->where('payment_type', __hardcoded(4));
+            }
+
+            if (request()->has('promocode_id')) {
+                $saleQuery->where('promocode_id', json_decode(request()->get('promocode_id')));
             }
 
             $sales = $saleQuery->get();

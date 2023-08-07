@@ -154,9 +154,16 @@
                         v-model.number="product_price"
                         type="number"/>
                     <v-text-field
-                        label="Стоимость в Kaspi Магазине"
+                        label="Стоимость в Kaspi Магазине (ИП Андрей)"
                         :disabled="!IS_SUPERUSER"
                         v-model.number="kaspi_product_price"
+                        type="number"
+                    />
+
+                    <v-text-field
+                        label="Стоимость в Kaspi Магазине (ИП Марина)"
+                        :disabled="!IS_SUPERUSER"
+                        v-model.number="kaspi_product_price_2"
                         type="number"
                     />
                     <v-text-field
@@ -592,6 +599,7 @@ export default {
         product_barcode: null,
         product_price: null,
         kaspi_product_price: 0,
+        kaspi_product_price_2: 0,
         iherb_price: 0,
         product_attributes: [
             {

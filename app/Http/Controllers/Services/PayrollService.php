@@ -8,7 +8,6 @@ use App\Http\Resources\Shifts\ShiftPenaltyResource;
 use App\MarginType;
 use App\Sale;
 use App\User;
-use App\v2\Models\ProductSaleEarning;
 use App\v2\Models\Shift;
 use App\v2\Models\ShiftPenalty;
 use App\v2\Models\ShiftTax;
@@ -79,6 +78,9 @@ class PayrollService {
     private function getSellers() {
         return User::sellers()
             ->select(['id', 'name', 'store_id'])
+            ->when(auth()->user()->isFranchise(), function ($query) {
+                return $query->whereStoreId(auth()->user()->store_id);
+            })
             ->get();
     }
 

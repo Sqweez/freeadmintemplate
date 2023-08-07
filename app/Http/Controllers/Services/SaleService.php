@@ -18,7 +18,7 @@ class SaleService {
 
     public function createSale($sale): Sale{
         // @TODO 2022-07-02T20:16:42 hardcoded изменять оплату на Андрея при каспи магазине
-        if ($sale['payment_type'] == __hardcoded(4)) {
+        if (in_array($sale['payment_type'], __hardcoded([4, 8]))) {
             $sale['user_id'] = __hardcoded(32);
         }
         if (isset($sale['is_opt']) && $sale['is_opt']) {

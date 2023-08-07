@@ -2,22 +2,23 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use App\User;
-use http\Client\Response;
+use Closure;
+use Illuminate\Http\Request;
 
 class AuthorizationMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $header = $request->header('Authorization', null);
+        \Log::info($header);
         if ($header && auth()->guest()) {
             $user = User::whereToken($header)->first();
             if ($user) {
