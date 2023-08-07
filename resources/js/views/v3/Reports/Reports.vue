@@ -212,6 +212,15 @@
                             />
                         </v-col>
                     </v-row>
+                    <v-autocomplete
+                        @blur="loadReport"
+                        label="Промокод"
+                        multiple
+                        v-model="promocode_ids"
+                        :items="promocodes"
+                        item-text="promocode"
+                        item-value="id"
+                    />
                 </v-col>
             </v-row>
             <v-text-field
@@ -642,6 +651,7 @@ export default {
     extends: DocumentsPage,
     components: {WholeSaleConfirmation, SaleEditModal, ReportCancelModal, ConfirmationModal},
     data: () => ({
+        promocode_ids: [],
         searchPromocode: '',
         showOnlyUnconfirmed: false,
         wholeSaleConfirmationModal: false,
@@ -700,13 +710,13 @@ export default {
                     moment().format(DATE_FORMAT),
                 ],
             },
-            {
-                name: 'За все время',
-                value: [
-                    moment.unix(1).format(DATE_FORMAT),
-                    moment().format(DATE_FORMAT)
-                ],
-            },
+            /* {
+                 name: 'За все время',
+                 value: [
+                     moment.unix(1).format(DATE_FORMAT),
+                     moment().format(DATE_FORMAT)
+                 ],
+             },*/
             {
                 name: 'Произвольно',
                 value: DATE_FILTERS.CUSTOM_FILTER
@@ -756,7 +766,7 @@ export default {
                 }
             })
         },
-        async manufacturerId(value) {
+        async manufacturerId() {
             this.$loading.enable();
             await this.loadReport();
             this.$loading.disable();
@@ -788,16 +798,28 @@ export default {
         },
         async init() {
             this.loading = true;
-            await this.$store.dispatch(ACTIONS.GET_REPORTS, {
-                start: this.currentDate[0],
-                finish: this.currentDate[1],
-            });
-            await this.$store.dispatch('GET_PREORDERS_REPORT', {
-                start: this.currentDate[0],
-                finish: this.currentDate[1],
-            })
+            await Promise.all([
+                this.$store.dispatch(ACTIONS.GET_REPORTS, {
+                    start: this.currentDate[0],
+                    finish: this.currentDate[1],
+                }),
+                this.$store.dispatch('GET_PREORDERS_REPORT', {
+                    start: this.currentDate[0],
+                    finish: this.currentDate[1],
+                }),
+                this.$store.dispatch('getLegalEntities'),
+                this.$store.dispatch('getPromocodes')
+            ]);
+            /* await this.$store.dispatch(ACTIONS.GET_REPORTS, {
+                 start: this.currentDate[0],
+                 finish: this.currentDate[1],
+             });
+             await this.$store.dispatch('GET_PREORDERS_REPORT', {
+                 start: this.currentDate[0],
+                 finish: this.currentDate[1],
+             })*/
             const {data} = await axios.get(`/api/v2/booking?start=${this.currentDate[0]}&finish=${this.currentDate[1]}`);
-            await this.$store.dispatch('getLegalEntities');
+            //await this.$store.dispatch('getLegalEntities');
             this.bookings = data.data;
             this.overlay = this.loading = false;
         },
@@ -822,6 +844,11 @@ export default {
             if (this.manufacturerId !== -1) {
                 dateObject.manufacturer_id = this.manufacturerId;
             }
+
+            if (this.promocode_ids.length > 0) {
+                dateObject.promocode_ids = this.promocode_ids;
+            }
+            
             await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
             await this.$store.dispatch('GET_PREORDERS_REPORT', dateObject);
             const {data} = await axios.get(`/api/v2/booking?start=${dateObject.start}&finish=${dateObject.finish}`);
@@ -867,6 +894,9 @@ export default {
         }
     },
     computed: {
+        promocodes() {
+            return this.$store.getters.PROMOCODES.map(p => ({ id: p.id, promocode: p.promocode }));
+        },
         manufacturers() {
             return [
                 {

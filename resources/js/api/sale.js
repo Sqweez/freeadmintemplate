@@ -1,10 +1,9 @@
 import axios from 'axios';
-import store from "@/store";
 
 axios.defaults.headers = {
     'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-    'Expires': '0',
+    Pragma: 'no-cache',
+    Expires: '0',
 };
 
 export async function makeSale(payload) {
@@ -12,19 +11,30 @@ export async function makeSale(payload) {
     return response.data;
 }
 
-export async function getReports({start, finish, user_id = null, is_supplier = null, store_id = null, manufacturer_id = null}) {
+export async function getReports({
+    start,
+    finish,
+    user_id = null,
+    is_supplier = null,
+    store_id = null,
+    manufacturer_id = null,
+    promocode_ids = null,
+}) {
     let query = `?start=${start}&finish=${finish}`;
     if (user_id) {
-        query += `&user_id=${user_id}`
+        query += `&user_id=${user_id}`;
     }
     if (is_supplier) {
-        query += '&is_supplier=1'
+        query += '&is_supplier=1';
     }
     if (store_id) {
-        query += `&store_id=${store_id}`
+        query += `&store_id=${store_id}`;
     }
     if (manufacturer_id) {
         query += `&manufacturer_id=${manufacturer_id}`;
+    }
+    if (promocode_ids) {
+        query += `&promocode_id=${JSON.stringify(promocode_ids)}`;
     }
     const response = await axios.get(`/api/reports${query}`);
     return response.data.data;
@@ -34,12 +44,14 @@ export async function cancelSale(payload, id) {
     return await axios.post(`/api/sales/${id}/cancel`, payload);
 }
 
-export async function getStoreReports({date_filter, store_id, role}) {
-    return await axios.get(`/api/reports/total?date_filter=${date_filter}&store_id=${store_id}&role=${role}`)
+export async function getStoreReports({ date_filter, store_id, role }) {
+    return await axios.get(
+        `/api/reports/total?date_filter=${date_filter}&store_id=${store_id}&role=${role}`,
+    );
 }
 
 export async function getPlanReports() {
-    return await axios.get(`/api/reports/plan`)
+    return await axios.get(`/api/reports/plan`);
 }
 
 export async function updateSale(payload) {
@@ -54,7 +66,7 @@ export async function getBrandsMotivation() {
 
 export async function createBrandsMotivation(motivations) {
     const { data } = await axios.post(`/api/v2/brands/motivation`, {
-        motivations
+        motivations,
     });
     return data;
 }
