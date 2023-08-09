@@ -18,7 +18,6 @@ class AuthorizationMiddleware
     public function handle(Request $request, Closure $next)
     {
         $header = $request->header('Authorization', null);
-        \Log::info($header);
         if ($header && auth()->guest()) {
             $user = User::whereToken($header)->first();
             if ($user) {

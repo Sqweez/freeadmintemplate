@@ -474,7 +474,7 @@
                     </div>
                 </template>
                 <template v-slot:item.action="{item}">
-                    <div v-if="item.is_confirmed">
+                    <div v-if="item.is_confirmed && item.can_be_changed">
                         <v-list v-if="report.id !== item.id && !item.sale_type">
                             <v-list-item v-if="IS_SUPERUSER">
                                 <v-btn small depressed color="error" text
@@ -513,7 +513,7 @@
                             </v-list-item>
                         </v-list>
                     </div>
-                    <v-list v-else>
+                    <v-list v-if="!item.is_confirmed && item.can_be_changed">
                         <v-list-item>
                             <v-btn small depressed color="error" text
                                    @click="purchaseId = item.id; currentProducts = [...item.products]; cancelModal = true;">
@@ -848,7 +848,7 @@ export default {
             if (this.promocode_ids.length > 0) {
                 dateObject.promocode_ids = this.promocode_ids;
             }
-            
+
             await this.$store.dispatch(ACTIONS.GET_REPORTS, dateObject);
             await this.$store.dispatch('GET_PREORDERS_REPORT', dateObject);
             const {data} = await axios.get(`/api/v2/booking?start=${dateObject.start}&finish=${dateObject.finish}`);
