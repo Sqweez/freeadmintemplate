@@ -73,6 +73,7 @@ class ReportsResource extends JsonResource
             'is_full_wholesale_purchase' => $this->is_opt,
             'promocode' => $this->promocode,
             'paid_by_barter_balance' => $this->paid_by_barter_balance,
+            'can_be_changed' => !auth()->user()->isStoreKeeper() || $this->payment_type === __hardcoded(4)
         ];
     }
 }

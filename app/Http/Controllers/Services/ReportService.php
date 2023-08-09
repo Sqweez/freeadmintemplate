@@ -45,10 +45,10 @@ class ReportService
                 $saleQuery->where('is_confirmed', true);
             }
 
-            if ($authUser->isStoreKeeper()) {
+            /*if ($authUser->isStoreKeeper()) {
                 $saleQuery
                     ->where('payment_type', __hardcoded(4));
-            }
+            }*/
 
             if (request()->has('promocode_id')) {
                 $saleQuery->where('promocode_id', json_decode(request()->get('promocode_id')));
