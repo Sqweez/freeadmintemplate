@@ -45,6 +45,7 @@ class TranslateProductDescriptions extends Command
         $products = $this->getProductsWithoutTranslation();
         foreach ($products as $key => $product) {
             try {
+                $this->line('Осталось: ' . ($products->count() - ($key)));
                 $this->line('Текущий товар: ' . $product->product_name);
                 $result = $this->translationService->translate($product->product_description);
                 $encoded = json_decode($result);
