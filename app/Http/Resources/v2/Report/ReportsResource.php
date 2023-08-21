@@ -23,6 +23,8 @@ class ReportsResource extends JsonResource
     public function toArray($request)
     {
         $user_id = $request->get('user_id', null) === null;
+        $user = auth()->user();
+        $canBeChanged = !is_null($user) && ((!$user->isStoreKeeper() || $this->payment_type === __hardcoded(4)));
         return [
             'id' => $this->id,
             'client' => $this->client,
@@ -73,7 +75,7 @@ class ReportsResource extends JsonResource
             'is_full_wholesale_purchase' => $this->is_opt,
             'promocode' => $this->promocode,
             'paid_by_barter_balance' => $this->paid_by_barter_balance,
-            'can_be_changed' => !auth()->user()->isStoreKeeper() || $this->payment_type === __hardcoded(4)
+            'can_be_changed' => $canBeChanged
         ];
     }
 }

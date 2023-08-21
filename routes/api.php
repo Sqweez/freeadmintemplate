@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\AnalyticsController;
 use App\Http\Controllers\api\ArrivalController;
 use App\Http\Controllers\api\ClientController;
+use App\Http\Controllers\api\dev\TranslatorController;
 use App\Http\Controllers\api\PromocodeController;
 use App\Http\Controllers\api\SaleController;
 use App\Http\Controllers\api\StoreController;
@@ -467,6 +468,16 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
         Route::prefix('barter')->group(function () {
             Route::post('/', [BarterBalanceController::class, 'store']);
+        });
+
+        Route::prefix('kaspi')->group(function () {
+            Route::get('/entity', [\App\Http\Controllers\api\v3\KaspiController::class, 'getEntities']);
+        });
+    });
+
+    Route::prefix('dev')->group(function () {
+        Route::prefix('translator')->group(function () {
+            Route::get('products/description', [TranslatorController::class, 'getProductsDescriptions']);
         });
     });
 });

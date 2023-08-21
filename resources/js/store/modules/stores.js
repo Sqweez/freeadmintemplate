@@ -17,6 +17,7 @@ const storeModule = {
         cities: [],
         store_types: [],
         legal_entities: [],
+        kaspi_entities: [],
     },
     getters: {
         stores: (state) => state.stores,
@@ -36,6 +37,7 @@ const storeModule = {
         legal_entities: (state) => state.legal_entities,
         legal_entity_by_id: (state) => (id) =>
             state.legal_entities.find((l) => l.id === +id),
+        kaspi_entities: (state) => state.kaspi_entities,
     },
     mutations: {
         async [MUTATIONS.DELETE_STORE](state, payload) {
@@ -96,6 +98,9 @@ const storeModule = {
                 return l;
             });
         },
+        SET_KASPI_ENTITIES(state, payload) {
+            state.kaspi_entities = payload;
+        },
     },
     actions: {
         async [ACTIONS.DELETE_STORE]({ commit }, payload) {
@@ -155,6 +160,10 @@ const storeModule = {
                 payload,
             );
             commit('updateBankAccount', data.account);
+        },
+        async GET_KASPI_ENTITIES({ commit }) {
+            const { data } = await axiosClient.get('/v3/kaspi/entity');
+            commit('SET_KASPI_ENTITIES', data.kaspi_entities);
         },
     },
 };

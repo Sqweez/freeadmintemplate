@@ -31,8 +31,7 @@ class KaspiController extends Controller {
 
     public function getProductsXML() {
         $xmlContent =  $this->getKaspiXML($this->getProducts());
-        $xmlContent = str_replace('&', '&amp;', $xmlContent);
-        return $xmlContent;
+        return str_replace('&', '&amp;', $xmlContent);
     }
 
     private function storeXML($xmlContent, $path = 'kaspi\xml\kaspi_products.xml'): Response {

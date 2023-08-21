@@ -9,6 +9,7 @@ use App\ProductBatch;
 use App\Tag;
 use App\v2\Models\AttributeValue;
 use App\v2\Models\Image;
+use App\v2\Models\KaspiEntityProduct;
 use App\v2\Models\Product;
 use App\v2\Models\ProductSku;
 use App\v2\Models\Thumb;
@@ -16,44 +17,39 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProductService {
+class ProductService
+{
 
-    public function all(Request $request) {
-        return (ProductSku::with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)
-            ->when($request->has('iherb'), function ($query) {
-                return $query->whereHas('product', function ($subQuery) {
-                    return $subQuery->where('is_iherb', true);
-                });
-            })
-            ->orderBy('product_id')
-            ->orderBy('id')
-            ->get()
-            ->sortBy('product_name')
-        );
+    public function all(Request $request)
+    {
+        return (ProductSku::with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)->when(
+                $request->has('iherb'),
+                function ($query) {
+                    return $query->whereHas('product', function ($subQuery) {
+                        return $subQuery->where('is_iherb', true);
+                    });
+                }
+            )->orderBy('product_id')->orderBy('id')->get()->sortBy('product_name'));
     }
 
-    public function get($id) {
-        return ProductSku::withCount('relativeSku')->whereId($id)->first();
+    public function get($id)
+    {
+        $sku = ProductSku::withCount('relativeSku')->whereId($id)->first();
+        $sku->load('product.kaspi_price');
+        return $sku;
     }
 
-    public function search(string $search) {
-        return (ProductSku::with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)
-            ->where(function ($q) use ($search) {
+    public function search(string $search)
+    {
+        return (ProductSku::with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)->where(function ($q) use ($search) {
                 $q->whereHas('product', function ($query) use ($search) {
-                    return $query
-                        ->where('product_name', 'like', $search);
-                })
-                ->orWhere('product_barcode', 'like', $search);
-            })
-
-            ->orderBy('product_id')
-            ->orderBy('id')
-            ->get()
-            ->sortBy('product_name')
-        );
+                    return $query->where('product_name', 'like', $search);
+                })->orWhere('product_barcode', 'like', $search);
+            })->orderBy('product_id')->orderBy('id')->get()->sortBy('product_name'));
     }
 
-    public function create(array $_product, array $_attributes) {
+    public function create(array $_product, array $_attributes)
+    {
         try {
             DB::beginTransaction();
             $product = Product::create($_product);
@@ -71,7 +67,8 @@ class ProductService {
         }
     }
 
-    public function attachTags($products, $tags) {
+    public function attachTags($products, $tags)
+    {
         $_tags = collect($tags)->map(function ($i) {
             unset($i['id']);
             return Tag::whereName($i['name'])->firstOrCreate($i)->id;
@@ -81,7 +78,8 @@ class ProductService {
         });
     }
 
-    private function createTags(Product $product) {
+    private function createTags(Product $product)
+    {
         $tags = [];
         array_push($tags, ['name' => $product->product_name]);
         array_push($tags, ['name' => $product->manufacturer->manufacturer_name]);
@@ -93,7 +91,8 @@ class ProductService {
         return $tags;
     }
 
-    public function updateProduct(Product $product, array $_attributes, array $fields) {
+    public function updateProduct(Product $product, array $_attributes, array $fields)
+    {
         try {
             DB::beginTransaction();
             $product->update($_attributes);
@@ -107,10 +106,10 @@ class ProductService {
                 'stacktrace' => $e->getTraceAsString()
             ], 412);
         }
-
     }
 
-    public function createSku(Product $product, array $_attributes) {
+    public function createSku(Product $product, array $_attributes)
+    {
         try {
             DB::beginTransaction();
             $product_sku = $this->createProductSku($product, $_attributes);
@@ -129,7 +128,8 @@ class ProductService {
         }
     }
 
-    public function updateSku(ProductSku $productSku, array $_attributes) {
+    public function updateSku(ProductSku $productSku, array $_attributes)
+    {
         try {
             DB::beginTransaction();
             $productSku->update([
@@ -146,52 +146,71 @@ class ProductService {
         }
     }
 
-    private function updateProductRelations(Product $product, array $fields) {
+    private function updateProductRelations(Product $product, array $fields)
+    {
         $tags = $this->createTags($product);
         $this->syncTags($product, array_merge($fields[Product::TAG], $tags));
         $this->syncProductImages($product, $fields[Product::PRODUCT_IMAGES]);
         $this->syncProductThumbs($product, $fields[Product::PRODUCT_THUMBS]);
         $this->syncProductPrices($product, $fields[Product::PRICE]);
-        $this->syncAttributes($product, $this->getProductAttributes($product->grouping_attribute_id, $fields[Product::ATTRIBUTES]));
+        $this->syncAttributes(
+            $product,
+            $this->getProductAttributes($product->grouping_attribute_id, $fields[Product::ATTRIBUTES])
+        );
         $this->syncAdditionalSubcategories($product, $fields['additional_subcategories']);
+        $this->syncKaspiPrices($product, $fields['kaspi_price']);
         $product->push();
     }
 
-    private function syncAdditionalSubcategories(Product $product, array $subcategories) {
+    private function syncKaspiPrices(Product $product, array $prices)
+    {
+        foreach ($prices as $price) {
+            KaspiEntityProduct::query()
+                ->updateOrCreate([
+                    'kaspi_entity_id' => $price['kaspi_entity_id'],
+                    'product_id' => $product->id,
+                ],[
+                    'is_visible' => $price['is_visible'],
+                    'price' => $price['price']
+                ]);
+        }
+    }
+
+    private function syncAdditionalSubcategories(Product $product, array $subcategories)
+    {
         $product->additionalSubcategories()->sync($subcategories);
     }
 
-    private function updateProductSkuRelations(ProductSku $productSku, array $fields, $attribute_id) {
+    private function updateProductSkuRelations(ProductSku $productSku, array $fields, $attribute_id)
+    {
         $this->syncProductImages($productSku, $fields[ProductSku::PRODUCT_SKU_IMAGES]);
         $this->syncProductThumbs($productSku, $fields[ProductSku::PRODUCT_SKU_THUMBS]);
         $this->syncAttributes($productSku, $this->getProductSkuAttributes($attribute_id, $fields[Product::ATTRIBUTES]));
         $productSku->push();
     }
 
-    public function createProductSku(Product $product, array $fields): ProductSku {
+    public function createProductSku(Product $product, array $fields): ProductSku
+    {
         $fields['product_id'] = $product->id;
         return ProductSku::create($fields);
     }
 
-    private function getProductAttributes($id, array $attributes): array {
-        return collect($attributes)
-            ->filter(function ($attr) use ($id) {
+    private function getProductAttributes($id, array $attributes): array
+    {
+        return collect($attributes)->filter(function ($attr) use ($id) {
                 return $attr['attribute_id'] !== $id;
-            })
-            ->values()
-            ->all();
+            })->values()->all();
     }
 
-    private function getProductSkuAttributes($id, array $attributes) {
-        return collect($attributes)
-            ->filter(function ($attr) use ($id) {
+    private function getProductSkuAttributes($id, array $attributes)
+    {
+        return collect($attributes)->filter(function ($attr) use ($id) {
                 return $attr['attribute_id'] === $id;
-            })
-            ->values()
-            ->all();
+            })->values()->all();
     }
 
-    private function syncTags(Product $product, $tags) {
+    private function syncTags(Product $product, $tags)
+    {
         $tags = collect($tags)->map(function ($i) {
             unset($i['id']);
             return Tag::whereName($i['name'])->firstOrCreate($i)->id;
@@ -200,11 +219,14 @@ class ProductService {
         $product->tags()->sync($tags);
     }
 
-    private function syncAttributes($product, array $attributes) {
+    private function syncAttributes($product, array $attributes)
+    {
         $attributes = collect($attributes)->map(function ($i) {
             $attributeValueQuery = AttributeValue::query();
-            $attributeValueQuery->where('attribute_value', 'like' ,  "%" . $i['attribute_value'] . "%")
-                ->where('attribute_id', $i['attribute_id']);
+            $attributeValueQuery->where('attribute_value', 'like', "%" . $i['attribute_value'] . "%")->where(
+                    'attribute_id',
+                    $i['attribute_id']
+                );
             return $attributeValueQuery->firstOrCreate($i)->id;
         });
 
@@ -212,7 +234,8 @@ class ProductService {
         $product->attributes()->sync($attributes);
     }
 
-    private function syncProductImages($product, array $images) {
+    private function syncProductImages($product, array $images)
+    {
         $images = collect($images)->map(function ($i) {
             return Image::whereImage($i['image'])->firstOrCreate($i)->id;
         });
@@ -220,7 +243,8 @@ class ProductService {
         $product->product_images()->sync($images);
     }
 
-    private function syncProductThumbs($product, array $images) {
+    private function syncProductThumbs($product, array $images)
+    {
         $images = collect($images)->map(function ($i) {
             return Thumb::whereImage($i['image'])->firstOrCreate($i)->id;
         });
@@ -228,7 +252,8 @@ class ProductService {
         $product->product_thumbs()->sync($images);
     }
 
-    private function syncProductPrices(Product $product, array $prices) {
+    private function syncProductPrices(Product $product, array $prices)
+    {
         Price::where('product_id', $product->id)->delete();
         $product_id = $product->id;
         collect($prices)->each(function ($price) use ($product_id) {
@@ -240,7 +265,8 @@ class ProductService {
         });
     }
 
-    public function getProductFields(Request $request): array{
+    public function getProductFields(Request $request): array
+    {
         $product = $request->only([
             Product::PRODUCT_NAME,
             Product::PRODUCT_DESCRIPTION,
@@ -266,7 +292,8 @@ class ProductService {
         return $product;
     }
 
-    public function getRelationFields(Request $request): array {
+    public function getRelationFields(Request $request): array
+    {
         return $request->only([
             Product::TAG,
             Product::ATTRIBUTES,
@@ -275,14 +302,16 @@ class ProductService {
             Product::PRICE,
             Product::PRODUCT_BARCODE,
             'additional_subcategories',
-            ProductSku::MARGIN_TYPE_ID
+            ProductSku::MARGIN_TYPE_ID,
+            'kaspi_price'
 
-         /*   ProductSku::PRODUCT_SKU_IMAGES,
-            ProductSku::PRODUCT_SKU_THUMBS*/
+            /*   ProductSku::PRODUCT_SKU_IMAGES,
+               ProductSku::PRODUCT_SKU_THUMBS*/
         ]);
     }
 
-    public function getSkuFields(Request $request): array {
+    public function getSkuFields(Request $request): array
+    {
         return $request->only([
             Product::ATTRIBUTES,
             Product::PRODUCT_BARCODE,
@@ -292,19 +321,19 @@ class ProductService {
         ]);
     }
 
-    private function getSkuAttributes($_fields): array {
-        return collect($_fields)
-            ->only([Product::PRODUCT_BARCODE])
-            ->values()
-            ->all();
+    private function getSkuAttributes($_fields): array
+    {
+        return collect($_fields)->only([Product::PRODUCT_BARCODE])->values()->all();
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         ProductSku::find($id)->delete();
     }
 
 
-    public function addQuantity($product_id, $store_id, $quantity, $purchase_price) {
+    public function addQuantity($product_id, $store_id, $quantity, $purchase_price)
+    {
         return ProductBatch::create([
             'product_id' => $product_id,
             'store_id' => $store_id,
@@ -314,7 +343,8 @@ class ProductService {
     }
 
 
-    public function getQuantityByProduct($product_id, $store_id) {
+    public function getQuantityByProduct($product_id, $store_id)
+    {
         return ProductSku::find($product_id)->getQuantity($store_id);
     }
 }

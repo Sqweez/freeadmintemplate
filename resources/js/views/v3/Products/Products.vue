@@ -30,7 +30,7 @@
                                 v-model="searchValue"
                                 clearable
                                 label="Поиск товара"
-                           />
+                            />
                         </v-col>
                         <v-col cols="12" xl="4">
                             <v-select
@@ -172,7 +172,7 @@
                                             <v-icon color="error" v-else>mdi-close</v-icon>
                                         </v-list-item-title>
                                         <v-list-item-subtitle>
-                                           Товар IHerb
+                                            Товар IHerb
                                         </v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
@@ -190,7 +190,8 @@
                                                 <v-list-item-content>
                                                     <v-list-item-title>{{ quantity.quantity }} шт</v-list-item-title>
                                                     <v-list-item-title
-                                                        class="font-weight-black">{{ quantity.name }}</v-list-item-title>
+                                                        class="font-weight-black">{{ quantity.name }}
+                                                    </v-list-item-title>
                                                 </v-list-item-content>
                                             </v-list-item>
                                         </v-list>
@@ -198,7 +199,8 @@
                                             <v-list-item>
                                                 <v-list-item-content>
                                                     <v-list-item-title>0 шт</v-list-item-title>
-                                                    <v-list-item-title class="font-weight-black">Всего</v-list-item-title>
+                                                    <v-list-item-title class="font-weight-black">Всего
+                                                    </v-list-item-title>
                                                 </v-list-item-content>
                                             </v-list-item>
                                         </v-list>
@@ -215,7 +217,8 @@
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <v-btn v-if="!item.sku_can_be_created" color="warning" @click="showProductModal(item.id, 'editProduct')">
+                                <v-btn v-if="!item.sku_can_be_created" color="warning"
+                                       @click="showProductModal(item.id, 'editProduct')">
                                     Ассортимент
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
@@ -238,7 +241,8 @@
                                     Количество
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
-                                <v-btn v-if="!item.sku_can_be_created" color="warning" @click="showProductModal(item.id, 'editProduct')">
+                                <v-btn v-if="!item.sku_can_be_created" color="warning"
+                                       @click="showProductModal(item.id, 'editProduct')">
                                     Ассортимент
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
@@ -285,7 +289,8 @@
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
                                 </div>
-                                <v-btn color="primary" @click="currentProduct = {...item}; showProductPrintModal = true;">
+                                <v-btn color="primary"
+                                       @click="currentProduct = {...item}; showProductPrintModal = true;">
                                     Печать этикеток
                                     <v-icon>mdi-print</v-icon>
                                 </v-btn>
@@ -349,380 +354,389 @@ import SkuModal from "@/components/v2/Modal/SkuModal";
 import ProductPrintModal from '@/components/Modal/ProductPrintModal';
 
 export default {
-        components: {
-            ProductPrintModal,
-            SkuModal,
-            PriceTagModal,
-            ProductModal,
-            ConfirmationModal,
-            ProductQuantityModal,
-            ProductRangeModal
+    components: {
+        ProductPrintModal,
+        SkuModal,
+        PriceTagModal,
+        ProductModal,
+        ConfirmationModal,
+        ProductQuantityModal,
+        ProductRangeModal
+    },
+    async created() {
+        this.showMainProducts = !!this.IS_MODERATOR;
+        try {
+            this.$loading.enable();
+            await this.$store.dispatch('GET_PRODUCTS_v2');
+            const store_id = this.IS_SUPERUSER ? null : this.user.store_id;
+            await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
+            this.storeFilter = -1;
+        } catch (e) {
+            console.log(e.response);
+        } finally {
+            this.$loading.disable();
+        }
+
+        await Promise.all([
+            this.$store.dispatch(ACTIONS.GET_CATEGORIES),
+            this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+            this.$store.dispatch(ACTIONS.GET_ATTRIBUTES),
+            this.$store.dispatch(ACTIONS.GET_SUPPLIERS),
+            this.$store.dispatch('GET_KASPI_ENTITIES')
+        ])
+        ;
+
+        /* await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+         await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
+         await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
+         await this.$store.dispatch(ACTIONS.GET_SUPPLIERS);*/
+    },
+    data: () => ({
+        showProductPrintModal: false,
+        currentProduct: {},
+        priceTagModal: false,
+        waitingQuantities: false,
+        loading: false,
+        options: {},
+        productModal: false,
+        productRangeModal: false,
+        productQuantityModal: false,
+        pageCount: 1,
+        deleteModal: false,
+        modalText: 'Вы действительно хотите удалить выбранный товар?',
+        productId: null,
+        storeFilter: null,
+        rangeMode: false,
+        priceTag: {},
+        pagination: {
+            ascending: true,
+            rowsPerPage: 10,
+            page: 1
         },
-        async created() {
-            this.showMainProducts = !!this.IS_MODERATOR;
+        photoFilter: 0,
+        photoFilters: [
+            {
+                name: 'Все товары',
+                id: 0,
+            },
+            {
+                name: 'Товары без фото',
+                id: 1,
+            },
+            {
+                name: 'Товары с фото',
+                id: 2,
+            },
+        ],
+        hideNotInStock: false,
+        manufacturerId: -1,
+        categoryId: -1,
+        subcategoryId: -1,
+        currentMarginType: -1,
+        kaspiVisibleFilters: [
+            {
+                id: -1,
+                text: 'Не важно'
+            },
+            {
+                id: true,
+                text: 'Да'
+            },
+            {
+                id: false,
+                text: 'Нет'
+            },
+        ],
+        isKaspiVisibleFilter: -1,
+        showMainProducts: false,
+    }),
+    computed: {
+        marginTypes() {
+            return [{id: -1, title: 'Все'}, ...this.$store.getters.MARGIN_TYPES];
+        },
+        manufacturers() {
+            return [
+                {
+                    id: -1,
+                    manufacturer_name: 'Все'
+                },
+                ...this.$store.getters.manufacturers
+            ];
+        },
+        quantities() {
+            return this.$store.getters.QUANTITIES_v2;
+        },
+        products() {
+            let products = this.showMainProducts ? this.$store.getters.MAIN_PRODUCTS_v2 : this.$store.getters.PRODUCTS_v2;
+            if (this.hideNotInStock) {
+                if (this.storeFilter !== -1) {
+                    products = products.filter(product => product.quantity > 0);
+                } else {
+                    products = products.filter(product => {
+                        const qnts = this.quantities[product.id];
+                        if (!qnts) {
+                            return false;
+                        }
+                        const total = qnts.reduce((a, c) => {
+                            return a + c.quantity;
+                        }, 0);
+                        return total > 0;
+                    })
+                }
+            }
+
+            if (this.manufacturerId !== -1) {
+                products = products.filter(p => p.manufacturer.id === this.manufacturerId);
+            }
+
+            if (this.categoryId !== -1) {
+                products = products.filter(p => p.category.id === this.categoryId);
+            }
+
+            if (this.subcategoryId !== -1) {
+                products = products.filter(p => p.subcategory_id === this.subcategoryId);
+            }
+
+            if (this.currentMarginType !== -1) {
+                products = products.filter(p => p.margin_type.id === this.currentMarginType);
+            }
+
+            if (this.isKaspiVisibleFilter !== -1) {
+                products = products.filter(p => p.is_kaspi_visible === this.isKaspiVisibleFilter);
+            }
+
+            return products;
+        },
+        stores() {
+            return [{
+                name: 'Все',
+                id: -1
+            }, ...this.$store.getters.stores];
+        },
+        categories() {
+            return [{
+                id: -1,
+                name: 'Все'
+            }, ...this.$store.getters.categories];
+        },
+        subcategories() {
+            return [
+                {
+                    id: -1,
+                    subcategory_name: 'Все'
+                }, ...this.categories
+                    .find(c => c.id === this.categoryId)
+                    .subcategories || []];
+        },
+        totalProducts() {
+            return this.$store.getters.totalProducts;
+        },
+        user() {
+            return this.$store.getters.USER;
+        },
+        is_admin() {
+            return this.$store.getters.IS_ADMIN || this.$store.getters.IS_STOREKEEPER;
+        },
+        headers() {
+            let headers = [
+                {
+                    value: 'product_name',
+                    text: 'Наименование',
+                    sortable: true,
+                },
+                {
+                    value: 'quantity',
+                    text: 'Остаток'
+                },
+                {
+                    value: 'product_price',
+                    text: 'Стоимость'
+                },
+                {
+                    value: 'product_barcode',
+                    text: 'Штрих-код',
+                    align: ' d-none'
+                },
+                {
+                    value: 'attributes',
+                    text: 'Атрибуты'
+                },
+                {
+                    value: 'manufacturer',
+                    text: 'Производитель'
+                },
+                {
+                    value: 'manufacturer.manufacturer_name',
+                    text: 'Название производителя',
+                    align: ' d-none'
+                },
+                {
+                    value: 'category',
+                    text: 'Категория'
+                },
+                {
+                    value: 'additional_data',
+                    text: 'Доп данные'
+                }
+            ];
+
+            if (this.is_admin || this.IS_BOSS || this.IS_SENIOR_SELLER || this.IS_MODERATOR || this.IS_FRANCHISE) {
+                headers.unshift({
+                    value: 'actions',
+                    text: 'Действие',
+                    sortable: false
+                });
+
+                headers.unshift({
+                    value: 'id',
+                    text: 'ID',
+                    sortable: true
+                })
+            }
+
+            if (this.IS_MODERATOR) {
+                headers = headers.filter(h => !['quantity', 'additional_data'].includes(h.value));
+            }
+
+            if (!this.IS_SUPERUSER) {
+                headers = headers.filter(h => h.value !== 'product_name_web');
+            }
+
+            return headers;
+        },
+    },
+    methods: {
+        getQuantities(id) {
+            let qnt = this.quantities[id];
+            if (!this.IS_SUPERUSER) {
+                qnt = qnt.filter(q => {
+                    return [-1, 1, 6, this.user.store_id].includes(q.store_id);
+                });
+                qnt = qnt.map(q => {
+                    if (q.store_id === -1) {
+                        q.quantity = qnt.filter(q => q.store_id !== -1).reduce((a, c) => {
+                            return a + c.quantity;
+                        }, 0)
+                        console.log(q);
+                    }
+                    return q;
+                })
+            }
+
+            return qnt;
+        },
+        async exportProductBatches() {
+            this.loading = true;
+            const {data} = await axios.get('/api/v2/documents/batches/purchases');
+            const link = document.createElement('a');
+            link.href = data.path;
+            link.click();
+            this.loading = false;
+        },
+        async changeCount(id, increment) {
+            const params = {
+                product_id: id,
+                increment,
+                store_id: this.storeFilter
+            };
+
             try {
-                this.$loading.enable();
-                await this.$store.dispatch('GET_PRODUCTS_v2');
-                const store_id = this.IS_SUPERUSER ? null : this.user.store_id;
-                await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
-                this.storeFilter = -1;
+                const result = await this.$store.dispatch('CHANGE_COUNT_v2', params);
+            } catch (e) {
+                if (increment === 1) {
+                    this.productId = id;
+                    this.productQuantityModal = true;
+                }
+            }
+        },
+        async deleteProduct() {
+            try {
+                await this.$store.dispatch('DELETE_PRODUCT_v2',
+                    this.productId,
+                );
+                this.$toast.success('Товар успешно удален');
             } catch (e) {
                 console.log(e.response);
+                this.$toast.error('Произошла ошибка');
             } finally {
-                this.$loading.disable();
+                this.productId = null;
+                this.deleteModal = false;
+            }
+        },
+        async groupProduct() {
+            await axios.get('/api/v2/products/group');
+            this.$toast.success('Товары успешно сгруппированы!')
+        },
+        updatePage(page) {
+
+        },
+        onCloseProductModal(event) {
+            if (event === PRODUCT_MODAL_EVENTS.ADD_PRODUCT) {
+                this.pagination.page = this.pageCount;
             }
 
-            await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
-            await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
-            await this.$store.dispatch(ACTIONS.GET_ATTRIBUTES);
-            await this.$store.dispatch(ACTIONS.GET_SUPPLIERS);
+            this.closeProductModal();
         },
-        data: () => ({
-            showProductPrintModal: false,
-            currentProduct: {},
-            priceTagModal: false,
-            waitingQuantities: false,
-            loading: false,
-            options: {},
-            productModal: false,
-            productRangeModal: false,
-            productQuantityModal: false,
-            pageCount: 1,
-            deleteModal: false,
-            modalText: 'Вы действительно хотите удалить выбранный товар?',
-            productId: null,
-            storeFilter: null,
-            rangeMode: false,
-            priceTag: {},
-            pagination: {
-                ascending: true,
-                rowsPerPage: 10,
-                page: 1
-            },
-            photoFilter: 0,
-            photoFilters: [
-                {
-                    name: 'Все товары',
-                    id: 0,
-                },
-                {
-                    name: 'Товары без фото',
-                    id: 1,
-                },
-                {
-                    name: 'Товары с фото',
-                    id: 2,
-                },
-            ],
-            hideNotInStock: false,
-            manufacturerId: -1,
-            categoryId: -1,
-            subcategoryId: -1,
-            currentMarginType: -1,
-            kaspiVisibleFilters: [
-                {
-                    id: -1,
-                    text: 'Не важно'
-                },
-                {
-                    id: true,
-                    text: 'Да'
-                },
-                {
-                    id: false,
-                    text: 'Нет'
-                },
-            ],
-            isKaspiVisibleFilter: -1,
-            showMainProducts: false,
-        }),
-        computed: {
-            marginTypes () {
-                return [{id: -1, title: 'Все'}, ...this.$store.getters.MARGIN_TYPES];
-            },
-            manufacturers() {
-                return [
-                    {
-                        id: -1,
-                        manufacturer_name: 'Все'
-                    },
-                    ...this.$store.getters.manufacturers
-                ];
-            },
-            quantities() {
-                return this.$store.getters.QUANTITIES_v2;
-            },
-            products() {
-                let products = this.showMainProducts ? this.$store.getters.MAIN_PRODUCTS_v2 : this.$store.getters.PRODUCTS_v2;
-                if (this.hideNotInStock) {
-                    if (this.storeFilter !== -1) {
-                        products = products.filter(product => product.quantity > 0);
-                    } else {
-                        products = products.filter(product => {
-                            const qnts = this.quantities[product.id];
-                            if (!qnts) {
-                                return false;
-                            }
-                            const total = qnts.reduce((a, c) => {
-                                return a + c.quantity;
-                            }, 0);
-                            return total > 0;
-                        })
-                    }
-                }
-
-                if (this.manufacturerId !== -1) {
-                    products = products.filter(p => p.manufacturer.id === this.manufacturerId);
-                }
-
-                if (this.categoryId !== -1) {
-                    products = products.filter(p => p.category.id === this.categoryId);
-                }
-
-                if (this.subcategoryId !== -1) {
-                    products = products.filter(p => p.subcategory_id === this.subcategoryId);
-                }
-
-                if (this.currentMarginType !== -1) {
-                    products = products.filter(p => p.margin_type.id === this.currentMarginType);
-                }
-
-                if (this.isKaspiVisibleFilter !== -1) {
-                    products = products.filter(p => p.is_kaspi_visible === this.isKaspiVisibleFilter);
-                }
-
-                return products;
-            },
-            stores() {
-                return [{
-                    name: 'Все',
-                    id: -1
-                }, ...this.$store.getters.stores];
-            },
-            categories() {
-                return [{
-                    id: -1,
-                    name: 'Все'
-                }, ...this.$store.getters.categories];
-            },
-            subcategories() {
-                return [
-                    {
-                        id: -1,
-                        subcategory_name: 'Все'
-                    }, ...this.categories
-                        .find(c => c.id === this.categoryId)
-                        .subcategories || []];
-            },
-            totalProducts() {
-                return this.$store.getters.totalProducts;
-            },
-            user() {
-                return this.$store.getters.USER;
-            },
-            is_admin() {
-                return this.$store.getters.IS_ADMIN || this.$store.getters.IS_STOREKEEPER;
-            },
-            headers() {
-                let headers = [
-                    {
-                        value: 'product_name',
-                        text: 'Наименование',
-                        sortable: true,
-                    },
-                    {
-                        value: 'quantity',
-                        text: 'Остаток'
-                    },
-                    {
-                        value: 'product_price',
-                        text: 'Стоимость'
-                    },
-                    {
-                        value: 'product_barcode',
-                        text: 'Штрих-код',
-                        align: ' d-none'
-                    },
-                    {
-                        value: 'attributes',
-                        text: 'Атрибуты'
-                    },
-                    {
-                        value: 'manufacturer',
-                        text: 'Производитель'
-                    },
-                    {
-                        value: 'manufacturer.manufacturer_name',
-                        text: 'Название производителя',
-                        align: ' d-none'
-                    },
-                    {
-                        value: 'category',
-                        text: 'Категория'
-                    },
-                    {
-                        value: 'additional_data',
-                        text: 'Доп данные'
-                    }
-                ];
-
-                if (this.is_admin || this.IS_BOSS || this.IS_SENIOR_SELLER || this.IS_MODERATOR || this.IS_FRANCHISE) {
-                    headers.unshift({
-                        value: 'actions',
-                        text: 'Действие',
-                        sortable: false
-                    });
-
-                    headers.unshift({
-                        value: 'id',
-                        text: 'ID',
-                        sortable: true
-                    })
-                }
-
-                if (this.IS_MODERATOR) {
-                    headers = headers.filter(h => !['quantity', 'additional_data'].includes(h.value));
-                }
-
-                if (!this.IS_SUPERUSER) {
-                    headers = headers.filter(h => h.value !== 'product_name_web');
-                }
-
-                return headers;
-            },
-        },
-        methods: {
-            getQuantities(id) {
-                let qnt = this.quantities[id];
-                if (!this.IS_SUPERUSER) {
-                    qnt = qnt.filter(q => {
-                        return [-1, 1, 6, this.user.store_id].includes(q.store_id);
-                    });
-                    qnt = qnt.map(q => {
-                        if (q.store_id === -1) {
-                            q.quantity = qnt.filter(q => q.store_id !== -1).reduce((a, c) => {
-                                return a + c.quantity;
-                            }, 0)
-                            console.log(q);
-                        }
-                        return q;
-                    })
-                }
-
-                return qnt;
-            },
-            async exportProductBatches() {
-                this.loading = true;
-                const {data} = await axios.get('/api/v2/documents/batches/purchases');
-                const link = document.createElement('a');
-                link.href = data.path;
-                link.click();
-                this.loading = false;
-            },
-            async changeCount(id, increment) {
-                const params = {
-                    product_id: id,
-                    increment,
-                    store_id: this.storeFilter
-                };
-
-                try {
-                    const result = await this.$store.dispatch('CHANGE_COUNT_v2', params);
-                } catch (e) {
-                    if (increment === 1) {
-                        this.productId = id;
-                        this.productQuantityModal = true;
-                    }
-                }
-            },
-            async deleteProduct() {
-                try {
-                    await this.$store.dispatch('DELETE_PRODUCT_v2',
-                        this.productId,
-                    );
-                    this.$toast.success('Товар успешно удален');
-                } catch (e) {
-                    console.log(e.response);
-                    this.$toast.error('Произошла ошибка');
-                } finally {
-                    this.productId = null;
-                    this.deleteModal = false;
-                }
-            },
-            async groupProduct() {
-                await axios.get('/api/v2/products/group');
-                this.$toast.success('Товары успешно сгруппированы!')
-            },
-            updatePage(page) {
-
-            },
-            onCloseProductModal(event) {
-                if (event === PRODUCT_MODAL_EVENTS.ADD_PRODUCT) {
-                    this.pagination.page = this.pageCount;
-                }
-
-                this.closeProductModal();
-            },
-            async showProductModal(id = null, action = PRODUCT_MODAL_EVENTS.ADD_PRODUCT) {
-                if (id !== null) {
-                    this.productId = id;
-                    await this.$store.dispatch('GET_PRODUCT_v2', id);
-                }
-                return this.$store.commit('modals/showProductModal', {
-                    id, action
-                });
-            },
-            closeProductModal() {
-                return this.$store.commit('modals/closeProductModal');
-            },
-            async showProductSkuModal(id = null, edit = false) {
-                if (id === null) {
-                    return false
-                }
+        async showProductModal(id = null, action = PRODUCT_MODAL_EVENTS.ADD_PRODUCT) {
+            if (id !== null) {
+                this.productId = id;
                 await this.$store.dispatch('GET_PRODUCT_v2', id);
-                return this.$store.commit('modals/showProductSkuModal', {
-                    id, edit
-                });
-            },
-            async addProductQuantity(batch) {
-                try {
-                    await this.$store.dispatch('ADD_PRODUCT_QUANTITY_v2', {
-                        id: this.productId,
-                        batch,
-                        store_id: this.storeFilter,
-                    });
-                    this.$toast.success('Количество товар успешно изменено!');
-                } catch (e) {
-                    this.$toast.error('При добавлении количества произошла ошибка');
-                } finally {
-                    this.productId = false;
-                    this.productQuantityModal = false;
-                }
             }
+            return this.$store.commit('modals/showProductModal', {
+                id, action
+            });
         },
-        mixins: [product, product_search]
-    }
+        closeProductModal() {
+            return this.$store.commit('modals/closeProductModal');
+        },
+        async showProductSkuModal(id = null, edit = false) {
+            if (id === null) {
+                return false
+            }
+            await this.$store.dispatch('GET_PRODUCT_v2', id);
+            return this.$store.commit('modals/showProductSkuModal', {
+                id, edit
+            });
+        },
+        async addProductQuantity(batch) {
+            try {
+                await this.$store.dispatch('ADD_PRODUCT_QUANTITY_v2', {
+                    id: this.productId,
+                    batch,
+                    store_id: this.storeFilter,
+                });
+                this.$toast.success('Количество товар успешно изменено!');
+            } catch (e) {
+                this.$toast.error('При добавлении количества произошла ошибка');
+            } finally {
+                this.productId = false;
+                this.productQuantityModal = false;
+            }
+        }
+    },
+    mixins: [product, product_search]
+}
 </script>
 
 <style>
-    .actions-products__container {
-        display: flex;
-        flex-direction: column;
-        row-gap: 10px;
-        margin-bottom: 10px;
-        width: 200px;
-    }
+.actions-products__container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    margin-bottom: 10px;
+    width: 200px;
+}
 
-    .v-data-table__mobile-row:first-child > .v-data-table__mobile-row__header {
-        display: none;
-    }
+.v-data-table__mobile-row:first-child > .v-data-table__mobile-row__header {
+    display: none;
+}
 
-    .v-data-table__mobile-row:first-child > .v-data-table__mobile-row__cell {
-        width: 100%;
-    }
+.v-data-table__mobile-row:first-child > .v-data-table__mobile-row__cell {
+    width: 100%;
+}
 
-    .v-data-table__mobile-row .actions-products__container {
-        margin-top: 10px;
-        width: 100%;
-    }
+.v-data-table__mobile-row .actions-products__container {
+    margin-top: 10px;
+    width: 100%;
+}
 </style>
