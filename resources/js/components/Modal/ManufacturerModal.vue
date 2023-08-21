@@ -1,5 +1,5 @@
 <template>
-    <base-modal :state="state" max-width="700" persistent :title="editMode ? 'Редактирование производителя' : 'Создание производителя'">
+    <base-modal :state="state" :max-width="700" persistent :title="editMode ? 'Редактирование производителя' : 'Создание производителя'">
         <template #default>
             <v-form>
                 <v-text-field
@@ -43,11 +43,10 @@
 </template>
 
 <script>
-    import uploadFile from "@/api/upload";
-    import ACTIONS from "@/store/actions";
-    import {__deepClone, createObjectURL, toFormData} from '@/utils/helpers';
+import ACTIONS from "@/store/actions";
+import {__deepClone, createObjectURL, toFormData} from '@/utils/helpers';
 
-    export default {
+export default {
         props: {
             state: {
                 type: Boolean,

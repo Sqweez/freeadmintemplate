@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -135,6 +136,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereIsDubai($value)
  * @method static Builder|Product whereIsIherbHit($value)
  * @method static Builder|Product whereProductPriceRub($value)
+ * @property string|null $product_description_kaz
+ * @property-read Collection|\App\v2\Models\KaspiEntityProduct[] $kaspi_price
+ * @property-read int|null $kaspi_price_count
+ * @method static Builder|Product whereProductDescriptionKaz($value)
  */
 class Product extends Model
 {
@@ -296,6 +301,11 @@ class Product extends Model
 
     public function favorite() {
         return $this->hasOne('App\v2\Models\Favorite', 'product_id');
+    }
+
+    public function kaspi_price(): HasMany
+    {
+        return $this->hasMany(KaspiEntityProduct::class, 'product_id');
     }
 
 

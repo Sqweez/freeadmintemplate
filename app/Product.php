@@ -2,8 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\v2\Models\KaspiEntityProduct;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -103,6 +105,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Product whereIsDubai($value)
  * @method static Builder|Product whereIsIherbHit($value)
  * @method static Builder|Product whereProductPriceRub($value)
+ * @property string|null $product_description_kaz
+ * @property-read \Illuminate\Database\Eloquent\Collection|KaspiEntityProduct[] $kaspi_price
+ * @property-read int|null $kaspi_price_count
+ * @method static Builder|Product whereProductDescriptionKaz($value)
  */
 class Product extends Model {
 
@@ -170,6 +176,11 @@ class Product extends Model {
 
     public function price() {
         return $this->hasMany('App\Price', 'product_id');
+    }
+
+    public function kaspi_price(): HasMany
+    {
+        return $this->hasMany(KaspiEntityProduct::class, 'product_id');
     }
 
     public function getCurrentPriceAttribute() {

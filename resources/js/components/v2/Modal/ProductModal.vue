@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="SHOW_MODAL" max-width="1200" persistent>
+    <v-dialog v-model="SHOW_MODAL" :max-width="1200" persistent>
         <v-card>
             <v-card-title class="headline justify-space-between">
                 <span class="white--text">{{ getModalTitle }} товара v2</span>
@@ -153,7 +153,31 @@
                         :disabled="!IS_SUPERUSER"
                         v-model.number="product_price"
                         type="number"/>
-                    <v-text-field
+
+                    <div v-if="IS_SUPERUSER">
+                        <v-divider />
+                        <h5>
+                            Каспи:
+                        </h5>
+                        <div v-for="(entity, key) of kaspi_price" :key="`entity-${key}`" class="ml-4">
+                            <h6>
+                                {{ entity.name }}
+                            </h6>
+                            <v-text-field
+                                label="Стоимость на каспи"
+                                type="text"
+                                v-model="kaspi_price[key].price"
+                            />
+                            <v-checkbox
+                                label="Виден на каспи"
+                                v-model="kaspi_price[key].is_visible"
+                            />
+                            <v-divider />
+                        </div>
+                        <v-divider />
+                    </div>
+
+<!--                    <v-text-field
                         label="Стоимость в Kaspi Магазине (ИП Андрей)"
                         :disabled="!IS_SUPERUSER"
                         v-model.number="kaspi_product_price"
@@ -165,7 +189,7 @@
                         :disabled="!IS_SUPERUSER"
                         v-model.number="kaspi_product_price_2"
                         type="number"
-                    />
+                    />-->
                     <v-text-field
                         label="Стоимость Iherb"
                         :disabled="!IS_SUPERUSER"
@@ -472,6 +496,13 @@ export default {
             } else {
                 if (this.id !== null && this.product) {
                     this.assignFields();
+                } else {
+                    this.kaspi_price = this.kaspiEntities.map(e => ({
+                        kaspi_entity_id: e.id,
+                        price: 0,
+                        is_visible: false,
+                        name: e.name,
+                    }))
                 }
             }
         },
@@ -497,6 +528,9 @@ export default {
         },
     },
     computed: {
+        kaspiEntities () {
+            return this.$store.getters.kaspi_entities;
+        },
         currentComment() {
             let comment = this.comments.find(c => c.id == this.commentId);
             if (!comment) {
@@ -641,6 +675,7 @@ export default {
         commentId: null,
         additionalSubcategories: [],
         margin_type_id: null,
+        kaspi_price: [],
     }),
     methods: {
         async generateBarcode() {
@@ -713,6 +748,7 @@ export default {
             this.additionalSubcategories = [];
             this.iherb_price = 0;
             this.margin_type_id = null;
+            this.kaspi_price = [];
         },
         assignFields() {
             this.margin_type_id = this.product.margin_type_id;
@@ -769,6 +805,17 @@ export default {
             this.meta_title = this.product.meta_title;
             this.meta_description = this.product.meta_description;
 
+            this.kaspi_price = this.kaspiEntities.map(e => ({
+                kaspi_entity_id: e.id,
+                name: e.name,
+                price:
+                    this.product.kaspi_price.find(k => k.product_id === this.product.product_id && e.id === k.kaspi_entity_id)
+                    ? this.product.kaspi_price.find(k => k.product_id === this.product.product_id && e.id === k.kaspi_entity_id).price
+                    : 0,
+                is_visible: this.product.kaspi_price.find(k => k.product_id === this.product.product_id && e.id === k.kaspi_entity_id)
+                    ? this.product.kaspi_price.find(k => k.product_id === this.product.product_id && e.id === k.kaspi_entity_id).is_visible
+                    : false
+            }))
 
         },
         getPriceStores(idx) {
@@ -893,7 +940,8 @@ export default {
                 meta_title: this.meta_title,
                 meta_description: this.meta_description,
                 is_dubai: this.is_dubai,
-                margin_type_id: this.margin_type_id
+                margin_type_id: this.margin_type_id,
+                kaspi_price: this.kaspi_price,
             };
         },
         validate(product) {

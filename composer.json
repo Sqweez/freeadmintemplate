@@ -22,7 +22,8 @@
         "milon/barcode": "^6.0",
         "phpoffice/phpspreadsheet": "^1.13",
         "spatie/laravel-backup": "^6.16",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-curl": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "*",
