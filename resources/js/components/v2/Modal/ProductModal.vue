@@ -969,10 +969,10 @@ export default {
                 return false;
             }
 
-            if (!product.kaspi_product_price && product.is_kaspi_visible === true) {
+           /* if (!product.kaspi_product_price && product.is_kaspi_visible === true) {
                 showErrorToast('Cтоимость в Kaspi Магазине');
                 return false;
-            }
+            }*/
 
             if (!product.product_barcode) {
                 showErrorToast('Штрих-код');

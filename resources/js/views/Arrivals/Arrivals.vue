@@ -34,13 +34,18 @@
 </template>
 
 <script>
-    import ArrivalHistory from "@/components/Segments/Arrivals/ArrivalHistory";
-    import CurrentArrivals from "@/components/Segments/Arrivals/CurrentArrivals";
-    import NewArrival from "@/components/Segments/Arrivals/NewArrival";
+import ArrivalHistory from "@/components/Segments/Arrivals/ArrivalHistory";
+import CurrentArrivals from "@/components/Segments/Arrivals/CurrentArrivals";
+import NewArrival from "@/components/Segments/Arrivals/NewArrival";
 
-    export default {
+export default {
         components: {
             ArrivalHistory, CurrentArrivals, NewArrival
+        },
+        async mounted () {
+            await Promise.all([
+                this.$store.dispatch('GET_KASPI_ENTITIES')
+            ])
         },
         data: () => ({
             loading: false,
