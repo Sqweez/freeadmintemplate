@@ -48,16 +48,10 @@ export default {
                 this.cart.push({
                     ...item,
                     count: 1,
-                    product_price: this.getPrice(
-                        item.product_price,
-                        this.storeFilter,
-                    ),
+                    product_price: this.getPrice(item, this.storeFilter),
                     discount: 0,
                     uuid: Math.random(),
-                    initial_price: this.getPrice(
-                        item.product_price,
-                        this.storeFilter,
-                    ),
+                    initial_price: this.getPrice(item, this.storeFilter),
                 });
             } else {
                 this.increaseCartCount(index);
