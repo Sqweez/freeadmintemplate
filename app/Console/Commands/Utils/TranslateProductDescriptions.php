@@ -48,6 +48,7 @@ class TranslateProductDescriptions extends Command
                 $this->line('Осталось: ' . ($products->count() - ($key)));
                 $this->line('Текущий товар: ' . $product->product_name);
                 $result = $this->translationService->translate($product->product_description);
+                $this->line($result);
                 $encoded = json_decode($result);
                 $text = $encoded->translations[0]->text;
                 $product->update([

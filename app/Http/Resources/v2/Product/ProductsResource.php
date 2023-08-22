@@ -42,6 +42,7 @@ class ProductsResource extends JsonResource
             })),
             'product_barcode' => $this->product_barcode,
             'product_price' => $this->product_price,
+            'base_price' => $this->product_price,
             'product_price_rub' => $this->product->product_price_rub,
             'quantity' => 0,
             'sku_can_be_created' => !!$this->grouping_attribute_id,

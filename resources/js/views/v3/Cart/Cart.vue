@@ -605,7 +605,7 @@
                         </v-list>
                     </template>
                     <template v-slot:item.product_price="{ item }">
-                        {{ item.product_price | priceFilters }}
+                        {{ getPrice(item) | priceFilters }}
                     </template>
                     <template v-slot:item.attributes="{ item }">
                         {{ item.attributes.map(a => a.attribute_value).join(', ') }}
