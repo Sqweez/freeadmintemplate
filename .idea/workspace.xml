@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductsResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/mixins/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/mixins/cart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -436,7 +432,7 @@
       <workItem from="1692607434425" duration="8000000" />
       <workItem from="1692617815367" duration="246000" />
       <workItem from="1692686009359" duration="825000" />
-      <workItem from="1692690078693" duration="2952000" />
+      <workItem from="1692690078693" duration="3162000" />
     </task>
     <servers />
   </component>
