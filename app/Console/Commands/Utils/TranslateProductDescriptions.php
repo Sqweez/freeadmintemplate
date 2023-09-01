@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands\Utils;
 
-use App\Service\YandexTranslator;
-use App\v2\Models\Product;
 use Illuminate\Console\Command;
 
 class TranslateProductDescriptions extends Command
@@ -13,16 +11,14 @@ class TranslateProductDescriptions extends Command
      *
      * @var string
      */
-    protected $signature = 'description:translate';
+    protected $signature = 'translate:product-description';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Осуществляет перевод описания товаров на казахский язык';
-
-    private $translationService;
+    protected $description = 'Переводит описания товаров при помощи NodeJS';
 
     /**
      * Create a new command instance.
@@ -32,7 +28,6 @@ class TranslateProductDescriptions extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->translationService = new YandexTranslator();
     }
 
     /**
@@ -42,32 +37,13 @@ class TranslateProductDescriptions extends Command
      */
     public function handle()
     {
-        $products = $this->getProductsWithoutTranslation();
-        foreach ($products as $key => $product) {
-            try {
-                $this->line('Осталось: ' . ($products->count() - ($key)));
-                $this->line('Текущий товар: ' . $product->product_name);
-                $result = $this->translationService->translate($product->product_description);
-                $this->line($result);
-                $encoded = json_decode($result);
-                $text = $encoded->translations[0]->text;
-                $product->update([
-                    'product_description_kaz' => $text
-                ]);
-            }
-            catch (\Exception $exception) {
-                $this->line($exception->getMessage());
-                continue;
-            }
-        }
-    }
+        $jsCode = 'console.log("Hello from JavaScript!");';
+        $command = 'node -e ' . escapeshellarg($jsCode);
+        $output = [];
+        exec($command, $output);
 
-    private function getProductsWithoutTranslation()
-    {
-        return Product::query()
-            ->whereNull('product_description_kaz')
-            ->whereNotNull('product_description')
-            ->select(['id', 'product_name', 'product_description_kaz', 'product_description'])
-            ->get();
+        foreach ($output as $line) {
+            $this->info($line);
+        }
     }
 }

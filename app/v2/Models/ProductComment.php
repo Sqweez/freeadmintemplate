@@ -61,4 +61,17 @@ class ProductComment extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
         return $this->belongsTo('App\User');
     }
+
+    public function getCommentName()
+    {
+        if ($this->fake_name) {
+            return $this->fake_name;
+        }
+
+        if ($this->client) {
+            return $this->client->name;
+        }
+
+        return __hardcoded('Гость');
+    }
 }
