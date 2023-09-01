@@ -219,7 +219,8 @@ class Product extends Model
     public $timestamps = true;
 
     public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany {
-        return $this->hasMany('App\v2\Models\ProductComment');
+        return $this->hasMany('App\v2\Models\ProductComment')
+            ->orderByDesc('created_at');
     }
 
     public function sku()

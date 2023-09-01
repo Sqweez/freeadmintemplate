@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\v2\Models\ProductComment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/* @mixin ProductComment */
 class ProductCommentResource extends JsonResource
 {
     /**
@@ -16,7 +18,7 @@ class ProductCommentResource extends JsonResource
         return [
             'id' => $this->id,
             'comment' => $this->comment,
-            'name' => $this->client ? $this->client->client_name : ($this->user ? $this->user->name : 'Гость'),
+            'name' => $this->getCommentName(),
             'date' => $this->date,
             'parent_id' => $this->parent_id,
             'is_employee' => !!$this->user_id
