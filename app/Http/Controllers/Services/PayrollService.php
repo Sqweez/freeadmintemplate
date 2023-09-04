@@ -76,7 +76,8 @@ class PayrollService {
     }
 
     private function getSellers() {
-        return User::sellers()
+        return User::query()
+            ->whereIn('role_id', [1, 2, 9])
             ->select(['id', 'name', 'store_id'])
             ->when(auth()->user()->isFranchise(), function ($query) {
                 return $query->whereStoreId(auth()->user()->store_id);
