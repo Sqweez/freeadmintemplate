@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/OldTranslateProductDescriptions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ProductCommentResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ProductCommentResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/ProductComment.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/ProductComment.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/User.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -444,7 +441,8 @@
       <workItem from="1693468722564" duration="20000" />
       <workItem from="1693473362859" duration="980000" />
       <workItem from="1693567336857" duration="1514000" />
-      <workItem from="1693569024316" duration="316000" />
+      <workItem from="1693569024316" duration="1164000" />
+      <workItem from="1693814104774" duration="611000" />
     </task>
     <servers />
   </component>
