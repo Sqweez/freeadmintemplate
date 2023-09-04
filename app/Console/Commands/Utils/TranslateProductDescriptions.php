@@ -3,6 +3,8 @@
 namespace App\Console\Commands\Utils;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class TranslateProductDescriptions extends Command
 {
@@ -11,14 +13,14 @@ class TranslateProductDescriptions extends Command
      *
      * @var string
      */
-    protected $signature = 'translate:product-description';
+    protected $signature = 'python:test';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Переводит описания товаров при помощи NodeJS';
+    protected $description = 'Переводит описания товаров при помощи Python';
 
     /**
      * Create a new command instance.
@@ -37,13 +39,17 @@ class TranslateProductDescriptions extends Command
      */
     public function handle()
     {
-        $jsCode = 'console.log("Hello from JavaScript!");';
-        $command = 'node -e ' . escapeshellarg($jsCode);
-        $output = [];
-        exec($command, $output);
+        $process = new Process(['python', getcwd() . '\python\translate.py', "Школа"]);
+        $process->setInput(NULL);
+        $process->setEnv(['LANG' => 'en_US.UTF-8']);
+        $process->run();
 
-        foreach ($output as $line) {
-            $this->info($line);
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        } else {
+            $output_data = $process->getOutput();
+            $this->line($output_data);
+            $this->line('OK');
         }
     }
 }

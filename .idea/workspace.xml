@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/python/script.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Actions/Sale/GetSaleDeliveryMessageAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Actions/Sale/GetSaleDeliveryMessageAction.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +221,7 @@
     &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Code/Laravel/iron-crm&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Code/Laravel/quickbooks-shopify&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -442,7 +443,9 @@
       <workItem from="1693473362859" duration="980000" />
       <workItem from="1693567336857" duration="1514000" />
       <workItem from="1693569024316" duration="1164000" />
-      <workItem from="1693814104774" duration="2123000" />
+      <workItem from="1693814104774" duration="2665000" />
+      <workItem from="1693816830152" duration="23000" />
+      <workItem from="1693826085336" duration="2266000" />
     </task>
     <servers />
   </component>
