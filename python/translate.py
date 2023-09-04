@@ -12,10 +12,10 @@ def function(text):
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
     driver = webdriver.Chrome(options=chrome_options)
-    
-    url = "https://translate.yandex.ru/?source_lang=ru&target_lang=kk"
+
+    url = "https://translate.yandex.ru/?source_lang=ru&target_lang=en"
     driver.get(url)
-    
+
     try:
         textarea = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="fakeArea"]')))
         textarea.clear()
@@ -26,16 +26,18 @@ def function(text):
         element.location_once_scrolled_into_view
 
         WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="translation"]')))
+        spinner = '//*[@id="textbox2"]/div[1]/div[2]/span';
+        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.XPATH, spinner)))
 
         review_text_element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="translation"]/span')))
         review_text = review_text_element.text
         print(review_text)
         driver.quit()
 
-            
+
     except Exception as e:
         print("")
-   
+
 
 if __name__ == "__main__":
     input_text = sys.argv[1]
