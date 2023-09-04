@@ -10,6 +10,7 @@ class GetSaleDeliveryMessageAction {
     public function handle(Sale $sale): string {
         $sale = new ReportsResource($sale);
         $message = 'Новая доставка №' . $sale->id . "\n";
+        $message .= 'Точка выдачи: ' . $sale->store->name . "\n";
         $message .= 'ФИО: ' . $sale['client']['client_name'] . "\n";
         $message .= 'Телефон: ' . $sale['client']['client_phone'] . "\n";
         $message .= $sale['comment'] . "\n";
