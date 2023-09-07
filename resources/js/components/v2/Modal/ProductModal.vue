@@ -29,7 +29,7 @@
                         :editor-options="editorSettings"
                         v-model="product_description" v-if="IS_SUPERUSER || IS_MODERATOR"
                     />
-                    <div v-if="IS_SUPERUSER">
+                    <div v-if="IS_SUPERUSER || IS_MODERATOR">
                         <div v-if="product_images.length">
                             <h4>Изображения для общих товаров:</h4>
                             <div class="d-flex">
