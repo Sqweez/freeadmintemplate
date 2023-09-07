@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/translate.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/translate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -444,7 +445,8 @@
       <workItem from="1693569024316" duration="1164000" />
       <workItem from="1693814104774" duration="2665000" />
       <workItem from="1693816830152" duration="23000" />
-      <workItem from="1693826085336" duration="3702000" />
+      <workItem from="1693826085336" duration="4017000" />
+      <workItem from="1694078057342" duration="911000" />
     </task>
     <servers />
   </component>

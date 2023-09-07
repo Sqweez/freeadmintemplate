@@ -25,7 +25,7 @@ class UserController extends Controller
         return
             UserResource::collection(
                 User::query()
-                    ->when($user->isFranchise(), function ($query) use ($user) {
+                    ->when((optional($user)->isFranchise()), function ($query) use ($user) {
                         return $query->where('store_id', $user->store_id);
                     })
                     ->with(['store.city_name', 'role'])
