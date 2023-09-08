@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/assets/reviews.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/News.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/News.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/ProductComment.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/ProductComment.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -245,6 +246,7 @@
       <recent name="C:\Code\Laravel\iron-crm\resources\js\utils" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Code\Laravel\iron-crm\app\Console\Commands\Utils\assets" />
       <recent name="C:\Code\Laravel\iron-crm\resources\js\plugins" />
       <recent name="C:\Code\Laravel\iron-crm\resources\assets\images" />
     </key>
@@ -446,7 +448,8 @@
       <workItem from="1693814104774" duration="2665000" />
       <workItem from="1693816830152" duration="23000" />
       <workItem from="1693826085336" duration="4017000" />
-      <workItem from="1694078057342" duration="911000" />
+      <workItem from="1694078057342" duration="1352000" />
+      <workItem from="1694160520241" duration="3263000" />
     </task>
     <servers />
   </component>

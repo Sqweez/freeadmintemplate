@@ -28,6 +28,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $products
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\NewsProduct[] $productNews
  * @property-read int|null $product_news_count
+ * @property string $title_kaz
+ * @property string $text_kaz
+ * @property string $short_text_kaz
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereShortTextKaz($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereTextKaz($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereTitleKaz($value)
  */
 class News extends Model
 {

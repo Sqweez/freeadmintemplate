@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductComment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductComment whereUserId($value)
  * @mixin \Eloquent
+ * @property string|null $fake_name
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductComment whereFakeName($value)
  */
 class ProductComment extends Model
 {
