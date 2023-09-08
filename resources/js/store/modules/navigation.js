@@ -380,7 +380,7 @@ const navigationModule = {
             },
             {
                 title: 'Товары',
-                url: '/products',
+                url: '/moderator/products',
                 icon: 'dashboard',
             },
             {
