@@ -215,10 +215,14 @@ export default {
         ],
         store_id: null,
         hideNotInStock: false,
+        parentTransfer: null,
     }),
     computed: {
         id () {
             return this.$route.query?.id;
+        },
+        transferId () {
+            return this.$route.query?.transfer;
         }
     },
     methods: {
@@ -258,21 +262,34 @@ export default {
             this.$set(this.cart[index], 'count', Math.max(1, this.cart[index].count - 1))
         },
         async syncProducts () {
-            if (!this.id) {
-                return null;
+            if (this.id) {
+                const { data: { data }} = await axiosClient.get(`/v2/matrix/${this.id}`);
+                data.products.forEach(product => {
+                    const needleProduct = this.products.find(p => p.id === product.id);
+                    this.cart.push({
+                        ...needleProduct,
+                        count: product.count,
+                        product_price: needleProduct.product_price,
+                        discount: 0,
+                        uuid: Math.random(),
+                        initial_price: needleProduct.product_price
+                    })
+                });
             }
-            const { data: { data }} = await axiosClient.get(`/v2/matrix/${this.id}`);
-            data.products.forEach(product => {
-                const needleProduct = this.products.find(p => p.id === product.id);
-                this.cart.push({
-                    ...needleProduct,
-                    count: product.count,
-                    product_price: needleProduct.product_price,
-                    discount: 0,
-                    uuid: Math.random(),
-                    initial_price: needleProduct.product_price
-                })
-            });
+
+            if (this.parentTransfer) {
+                this.parentTransfer.products.forEach(product => {
+                    const needleProduct = this.products.find(p => p.id === product.product_id);
+                    this.cart.push({
+                        ...needleProduct,
+                        count: product.count,
+                        product_price: needleProduct.product_price,
+                        discount: 0,
+                        uuid: Math.random(),
+                        initial_price: needleProduct.product_price
+                    })
+                });
+            }
         },
     },
     async mounted () {
@@ -282,6 +299,10 @@ export default {
             await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
             await this.$store.dispatch(ACTIONS.GET_CATEGORIES)
         ]);
+        if (this.transferId) {
+            const { data: { data }} = await axiosClient.get(`/transfers/${this.transferId}`);
+            this.parentTransfer = data;
+        }
         await this.syncProducts();
         this.$loading.disable();
     }

@@ -10,6 +10,31 @@ Route::prefix('console/artisan')->group(function () {
     });
 });
 
+Route::get('without-reviews', function () {
+    $products =  \App\v2\Models\Product::query()
+        ->whereHas('sku', function ($q) {
+            return $q->whereHas('margin_type', function ($q) {
+                return $q->where('title', 'LIKE', strtoupper(request()->get('type', 'A')));
+            });
+        })
+        ->whereDoesntHave('comments')
+        ->with('manufacturer')
+        ->get()
+        ->map(function (\App\v2\Models\Product $product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->product_name,
+                'brand' => $product->manufacturer->manufacturer_name,
+            ];
+        });
+
+    $jsonData = json_encode($products);
+    $response = Response::make($jsonData);
+    $response->header('Content-Type', 'application/json');
+    $response->header('Content-Disposition', 'attachment; filename=товары-без-отзывов-' . strtoupper(request()->get('type', 'A')) . '.json');
+    return $response;
+});
+
 Route::get('orders/{order}/whatsapp', function (\App\Order $order) {
     $phone = \Str::replaceFirst('+', '', $order['phone']);
     $message = 'Здравствуйте, Ваш заказ принят и передан курьеру. Ожидайте доставку c ?? до ??. (с) Служба заботы о клиентах “Iron addicts”';

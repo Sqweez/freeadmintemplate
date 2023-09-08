@@ -254,12 +254,28 @@
                 <v-btn icon color="primary" @click="transferId = item.id; infoModal = true">
                     <v-icon>mdi-information-outline</v-icon>
                 </v-btn>
-                <v-btn icon color="success" @click="printWaybill(item.id)">
-                    <v-icon>mdi-file-excel</v-icon>
-                </v-btn>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn v-bind="attrs" v-on="on" icon color="success" @click="printWaybill(item.id)">
+                            <v-icon>mdi-file-excel</v-icon>
+
+                        </v-btn>
+                    </template>
+                    <span>Печать накладной</span>
+                </v-tooltip>
                 <v-btn icon color="primary" @click="showPhotoModal(item.photos)">
                     <v-icon>mdi-camera</v-icon>
                 </v-btn>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn v-bind="attrs" v-on="on" color="orange darken-2" icon @click="$router.push(`/matrixes/create?transfer=${item.id}`)">
+                            <v-icon>
+                                mdi-collage
+                            </v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Сформировать матрицу на основании текущего перемещения</span>
+                </v-tooltip>
             </template>
             <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                 {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
