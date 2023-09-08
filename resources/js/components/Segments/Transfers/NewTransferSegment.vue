@@ -87,7 +87,7 @@
                         <tbody class="background-iron-grey fz-18">
                         <tr>
                             <td class="text-center">{{ cartCount }} шт.</td>
-                            <td class="text-center">{{ subtotal }} ₸</td>
+                            <td class="text-center">{{ subtotal | priceFilters }}</td>
 <!--                            <td class="text-center">
                                 <v-select
                                     :items="_stores"
