@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Utils;
 
 use App\v2\Models\ProductComment;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 
@@ -36,6 +37,7 @@ class CreateProductReviews extends Command
      * Execute the console command.
      *
      * @return void
+     * @throws Exception
      */
     public function handle()
     {
