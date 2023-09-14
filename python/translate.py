@@ -25,13 +25,13 @@ def function(text):
         element = driver.find_element(By.XPATH, '//*[@id="textbox2"]/div[1]/div[1]')
         element.location_once_scrolled_into_view
 
-        WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="translation"]')))
-        spinner = '//*[@id="textbox2"]/div[1]/div[2]/span';
+        WebDriverWait(driver, 10).until(EC.presence_of_al_elements_located((By.XPATH, '//*[@id="translation"]')))
+        spinner = '//*[@id="textbox2"]/div[1]/div[2]/span'
         WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.XPATH, spinner)))
 
         review_text_element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="translation"]/span')))
         review_text = review_text_element.text
-        print(review_text)
+        print(review_text.strip())
         driver.quit()
 
 

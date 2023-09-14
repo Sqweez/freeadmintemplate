@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Utils/UnlinkOldPriceLists.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/UnlinkOldPriceLists.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/translate.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/translate.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -454,7 +456,7 @@
       <workItem from="1694440775033" duration="7000" />
       <workItem from="1694507867387" duration="1190000" />
       <workItem from="1694670238602" duration="54000" />
-      <workItem from="1694670305794" duration="9950000" />
+      <workItem from="1694670305794" duration="10449000" />
     </task>
     <servers />
   </component>
