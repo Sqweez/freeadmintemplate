@@ -39,7 +39,7 @@ class UnlinkOldPriceLists extends Command
      */
     public function handle()
     {
-        $directory = getcwd() . '\storage\app\public\excel\waybills';
+        $directory = getcwd() . '/storage/app/public/excel/waybills';
         try {
             $files = File::files($directory);
             foreach ($files as $file) {
