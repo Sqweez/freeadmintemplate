@@ -401,7 +401,7 @@
                         <v-list-item v-if="item.promocode.id">
                             <v-list-item-content>
                                 <v-list-item-title style="white-space: normal;">{{
-                                        item.promocode.promocode
+                                        item.promocode.title ? item.promocode.title : item.promocode.promocode
                                     }}
                                 </v-list-item-title>
                                 <v-list-item-subtitle style="white-space: normal;">Промокод</v-list-item-subtitle>

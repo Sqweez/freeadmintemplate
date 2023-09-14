@@ -231,6 +231,8 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
     // Promocode
     Route::get('promocode/search/{promocode}', 'api\PromocodeController@searchPromocode');
     Route::post('promocode/check', 'api\PromocodeController@checkPromocode');
+    Route::post('promocode/{promocode}/clients', [PromocodeController::class, 'setClients']);
+    Route::get('promocode/stocks/available', [PromocodeController::class, 'getAvailableStocks']);
     Route::get('promocode/types', [PromocodeController::class, 'getTypes']);
     Route::resource('promocode', 'api\PromocodeController');
 

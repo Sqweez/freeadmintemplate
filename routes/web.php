@@ -30,7 +30,7 @@ Route::get('without-reviews', function () {
 
     $jsonData = json_encode($products);
     $response = Response::make($jsonData);
-    $response->header('Content-Type', 'application/json');
+    $response->header('Content-Type', 'application/json; charset=utf-8');
     $response->header('Content-Disposition', 'attachment; filename=товары-без-отзывов-' . strtoupper(request()->get('type', 'A')) . '.json');
     return $response;
 });

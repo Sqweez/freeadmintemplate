@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\v2\Models\ClientPromocode;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -56,9 +58,23 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Promocode wherePromocodeGifts($value)
  * @method static Builder|Promocode wherePromocodePurposeId($value)
  * @method static Builder|Promocode wherePromocodePurposePayload($value)
+ * @property int $promocode_apply_type_id
+ * @property string|null $title
+ * @method static Builder|Promocode wherePromocodeApplyTypeId($value)
+ * @method static Builder|Promocode whereTitle($value)
+ * @property array|null $available_stores
+ * @property int|null $total_use_quantity
+ * @property int|null $per_client_use_quantity
+ * @property-read string $promocode_apply_type
+ * @method static Builder|Promocode whereAvailableStores($value)
+ * @method static Builder|Promocode wherePerClientUseQuantity($value)
+ * @method static Builder|Promocode whereTotalUseQuantity($value)
+ * @property int $apply_to_clients_id
+ * @method static Builder|Promocode whereApplyToClientsId($value)
  */
 class Promocode extends Model {
     const GOV_PROMOCODE_ID = 165;
+    
     const TYPES = [
         1 => 'Процентный',
         2 => 'Фиксированный',
@@ -82,12 +98,19 @@ class Promocode extends Model {
         1 => 'От суммы',
         2 => 'От количества позиций'
     ];
+
+    const APPLY_TYPES = [
+        1 => 'Промокод',
+        2 => 'Акция'
+    ];
+
     protected $guarded = ['id'];
     protected $casts = [//'required_products' => 'array',
         'promocode_cascade' => 'array',
         'promocode_purpose_payload' => 'array',
         'promocode_condition_payload' => 'array',
         'promocode_gifts' => 'array',
+        'available_stores' => 'array'
     ];
 
     public function partner() {
@@ -97,6 +120,16 @@ class Promocode extends Model {
                 'client_name' => 'Без партнера',
                 'id' => null
             ]);
+    }
+
+    public function client_promocodes(): HasMany
+    {
+        return $this->hasMany(ClientPromocode::class, 'promocode_id');
+    }
+
+    public function getPromocodeApplyTypeAttribute(): string
+    {
+        return self::APPLY_TYPES[$this->promocode_apply_type_id];
     }
 
     public function scopeOfPartner($query, $id) {

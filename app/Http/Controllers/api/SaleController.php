@@ -17,6 +17,7 @@ use App\Jobs\Notifications\SendWholesaleOrderNotificationJob;
 use App\Manufacturer;
 use App\Product;
 use App\ProductBatch;
+use App\Promocode;
 use App\Sale;
 use App\SaleProduct;
 use App\User;
@@ -31,6 +32,8 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SaleController extends Controller {
 
@@ -86,7 +89,8 @@ class SaleController extends Controller {
             }
 
             $saleService->createSaleProducts($sale, $store_id, $cart);
-            $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, $partner_id, $request->get('payment_type'));
+            $pr = Promocode::find($promocode_id);
+            $saleService->createClientSale($client_id, $discount, $cart, $balance, $user_id, $sale->id, optional($pr)->client_id, $request->get('payment_type'));
             $saleService->createCompanionTransaction($sale, $request->header('user_id'));
             if ($certificate) {
                 $_certificate = Certificate::find($certificate['id']);
@@ -132,6 +136,10 @@ class SaleController extends Controller {
     }
 
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function reports(Request $request) {
         $start = $request->get('start');
         $finish = $request->get('finish');

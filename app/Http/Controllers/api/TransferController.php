@@ -32,7 +32,8 @@ class TransferController extends Controller {
         if ($mode === 'history') {
             $transfersQuery = $transfersQuery
                 ->where('is_confirmed', true)
-                ->where('is_accepted', true);
+                ->where('is_accepted', true)
+                ->whereDate('updated_at', '>=', today()->subDays(30)->startOfDay());
         }
         if ($mode === 'not_accepted') {
             $transfersQuery = $transfersQuery->where('is_accepted', false);

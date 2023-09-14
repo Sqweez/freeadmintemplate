@@ -5,13 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/UnlinkOldPriceLists.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Repository/PromocodeRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/v2/Models/ClientCard.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/v2/Models/ClientPromocode.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2023_09_11_125455_alter_table_promocodes_column_promocode_apply_type_id.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2023_09_11_150309_create_client_cards_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2023_09_11_150414_create_client_promocodes_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodeClients.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c86d0892-4e42-4450-a76b-d981d275a83a.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/c86d0892-4e42-4450-a76b-d981d275a83a.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Actions/Promocode/CheckPromocodeAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Actions/Promocode/CheckPromocodeAction.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Client.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Client.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Helpers/functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/functions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/PromocodeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/PromocodeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/TransferController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/TransferController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/PromocodeResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/PromocodeResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Promocode.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Promocode.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/CurrentTransfers.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/CurrentTransfers.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/NewTransferSegment.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/NewTransferSegment.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/TransferHistory.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Transfers/TransferHistory.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Matrix/MatrixCreate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Matrix/MatrixCreate.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/python/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/css/application.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/css/application.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/router/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/router/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/templates/MainTemplate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/templates/MainTemplate.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/Promocodes.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/Promocodes.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodesCreate.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Cart/Cart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -209,7 +235,9 @@
     </include_path>
   </component>
   <component name="ProjectId" id="2ECyVKREooMTE2iIfKZz7uda6Bz" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -217,6 +245,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
@@ -453,12 +482,20 @@
       <workItem from="1693816830152" duration="23000" />
       <workItem from="1693826085336" duration="4017000" />
       <workItem from="1694078057342" duration="1352000" />
-      <workItem from="1694160520241" duration="7117000" />
+      <workItem from="1694160520241" duration="7933000" />
+      <workItem from="1694414488014" duration="10972000" />
+      <workItem from="1694440775033" duration="7000" />
+      <workItem from="1694507867387" duration="1190000" />
+      <workItem from="1694670238602" duration="54000" />
+      <workItem from="1694670305794" duration="9720000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

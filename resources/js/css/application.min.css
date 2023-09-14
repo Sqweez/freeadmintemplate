@@ -6992,7 +6992,16 @@ input.mdl-button[type=submit] {
     overflow: hidden
 }
 
+/*
+body {
+    background-color: black;
+}
+*/
+
 main {
+    /*
+    background: #000000!important;
+    */
     background: url(../images/Dark_background_1920x1080.png) center top no-repeat;
     background-size: cover
 }

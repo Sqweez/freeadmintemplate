@@ -176,7 +176,7 @@ class Sale extends Model
     }
 
     public function promocode(): BelongsTo {
-        return $this->belongsTo(Promocode::class)->select(['id', 'promocode', 'client_id'])->withDefault([
+        return $this->belongsTo(Promocode::class)->select(['id', 'promocode', 'client_id', 'title'])->withDefault([
             'promocode' => '-'
         ]);
     }

@@ -85,6 +85,7 @@ import LegalEntityCreate from '@/views/LegalEntity/LegalEntityCreate';
 import LegalEntityUpdate from '@/views/LegalEntity/LegalEntityUpdate';
 import BankAccountCreate from '@/views/LegalEntity/BankAccountCreate';
 import WorkingScheduleIndex from '@/views/WorkingSchedule/WorkingScheduleIndex';
+import PromocodeClients from '@/views/Promocodes/PromocodeClients';
 
 const routes = [
     {
@@ -329,6 +330,20 @@ const routes = [
             },
         },
         component: PromocodesCreate,
+    },
+    {
+        path: '/promocodes/:id/clients',
+        component: PromocodeClients,
+        meta: {
+            CAN_ENTER: {
+                IS_ADMIN: true,
+                IS_SELLER: true,
+                IS_BOSS: true,
+                IS_SENIORSELLER: true,
+                IS_MARKETOLOG: true,
+                IS_FRANCHISE: true,
+            },
+        },
     },
     {
         path: '/stats/partners',

@@ -358,7 +358,9 @@ class Product extends Model
 
     public function scopeOfTag($query, $tag) {
         return $query->whereHas('tags', function ($q) use ($tag) {
-            return $q->where('name', 'like', $tag);
+            return $q
+                ->where('name', 'like', $tag)
+                ->orWhere('name', 'like', _transliterate($tag));
         });
     }
 

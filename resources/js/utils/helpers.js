@@ -8,11 +8,11 @@ export function __deepClone($object) {
 
 export function __debounce(cb, delay = 500) {
     let timeoutID = null;
-    return function() {
+    return function () {
         clearTimeout(timeoutID);
         const args = arguments;
         const that = this;
-        timeoutID = setTimeout(function() {
+        timeoutID = setTimeout(function () {
             cb.apply(that, args);
         }, delay);
     };
@@ -20,10 +20,10 @@ export function __debounce(cb, delay = 500) {
 
 export function toFormData(payload) {
     const formData = new FormData();
-    Object.keys(payload).forEach(key => {
+    Object.keys(payload).forEach((key) => {
         const value = payload[key];
         if (Array.isArray(value)) {
-            value.forEach(v => {
+            value.forEach((v) => {
                 formData.append(`${key}[]`, v);
             });
         } else {
@@ -38,8 +38,21 @@ export function createObjectURL(file) {
 }
 
 export function fileDownload(path) {
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = `${window.location.origin}/${path}`;
     link.click();
     link.remove();
+}
+
+export function getNumbersInRange(from, to) {
+    if (from > to) {
+        return []; // Возвращаем пустой массив, если from > to
+    }
+
+    const result = [];
+    for (let i = from; i <= to; i++) {
+        result.push(i);
+    }
+
+    return result;
 }
