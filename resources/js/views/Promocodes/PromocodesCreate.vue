@@ -1,17 +1,68 @@
 <template>
     <div>
         <i-card-page title="Создание промокода">
+            <v-select
+                v-model="promocode.promocode_apply_type_id"
+                :items="applyTypes"
+                item-text="name"
+                item-value="id"
+                label="Способ применения промокода"
+            />
             <v-text-field
+                v-model="promocode.title"
+                label="Название"
+                type="text"
+            />
+            <v-text-field
+                v-if="promocode.promocode_apply_type_id === 1"
                 v-model="promocode.promocode"
                 label="Промокод"
                 type="text"
             />
             <v-autocomplete
+                v-if="promocode.promocode_apply_type_id === 1"
                 v-model="promocode.client_id"
                 :items="partners"
                 item-text="client_name"
                 item-value="id"
                 label="Партнер"
+            />
+            <v-autocomplete
+                class="mb-2"
+                label="Применимо в магазинах:"
+                v-model="promocode.available_stores"
+                multiple
+                :items="$stores"
+                item-text="name"
+                item-value="id"
+                hint="Если промокод может применяться в любом магазине, оставьте это значение пустым"
+                persistent-hint
+            />
+            <v-select
+                label="Применимо к клиентам:"
+                v-model="promocode.apply_to_clients_id"
+                :items="[
+                    {id: 1, name: 'Все клиенты'},
+                    {id: 2, name: 'Выбранные клиенты'},
+                 ]"
+                item-text="name"
+                item-value="id"
+            />
+            <v-text-field
+                v-model="promocode.total_use_quantity"
+                label="Общее количество применений"
+                type="number"
+                hint="Если не ограничено, оставьте пустым"
+                persistent-hint
+                class="my-2"
+            />
+            <v-text-field
+                v-model="promocode.per_client_use_quantity"
+                label="Общее количество применений для каждого клиента"
+                type="number"
+                hint="Если не ограничено, оставьте пустым"
+                persistent-hint
+                class="my-2"
             />
             <v-select
                 v-model="promocode.promocode_type_id"
@@ -569,6 +620,12 @@ export default {
             promocode_purpose_id: 1,
             client_id: null,
             discount: null,
+            promocode_apply_type_id: 1,
+            title: '',
+            available_stores: [],
+            apply_to_clients_id: 1,
+            total_use_quantity: null,
+            per_client_use_quantity: null,
         },
         conditionalBrandId: null,
         conditionalCategoryId: null,
@@ -623,6 +680,9 @@ export default {
         cascades() {
             return this.$store.getters.PROMOCODE_TYPES.cascades;
         },
+        applyTypes () {
+            return this.$store.getters.PROMOCODE_TYPES.apply_types;
+        },
         partners() {
             return this.$store.getters.PARTNERS;
         },
@@ -665,8 +725,12 @@ export default {
             }
         },
         _validateForm() {
-            if (!this.promocode.promocode) {
+            if (this.promocode.promocode_apply_type_id === __hardcoded(1) && !this.promocode.promocode) {
                 return this.$toast.error('Введите значение промокода');
+            }
+
+            if (this.promocode.promocode_apply_type_id === __hardcoded(2) && !this.promocode.title) {
+                return this.$toast.error('Введите название промокода');
             }
 
             if ([1, 2].includes(this.promocode.promocode_type_id)) {
@@ -747,6 +811,12 @@ export default {
                 discount: null,
                 promocode_cascade: null,
                 promocode_gifts: null,
+                promocode_apply_type_id: this.promocode.promocode_apply_type_id,
+                title: this.promocode.title,
+                available_stores: this.promocode.available_stores,
+                apply_to_clients_id: this.promocode.apply_to_clients_id,
+                total_use_quantity: this.promocode.total_use_quantity,
+                per_client_use_quantity: this.promocode.per_client_use_quantity,
             };
 
             if ([1, 2].includes(this.promocode.promocode_type_id)) {

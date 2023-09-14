@@ -34,7 +34,8 @@ class ProductController extends Controller {
      * Получение всех товаров
      * */
 
-    public function search(string $search, ProductServiceStatic $service) {
+    public function search(string $search, ProductServiceStatic $service): AnonymousResourceCollection
+    {
         return ProductsResource::collection(
             $service->search($this->prepareSearchString($search))
         );

@@ -3,12 +3,24 @@
 namespace App\Http\Controllers\api;
 
 use App\Actions\Promocode\CheckPromocodeAction;
+use App\Client;
 use App\Http\Resources\PromocodeResource;
 use App\Promocode;
+use App\Repository\PromocodeRepository;
+use App\Store;
+use App\v2\Models\ClientPromocode;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PromocodeController extends BaseApiController
 {
+    private $promocodeRepository;
+
+    public function __construct()
+    {
+        $this->promocodeRepository = new PromocodeRepository();
+    }
+
     public function index() {
         return PromocodeResource::collection(Promocode::with('partner')->get());
     }
@@ -52,12 +64,28 @@ class PromocodeController extends BaseApiController
                 })
                 ->values()
                 ->toArray(),
+            'apply_types' => collect(Promocode::APPLY_TYPES)
+                ->map(function ($value, $key) {
+                    return [
+                        'id' => $key,
+                        'name' => $value
+                    ];
+                })
+                ->values()
+                ->toArray(),
         ];
     }
 
     public function store(Request $request) {
         try {
-            $promocode = Promocode::create($request->all())->refresh();
+
+            $payload = $request->all();
+
+            if ($payload['promocode_apply_type_id'] == __hardcoded(2)) {
+                $payload['promocode'] = \Str::upper(\Str::random(30));
+            }
+
+            $promocode = Promocode::create($payload)->refresh();
             return new PromocodeResource($promocode);
         } catch (\Exception $exception) {
             return response()->json([
@@ -92,9 +120,14 @@ class PromocodeController extends BaseApiController
         return new PromocodeResource($_promocode);
     }
 
-    public function checkPromocode(Request $request): \Illuminate\Http\JsonResponse {
+    public function checkPromocode(Request $request): JsonResponse {
         $cart = $request->get('cart');
         $code = $request->get('promocode');
+        $promocode_id = $request->get('promocode_id');
+        if ($promocode_id) {
+            $promocode = Promocode::findOrFail($promocode_id);
+            $code = $promocode->promocode;
+        }
         $promocode = CheckPromocodeAction::i()
             ->handle($code, $cart);
         return $this->respondSuccess([
@@ -102,5 +135,27 @@ class PromocodeController extends BaseApiController
             'cart' => $promocode['cart'] ?? null,
             'promocode' => $promocode['promocode'] ?? null,
         ], $promocode['message']);
+    }
+
+    public function setClients(Promocode $promocode, Request $request)
+    {
+        $codes = $request->get('codes', []);
+        foreach ($codes as $code) {
+            ClientPromocode::firstOrCreate([
+                'card_code' => $code,
+                'client_id' => null,
+            ],[
+                'promocode_id' => $promocode->id,
+            ]);
+        }
+    }
+
+    public function getAvailableStocks(Request $request): JsonResponse
+    {
+        $client = Client::find($request->get('client_id'));
+        $store = Store::find($request->get('store_id'));
+        return $this->respondSuccess([
+            'stocks' => $this->promocodeRepository->getAvailableStocks($client, $store)
+        ]);
     }
 }

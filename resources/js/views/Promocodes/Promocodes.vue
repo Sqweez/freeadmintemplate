@@ -29,6 +29,14 @@
                             'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
                             'items-per-page-text': 'Записей на странице',
                         }">
+                    <template v-slot:item.promocode="{item}">
+                        <span v-if="item.promocode_apply_type_id === 1">
+                            {{ item.promocode }}
+                        </span>
+                        <span v-else>
+                            {{ item.title }}
+                        </span>
+                    </template>
                     <template v-slot:item.is_active="{item}">
                         <v-icon color="success" v-if="item.is_active">
                             mdi-check
@@ -65,6 +73,11 @@
                         <v-btn icon color="red" @click="deleteModal = true; promocode_id = item.id">
                             <v-icon>
                                 mdi-delete
+                            </v-icon>
+                        </v-btn>
+                        <v-btn @click="$router.push(`/promocodes/${item.id}/clients`)" title="Назначить клиентов" icon color="primary" v-if="item.apply_to_clients_id == 2">
+                            <v-icon>
+                                mdi-account
                             </v-icon>
                         </v-btn>
                     </template>
@@ -106,6 +119,10 @@ export default {
             {
                 value: 'promocode',
                 text: 'Промокод'
+            },
+            {
+                value: 'promocode_apply_type',
+                text: 'Способ применения'
             },
             {
                 value: 'partner',

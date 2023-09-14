@@ -231,10 +231,10 @@
                                 @click:append-outer="partner_id = null"
                             ></v-autocomplete>
                         </div>
-                        <div v-if="!isFree && !isFullWholesalePurchase && clientChosen">
+                        <div v-if="!isFullWholesalePurchase && clientChosen && stockCanBeApplied">
                             <v-text-field
                                 label="Промокод"
-                                :disabled="!!partner_id"
+                                :disabled="!!partner_id || promocodeSet"
                                 v-model="promocode"
                                 class="w-100px"
                                 color="white darken-2"
@@ -242,6 +242,19 @@
                                 hint="Для поиска промокода нажмите enter"
                                 :persistent-hint="true"
                                 outlined
+                            />
+                        </div>
+                    </div>
+                    <div style="padding: 10px 25px">
+                        <div>
+                            <v-select
+                                label="Доступные акции"
+                                :items="displayedStocks"
+                                item-value="id"
+                                item-text="title"
+                                v-model="stockId"
+                                :disabled="isStocksDisabled"
+                                @change="verifyPromocode"
                             />
                         </div>
                         <v-textarea
@@ -495,6 +508,7 @@
                     </template>
                 </v-simple-table>
                 <div class="background-iron-grey pa-10">
+                    {{ stockId }}
                     <v-btn depressed color="error" block style="font-size: 16px" @click="clientCartModal = true"
                            v-if="!client">
                         Выбрать клиента
@@ -699,6 +713,8 @@ import DocumentsPage from '@/components/Documents/DocumentsPage';
 import InvoiceModal from '@/components/Modal/InvoiceModal';
 import InvoicePaymentModal from '@/components/Modal/InvoicePaymentModal';
 import ProductCheckModal from '@/components/Modal/ProductCheckModal';
+import axiosClient from '@/utils/axiosClient';
+import {__hardcoded} from '@/utils/helpers';
 
 export default {
     extends: DocumentsPage,
@@ -742,6 +758,22 @@ export default {
         this.loading = false;
     },
     watch: {
+        isStocksDisabled: {
+            immediate: true,
+            handler: function (value) {
+                if (value) {
+                    this._deselectStock();
+                }
+            },
+        },
+        stockCanBeApplied: {
+            immediate: true,
+                handler: function (value) {
+                if (!value) {
+                    this._deselectStock();
+                }
+            },
+        },
         stores(value) {
             //this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
         },
@@ -817,9 +849,14 @@ export default {
                 this.isFree = false;
             }
         },
-        client() {
+        async client() {
             this.isPaidByBarter = false;
             this.barterBalance = 0;
+            if (!this.client) {
+                this.availableStocks = [];
+            } else {
+                await this._getAvailableStocks();
+            }
         }
     },
     mixins: [product, product_search, cart],
@@ -915,6 +952,9 @@ export default {
         kaspiTransactionId: null,
         currentPromocode: null,
         isPaidByBarter: false,
+        availableStocks: [],
+        stockId: -1,
+        fixedDiscountAmount: 0,
     }),
     methods: {
         ...mapActions([
@@ -922,6 +962,19 @@ export default {
             ACTIONS.GET_CLIENTS,
             ACTIONS.GET_STORES,
         ]),
+        _deselectStock () {
+            this.$nextTick(() => {
+                this.stockId = -1;
+                this.fixedDiscountAmount = 0;
+                this.promocode_id = null;
+                this.promocodeSet = false;
+                this.promocode = '';
+            });
+            this.cart = this.cart.map(c => {
+                c.discount = 0;
+                return c;
+            })
+        },
         calculateProductFinalPrice(product) {
             const priceWithoutDiscount = product.product_price * product.count;
             if (this.isRed || this.isProductPriceChangedManually) {
@@ -999,72 +1052,13 @@ export default {
             this.$loading.enable();
             try {
                 const { data: { data } } = await axios.get(`/api/promocode/search/${this.promocode}`);
-                this.checkPromocodeRules(data);
+                //this.checkPromocodeRules(data);
+                await this.verifyPromocode(data.id)
             } catch (e) {
                 console.log(e);
                 this.$toast.error(e.response.data.error)
             } finally {
                 this.$loading.disable();
-            }
-        },
-        checkPromocodeRules(promocode) {
-            if (promocode.min_total > 0 && this.subtotal < promocode.min_total) {
-                return this.$toast.error(`Для применения это промокода сумма покупки должна быть как минимум ${promocode.min_total} тенге!`)
-            }
-            if (promocode.promocode_type_id === 1) {
-                this.discountPercent = Math.max(this.discountPercent, promocode.discount);
-                this.currentPromocode = {...promocode};
-                this.promocodeSet = true;
-                this.partner_id = promocode.partner.id;
-                this.promocode_id = promocode.id;
-                return this.$toast.success('Промокод применен!');
-            }
-            if (promocode.promocode_type_id === 2) {
-                this.currentPromocode = {...promocode};
-                this.promocodeSet = true;
-                this.partner_id = data.partner.id;
-                this.promocode_id = data.id;
-                return this.$toast.success('Промокод применен!');
-            }
-            if (promocode.promocode_type_id === 3) {
-                const hasAllProducts = promocode.required_products.every(r => {
-                    const element = this.cart.find(c => c.product_id === r.product_id);
-                    return element && element.count >= r.count;
-                })
-                if (!hasAllProducts) {
-                    return this.$toast.error('Не все товары из условия добавлены в корзину!');
-                }
-                const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
-                if (freeProductIndex === -1) {
-                    return this.$toast.error('Добавьте подарочный товар в корзину!');
-                }
-                this.$set(this.cart[freeProductIndex], 'discount', 100);
-                this.partner_id = promocode.partner.id;
-                this.promocode_id = promocode.id;
-                this.promocodeSet = true;
-                return this.$toast.success('Промокод применен!');
-            }
-
-            if (promocode.promocode_type_id === 4) {
-                const productsInCart = this.cart.filter(c => {
-                    console.log(c);
-                    return c.product_id !== promocode.free_product_id && c.manufacturer_id === promocode.brand_id;
-                });
-                const totalPrice = productsInCart.reduce((a, c) => {
-                    return a + c.quantity * c.product_price;
-                }, 0);
-                if (promocode.min_total > 0 && totalPrice < promocode.min_total) {
-                    return this.$toast.error(`Для применения это промокода сумма покупки выбранного бренда должна быть как минимум ${promocode.min_total} тенге!`)
-                }
-                const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
-                if (freeProductIndex === -1) {
-                    return this.$toast.error('Добавьте подарочный товар в корзину!');
-                }
-                this.$set(this.cart[freeProductIndex], 'discount', 100);
-                this.partner_id = promocode.partner.id;
-                this.promocode_id = promocode.id;
-                this.promocodeSet = true;
-                return this.$toast.success('Промокод применен!');
             }
         },
         async refreshProducts() {
@@ -1153,9 +1147,10 @@ export default {
                 is_delivery: this.isDelivery,
                 is_paid: this.is_paid,
                 is_opt: this.isOpt,
-                promocode_id: this.promocode_id,
+                promocode_id: this.stockId > 0 ? this.stockId : this.promocode_id,
                 paid_by_barter: this.isPaidByBarter,
                 barter_balance: this.barterBalance,
+                promocode_fixed_amount: this.fixedDiscountAmount,
             };
 
             if (!this.isTodaySale && this.customSaleDate) {
@@ -1210,6 +1205,8 @@ export default {
                 this.promocode_id = null;
                 this.promocode = '';
                 this.isPaidByBarter = false;
+                this.stockId = -1;
+                this.fixedDiscountAmount = 0;
             } catch (e) {
                 throw e;
             }
@@ -1255,9 +1252,137 @@ export default {
                 default:
                     break;
             }
-        }
+        },
+        async _getAvailableStocks () {
+            this.$loading.enable();
+            try {
+                const payload = new URLSearchParams({
+                    store_id: this.storeFilter,
+                    client_id: this.client.id,
+                });
+                const { data } = await axiosClient.get(`/promocode/stocks/available?${payload}`);
+                this.availableStocks = data.stocks;
+            } catch (e) {}
+            finally {
+                this.$loading.disable();
+            }
+        },
+        async verifyPromocode (promocode) {
+            if (!promocode || !promocode.id) {
+                this._deselectStock();
+            }
+            try {
+                this.$loading.enable();
+                const response = await axiosClient.post(`/shop/promocode/check`, {
+                    cart: this.cart,
+                    promocode_id: promocode,
+                });
+                const { data } = response;
+                if (!data.success) {
+                    this._deselectStock();
+                    return this.$toast.warning(data.message);
+                } else {
+                    await this._applyPromocode(data.promocode, data.cart);
+                }
+            } catch (e) {
+                this._deselectStock();
+            } finally {
+                this.$loading.disable();
+            }
+        },
+        checkPromocodeRules(promocode) {
+            if (promocode.min_total > 0 && this.subtotal < promocode.min_total) {
+                return this.$toast.error(`Для применения это промокода сумма покупки должна быть как минимум ${promocode.min_total} тенге!`)
+            }
+            if (promocode.promocode_type_id === 1) {
+                this.discountPercent = Math.max(this.discountPercent, promocode.discount);
+                this.currentPromocode = {...promocode};
+                this.promocodeSet = true;
+                this.partner_id = promocode.partner.id;
+                this.promocode_id = promocode.id;
+                return this.$toast.success('Промокод применен!');
+            }
+            if (promocode.promocode_type_id === 2) {
+                this.currentPromocode = {...promocode};
+                this.promocodeSet = true;
+                this.partner_id = data.partner.id;
+                this.promocode_id = data.id;
+                return this.$toast.success('Промокод применен!');
+            }
+            if (promocode.promocode_type_id === 3) {
+                const hasAllProducts = promocode.required_products.every(r => {
+                    const element = this.cart.find(c => c.product_id === r.product_id);
+                    return element && element.count >= r.count;
+                })
+                if (!hasAllProducts) {
+                    return this.$toast.error('Не все товары из условия добавлены в корзину!');
+                }
+                const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
+                if (freeProductIndex === -1) {
+                    return this.$toast.error('Добавьте подарочный товар в корзину!');
+                }
+                this.$set(this.cart[freeProductIndex], 'discount', 100);
+                this.partner_id = promocode.partner.id;
+                this.promocode_id = promocode.id;
+                this.promocodeSet = true;
+                return this.$toast.success('Промокод применен!');
+            }
+
+            if (promocode.promocode_type_id === 4) {
+                const productsInCart = this.cart.filter(c => {
+                    console.log(c);
+                    return c.product_id !== promocode.free_product_id && c.manufacturer_id === promocode.brand_id;
+                });
+                const totalPrice = productsInCart.reduce((a, c) => {
+                    return a + c.quantity * c.product_price;
+                }, 0);
+                if (promocode.min_total > 0 && totalPrice < promocode.min_total) {
+                    return this.$toast.error(`Для применения это промокода сумма покупки выбранного бренда должна быть как минимум ${promocode.min_total} тенге!`)
+                }
+                const freeProductIndex = this.cart.findIndex(c => c.product_id === promocode.free_product_id);
+                if (freeProductIndex === -1) {
+                    return this.$toast.error('Добавьте подарочный товар в корзину!');
+                }
+                this.$set(this.cart[freeProductIndex], 'discount', 100);
+                this.partner_id = promocode.partner.id;
+                this.promocode_id = promocode.id;
+                this.promocodeSet = true;
+                return this.$toast.success('Промокод применен!');
+            }
+        },
+        async _applyPromocode (promocode, cart) {
+            if (promocode.promocode_type_id === __hardcoded(2)) {
+                this.fixedDiscountAmount = promocode.discount;
+            }
+            if (promocode.promocode_type_id === __hardcoded(1)) {
+                this.cart = this.cart.map(c => {
+                    const needle = cart.find(_c => c.id === _c.id);
+                    if (needle) {
+                        c.discount = needle.discount;
+                    }
+                    return c;
+                })
+            }
+            if (promocode.promocode_apply_type_id === 1) {
+                this.promocode_id = promocode.id;
+            } else {
+                this.stockId = promocode.id;
+            }
+            this.partner_id = promocode.client_id;
+            this.promocodeSet = true;
+            this.$toast.success('Промокод успешно применен!');
+        },
     },
     computed: {
+        displayedStocks () {
+            return [
+                {
+                    id: -1,
+                    title: 'Не выбрано'
+                },
+                ...this.availableStocks
+            ];
+        },
         isProductPriceChangedManually() {
             return this.cart.some(c => c.product_price !== c.initial_price);
         },
@@ -1291,7 +1416,7 @@ export default {
         discountTotal() {
             return !this.isDiscountDisabled ? this.cart.reduce((a, c) => {
                 return a + Math.max(this.discount, c.discount) / 100 * c.product_price * c.count;
-            }, 0) : 0;
+            }, 0) + this.fixedDiscountAmount : 0;
         },
         total() {
             return this.subtotal - this.discountTotal;
@@ -1358,6 +1483,19 @@ export default {
                 && (this.payment_type === 1
                     || this.payment_type === 2
                     || this.splitPayment.filter(s => (s.payment_type === 1 || s.payment_type === 2) && s.amount > 0).length > 0);
+        },
+        isStocksDisabled () {
+            return this.availableStocks.length === 0
+                || this.isRed
+                || this.isOpt
+                || !this.client
+                || this.isFree
+                || this.promocode_id
+                || this.isProductPriceChangedManually
+                || this.isPaidByBarter;
+        },
+        stockCanBeApplied () {
+            return !this.isOpt && !this.isRed && !this.isFree;
         }
     },
 }

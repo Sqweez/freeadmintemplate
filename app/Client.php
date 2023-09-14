@@ -177,7 +177,8 @@ class Client extends Model
         return $this->hasMany('App\ClientTransaction', 'client_id');
     }
 
-    public function sales() {
+    public function sales(): HasMany
+    {
         return $this->hasMany('App\ClientSale', 'client_id');
     }
 

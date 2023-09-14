@@ -31,7 +31,7 @@ class CheckPromocodeAction {
             'success' => true,
             'message' => 'Успех',
             'cart' => $recalculatedCart,
-            'promocode' => $this->promocode->only(['id', 'promocode', 'discount', 'promocode_type_id', 'promocode_gifts']),
+            'promocode' => $this->promocode->only(['id', 'promocode', 'discount', 'promocode_type_id', 'promocode_gifts', 'client_id']),
         ];
     }
 
