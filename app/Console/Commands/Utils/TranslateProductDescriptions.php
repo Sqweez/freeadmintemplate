@@ -39,7 +39,7 @@ class TranslateProductDescriptions extends Command
      */
     public function handle()
     {
-        $process = new Process(['python', getcwd() . '/python/translate.py', 'Школа']);
+        $process = new Process(['python', getcwd() . '\python\translate.py', 'Я хожу учиться в школу города Павлодар. У меня все отлично']);
         $process->setInput(NULL);
         $process->setEnv(['LANG' => 'en_US.UTF-8']);
         $process->run();
