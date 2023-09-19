@@ -56,3 +56,19 @@ export function getNumbersInRange(from, to) {
 
     return result;
 }
+
+export function _getFileType(filename) {
+    const extension = filename.split('.').pop().toLowerCase();
+
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+
+    const videoExtensions = ['mp4', 'avi', 'mkv', 'mov', 'webm'];
+
+    if (imageExtensions.includes(extension)) {
+        return 'image';
+    } else if (videoExtensions.includes(extension)) {
+        return 'video';
+    } else {
+        return undefined;
+    }
+}

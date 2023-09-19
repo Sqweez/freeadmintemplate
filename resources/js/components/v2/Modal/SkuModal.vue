@@ -29,10 +29,19 @@
                             :key="idx">
                             <button class="delete-image" @click.prevent="deleteImage(idx)">&times;</button>
                             <img
+                                v-if="_getFileType(image.image) === 'image'"
                                 :src="'../storage/' + image.image"
                                 width="150"
                                 height="150"
                                 alt="Изображение">
+                            <video
+                                v-if="_getFileType(image.image) === 'video'"
+                                :src="'../storage/' + image.image"
+                                width="150"
+                                height="150"
+                                controls
+                                muted
+                            />
                         </div>
                     </div>
                 </div>
@@ -105,6 +114,7 @@
 <script>
 import uploadFile, {deleteFile} from "@/api/upload";
 import {generateThumb} from "@/api/image";
+import {_getFileType} from '@/utils/helpers';
 
 export default {
         data: () => ({
@@ -207,12 +217,18 @@ export default {
                     const file = e.target.files[0];
                     const response = await uploadFile(file, 'file', 'products');
                     this.product_sku_images.push({image: response.data});
-                    await this.createImageThumb(response.data)
+                    const mimeType = file.type;
+                    if (mimeType.indexOf('image') !== -1) {
+                        await this.createImageThumb(response.data)
+                    }
                 } catch (e) {
                     this.$toast.error('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию');
                 } finally {
                     this.$refs.fileInput.value = null;
                 }
+            },
+            _getFileType (filename) {
+                return _getFileType(filename);
             },
             async createImageThumb(image) {
                 try {

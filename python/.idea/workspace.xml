@@ -1,30 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="414c111f-e9ac-439c-9e46-2e0dfa3333d3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../app/Repository/PromocodeRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../app/v2/Models/ClientCard.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../app/v2/Models/ClientPromocode.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../database/migrations/2023_09_11_125455_alter_table_promocodes_column_promocode_apply_type_id.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../database/migrations/2023_09_11_150309_create_client_cards_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../database/migrations/2023_09_11_150414_create_client_promocodes_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../resources/js/views/Promocodes/PromocodeClients.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/c86d0892-4e42-4450-a76b-d981d275a83a.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/c86d0892-4e42-4450-a76b-d981d275a83a.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Client.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Client.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Http/Controllers/api/PromocodeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Controllers/api/PromocodeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Http/Controllers/api/TransferController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Controllers/api/TransferController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Http/Resources/PromocodeResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Resources/PromocodeResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Promocode.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Promocode.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../resources/js/css/application.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/css/application.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../resources/js/router/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/router/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../resources/js/templates/MainTemplate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/templates/MainTemplate.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../resources/js/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/utils/helpers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../resources/js/views/Promocodes/Promocodes.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/views/Promocodes/Promocodes.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../resources/js/views/Promocodes/PromocodesCreate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/views/Promocodes/PromocodesCreate.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Console/Commands/Utils/TranslateProductDescriptions.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Console/Commands/Utils/TranslateProductDescriptions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translate.py" beforeDir="false" afterPath="$PROJECT_DIR$/translate.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +31,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Code/Python/tiktok-parser"
+    "last_opened_file_path": "C:/Code/Laravel/iron-crm/python"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

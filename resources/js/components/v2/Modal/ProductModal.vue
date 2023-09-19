@@ -39,10 +39,19 @@
                                     :key="idx">
                                     <button class="delete-image" @click.prevent="deleteImage(idx)">&times;</button>
                                     <img
+                                        v-if="_getFileType(image.image) === 'image'"
                                         :src="'../storage/' + image.image"
                                         width="150"
                                         height="150"
                                         alt="Изображение">
+                                    <video
+                                        v-if="_getFileType(image.image) === 'video'"
+                                        :src="'../storage/' + image.image"
+                                        width="150"
+                                        height="150"
+                                        controls
+                                        muted
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -80,10 +89,19 @@
                                     :key="idx">
                                     <button class="delete-image" @click.prevent="deleteSkuImage(idx)">&times;</button>
                                     <img
+                                        v-if="_getFileType(image.image) === 'image'"
                                         :src="'../storage/' + image.image"
                                         width="150"
                                         height="150"
                                         alt="Изображение">
+                                    <video
+                                        v-if="_getFileType(image.image) === 'video'"
+                                        :src="'../storage/' + image.image"
+                                        width="150"
+                                        height="150"
+                                        controls
+                                        muted
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -484,6 +502,7 @@ import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
 import {generateThumb} from "@/api/image";
 import axios from 'axios';
 import ImageResize from 'quill-image-resize-vue';
+import {_getFileType} from '@/utils/helpers';
 
 Quill.register('modules/imageResize', ImageResize);
 
@@ -1018,6 +1037,7 @@ export default {
         async uploadPhoto(e) {
             try {
                 const file = e.target.files[0];
+                const mimeType = file.type;
                 const response = await uploadFile(file, 'file', 'products');
                 if (this.uploadingImageFor === 'product') {
                     this.product_images.push({image: response.data});
@@ -1025,12 +1045,17 @@ export default {
                 if (this.uploadingImageFor === 'sku') {
                     this.product_sku_images.push({image: response.data});
                 }
-                await this.createImageThumb(response.data)
+                if (mimeType.indexOf('image') !== -1) {
+                    await this.createImageThumb(response.data)
+                }
             } catch (e) {
                 this.$toast.error('Во время загрузки файла произошла ошибка, попробуйте загрузить другую фотографию');
             } finally {
                 this.$refs.fileInput.value = null;
             }
+        },
+        _getFileType (filename) {
+            return _getFileType(filename);
         },
         async createImageThumb(image) {
             try {
