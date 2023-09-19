@@ -6,14 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/TranslateProductDescriptions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/KaspiController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/KaspiController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/python/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/translate.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/translate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Modal/SkuModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Modal/SkuModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodeClients.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Promocodes/PromocodeClients.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -306,8 +300,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.hot" />
         <item itemvalue="npm.prod" />
+        <item itemvalue="npm.hot" />
         <item itemvalue="npm.watch-poll" />
         <item itemvalue="npm.dev" />
       </list>
@@ -465,7 +459,7 @@
       <workItem from="1694670305794" duration="16133000" />
       <workItem from="1694773608784" duration="2416000" />
       <workItem from="1695108378960" duration="237000" />
-      <workItem from="1695108645885" duration="2161000" />
+      <workItem from="1695108645885" duration="4420000" />
     </task>
     <servers />
   </component>
