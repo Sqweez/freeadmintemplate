@@ -70,12 +70,14 @@
                             <div v-if="IS_SUPERUSER">
                                 <v-text-field
                                     label="Закупочная стоимость"
-                                    v-if="confirmMode && editMode"
+                                    v-if="confirmMode && editMode && IS_BOSS"
                                     v-model.number="item.purchase_price"
                                     type="number"
                                 />
                                 <span v-else>
-                                    {{ item.purchase_price | priceFilters }}
+                                    <span v-if="IS_BOSS">
+                                        {{ item.purchase_price | priceFilters }}
+                                    </span>
                             </span>
                             </div>
                             <div class="d-flex align-center" v-if="IS_SUPERUSER  && (confirmMode || editMode)">
@@ -128,7 +130,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td v-if="IS_SUPERUSER">
+                        <td v-if="IS_BOSS">
                             <v-list flat>
                                 <v-list-item>
                                     <v-list-item-content>
@@ -194,6 +196,9 @@
                                 </v-list-item>
                             </v-list>
 
+                        </td>
+                        <td v-else>
+                            -
                         </td>
                         <td style="min-width: 200px;" v-if="false">
 

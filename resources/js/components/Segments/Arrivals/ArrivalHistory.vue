@@ -99,7 +99,7 @@
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
-                            <v-list-item v-if="IS_SUPERUSER">
+                            <v-list-item v-if="IS_BOSS">
                                 <v-list-item-content>
                                     <v-list-item-title>
                                         {{ item.total_cost | priceFilters }}

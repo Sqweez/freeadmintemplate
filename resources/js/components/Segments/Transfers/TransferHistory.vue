@@ -308,6 +308,7 @@ import TransferModal from "@/components/Modal/TransferModal";
 import axios from 'axios';
 import TransferPhotoModal from "@/components/Modal/TransferPhotoModal";
 import moment from 'moment';
+import {__hardcoded} from '@/utils/helpers';
 
 export default {
         async mounted() {
@@ -323,63 +324,6 @@ export default {
             transferId: null,
             photoModal: false,
             currentPhotos: [],
-            headers: [
-                {
-                    text: 'Количество позиций',
-                    value: 'position_count',
-                    sortable: false,
-                },
-                {
-                    text: 'Количество товаров',
-                    value: 'product_count',
-                    sortable: false,
-                },
-                {
-                    text: 'Общая закуп. стоимость',
-                    value: 'total_purchase_cost',
-                    sortable: false,
-                },
-                {
-                    text: 'Общая стоимость',
-                    value: 'total_cost',
-                    sortable: false,
-                },
-                {
-                    text: 'Пользователь',
-                    value: 'user',
-                    sortable: false
-                },
-                {
-                    text: 'Дата создания',
-                    value: 'date',
-                    sortable: false
-                },
-                {
-                    text: 'Дата принятия',
-                    value: 'date_updated',
-                    sortable: false
-                },
-                {
-                    text: 'Отправитель',
-                    value: 'parent_store',
-                    sortable: false
-                },
-                {
-                    text: 'Получатель',
-                    value: 'child_store',
-                    sortable: false
-                },
-                {
-                    text: 'Действие',
-                    value: 'actions',
-                    sortable: false
-                },
-                {
-                    text: 'Поиск',
-                    value: 'search',
-                    align: ' d-none'
-                }
-            ],
             parentCity: -1,
             childCity: -1,
             start: null,
@@ -426,6 +370,72 @@ export default {
             },
         },
         computed: {
+            headers () {
+                let defaultHeaders = [
+                    {
+                        text: 'Количество позиций',
+                        value: 'position_count',
+                        sortable: false,
+                    },
+                    {
+                        text: 'Количество товаров',
+                        value: 'product_count',
+                        sortable: false,
+                    },
+                    {
+                        text: 'Общая стоимость',
+                        value: 'total_cost',
+                        sortable: false,
+                    },
+                    {
+                        text: 'Пользователь',
+                        value: 'user',
+                        sortable: false
+                    },
+                    {
+                        text: 'Дата создания',
+                        value: 'date',
+                        sortable: false
+                    },
+                    {
+                        text: 'Дата принятия',
+                        value: 'date_updated',
+                        sortable: false
+                    },
+                    {
+                        text: 'Отправитель',
+                        value: 'parent_store',
+                        sortable: false
+                    },
+                    {
+                        text: 'Получатель',
+                        value: 'child_store',
+                        sortable: false
+                    },
+                    {
+                        text: 'Действие',
+                        value: 'actions',
+                        sortable: false
+                    },
+                    {
+                        text: 'Поиск',
+                        value: 'search',
+                        align: ' d-none'
+                    }
+                ];
+
+                let selfCost =  {
+                    text: 'Общая закуп. стоимость',
+                    value: 'total_purchase_cost',
+                    sortable: false,
+                };
+
+                if (this.IS_BOSS) {
+                    defaultHeaders.splice(__hardcoded(2), 0, selfCost);
+                }
+
+                return defaultHeaders;
+            },
             transfers() {
                 return this.$store.getters.transfers.filter(s => {
                     if (this.isSeller || this.IS_FRANCHISE) {
