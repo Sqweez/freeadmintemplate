@@ -31,7 +31,8 @@ class ProductController extends Controller {
         }
     }
 
-    public function filters(Request $request) {
+    public function filters(Request $request): array
+    {
         $query = $request->all();
         $store_id = $request->cookie('store_id') ?? 1;
         return $this->getFilters($query, $store_id);
