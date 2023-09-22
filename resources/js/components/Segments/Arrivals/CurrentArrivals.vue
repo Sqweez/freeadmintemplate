@@ -2,7 +2,7 @@
     <div>
         <v-card>
             <v-card-text>
-                <h5 v-if="IS_SUPERUSER">Общая закупочная сумма: {{totalPurchasePrice | priceFilters}}</h5>
+                <h5 v-if="IS_BOSS">Общая закупочная сумма: {{totalPurchasePrice | priceFilters}}</h5>
                 <h5>Общая продажная сумма: {{totalProductPrice | priceFilters}}</h5>
                 <v-text-field
                     label="Поиск по поступлениям"
@@ -91,7 +91,7 @@
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
-                            <v-list-item v-if="IS_SUPERUSER">
+                            <v-list-item v-if="IS_BOSS">
                                 <v-list-item-content>
                                     <v-list-item-title>
                                         {{ item.total_cost | priceFilters }}
@@ -224,7 +224,7 @@
 </template>
 
 <script>
-import {deleteArrival, editArrival, getArrival, getArrivals} from "@/api/arrivals";
+import {editArrival} from "@/api/arrivals";
 import ArrivalInfoModal from "@/components/Modal/ArrivalInfoModal";
 import ConfirmationModal from "@/components/Modal/ConfirmationModal";
 import axios from "axios";
