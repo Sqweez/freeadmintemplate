@@ -309,6 +309,15 @@ class ProductController extends Controller {
             $_products = $products->filter(function ($p) use ($category) {
                 return $category['id'] === $p['category_id'];
             });
+            $_products = $_products->sort(function ($a, $b) {
+                if ($a->margin_type_id == 4 && $b->margin_type_id != 4) {
+                    return -1;
+                } elseif ($a->margin_type_id != 4 && $b->margin_type_id == 4) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
             $category['products'] = collect(ProductsResource::collection($_products))
                 ->map(function ($i) use ($_products) {
                     $needle = $_products->where('id', $i['product_id'])->first();

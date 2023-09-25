@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
 use App\Console\Commands\Utils\ClearClientCarts;
+use App\Console\Commands\Utils\ReformatMarginTypes;
 use App\Console\Commands\Utils\UnlinkOldPriceLists;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -38,6 +39,8 @@ class Kernel extends ConsoleKernel
             ->dailyAt('01:00');
         $schedule->command(UnlinkOldPriceLists::class)
             ->dailyAt('00:00');
+        $schedule->command(ReformatMarginTypes::class)
+            ->hourly();
         // $schedule->command('inspire')
         //          ->hourly();
     }
