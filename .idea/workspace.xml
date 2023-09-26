@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Products/Products.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Products/Products.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -463,7 +462,7 @@
       <workItem from="1695369775018" duration="2482000" />
       <workItem from="1695634092643" duration="1987000" />
       <workItem from="1695636116733" duration="864000" />
-      <workItem from="1695712070081" duration="1007000" />
+      <workItem from="1695712070081" duration="1325000" />
     </task>
     <servers />
   </component>

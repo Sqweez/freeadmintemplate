@@ -611,15 +611,15 @@ export default {
             let qnt = this.quantities[id];
             if (!this.IS_SUPERUSER) {
                 qnt = qnt.filter(q => {
-                    return [-1, 1, 6, this.user.store_id].includes(q.store_id);
+                    let arr = [-1, 1, 6, this.user.store_id];
+                    if (this.user.store_id === __hardcoded(16)) {
+                        arr.push(__hardcoded(23))
+                    }
+                    if (this.user.store_id === __hardcoded(23)) {
+                        arr.push(__hardcoded(16))
+                    }
+                    return arr.includes(q.store_id);
                 });
-                // 16, 23
-                if (this.user.store_id === __hardcoded(16)) {
-                    qnt.push(__hardcoded(23))
-                }
-                if (this.user.store_id === __hardcoded(23)) {
-                    qnt.push(__hardcoded(16))
-                }
                 qnt = qnt.map(q => {
                     if (q.store_id === -1) {
                         q.quantity = qnt.filter(q => q.store_id !== -1).reduce((a, c) => {
