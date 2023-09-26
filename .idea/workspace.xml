@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/ReformatMarginTypes.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_09_25_155238_alter_table_products_margin_type_id.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2023_09_26_131034_alter_table_categories_kaz.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2023_09_26_131049_alter_table_subcategories_kaz.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/shop/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/shop/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/shop/ProductsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/shop/ProductsResource.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -465,7 +462,9 @@
       <workItem from="1695108645885" duration="4868000" />
       <workItem from="1695205516689" duration="1284000" />
       <workItem from="1695369775018" duration="2482000" />
-      <workItem from="1695634092643" duration="1787000" />
+      <workItem from="1695634092643" duration="1987000" />
+      <workItem from="1695636116733" duration="864000" />
+      <workItem from="1695712070081" duration="222000" />
     </task>
     <servers />
   </component>
