@@ -352,6 +352,7 @@ import product_search from "@/mixins/product_search";
 import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
 import SkuModal from "@/components/v2/Modal/SkuModal";
 import ProductPrintModal from '@/components/Modal/ProductPrintModal';
+import {__hardcoded} from '@/utils/helpers';
 
 export default {
     components: {
@@ -612,12 +613,18 @@ export default {
                 qnt = qnt.filter(q => {
                     return [-1, 1, 6, this.user.store_id].includes(q.store_id);
                 });
+                // 16, 23
+                if (this.user.store_id === __hardcoded(16)) {
+                    qnt.push(__hardcoded(23))
+                }
+                if (this.user.store_id === __hardcoded(23)) {
+                    qnt.push(__hardcoded(16))
+                }
                 qnt = qnt.map(q => {
                     if (q.store_id === -1) {
                         q.quantity = qnt.filter(q => q.store_id !== -1).reduce((a, c) => {
                             return a + c.quantity;
                         }, 0)
-                        console.log(q);
                     }
                     return q;
                 })
