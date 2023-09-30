@@ -112,8 +112,17 @@ class SaleService {
                 'partner_expired_at' => now()->addDays(60),
             ]);
 
-            $partnerSalesAmount = $this->getPartnerSalesAmount($partner, $sale_id);
-            $partnerCashback = $this->calculatePartnerCashback($cart, $partnerSalesAmount, $discount);
+            $store = Sale::find($sale_id)->store;
+
+            #$partnerSalesAmount = $this->getPartnerSalesAmount($partner, $sale_id);
+            $partnerCashback = collect($cart)
+                ->reduce(function ($a, $c) use ($store, $discount) {
+                    $price = $c['product_price'] * $c['count'];
+                    $finalPrice = $price - ($price * max($discount, $c['discount']) / 100);
+                    $cashbackPercent = floatval($store->partner_cashback_percent) / 100;
+                    return $a + ($finalPrice * $cashbackPercent);
+                });
+            #$partnerCashback = $this->calculatePartnerCashback($cart, $partnerSalesAmount, $discount);
 
             $partner->transactions()->create([
                 'amount' => $partnerCashback,

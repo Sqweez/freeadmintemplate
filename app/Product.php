@@ -109,6 +109,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|KaspiEntityProduct[] $kaspi_price
  * @property-read int|null $kaspi_price_count
  * @method static Builder|Product whereProductDescriptionKaz($value)
+ * @property int $margin_type_id
+ * @method static Builder|Product whereMarginTypeId($value)
  */
 class Product extends Model {
 

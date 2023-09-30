@@ -238,7 +238,7 @@
                                 v-model="promocode"
                                 class="w-100px"
                                 color="white darken-2"
-                                @keypress.enter="searchPromocode"
+                                @keydown.enter="searchPromocode"
                                 hint="Для поиска промокода нажмите enter"
                                 :persistent-hint="true"
                                 outlined

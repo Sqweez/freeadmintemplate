@@ -119,7 +119,7 @@ class BookingController extends Controller
         });
 
         $saleService->createSaleProducts($sale, $booking->store_id, $products->toArray());
-        $saleService->createClientSale($booking->client_id, $sale->discount, $products->toArray(), 0, $request->get('user_id'), $sale->id, null);
+        $saleService->createClientSale($booking->client_id, $sale->discount, $products->toArray(), 0, $request->get('user_id'), $sale->id, null, 1);
         $booking->is_sold = 1;
         $booking->save();
         \DB::commit();
