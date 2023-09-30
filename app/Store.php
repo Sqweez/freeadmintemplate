@@ -51,6 +51,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Store whereEtc($value)
  * @property string $iin
  * @method static \Illuminate\Database\Eloquent\Builder|Store whereIin($value)
+ * @property string $partner_cashback_percent
+ * @method static \Illuminate\Database\Eloquent\Builder|Store wherePartnerCashbackPercent($value)
  */
 class Store extends Model
 {

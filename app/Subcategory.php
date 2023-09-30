@@ -37,6 +37,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereMetaDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereMetaH1($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereMetaTitle($value)
+ * @property string $subcategory_name_kaz
+ * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereSubcategoryNameKaz($value)
  */
 class Subcategory extends Model
 {

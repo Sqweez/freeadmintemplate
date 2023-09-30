@@ -140,6 +140,8 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|\App\v2\Models\KaspiEntityProduct[] $kaspi_price
  * @property-read int|null $kaspi_price_count
  * @method static Builder|Product whereProductDescriptionKaz($value)
+ * @property int $margin_type_id
+ * @method static Builder|Product whereMarginTypeId($value)
  */
 class Product extends Model
 {

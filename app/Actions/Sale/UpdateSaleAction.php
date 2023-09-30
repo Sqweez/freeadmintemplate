@@ -44,9 +44,8 @@ class UpdateSaleAction {
         $sale->fresh();
         // 4. Заново создаем список продуктов
         $cart = $request->get('cart');
-        //return $request->all();
         $this->saleService->createSaleProducts($sale, $sale->store_id, $cart);
-        $this->saleService->createClientSale($sale->client_id, $sale->discount, $cart, $sale->balance, $sale->user, $sale->id, $sale->partner_id);
+        $this->saleService->createClientSale($sale->client_id, $sale->discount, $cart, $sale->balance, $sale->user, $sale->id, $sale->partner_id, $sale->payment_type);
         $sale->fresh();
         \DB::commit();
     }

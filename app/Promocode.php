@@ -71,6 +71,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Promocode whereTotalUseQuantity($value)
  * @property int $apply_to_clients_id
  * @method static Builder|Promocode whereApplyToClientsId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|ClientPromocode[] $client_promocodes
+ * @property-read int|null $client_promocodes_count
  */
 class Promocode extends Model {
     const GOV_PROMOCODE_ID = 165;
