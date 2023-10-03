@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
+use App\Console\Commands\Trainers\CollectCashback;
 use App\Console\Commands\Utils\ClearClientCarts;
 use App\Console\Commands\Utils\ReformatMarginTypes;
 use App\Console\Commands\Utils\UnlinkOldPriceLists;
@@ -41,6 +42,8 @@ class Kernel extends ConsoleKernel
             ->dailyAt('00:00');
         $schedule->command(ReformatMarginTypes::class)
             ->hourly();
+        $schedule->command(CollectCashback::class)
+            ->weeklyOn(7, '10:00');
         // $schedule->command('inspire')
         //          ->hourly();
     }

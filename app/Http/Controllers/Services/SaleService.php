@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Services;
 
 
 use App\Client;
+use App\ClientTransaction;
 use App\CompanionSaleProduct;
 use App\CompanionTransaction;
 use App\ProductBatch;
@@ -127,7 +128,8 @@ class SaleService {
             $partner->transactions()->create([
                 'amount' => $partnerCashback,
                 'sale_id' => $sale_id,
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                'type_id' => ClientTransaction::TYPE_PARTNER_ROYALTY,
             ]);
 
             $partner->cached_balance += $partnerCashback;
