@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\ClientTransaction
@@ -30,7 +31,14 @@ class ClientTransaction extends Model
 {
     protected $guarded = [];
 
+    const TYPE_CASHBACK = 1;
+    const TYPE_PARTNER_ROYALTY = 2;
+
     public function setAmountAttribute($value) {
         $this->attributes['amount'] = ceil($value);
+    }
+
+    public function client(): BelongsTo {
+        return $this->belongsTo(Client::class, 'client_id');
     }
 }

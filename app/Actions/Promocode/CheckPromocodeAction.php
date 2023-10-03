@@ -37,7 +37,8 @@ class CheckPromocodeAction {
 
     private function getPromocode($promoCode) {
         return Promocode::query()
-            ->where('promocode', 'like', '%' . $promoCode . '%')
+            //->where('promocode', 'like', '%' . $promoCode . '%')
+            ->whereRaw("LOWER(promocode) = LOWER(?)", [$promoCode])
             ->active()
             ->first();
     }
