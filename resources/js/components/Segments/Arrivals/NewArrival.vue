@@ -215,6 +215,11 @@
                 </div>
             </v-card-text>
         </v-card>
+        <div class="my-3">
+            <v-btn color="error" @click="showProductModal()">Добавить товар
+                <v-icon>mdi-plus</v-icon>
+            </v-btn>
+        </div>
         <v-card class="background-tooman-darkgrey">
             <v-card-title>
                 Товары
@@ -336,11 +341,10 @@ import WayBillModal from "@/components/Modal/WayBillModal";
 import ACTIONS from "@/store/actions";
 import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
 import axios from "axios";
-import {createArrival} from "@/api/arrivals";
 import product_search from "@/mixins/product_search";
 import cart from "@/mixins/cart";
 import SkuModal from "@/components/v2/Modal/SkuModal";
-import { db } from '@/db';
+import {db} from '@/db';
 import product from '@/mixins/product';
 import {mapActions} from 'vuex';
 
