@@ -331,7 +331,7 @@ export default {
             const payload = {
                 ...this.arrival,
                 products: this.products.map(product => ({
-                    purchase_price: product.purchase_price,
+                    purchase_price: product.purchase_price * this.moneyRate,
                     count: product.count,
                     product_id: product.id,
                     base_product_id: product.base_product_id,

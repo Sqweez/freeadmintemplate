@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Console/Commands/Trainers/CollectCashback.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_10_02_172721_alter_table_ct_column_transactation_type.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Actions/Promocode/CheckPromocodeAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Actions/Promocode/CheckPromocodeAction.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/ClientTransaction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/ClientTransaction.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/SaleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/SaleService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Trainers/CollectCashback.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Trainers/CollectCashback.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/python/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/ArrivalInfoModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/ArrivalInfoModal.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -479,7 +476,8 @@
       <workItem from="1696074930839" duration="51000" />
       <workItem from="1696084729054" duration="3822000" />
       <workItem from="1696241388275" duration="3033000" />
-      <workItem from="1696326965219" duration="445000" />
+      <workItem from="1696326965219" duration="950000" />
+      <workItem from="1696584729727" duration="301000" />
     </task>
     <servers />
   </component>

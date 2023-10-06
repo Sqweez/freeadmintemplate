@@ -43,8 +43,8 @@ class CollectCashback extends Command
     {
         // @TODO создать чат
         $chat_ids = [
-            22 => '-4053634757',
-            23 => '-4033835182'
+            22 => '-1001801113542',
+            21 => '-1001916102974'
         ];
 
         foreach ($chat_ids as $key => $chat_id) {
@@ -56,6 +56,7 @@ class CollectCashback extends Command
             $transactions = ClientTransaction::query()
                 ->whereIn('sale_id', $sales->pluck('id'))
                 ->where('type_id', ClientTransaction::TYPE_PARTNER_ROYALTY)
+                ->where('amount', '>', 0)
                 ->with('client')
                 ->get()
                 ->groupBy('client_id')
@@ -68,7 +69,8 @@ class CollectCashback extends Command
                         'client' => collect($items)->first()['client']
                     ];
                 })
-                ->values();
+                ->values()
+                ->sortByDesc('amount');
 
             $message = $this->buildMessage($transactions, $key);
             (new TelegramService())->send($chat_id, $message);
