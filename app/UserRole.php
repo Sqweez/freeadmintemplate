@@ -25,4 +25,5 @@ class UserRole extends Model
 
     const ADMIN_ROLE_ID = 1;
     const BOSS_ROLE_ID = 8;
+    const SELLER_ROLE_ID = 2;
 }

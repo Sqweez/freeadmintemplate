@@ -100,7 +100,7 @@ const reportsModule = {
                 payload.is_supplier = 1;
             }
 
-            if (getters.IS_SENIOR_SELLER || getters.IS_FRANCHISE) {
+            if (getters.IS_SENIOR_SELLER) {
                 payload.store_id = getters.USER.store_id;
             }
 

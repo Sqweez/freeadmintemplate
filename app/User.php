@@ -86,6 +86,10 @@ class User extends Authenticatable
         return $this->role_id === __hardcoded(7);
     }
 
+    public function isSeller(): bool {
+        return $this->role_id === __hardcoded(UserRole::SELLER_ROLE_ID);
+    }
+
     public function scopeLogin($q, $login) {
         $q->where('login', $login);
     }

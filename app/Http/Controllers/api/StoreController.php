@@ -24,7 +24,7 @@ class StoreController extends Controller
             ->with(['transactions'])
             ->with('city_name')
             ->when(auth()->user() && auth()->user()->isFranchise(), function ($query) {
-                return $query->where('id', auth()->user()->store_id);
+                return $query->where('city_id', auth()->user()->store->city_id);
             });
         if ($request->has('store_id')) {
             $storeQuery->where('id', $request->get('store_id'));

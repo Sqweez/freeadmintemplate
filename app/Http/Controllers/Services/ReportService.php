@@ -6,26 +6,19 @@ namespace App\Http\Controllers\Services;
 
 use App\Http\Resources\v2\Report\ReportsResource;
 use App\Sale;
+use App\Store;
 use App\User;
 use App\v2\Models\Supplier;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ReportService
-{
+class ReportService {
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function getReports(
-        $start,
-        $finish,
-        $user_id,
-        $is_supplier = false,
-        $store_id = null,
-        $manufacturer_id = null
-    ): AnonymousResourceCollection {
+    public static function getReports($start, $finish, $user_id, $is_supplier = false, $store_id = null, $manufacturer_id = null): AnonymousResourceCollection {
         $saleQuery = Sale::query();
         $sales = null;
         $user = null;
@@ -49,6 +42,12 @@ class ReportService
                 $saleQuery
                     ->where('payment_type', __hardcoded(4));
             }*/
+
+            if ($authUser->isFranchise()) {
+                $store = Store::find($authUser->store_id);
+                $storeIds = Store::where('city_id', $store->city_id)->get()->pluck('id');
+                $saleQuery->whereIn('store_id', $storeIds);
+            }
 
             if (request()->has('promocode_id')) {
                 $saleQuery->where('promocode_id', json_decode(request()->get('promocode_id')));
@@ -86,18 +85,13 @@ class ReportService
                 return count($sale['products']) > 0;
             })->values();
         }
-        return ReportsResource::collection(
-            $sales
-        );
+        return ReportsResource::collection($sales);
     }
 
-    public static function getClientReports($client_id): AnonymousResourceCollection
-    {
+    public static function getClientReports($client_id): AnonymousResourceCollection {
         $saleQuery = Sale::query();
         $saleQuery = $saleQuery->report()->whereClientId($client_id)->orderByDesc('created_at');
 
-        return ReportsResource::collection(
-            $saleQuery->get()
-        );
+        return ReportsResource::collection($saleQuery->get());
     }
 }

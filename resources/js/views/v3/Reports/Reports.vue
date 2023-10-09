@@ -165,12 +165,12 @@
                     >
                     </v-select>
                     <v-select
-                        v-if="IS_SUPERUSER"
+                        v-if="IS_SUPERUSER || IS_FRANCHISE"
                         :items="shops"
                         item-text="name"
                         item-value="id"
                         v-model="currentCity"
-                        label="Город:"
+                        label="Магазин:"
                     >
                     </v-select>
                     <v-select
