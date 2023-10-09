@@ -127,7 +127,7 @@
                         v-model="child_store"
                         item-value="id"
                         label="Склад"
-                        :disabled="!IS_SUPERUSER && !IS_STOREKEEPER"
+                        :disabled="!IS_SUPERUSER && !IS_STOREKEEPER && !IS_FRANCHISE"
                     />
                 </v-col>
                 <v-col cols="12" lg="3">
@@ -195,7 +195,7 @@
                             v-model="storeFilter"
                             item-value="id"
                             label="Склад"
-                            :disabled="!IS_SUPERUSER && !IS_STOREKEEPER"
+                            :disabled="!IS_SUPERUSER && !IS_STOREKEEPER && !IS_FRANCHISE"
                         />
                     </v-col>
                 </v-row>

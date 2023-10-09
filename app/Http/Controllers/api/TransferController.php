@@ -9,8 +9,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SingleTransferResource;
 use App\Http\Resources\TransferResource;
 use App\ProductBatch;
+use App\Store;
 use App\Transfer;
 use App\TransferBatch;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -60,6 +62,25 @@ class TransferController extends Controller {
                 return $q->where('type_id', Transfer::PARTNER_SELLER_ID);
             });
         }
+
+        /* @var User $user */
+        $user = auth()->user();
+
+        if ($user->isSeller()) {
+            $transfersQuery = $transfersQuery
+                ->where('child_store_id', $user->store_id)
+                ->orWhere('parent_store_id', $user->store_id);
+        }
+
+        if ($user->isFranchise()) {
+            $store = Store::find($user->store_id);
+            $city_id = $store->city_id;
+            $store_ids = Store::where('city_id', $city_id)->get()->pluck('id');
+            $transfersQuery = $transfersQuery
+                ->where('child_store_id', $store_ids->toArray())
+                ->orWhere('parent_store_id', $store_ids->toArray());
+        }
+
         return TransferResource::collection($transfersQuery->get());
     }
 

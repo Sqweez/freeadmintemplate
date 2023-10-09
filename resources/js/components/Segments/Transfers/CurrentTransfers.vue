@@ -219,7 +219,8 @@
                     </v-btn>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn v-bind="attrs" v-on="on" color="orange darken-2" icon @click="$router.push(`/matrixes/create?transfer=${item.id}`)">
+                            <v-btn v-bind="attrs" v-on="on" color="orange darken-2" icon
+                                   @click="$router.push(`/matrixes/create?transfer=${item.id}`)">
                                 <v-icon>
                                     mdi-collage
                                 </v-icon>
@@ -273,194 +274,190 @@ import moment from "moment";
 import {__hardcoded} from '@/utils/helpers';
 
 export default {
-        async mounted() {
+    async mounted() {
+        await this.$store.dispatch('getTransfers', {mode: 'current'});
+        this.loading = false;
+    },
+    components: {ConfirmationModal, TransferModal, TransferPhotoModal},
+    data: () => ({
+        parentCity: -1,
+        childCity: -1,
+        startMenu: null,
+        start: null,
+        finishMenu: null,
+        finish: null,
+        search: '',
+        editMode: false,
+        loading: true,
+        cancelModal: false,
+        infoModal: false,
+        transferId: null,
+        photoModal: false,
+        currentPhotos: [],
+        storeId: null,
+    }),
+    methods: {
+        async changeCustomDate() {
+            this.$refs.startMenu.save(this.start);
+            this.$refs.finishMenu.save(this.finish);
+        },
+        async cancelTransfer() {
+            this.loading = true;
+            this.cancelModal = false;
+            await declineTransfer(this.transferId);
+            this.transferId = null;
             await this.$store.dispatch('getTransfers', {mode: 'current'});
             this.loading = false;
         },
-        components: {ConfirmationModal, TransferModal, TransferPhotoModal},
-        data: () => ({
-            parentCity: -1,
-            childCity: -1,
-            startMenu: null,
-            start: null,
-            finishMenu: null,
-            finish: null,
-            search: '',
-            editMode: false,
-            loading: true,
-            cancelModal: false,
-            infoModal: false,
-            transferId: null,
-            photoModal: false,
-            currentPhotos: [],
-            storeId: null,
-        }),
-        methods: {
-            async changeCustomDate() {
-                this.$refs.startMenu.save(this.start);
-                this.$refs.finishMenu.save(this.finish);
-            },
-            async cancelTransfer() {
-                this.loading = true;
-                this.cancelModal = false;
-                await declineTransfer(this.transferId);
-                this.transferId = null;
-                await this.$store.dispatch('getTransfers', {mode: 'current'});
-                this.loading = false;
-            },
-            async onConfirm() {
-                this.transferId = null;
-                this.infoModal = false;
-                this.loading = true;
-                await this.$store.dispatch('getTransfers', {mode: 'current'});
-                this.loading = false;
-            },
-            async printWaybill(id) {
-                this.loading = true;
-                const { data } = await axios.get(`/api/excel/transfer/waybill?transfer=${id}`)
-                const link = document.createElement('a');
-                link.href = data.path;
-                link.click();
-                this.loading = false;
-            },
-            showPhotoModal(photos) {
-                if (!photos || !photos.length) {
-                    this.$toast.error('Нет фотографий');
-                    return false;
-                }
-                this.currentPhotos = photos;
-                this.photoModal = true;
-            },
-            toggleEditTransfer(item) {
-                this.transferId = item.id;
-                this.storeId = item.child_store_id;
-                this.editMode = !this.editMode;
-            },
-            async editTransfer() {
-                try {
-                    await this.$store.dispatch('editTransfer', {
-                        id: this.transferId,
-                        child_store_id: this.storeId
-                    });
-                    this.editMode = false;
-                    this.transferId = null;
-                    this.$toast.success('Перемещение отредактировано!')
-                } catch (e) {
-                    this.$toast.error('Произошла ошибка')
-                }
-            }
+        async onConfirm() {
+            this.transferId = null;
+            this.infoModal = false;
+            this.loading = true;
+            await this.$store.dispatch('getTransfers', {mode: 'current'});
+            this.loading = false;
         },
-        computed: {
-            headers () {
-                let defaultHeaders =  [
-                    {
-                        text: 'Количество позиций',
-                        value: 'position_count',
-                        sortable: false,
-                    },
-                    {
-                        text: 'Количество товаров',
-                        value: 'product_count',
-                        sortable: false,
-                    },
-                    {
-                        text: 'Общая стоимость',
-                        value: 'total_cost',
-                        sortable: false,
-                    },
-                    {
-                        text: 'Пользователь',
-                        value: 'user',
-                        sortable: false
-                    },
-                    {
-                        text: 'Дата создания',
-                        value: 'date',
-                        sortable: false
-                    },
-                    {
-                        text: 'Отправитель',
-                        value: 'parent_store',
-                        sortable: false
-                    },
-                    {
-                        text: 'Получатель',
-                        value: 'child_store',
-                        sortable: false
-                    },
-                    {
-                        text: 'Действие',
-                        value: 'actions',
-                        sortable: false
-                    },
-                    {
-                        text: 'Поиск',
-                        value: 'search',
-                        align: ' d-none'
-                    }
-                ];
-
-                let selfCost =  {
-                        text: 'Общая закуп. стоимость',
-                        value: 'total_purchase_cost',
-                        sortable: false,
-                    };
-
-                if (this.IS_BOSS) {
-                    defaultHeaders.splice(__hardcoded(2), 0, selfCost);
-                }
-
-                return defaultHeaders;
-            },
-            transfers() {
-                return this.$store.getters.transfers.filter(s => {
-                    if (this.isSeller || this.IS_FRANCHISE) {
-                        return +s.child_store_id === +this.user.store_id || +s.parent_store_id === +this.user.store_id;
-                    }
-
-                    if (this.transferId !== null) {
-                        return s.id === this.transferId;
-                    }
-
-                    return s;
-                }).filter(t => {
-                    if (this.childCity === -1) {
-                        return t;
-                    }
-                    return t.child_store_id === this.childCity;
-                }).filter(t => {
-                    if (this.parentCity === -1) {
-                        return t;
-                    }
-                    return t.parent_store_id === this.parentCity;
-                }).filter(t => {
-                    if (!(this.start && this.finish)) {
-                        return t;
-                    }
-                    return moment(t.created_at)
-                        .startOf('day')
-                        .isSameOrBefore(this.finish) && moment(t.created_at)
-                        .startOf('day')
-                        .isSameOrAfter(this.start);
+        async printWaybill(id) {
+            this.loading = true;
+            const {data} = await axios.get(`/api/excel/transfer/waybill?transfer=${id}`)
+            const link = document.createElement('a');
+            link.href = data.path;
+            link.click();
+            this.loading = false;
+        },
+        showPhotoModal(photos) {
+            if (!photos || !photos.length) {
+                this.$toast.error('Нет фотографий');
+                return false;
+            }
+            this.currentPhotos = photos;
+            this.photoModal = true;
+        },
+        toggleEditTransfer(item) {
+            this.transferId = item.id;
+            this.storeId = item.child_store_id;
+            this.editMode = !this.editMode;
+        },
+        async editTransfer() {
+            try {
+                await this.$store.dispatch('editTransfer', {
+                    id: this.transferId,
+                    child_store_id: this.storeId
                 });
-            },
-            isSeller() {
-                return this.$store.getters.IS_SELLER;
-            },
-            user() {
-                return this.$store.getters.USER;
-            },
-            stores() {
-                return [
-                    {
-                        id: -1,
-                        name: 'Все'
-                    },
-                    ...this.$store.getters.stores
-                ];
+                this.editMode = false;
+                this.transferId = null;
+                this.$toast.success('Перемещение отредактировано!')
+            } catch (e) {
+                this.$toast.error('Произошла ошибка')
             }
         }
+    },
+    computed: {
+        headers() {
+            let defaultHeaders = [
+                {
+                    text: 'Количество позиций',
+                    value: 'position_count',
+                    sortable: false,
+                },
+                {
+                    text: 'Количество товаров',
+                    value: 'product_count',
+                    sortable: false,
+                },
+                {
+                    text: 'Общая стоимость',
+                    value: 'total_cost',
+                    sortable: false,
+                },
+                {
+                    text: 'Пользователь',
+                    value: 'user',
+                    sortable: false
+                },
+                {
+                    text: 'Дата создания',
+                    value: 'date',
+                    sortable: false
+                },
+                {
+                    text: 'Отправитель',
+                    value: 'parent_store',
+                    sortable: false
+                },
+                {
+                    text: 'Получатель',
+                    value: 'child_store',
+                    sortable: false
+                },
+                {
+                    text: 'Действие',
+                    value: 'actions',
+                    sortable: false
+                },
+                {
+                    text: 'Поиск',
+                    value: 'search',
+                    align: ' d-none'
+                }
+            ];
+
+            let selfCost = {
+                text: 'Общая закуп. стоимость',
+                value: 'total_purchase_cost',
+                sortable: false,
+            };
+
+            if (this.IS_BOSS) {
+                defaultHeaders.splice(__hardcoded(2), 0, selfCost);
+            }
+
+            return defaultHeaders;
+        },
+        transfers() {
+            return this.$store.getters.transfers.filter(s => {
+                if (this.transferId !== null) {
+                    return s.id === this.transferId;
+                }
+
+                return s;
+            }).filter(t => {
+                if (this.childCity === -1) {
+                    return t;
+                }
+                return t.child_store_id === this.childCity;
+            }).filter(t => {
+                if (this.parentCity === -1) {
+                    return t;
+                }
+                return t.parent_store_id === this.parentCity;
+            }).filter(t => {
+                if (!(this.start && this.finish)) {
+                    return t;
+                }
+                return moment(t.created_at)
+                    .startOf('day')
+                    .isSameOrBefore(this.finish) && moment(t.created_at)
+                    .startOf('day')
+                    .isSameOrAfter(this.start);
+            });
+        },
+        isSeller() {
+            return this.$store.getters.IS_SELLER;
+        },
+        user() {
+            return this.$store.getters.USER;
+        },
+        stores() {
+            return [
+                {
+                    id: -1,
+                    name: 'Все'
+                },
+                ...this.$store.getters.stores
+            ];
+        }
     }
+}
 </script>
 
 <style scoped>

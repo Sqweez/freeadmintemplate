@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Utils;
 
 use App\v2\Models\ProductComment;
+use App\v2\Models\ProductSku;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -44,8 +45,26 @@ class CreateProductReviews extends Command
         $realPath = 'Console/Commands/Utils/assets/reviews.json';
         $jsonFilePath = app_path($realPath);
         $jsonContent = file_get_contents($jsonFilePath);
-        $products = json_decode($jsonContent, true);
-        $lastCommentId = __hardcoded(7194);
+        $products = collect(json_decode($jsonContent, true));
+        $products = $products
+            ->groupBy('id')
+            ->each(function ($items, $id) {
+                $productSkuId = $id;
+                $productId = ProductSku::find($productSkuId)->product_id;
+                ProductComment::where('product_id', $productId)->delete();
+                collect($items)
+                    ->each(function ($item) use ($productId) {
+                        $this->line($item['review']);
+                        ProductComment::create([
+                            'product_id' => $productId,
+                            'comment' => $item['review'],
+                            'user_id' => __hardcoded(11),
+                            'fake_name' => $this->getFakeName(),
+                            'created_at' => $this->getDate(),
+                        ]);
+                    });
+            });
+        /*$lastCommentId = __hardcoded(7194);
 
         ProductComment::where('id', '>=', $lastCommentId)
             ->delete();
@@ -56,28 +75,20 @@ class CreateProductReviews extends Command
                 $productComment->update([
                     'fake_name' => $this->getFakeName()
                 ]);
-            });
+            });*/
 
-        foreach ($products as $product) {
-            $productId = $product['product']['id'];
-            foreach ($product['reviews'] as $review) {
-
-                $_review = trim($review);
-
-                if (count(explode(' ', $_review)) === 1) {
-                    $_review = $this->getFakeReview();
-                    $this->line($_review);
-                }
-
-                ProductComment::create([
-                    'product_id' => $productId,
-                    'comment' => $_review,
-                    'user_id' => __hardcoded(11),
-                    'fake_name' => $this->getFakeName(),
-                    'created_at' => $this->getDate(),
-                ]);
-            }
-        };
+        /*foreach ($products as $product) {
+            $productSkuId = $product['id'];
+            $review = $product['review'];
+            $productId = ProductSku::find($productSkuId)->product_id;
+            ProductComment::create([
+                'product_id' => $productId,
+                'comment' => $review,
+                'user_id' => __hardcoded(11),
+                'fake_name' => $this->getFakeName(),
+                'created_at' => $this->getDate(),
+            ]);
+        };*/
     }
 
     private function getFakeName(): string
