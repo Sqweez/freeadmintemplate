@@ -475,6 +475,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::prefix('kaspi')->group(function () {
             Route::get('/entity', [\App\Http\Controllers\api\v3\KaspiController::class, 'getEntities']);
         });
+
+        Route::prefix('report')->group(function () {
+            Route::post('product', [\App\Http\Controllers\api\v3\ReportController::class, 'getProductReport']);
+        });
     });
 
     Route::prefix('dev')->group(function () {

@@ -23,23 +23,11 @@ class TransferController extends Controller {
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index(Request $request) {
+    public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection {
         $mode = $request->get('mode');
+        /* @var User $user */
+        $user = auth()->user();
         $transfersQuery = Transfer::query();
-        if ($mode === 'current') {
-            $transfersQuery = $transfersQuery
-                ->where('is_confirmed', false)
-                ->where('is_accepted', true);
-        }
-        if ($mode === 'history') {
-            $transfersQuery = $transfersQuery
-                ->where('is_confirmed', true)
-                ->where('is_accepted', true)
-                ->whereDate('updated_at', '>=', today()->subDays(30)->startOfDay());
-        }
-        if ($mode === 'not_accepted') {
-            $transfersQuery = $transfersQuery->where('is_accepted', false);
-        }
         $transfersQuery = $transfersQuery
             ->whereHas('batches.product')
             ->whereHas('batches.product.product')
@@ -54,32 +42,81 @@ class TransferController extends Controller {
                     'batches.product.product.attributes', 'batches.product.attributes',
                     'batches.product.product.attributes.attribute_name'
                 ])
-            ->select(['id', 'parent_store_id', 'child_store_id', 'user_id', 'photos', 'created_at', 'updated_at'])
+            ->select(['id', 'parent_store_id', 'child_store_id', 'user_id', 'photos', 'created_at', 'updated_at', 'is_confirmed', 'is_accepted'])
+            ->when($mode === 'current', function ($query) {
+                return $query
+                    ->where('is_confirmed', false)
+                    ->where('is_accepted', true);
+            })
+            ->when($mode === 'history', function ($query) {
+                return $query
+                    ->where('is_confirmed', true)
+                    ->where('is_accepted', true)
+                    ->whereDate('updated_at', '>=', today()->subDays(30)->startOfDay());
+            })
+            ->when($mode === 'not_accepted', function ($query) {
+                return $query
+                    ->where('is_accepted', false);
+            })
+            ->when($request->has('partners'), function ($q) {
+                return $q->whereHas('child_store', function ($q) {
+                    return $q->where('type_id', Transfer::PARTNER_SELLER_ID);
+                });
+            })
+            ->when($user && $user->isSeller(), function ($q) use ($user) {
+                return $q
+                    ->where(function ($q) use ($user) {
+                        return $q->where('child_store_id', $user->store_id)
+                            ->orWhere('parent_store_id', $user->store_id);
+                    });
+            })
+            ->when($user && $user->isFranchise(), function ($q) use ($user) {
+                $store = Store::find($user->store_id);
+                $city_id = $store->city_id;
+                $store_ids = Store::where('city_id', $city_id)->get()->pluck('id');
+                return $q
+                    ->where(function ($q) use ($store_ids) {
+                        return $q->whereIn('child_store_id', $store_ids->toArray())
+                            ->orWhereIn('parent_store_id', $store_ids->toArray());
+                    });
+            })
             ->orderByDesc('created_at');
 
-        if ($request->has('partners')) {
-            $transfersQuery = $transfersQuery->whereHas('child_store', function ($q) {
-                return $q->where('type_id', Transfer::PARTNER_SELLER_ID);
-            });
+        /*if ($mode === 'current') {
+            $transfersQuery = $transfersQuery
+                ->where('is_confirmed', false)
+                ->where('is_accepted', true);
         }
+        if ($mode === 'history') {
+            $transfersQuery = $transfersQuery
+                ->where('is_confirmed', true)
+                ->where('is_accepted', true)
+                ->whereDate('updated_at', '>=', today()->subDays(30)->startOfDay());
+        }*/
+        /*	if ($mode === 'not_accepted') {
+                $transfersQuery = $transfersQuery->where('is_accepted', false);
+            }*/
 
-        /* @var User $user */
-        $user = auth()->user();
+        /*	if ($request->has('partners')) {
+                $transfersQuery = $transfersQuery->whereHas('child_store', function ($q) {
+                    return $q->where('type_id', Transfer::PARTNER_SELLER_ID);
+                });
+            }*/
 
-        if ($user->isSeller()) {
+        /*if ($user && $user->isSeller()) {
             $transfersQuery = $transfersQuery
                 ->where('child_store_id', $user->store_id)
                 ->orWhere('parent_store_id', $user->store_id);
         }
 
-        if ($user->isFranchise()) {
+        if ($user && $user->isFranchise()) {
             $store = Store::find($user->store_id);
             $city_id = $store->city_id;
             $store_ids = Store::where('city_id', $city_id)->get()->pluck('id');
             $transfersQuery = $transfersQuery
-                ->where('child_store_id', $store_ids->toArray())
-                ->orWhere('parent_store_id', $store_ids->toArray());
-        }
+                ->whereIn('child_store_id', $store_ids->toArray())
+                ->orWhereIn('parent_store_id', $store_ids->toArray());
+        }*/
 
         return TransferResource::collection($transfersQuery->get());
     }
@@ -216,11 +253,11 @@ class TransferController extends Controller {
                 $batches->filter(function ($i) use ($product_id) {
                     return $i['product_id'] === $product_id;
                 })
-                ->take($countDifference)->each(function ($batch) {
-                    $productBatch = ProductBatch::find($batch['batch_id']);
-                    $productBatch->update(['quantity' => $productBatch->quantity + 1]);
-                    TransferBatch::find($batch['id'])->delete();
-                });
+                    ->take($countDifference)->each(function ($batch) {
+                        $productBatch = ProductBatch::find($batch['batch_id']);
+                        $productBatch->update(['quantity' => $productBatch->quantity + 1]);
+                        TransferBatch::find($batch['id'])->delete();
+                    });
             }
         }
     }

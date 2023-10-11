@@ -120,13 +120,13 @@
 </template>
 
 <script>
-    import months from '@/common/enums/months.ru';
-    import moment from 'moment';
-    import ACTIONS from "@/store/actions";
-    import CreateShiftModal from "@/components/Modal/CreateShiftModal";
-    import EditShiftModal from "@/components/Modal/EditShiftModal";
+import months from '@/common/enums/months.ru';
+import moment from 'moment';
+import ACTIONS from "@/store/actions";
+import CreateShiftModal from "@/components/Modal/CreateShiftModal";
+import EditShiftModal from "@/components/Modal/EditShiftModal";
 
-    export default {
+export default {
         components: {EditShiftModal, CreateShiftModal},
         data: () => ({
             currentDate: null,
@@ -136,6 +136,7 @@
             shift: {},
             editShiftModal: false,
         }),
+
         methods: {
             getButtonColor(user) {
                 try {
@@ -199,6 +200,11 @@
             }
         },
         async created() {
+            console.log(this.HAS_SHIFT_LIST_ACCESS);
+            if (!this.HAS_SHIFT_LIST_ACCESS) {
+                this.$toast.error('Нефорам вход запрещен')
+                return this.$router.push('/');
+            }
             this.currentDate = moment().format('YYYY-MM');
         },
         computed: {

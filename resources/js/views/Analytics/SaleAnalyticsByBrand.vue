@@ -155,7 +155,7 @@
                     label="Поиск товара"
                     single-line
                     hide-details
-                ></v-text-field>
+                />
                 <v-row class="d-flex align-center">
                     <v-col cols="12" xl="4">
                         <v-autocomplete
@@ -226,7 +226,7 @@ import SaleChart from "@/components/Charts/SaleChart";
 import months from '@/common/enums/months.ru';
 import moment from "moment";
 import ACTIONS from "@/store/actions";
-import { mapGetters } from 'vuex';
+import {mapGetters} from 'vuex';
 import product_search from "@/mixins/product_search";
 
 export default {

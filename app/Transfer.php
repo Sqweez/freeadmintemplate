@@ -46,7 +46,8 @@ class Transfer extends Model
     protected $casts = [
         'is_accepted' => 'boolean',
         'child_store_id' => 'integer',
-        'parent_store_id' => 'integer'
+        'parent_store_id' => 'integer',
+        'is_confirmed' => 'boolean'
     ];
 
     const PARTNER_SELLER_ID = 3;

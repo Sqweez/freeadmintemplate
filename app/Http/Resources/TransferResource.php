@@ -66,7 +66,9 @@ class TransferResource extends JsonResource
             'is_consignment' => $this->companionSale->is_consignment,
             'search' => trim($search),
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
+            'is_accepted' => $this->is_accepted,
+            'is_confirmed' => $this->is_confirmed
         ];
     }
 }
