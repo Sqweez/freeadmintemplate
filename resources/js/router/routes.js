@@ -468,7 +468,7 @@ const routes = [
         },
     },
     {
-        path: '/reports/products',
+        path: '/report/products',
         component: ProductReports,
         meta: {
             CAN_ENTER: {

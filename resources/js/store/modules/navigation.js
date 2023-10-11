@@ -221,34 +221,37 @@ const navigationModule = {
                 icon: 'settings',
             },
             {
-                title: 'Отчеты по продажам',
-                url: '/reports',
+                title: 'Отчеты',
+                url: '#',
                 icon: 'report',
-            },
-            {
-                title: 'Отчеты по товарам',
-                url: '/reports/products',
-                icon: 'report',
-            },
-            {
-                title: 'Отчеты по тренерам',
-                url: '/analytics/trainer/rating',
-                icon: 'report',
-            },
-            {
-                title: 'Отчеты по партнерам',
-                url: '/analytics/partners/rating',
-                icon: 'report',
-            },
-            {
-                title: 'Отчеты по клиентам',
-                url: '/analytics/clients/sales',
-                icon: 'report',
-            },
-            {
-                title: 'Рассылка',
-                url: '/mailing',
-                icon: 'mail',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Отчеты по продажам',
+                        url: '/reports',
+                        icon: 'report',
+                    },
+                    {
+                        title: 'Отчеты по товарам',
+                        url: '/report/products',
+                        icon: 'report',
+                    },
+                    {
+                        title: 'Отчеты по тренерам',
+                        url: '/analytics/trainer/rating',
+                        icon: 'report',
+                    },
+                    {
+                        title: 'Отчеты по партнерам',
+                        url: '/analytics/partners/rating',
+                        icon: 'report',
+                    },
+                    {
+                        title: 'Отчеты по клиентам',
+                        url: '/analytics/clients/sales',
+                        icon: 'report',
+                    },
+                ],
             },
             {
                 title: 'Kaspi',
@@ -610,34 +613,37 @@ const navigationModule = {
                 icon: 'settings',
             },
             {
-                title: 'Отчеты по продажам',
-                url: '/reports',
+                title: 'Отчеты',
+                url: '#',
                 icon: 'report',
-            },
-            {
-                title: 'Отчеты по товарам',
-                url: '/reports/products',
-                icon: 'report',
-            },
-            {
-                title: 'Отчеты по тренерам',
-                url: '/analytics/trainer/rating',
-                icon: 'report',
-            },
-            {
-                title: 'Отчеты по партнерам',
-                url: '/analytics/partners/rating',
-                icon: 'report',
-            },
-            {
-                title: 'Отчеты по клиентам',
-                url: '/analytics/clients/sales',
-                icon: 'report',
-            },
-            {
-                title: 'Рассылка',
-                url: '/mailing',
-                icon: 'mail',
+                hasDropdown: true,
+                children: [
+                    {
+                        title: 'Отчеты по продажам',
+                        url: '/reports',
+                        icon: 'report',
+                    },
+                    {
+                        title: 'Отчеты по товарам',
+                        url: '/report/products',
+                        icon: 'report',
+                    },
+                    {
+                        title: 'Отчеты по тренерам',
+                        url: '/analytics/trainer/rating',
+                        icon: 'report',
+                    },
+                    {
+                        title: 'Отчеты по партнерам',
+                        url: '/analytics/partners/rating',
+                        icon: 'report',
+                    },
+                    {
+                        title: 'Отчеты по клиентам',
+                        url: '/analytics/clients/sales',
+                        icon: 'report',
+                    },
+                ],
             },
             {
                 title: 'Аналитика продаж бренды',

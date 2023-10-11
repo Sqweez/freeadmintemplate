@@ -89,6 +89,9 @@ export default {
                 IS_FRANCHISE() {
                     return this.$store.getters.IS_FRANCHISE;
                 },
+                HAS_SHIFT_LIST_ACCESS() {
+                    return ['boss', 'kamercel'].includes(this.$user.login);
+                },
             },
         });
     },
