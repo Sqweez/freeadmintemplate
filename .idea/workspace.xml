@@ -5,21 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Actions/Reports/CollectProductReportAction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v3/ReportController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Resolvers/ProductSku/ProductSkuNameResolver.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/TransferController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/TransferController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/TransferResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/TransferResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Transfer.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Transfer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/router/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/router/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Utils/CreateProductReviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/CreateProductReviews.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Utils/assets/reviews.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Utils/assets/reviews.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/utils/vuePlugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/vuePlugins.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Analytics/SaleAnalyticsByBrand.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Analytics/SaleAnalyticsByBrand.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/views/Shifts/ShiftsList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Shifts/ShiftsList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Reports/ProductReports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Reports/ProductReports.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -317,9 +308,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.prod" />
+        <item itemvalue="npm.dev" />
         <item itemvalue="npm.hot" />
         <item itemvalue="npm.watch-poll" />
-        <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
   </component>
@@ -495,7 +486,12 @@
       <workItem from="1696864878294" duration="3003000" />
       <workItem from="1696868451530" duration="1271000" />
       <workItem from="1696949221526" duration="1428000" />
-      <workItem from="1697012541949" duration="6910000" />
+      <workItem from="1697012541949" duration="7594000" />
+      <workItem from="1697364493590" duration="582000" />
+      <workItem from="1697380342542" duration="41000" />
+      <workItem from="1698308449669" duration="511000" />
+      <workItem from="1698312063214" duration="48000" />
+      <workItem from="1698946528465" duration="317000" />
     </task>
     <servers />
   </component>

@@ -90,7 +90,13 @@ export default {
                     return this.$store.getters.IS_FRANCHISE;
                 },
                 HAS_SHIFT_LIST_ACCESS() {
-                    return ['boss', 'kamercel'].includes(this.$user.login);
+                    return [
+                        'shym',
+                        'vladimir',
+                        'boss',
+                        'kamercel',
+                        'ilya',
+                    ].includes(this.$user.login);
                 },
             },
         });

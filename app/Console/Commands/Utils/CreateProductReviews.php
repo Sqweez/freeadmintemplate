@@ -46,6 +46,7 @@ class CreateProductReviews extends Command
         $jsonFilePath = app_path($realPath);
         $jsonContent = file_get_contents($jsonFilePath);
         $products = collect(json_decode($jsonContent, true));
+        
         $products = $products
             ->groupBy('id')
             ->each(function ($items, $id) {
