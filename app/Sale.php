@@ -272,6 +272,8 @@ class Sale extends Model
 
         $price -= $this->promocode_fixed_amount;
 
+        $price -= $this->paid_by_barter_balance;
+
 
         return ceil($price - $this->balance);
     }

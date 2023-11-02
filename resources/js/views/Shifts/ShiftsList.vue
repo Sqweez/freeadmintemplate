@@ -200,9 +200,8 @@ export default {
             }
         },
         async created() {
-            console.log(this.HAS_SHIFT_LIST_ACCESS);
             if (!this.HAS_SHIFT_LIST_ACCESS) {
-                this.$toast.error('Нефорам вход запрещен')
+                this.$toast.error('Обратитесь в службу поддержки для получения доступа к данному разделу')
                 return this.$router.push('/');
             }
             this.currentDate = moment().format('YYYY-MM');
