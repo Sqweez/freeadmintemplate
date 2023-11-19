@@ -136,7 +136,9 @@ export default {
                     if (isArray(b.cities)) {
                         b.cities_text = b.cities.reduce((a, c) => {
                             const city = this.$cities.find(city => city.id == c).name;
-                            a.push(city);
+                            if (city) {
+                                a.push(city);
+                            }
                             return a;
                         }, []).join(', ');
                     }
@@ -145,7 +147,10 @@ export default {
             }
         },
         async created() {
-            await this.getBanners();
+            await Promise.all([
+                this.getBanners(),
+                this.$store.dispatch('getCities')
+            ]);
         }
     }
 </script>
