@@ -30,13 +30,16 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Banner whereMobileImage($value)
  * @property int $website
  * @method static \Illuminate\Database\Eloquent\Builder|Banner whereWebsite($value)
+ * @property string|null $cities
+ * @method static \Illuminate\Database\Eloquent\Builder|Banner whereCities($value)
  */
 class Banner extends Model
 {
-    protected $guarded = [
+    protected $casts = [
         'is_active' => 'boolean',
-        'order' => 'integer'
+        'order' => 'integer',
+        'cities' => 'array'
     ];
 
-    protected $fillable = ['image', 'is_active', 'order', 'description', 'mobile_image', 'website'];
+    protected $guarded = ['id'];
 }

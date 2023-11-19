@@ -1,9 +1,11 @@
+import { cloneDeep } from 'lodash';
+
 export function __hardcoded($value) {
     return $value;
 }
 
 export function __deepClone($object) {
-    return JSON.parse(JSON.stringify($object));
+    return cloneDeep($object);
 }
 
 export function __debounce(cb, delay = 500) {
@@ -71,4 +73,11 @@ export function _getFileType(filename) {
     } else {
         return undefined;
     }
+}
+
+export function _generateImagePreview(file) {
+    if (!file) {
+        return null;
+    }
+    return createObjectURL(file);
 }

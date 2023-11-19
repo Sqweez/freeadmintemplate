@@ -36,7 +36,7 @@ class PromocodeRepository
             ->select(['id', 'promocode_id', 'client_id'])
             ->get();
 
-        $stocks = $stocks
+        return $stocks
             ->filter(function (Promocode $stock) use ($sales, $client) {
                 $needleSales = collect($sales)->where('promocode_id', $stock->id);
                 $clientCount = $needleSales->where('client_id', $client->id);
@@ -44,7 +44,5 @@ class PromocodeRepository
                     &&
                     (is_null($stock->per_client_use_quantity) || $stock->per_client_use_quantity > $clientCount->count());
             });
-
-        return $stocks;
     }
 }

@@ -21,6 +21,7 @@ export default {
                     $storeFilters: 'store_filters',
                     $users: 'users',
                     $userFilters: 'user_filters',
+                    $cities: 'cities',
                 }),
                 $barcode() {
                     return new BarcodeService();
@@ -34,13 +35,6 @@ export default {
                 $loading() {
                     return new LoadingService(store);
                 },
-                /* $confirm(
-                    text = 'Подтвердите действие',
-                    title = 'Подтвердите действие',
-                    options = {},
-                ) {
-                    return $confirm(text, title, options);
-                },*/
                 $economy() {
                     return new EconomyService();
                 },
