@@ -6,6 +6,7 @@ use App\Banner;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
+/* @mixin Banner */
 class BannerResource extends JsonResource
 {
     /**
@@ -26,6 +27,7 @@ class BannerResource extends JsonResource
             'order' => $this->order,
             'is_active' => $this->is_active,
             'website' => $this->website,
+            'cities' => $this->cities,
         ];
     }
 }

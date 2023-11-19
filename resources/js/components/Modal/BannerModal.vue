@@ -65,6 +65,19 @@
                         item-value="value"
                         item-text="title"
                     />
+                    <v-autocomplete
+                        v-if="!showInEveryCity"
+                        label="Показывать в городах"
+                        v-model="banner.cities"
+                        multiple
+                        :items="$cities"
+                        item-value="id"
+                        item-text="name"
+                    />
+                    <v-checkbox
+                        label="Показывать во всех городах"
+                        v-model="showInEveryCity"
+                    />
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -83,19 +96,24 @@
 </template>
 
 <script>
-    import uploadFile from "../../api/upload";
-    import axios from 'axios';
+import uploadFile from "../../api/upload";
+import axios from 'axios';
+import {__deepClone} from "@/utils/helpers";
 
-    export default {
+const DEFAULT_BANNER_STATE = {
+    image: null,
+    mobile_image: null,
+    description: '',
+    is_active: true,
+    order: 0,
+    website: 1,
+    cities: [],
+};
+
+export default {
         data: () => ({
-            banner: {
-                image: null,
-                mobile_image: null,
-                description: '',
-                is_active: true,
-                order: 0,
-                website: 1
-            },
+            banner: DEFAULT_BANNER_STATE,
+            showInEveryCity: false,
             websites: [
                 {
                     title: 'Основной',
@@ -111,7 +129,19 @@
             onCancel() {
                 this.$emit('cancel');
             },
+            _validate (banner) {
+                if (!banner.image) {
+                    return this.$toast.error('Загрузите баннер для компьютера!')
+                }
+                if (!banner.mobile_image) {
+                    return this.$toast.error('Загрузите мобильный баннер!');
+                }
+                return true;
+            },
             async onConfirm() {
+                if (this._validate(this.banner) !== true) {
+                    return;
+                }
                 this.$loading.enable();
                 const banner = Object.keys(this._banner).length ? await this.editBanner() : await this.createBanner();
                 this.$loading.disable();
@@ -121,10 +151,16 @@
             async editBanner() {
                 const banner_id = this.banner.id;
                 delete this.banner.id;
+                if (this.showInEveryCity) {
+                    this.banner.cities = null;
+                }
                 const response = await axios.patch(`/api/shop/banners/${banner_id}`, this.banner);
                 return response.data;
             },
             async createBanner() {
+                if (this.showInEveryCity) {
+                    this.banner.cities = null;
+                }
                 const response = await axios.post(`/api/shop/banners`, this.banner);
                 return response.data;
             },
@@ -143,15 +179,12 @@
         watch: {
             state() {
                 if (Object.keys(this._banner).length) {
-                    this.banner = JSON.parse(JSON.stringify(this._banner));
+                    this.banner = __deepClone(this._banner);
+                    if (!this.banner.cities || this.banner.cities.length === 0) {
+                        this.showInEveryCity = true;
+                    }
                 } else {
-                    this.banner = {
-                        image: null,
-                        description: '',
-                        is_active: true,
-                        order: 0,
-                        website: 1,
-                    };
+                    this.banner = DEFAULT_BANNER_STATE;
                 }
             }
         },

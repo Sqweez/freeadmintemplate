@@ -17,11 +17,12 @@
                             <th>Описание</th>
                             <th>Активен?</th>
                             <th>Порядок</th>
+                            <th>Показывать в городах</th>
                             <th>Действие</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(banner, key) of banners" :key="`banner-${banner.id}`">
+                        <tr v-for="(banner, key) of mappedBanners" :key="`banner-${banner.id}`">
                             <td>{{ key + 1 }}</td>
                             <td>
                                 <img
@@ -39,6 +40,9 @@
                             </td>
                             <td>
                                 {{ banner.order }}
+                            </td>
+                            <td>
+                                {{ banner.cities_text }}
                             </td>
                             <td>
                                 <v-btn icon color="error" @click="currentBanner = banner; confirmationModal = true">
@@ -77,11 +81,12 @@
 </template>
 
 <script>
-    import axios from 'axios';
-    import BannerModal from "@/components/Modal/BannerModal";
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import axios from 'axios';
+import BannerModal from "@/components/Modal/BannerModal";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import {isArray} from "lodash";
 
-    export default {
+export default {
         components: {ConfirmationModal, BannerModal},
         data: () => ({
             banners: [],
@@ -124,7 +129,21 @@
                 this.confirmationModal = false;
             }
         },
-        computed: {},
+        computed: {
+            mappedBanners () {
+                return this.banners.map(b => {
+                    b.cities_text = 'Все города';
+                    if (isArray(b.cities)) {
+                        b.cities_text = b.cities.reduce((a, c) => {
+                            const city = this.$cities.find(city => city.id == c).name;
+                            a.push(city);
+                            return a;
+                        }, []).join(', ');
+                    }
+                    return b;
+                })
+            }
+        },
         async created() {
             await this.getBanners();
         }

@@ -26,6 +26,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|ClientTransaction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ClientTransaction whereUserId($value)
  * @mixin \Eloquent
+ * @property int $type_id
+ * @property-read \App\Client $client
+ * @method static \Illuminate\Database\Eloquent\Builder|ClientTransaction whereTypeId($value)
  */
 class ClientTransaction extends Model
 {
