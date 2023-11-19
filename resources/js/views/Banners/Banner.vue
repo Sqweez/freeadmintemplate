@@ -135,9 +135,9 @@ export default {
                     b.cities_text = 'Все города';
                     if (isArray(b.cities)) {
                         b.cities_text = b.cities.reduce((a, c) => {
-                            const city = this.$cities.find(city => city.id == c).name;
+                            const city = this.$cities.find(city => city.id == c);
                             if (city) {
-                                a.push(city);
+                                a.push(city.name);
                             }
                             return a;
                         }, []).join(', ');
@@ -147,10 +147,8 @@ export default {
             }
         },
         async created() {
-            await Promise.all([
-                this.getBanners(),
-                this.$store.dispatch('getCities')
-            ]);
+            await this.$store.dispatch('getCities')
+            await this.getBanners()
         }
     }
 </script>
