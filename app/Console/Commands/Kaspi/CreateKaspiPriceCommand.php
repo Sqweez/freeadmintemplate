@@ -32,6 +32,10 @@ class CreateKaspiPriceCommand extends Command
         parent::__construct();
     }
 
+    protected function memory () {
+        return 512;
+    }
+
     /**
      * Execute the console command.
      *
