@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Banners/Banner.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Banners/Banner.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -495,6 +495,8 @@
       <workItem from="1700395941973" duration="50000" />
       <workItem from="1700396006428" duration="3482000" />
       <workItem from="1700401275726" duration="221000" />
+      <workItem from="1700558165128" duration="18000" />
+      <workItem from="1700562517328" duration="140000" />
     </task>
     <servers />
   </component>
