@@ -77,7 +77,7 @@ class CreateKaspiPriceAction
                 return $q->whereHas('kaspi_price', function ($sQ) {
                     return $sQ
                         ->where('is_visible', true)
-                        ->where('price', '!=', 0)
+                        ->where('price', '>', 1)
                         ->where('kaspi_entity_id', $this->kaspiEntity->id);
                 });
             })
