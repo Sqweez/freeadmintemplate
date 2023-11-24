@@ -9,7 +9,7 @@ use App\Store;
 
 class PromocodeRepository
 {
-    public function getAvailableStocks(Client $client, Store $store)
+    public function getAvailableStocks(?Client $client, Store $store)
     {
         $user = auth()->user();
         $stocks = Promocode::query()
