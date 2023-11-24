@@ -11,6 +11,10 @@ class PromocodeRepository
 {
     public function getAvailableStocks(?Client $client, Store $store)
     {
+
+        if (!$client) {
+            return [];
+        }
         $user = auth()->user();
         $stocks = Promocode::query()
             ->where('promocode_apply_type_id', __hardcoded(2))
