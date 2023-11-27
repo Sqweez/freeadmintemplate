@@ -4,9 +4,10 @@ namespace App;
 
 use App\v2\Models\SeoText;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Cache;
+
 use function foo\func;
 
 /**
@@ -76,6 +77,11 @@ class Category extends Model
             Cache::forget('categories');
             Cache::forget('shop-categories');
         });
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(\App\v2\Models\Product::class, 'category_id');
     }
 
     public function relatedProducts() {
