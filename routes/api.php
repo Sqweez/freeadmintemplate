@@ -55,6 +55,7 @@ Route::get('set-tags', 'api\ProductController@setTags'); */
 Route::get('set-partner-expired-at', 'HelpController@setPartnerExpiredAt');
 Route::get('backup', 'Services\BackupController@backup');
 
+
 Route::middleware(AuthorizationMiddleware::class)->group(function () {
     Route::prefix('shop')->group(function () {
         Route::prefix('iherb')->group(function () {
@@ -478,6 +479,10 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
 
         Route::prefix('report')->group(function () {
             Route::post('product', [\App\Http\Controllers\api\v3\ReportController::class, 'getProductReport']);
+        });
+
+        Route::group(['prefix' => 'nomad'], function () {
+            Route::get('/category', [App\Http\Controllers\api\v3\Nomad\CategoryController::class, 'index']);
         });
     });
 

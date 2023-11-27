@@ -55,4 +55,9 @@ class Subcategory extends Model
     public function seoText(): MorphOne {
         return $this->morphOne(SeoText::class, 'entity');
     }
+
+    public function products()
+    {
+        return $this->hasMany(\App\v2\Models\Product::class, 'subcategory_id');
+    }
 }
