@@ -222,7 +222,7 @@
                                     Ассортимент
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
-                                <div class="mb-2 d-flex justify-space-between" v-if="storeFilter !== -1">
+                                <div class="mb-2 d-flex justify-space-between" v-if="false && storeFilter !== -1">
                                     <v-btn color="error" class="mr-2" @click="changeCount(item.id, -1)">
                                         <v-icon>mdi-minus</v-icon>
                                     </v-btn>
@@ -281,7 +281,7 @@
                                     Удалить
                                     <v-icon>mdi-delete</v-icon>
                                 </v-btn>
-                                <div class="mb-2 d-flex justify-space-between" v-if="storeFilter !== -1">
+                                <div class="mb-2 d-flex justify-space-between" v-if="false && storeFilter !== -1">
                                     <v-btn color="error" class="mr-2" @click="changeCount(item.id, -1)">
                                         <v-icon>mdi-minus</v-icon>
                                     </v-btn>
@@ -340,17 +340,17 @@
 </template>
 
 <script>
-import ProductRangeModal from "@/components/Modal/ProductRangeModal";
-import ProductModal from "@/components/v2/Modal/ProductModal";
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-import ProductQuantityModal from "@/components/Modal/ProductQuantityModal";
-import ACTIONS from "@/store/actions";
+import ProductRangeModal from '@/components/Modal/ProductRangeModal';
+import ProductModal from '@/components/v2/Modal/ProductModal';
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
+import ProductQuantityModal from '@/components/Modal/ProductQuantityModal';
+import ACTIONS from '@/store/actions';
 import axios from 'axios';
-import PriceTagModal from "@/components/Modal/PriceTagModal";
-import product from "@/mixins/product";
-import product_search from "@/mixins/product_search";
-import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
-import SkuModal from "@/components/v2/Modal/SkuModal";
+import PriceTagModal from '@/components/Modal/PriceTagModal';
+import product from '@/mixins/product';
+import product_search from '@/mixins/product_search';
+import {PRODUCT_MODAL_EVENTS} from '@/config/consts';
+import SkuModal from '@/components/v2/Modal/SkuModal';
 import ProductPrintModal from '@/components/Modal/ProductPrintModal';
 import {__hardcoded} from '@/utils/helpers';
 
