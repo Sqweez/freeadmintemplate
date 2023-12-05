@@ -107,7 +107,8 @@ class ProductSku extends Model
     const WITH_PRODUCT = 'product:id,product_name,product_price,category_id,manufacturer_id';
 
     public function attributes() {
-        return $this->morphToMany(AttributeValue::class, 'attributable', 'attributable');
+        return $this->morphToMany(AttributeValue::class, 'attributable', 'attributable')
+            ->where('filterable', false);
     }
 
     public function product_images() {

@@ -373,22 +373,6 @@
                                 Добавить атрибут
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
-                            <!--<v-select
-                                style="max-width: 300px;"
-                                :items="getAttributes(0)"
-                                item-text="attribute_name"
-                                item-value="id"
-                                label="Атрибут"
-                                v-model="product_attributes[0].attribute_id"
-                            ></v-select>
-                            <v-spacer />
-                            <v-text-field
-                                label="Значение"
-                                v-model="product_attributes[0].attribute_value"
-                            ></v-text-field>
-                            <v-btn icon @click="addAttributesSelect">
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>-->
                         </div>
                         <div class="d-flex" v-for="(attrs, idx) of attributesSelect" :key="`attribute-select-${idx}`"
                              v-if="attributesSelect.length !== 0">
@@ -423,6 +407,35 @@
                                 Например, вкус для протеина, размер для одежды, цвет для шейкера</p>
                         </div>
 
+                        <v-divider></v-divider>
+                        <h5>Фильтры:</h5>
+                        <div class="d-flex">
+                            <v-btn text @click="filters.push({attribute_id: null, attribute_value: ''})">
+                                Добавить фильтр (для сайта)
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                        </div>
+                        <div class="d-flex"
+                             v-for="(_, idx) of filters"
+                             :key="`filter-select-${idx}`"
+                        >
+                            <v-select
+                                style="max-width: 300px;"
+                                :items="attributes"
+                                item-text="attribute_name"
+                                item-value="id"
+                                label="Атрибут"
+                                v-model="filters[idx].attribute_id"
+                            />
+                            <v-spacer/>
+                            <v-text-field
+                                label="Значение"
+                                v-model="filters[idx].attribute_value"
+                            ></v-text-field>
+                            <v-btn icon @click="filters.splice(idx, 1)">
+                                <v-icon>mdi-minus</v-icon>
+                            </v-btn>
+                        </div>
                         <v-divider></v-divider>
                         <h5>Комментарии</h5>
                         <v-list>
@@ -494,12 +507,12 @@
 </template>
 
 <script>
-import {VSelect} from 'vuetify/lib'
-import ManufacturerModal from "@/components/Modal/ManufacturerModal";
-import uploadFile, {deleteFile} from "@/api/upload";
-import {Quill, VueEditor} from "vue2-editor";
-import {PRODUCT_MODAL_EVENTS} from "@/config/consts";
-import {generateThumb} from "@/api/image";
+import {VSelect} from 'vuetify/lib';
+import ManufacturerModal from '@/components/Modal/ManufacturerModal';
+import uploadFile, {deleteFile} from '@/api/upload';
+import {Quill, VueEditor} from 'vue2-editor';
+import {PRODUCT_MODAL_EVENTS} from '@/config/consts';
+import {generateThumb} from '@/api/image';
 import axios from 'axios';
 import ImageResize from 'quill-image-resize-vue';
 import {_getFileType} from '@/utils/helpers';
@@ -633,6 +646,7 @@ export default {
         }
     },
     data: () => ({
+        filters: [],
         editorSettings: {
             modules: {
                 imageResize: {},
@@ -768,6 +782,7 @@ export default {
             this.iherb_price = 0;
             this.margin_type_id = null;
             this.kaspi_price = [];
+            this.filters = [];
         },
         assignFields() {
             this.margin_type_id = this.product.margin_type_id;
@@ -835,6 +850,8 @@ export default {
                     ? this.product.kaspi_price.find(k => k.product_id === this.product.product_id && e.id === k.kaspi_entity_id).is_visible
                     : false
             }))
+
+            this.filters = this.product.filters;
 
         },
         getPriceStores(idx) {
@@ -961,6 +978,7 @@ export default {
                 is_dubai: this.is_dubai,
                 margin_type_id: this.margin_type_id,
                 kaspi_price: this.kaspi_price,
+                filters: this.filters.filter(f => f.attribute_value)
             };
         },
         validate(product) {

@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -231,7 +232,16 @@ class Product extends Model
     }
 
     public function attributes() {
-        return $this->morphToMany(AttributeValue::class, 'attributable', 'attributable');
+        return $this
+            ->morphToMany(AttributeValue::class, 'attributable', 'attributable')
+            ->where('filterable', false);
+    }
+
+    public function filters(): MorphToMany
+    {
+        return $this
+            ->morphToMany(AttributeValue::class, 'attributable', 'attributable')
+            ->where('filterable', true);
     }
 
     public function tags() {
