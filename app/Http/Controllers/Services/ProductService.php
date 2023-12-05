@@ -36,6 +36,7 @@ class ProductService
     {
         $sku = ProductSku::withCount('relativeSku')->whereId($id)->first();
         $sku->load('product.kaspi_price');
+        $sku->load('product.filters.attribute_name');
         return $sku;
     }
 
@@ -159,6 +160,7 @@ class ProductService
         );
         $this->syncAdditionalSubcategories($product, $fields['additional_subcategories']);
         $this->syncKaspiPrices($product, $fields['kaspi_price']);
+        $this->syncProductFilters($product, $fields['filters']);
         $product->push();
     }
 
@@ -234,6 +236,31 @@ class ProductService
         $product->attributes()->sync($attributes);
     }
 
+    private function syncProductFilters(Product $product, array $filters)
+    {
+        $attributes = collect($filters)->map(function ($i) {
+            $attributeValueQuery = AttributeValue::query();
+            $attributeValueQuery->where('attribute_value', 'like', "%" . $i['attribute_value'] . "%")->where(
+                'attribute_id',
+                $i['attribute_id']
+            );
+            return $attributeValueQuery->firstOrCreate($i);
+        });
+
+        $product->filters()->delete();
+        foreach ($attributes as $attribute) {
+            DB::table('attributable')->insert([
+                'attributable_id' => $product->id,
+                'attribute_value_id' => $attribute->id,
+                'attributable_type' => Product::class,
+                'filterable' => true,
+            ]);
+        }
+
+
+        $product->attributes()->sync($attributes->pluck('id')->toArray());
+    }
+
     private function syncProductImages($product, array $images)
     {
         $images = collect($images)->map(function ($i) {
@@ -283,7 +310,7 @@ class ProductService
             Product::IS_IHERB,
             'iherb_price',
             'is_iherb_hit',
-            'is_dubai'
+            'is_dubai',
         ]);
 
         $product[Product::CATEGORY_ID] = $request->get(Product::CATEGORY);
@@ -303,7 +330,8 @@ class ProductService
             Product::PRODUCT_BARCODE,
             'additional_subcategories',
             ProductSku::MARGIN_TYPE_ID,
-            'kaspi_price'
+            'kaspi_price',
+            'filters'
 
             /*   ProductSku::PRODUCT_SKU_IMAGES,
                ProductSku::PRODUCT_SKU_THUMBS*/

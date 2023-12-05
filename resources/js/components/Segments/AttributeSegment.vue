@@ -73,9 +73,10 @@
 </template>
 
 <script>
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
+import ACTIONS from '@/store/actions';
 
-    export default {
+export default {
         components: {
             ConfirmationModal
         },
