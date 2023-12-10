@@ -191,6 +191,7 @@ class Product extends Model
     const FILTER_IS_IHERB_HIT = 'is_iherb_hit';
     const FILTER_SEARCH = 'search';
     const FILTER_STORE = 'store_id';
+    const FILTER_FILTERS = 'filters';
 
     // cache constants
 
