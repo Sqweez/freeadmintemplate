@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\v2\Models\AttributeValue;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,6 +24,11 @@ class Attribute extends Model
 
     public function value() {
         return $this->hasOne('App\AttributeProduct', 'attribute_id');
+    }
+
+    public function values()
+    {
+        return $this->hasMany(AttributeValue::class);
     }
 
     public $timestamps = false;

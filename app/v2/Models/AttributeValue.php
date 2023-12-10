@@ -2,8 +2,9 @@
 
 namespace App\v2\Models;
 
-use App\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * App\v2\Models\AttributeValue
@@ -30,7 +31,13 @@ class AttributeValue extends Model
 
     protected $hidden = ['pivot'];
 
-    public function attribute_name() {
+    public function attribute_name(): BelongsTo
+    {
         return $this->belongsTo('App\Attribute', 'attribute_id');
+    }
+
+    public function products(): MorphToMany
+    {
+        return $this->morphedByMany(Product::class, 'attributable');
     }
 }
