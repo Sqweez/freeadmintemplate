@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v3\Nomad;
 
 use App\Actions\Nomad\RetrieveAvailableNomadFiltersAction;
 use App\Http\Controllers\Controller;
+use App\Jobs\Notifications\SendTelegramMessageJob;
 use App\Resolvers\Catalog\CatalogFiltersResolver;
 use App\Resolvers\Catalog\CatalogProductQueryResolver;
 use Illuminate\Http\Request;
@@ -27,5 +28,11 @@ class ProductController extends Controller
         $productQueryResolver = app(CatalogProductQueryResolver::class);
         $ids = $productQueryResolver->resolve($filters, __hardcoded(1), $request->user_token)->select(['id'])->pluck('id');
         return $action->handle($ids);
+    }
+
+    public function createTicket(Request $request)
+    {
+        $text = $request->get('text');
+        SendTelegramMessageJob::dispatch('-4050547708', $text);
     }
 }

@@ -17,6 +17,7 @@ use App\Sale;
 use App\Store;
 use App\User;
 use App\v2\Models\ProductSku;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use TelegramService;
@@ -63,7 +64,7 @@ class CartController extends Controller {
                     'products.product.product.subcategory',
                     'products.product.attributes',
                     'products.product.product.attributes'
-                    ])
+                ])
                 ->with(['products.product.batches' => function ($q) use ($store_id) {
                     if (intval($store_id) === -1) {
                         return $q->whereIn('store_id', [1, 6])->where('quantity', '>', 0);
@@ -95,13 +96,21 @@ class CartController extends Controller {
         ], 200);
     }
 
-    public function deleteCart(Request $request) {
+    public function deleteCart(Request $request): JsonResponse
+    {
 
         $cart = $request->get('cart');
+        $userToken = $request->get('user_token');
 
         $product = $request->get('product');
 
-        CartProduct::where('cart_id', $cart)->where('product_id', $product)->delete();
+        CartProduct::query()
+            ->where(function ($query) use ($cart, $userToken) {
+                return $query
+                    ->where('cart_id', $cart);
+            })
+            ->where('product_id', $product)
+            ->delete();
 
         return response()->json([]);
 
@@ -135,14 +144,14 @@ class CartController extends Controller {
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
         $cart = Cart::with([
-                'products', 'products.product',
-                'products.product.product.stocks',
-                'products.product.attributes', 'products.product.product.attributes'])
-                ->ofUser($user_token)
-                ->with(['products.product.batches' => function ($q) use ($store_id) {
-                    return $q/*->where('store_id', $store_id)*/->where('quantity', '>', 0);
-                }])
-                ->first() ?? null;
+            'products', 'products.product',
+            'products.product.product.stocks',
+            'products.product.attributes', 'products.product.product.attributes'])
+            ->ofUser($user_token)
+            ->with(['products.product.batches' => function ($q) use ($store_id) {
+                return $q/*->where('store_id', $store_id)*/->where('quantity', '>', 0);
+            }])
+            ->first() ?? null;
         if ($cart && $store_id != $cart['store_id']) {
             CartProduct::where('cart_id', $cart['id'])->delete();
             $cart->delete();
@@ -157,6 +166,7 @@ class CartController extends Controller {
     }
 
     public function order(Request $request) {
+        \Log::info('order', $request->all());
         $cart = $request->get('cart');
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
@@ -243,8 +253,8 @@ class CartController extends Controller {
     public function getOrderAmount(Order $order) {
         $discount = $order['discount'];
         return ceil($order->items->reduce(function ($a, $c) use ($discount){
-                    return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
-                }, 0) - intval($order['balance']));
+                return $a + ($c['product_price'] * ((100 - intval($discount)) / 100));
+            }, 0) - intval($order['balance']));
     }
 
     private function sendTelegramMessage(Order $order, $result = null) {
@@ -326,9 +336,9 @@ class CartController extends Controller {
         $delivery = Order::ORDER_DELIVERY[$order['delivery']]['text'];
         $payment = 'Оплата наличными';
 
-       /* if ($order['delivery'] == 1) {
-            $delivery = 'Самовывоз';
-        }*/
+        /* if ($order['delivery'] == 1) {
+             $delivery = 'Самовывоз';
+         }*/
 
         if ($order['payment'] == 1) {
             $payment = 'Оплата картой';

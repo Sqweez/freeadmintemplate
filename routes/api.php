@@ -484,6 +484,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         Route::group(['prefix' => 'nomad'], function () {
             Route::get('/category', [App\Http\Controllers\api\v3\Nomad\CategoryController::class, 'index']);
             Route::get('/filters', [\App\Http\Controllers\api\v3\Nomad\ProductController::class, 'getNomadFilters']);
+            Route::post('/tickets', [\App\Http\Controllers\api\v3\Nomad\ProductController::class, 'createTicket']);
         });
     });
 
