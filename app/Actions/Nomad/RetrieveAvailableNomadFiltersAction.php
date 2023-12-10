@@ -12,7 +12,9 @@ class RetrieveAvailableNomadFiltersAction
     {
         $attributes = Attribute::query()
             ->with(['values' => function ($query) {
-                return $query->has('products');
+                return $query
+                    ->has('products')
+                    ->with('products');
             }])
             ->get();
 
