@@ -40,6 +40,7 @@ class ProductResource extends JsonResource
             'product_images' => $this->product_images->count() > 0 ? $this->product_images->pluck('image')->map(function ($image) {
                 return url('/') . Storage::url($image);
             })->first() : url('/') . Storage::url('products/product_image_default.jpg'),
+            'assets' => $this->product_images,
             'is_hit' => $this->is_hit,
             'is_site_visible' => $this->is_site_visible,
             'skus' => $skus,
