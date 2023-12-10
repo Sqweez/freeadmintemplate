@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v3\Nomad;
 
 use App\Http\Controllers\Controller;
 use App\Resolvers\Catalog\CatalogFiltersResolver;
+use App\Resolvers\Catalog\CatalogProductQueryResolver;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -22,6 +23,8 @@ class ProductController extends Controller
         $query['store_id'] = __hardcoded(1);
         $query['brands'] = '608';
         $filters = $catalogFiltersResolver->resolve($query);
+        $productQueryResolver = app(CatalogProductQueryResolver::class);
+        return $productQueryResolver->resolve($filters, __hardcoded(1), $query->user_token);
         return $filters;
     }
 }
