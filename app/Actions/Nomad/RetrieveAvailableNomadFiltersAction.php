@@ -3,17 +3,16 @@
 namespace App\Actions\Nomad;
 
 use App\Attribute;
-use App\DTO\Nomad\NomadCatalogQueryDTO;
 
 class RetrieveAvailableNomadFiltersAction
 {
 
-    public function handle(NomadCatalogQueryDTO $catalogQueryDTO)
+    public function handle($productIds)
     {
         $attributes = Attribute::query()
-            ->with(['values' => function ($query) use ($catalogQueryDTO) {
+            ->with(['values' => function ($query) use ($productIds) {
                 return $query
-                    ->whereHas('products', function ($q) use ($catalogQueryDTO) {
+                    ->whereHas('products', function ($q) use ($productIds) {
                         return $q
                             ->where('filterable', true);
                     });
