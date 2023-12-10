@@ -59,7 +59,9 @@ class ProductResource extends JsonResource
             'in_stock' => collect($skus)->reduce(function ($a, $c) {
                 return $a + $c['quantity'];
             }, 0) > 0,
-            'filters' => $this->filters,
+            'labels' => $this->filters->filter(function ($item) {
+                return $item['attribute_id'] === __hardcoded(14);
+            })->values(),
         ];
     }
 }
