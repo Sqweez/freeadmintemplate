@@ -9,12 +9,13 @@ class RetrieveAvailableNomadFiltersAction
 
     public function handle($productIds)
     {
-        $attributes = Attribute::query()
+        return Attribute::query()
             ->with(['values' => function ($query) use ($productIds) {
                 return $query
                     ->whereHas('products', function ($q) use ($productIds) {
                         return $q
-                            ->where('filterable', true);
+                            ->where('filterable', true)
+                            ->whereIn('products.id', $productIds);
                     });
             }])
             ->get()
@@ -22,7 +23,5 @@ class RetrieveAvailableNomadFiltersAction
                 return count($attribute->values);
             })
             ->values();
-
-        return $attributes;
     }
 }
