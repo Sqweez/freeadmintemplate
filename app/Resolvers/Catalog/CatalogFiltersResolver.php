@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resolvers;
+namespace App\Resolvers\Catalog;
 
 use App\v2\Models\Product;
 
