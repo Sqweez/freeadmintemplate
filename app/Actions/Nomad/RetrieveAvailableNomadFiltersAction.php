@@ -11,12 +11,18 @@ class RetrieveAvailableNomadFiltersAction
     public function handle(NomadCatalogQueryDTO $catalogQueryDTO)
     {
         $attributes = Attribute::query()
-            ->with(['values' => function ($query) {
+            ->with(['values' => function ($query) use ($catalogQueryDTO) {
                 return $query
-                    ->has('products')
-                    ->with('products');
+                    ->whereHas('products', function ($q) use ($catalogQueryDTO) {
+                        return $q
+                            ->where('filterable', true);
+                    });
             }])
-            ->get();
+            ->get()
+            ->filter(function (Attribute $attribute) {
+                return count($attribute->values);
+            })
+            ->values();
 
         return $attributes;
     }

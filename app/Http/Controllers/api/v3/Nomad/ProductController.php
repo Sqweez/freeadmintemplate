@@ -11,10 +11,13 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        // @TODO later
-        $store_id = __hardcoded(1);
-        $user_token = $request->header('Authorization');
+        $params = $request->all();
         return [];
+    }
+
+    private function buildParams()
+    {
+
     }
 
     public function getNomadFilters(Request $request, RetrieveAvailableNomadFiltersAction $action)

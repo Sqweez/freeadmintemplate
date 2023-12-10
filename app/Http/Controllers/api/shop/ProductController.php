@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\shop\ProductResource;
 use App\Http\Resources\shop\ProductsResource;
 use App\Manufacturer;
+use App\Resolvers\CatalogFiltersResolver;
 use App\v2\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -15,6 +16,13 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller {
+
+
+    private $filtersResolver;
+    public function __construct()
+    {
+        $this->filtersResolver = new CatalogFiltersResolver();
+    }
 
     public function getProducts(Request $request) {
         $query = $request->except('store_id');
@@ -80,18 +88,9 @@ class ProductController extends Controller {
     }
 
 
-    private function getFilterParametrs($query, $store_id) {
-        return [
-            Product::FILTER_CATEGORIES => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_CATEGORIES] ?? '')), 'strlen')),
-            Product::FILTER_SUBCATEGORIES => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_SUBCATEGORIES] ?? '')), 'strlen')),
-            Product::FILTER_BRANDS => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_BRANDS] ?? '')), 'strlen')),
-            Product::FILTER_PRICES => array_map('intval', array_filter(explode(',', ($query[Product::FILTER_PRICES] ?? '')), 'strlen')),
-            Product::FILTER_IS_HIT => isset($query[Product::FILTER_IS_HIT]) ? ($query[Product::FILTER_IS_HIT] === 'true' ? 'true' : 'false') : 'false',
-            Product::FILTER_IS_IHERB_HIT => isset($query[Product::FILTER_IS_IHERB_HIT]) ? ($query[Product::FILTER_IS_IHERB_HIT] === 'true' ? 'true' : 'false') : 'false',
-            // Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? $this->prepareSearchString($query[Product::FILTER_SEARCH]) : ''
-            // @TODO 2022-04-17T22:12:44 maybe rework it
-            Product::FILTER_SEARCH => isset($query[Product::FILTER_SEARCH]) ? str_replace(' ', '%', $query[Product::FILTER_SEARCH]) . "%" : '',
-        ];
+    private function getFilterParametrs($query, $store_id): array
+    {
+        return $this->filtersResolver->resolve($query);
     }
 
     private function getProductWithFilter($filters, $store_id, $user_token = null) {
