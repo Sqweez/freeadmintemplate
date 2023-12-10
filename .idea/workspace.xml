@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Actions/Nomad/RetrieveAvailableNomadFiltersAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Actions/Nomad/RetrieveAvailableNomadFiltersAction.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Attribute.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Attribute.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/AttributeValue.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/AttributeValue.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -511,7 +508,7 @@
       <workItem from="1702046942756" duration="1285000" />
       <workItem from="1702154987448" duration="167000" />
       <workItem from="1702231454396" duration="79000" />
-      <workItem from="1702231538890" duration="1871000" />
+      <workItem from="1702231538890" duration="1920000" />
     </task>
     <servers />
   </component>
