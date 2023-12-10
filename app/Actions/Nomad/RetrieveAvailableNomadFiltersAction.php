@@ -11,7 +11,9 @@ class RetrieveAvailableNomadFiltersAction
     public function handle(NomadCatalogQueryDTO $catalogQueryDTO)
     {
         $attributes = Attribute::query()
-            ->with('value')
+            ->with(['values' => function ($query) {
+                return $query->has('products');
+            }])
             ->get();
 
         return $attributes;
