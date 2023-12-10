@@ -93,7 +93,8 @@ class ProductController extends Controller {
         return $this->filtersResolver->resolve($query);
     }
 
-    private function getProductWithFilter($filters, $store_id, $user_token = null) {
+    private function getRawProductQuery($filters, $store_id, $user_token = null)
+    {
         $productQuery = Product::query()->whereIsSiteVisible(true);
 
         $isDubaiProductsNeed = count($filters[Product::FILTER_BRANDS]) > 0 && in_array(99999, $filters[Product::FILTER_BRANDS]);
@@ -142,18 +143,29 @@ class ProductController extends Controller {
             return $q->where('is_site_visible', true);
         });
 
-        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
-        $productQuery->with(['favorite' => function ($query) use ($user_token) {
-            return $query->where('user_token', $user_token);
-        }]);
-
         $productQuery->whereHas('batches', function ($q) use ($store_id) {
             if ($store_id === -1) {
                 return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
             } else {
                 return $q->where('quantity', '>', 0)->where('store_id', $store_id);
             }
-        })->with(['batches' => function ($q) use ($store_id) {
+        });
+
+        $productQuery->orderBy('product_name');
+
+        return $productQuery;
+    }
+
+    private function getProductWithFilter($filters, $store_id, $user_token = null) {
+
+        $productQuery = $this->getRawProductQuery($filters, $store_id, $user_token);
+
+        $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
+        $productQuery->with(['favorite' => function ($query) use ($user_token) {
+            return $query->where('user_token', $user_token);
+        }]);
+
+        $productQuery->with(['batches' => function ($q) use ($store_id) {
             if ($store_id === -1) {
                 return $q->where('quantity', '>', 0)->whereIn('store_id', [1, 6]);
             } else {
