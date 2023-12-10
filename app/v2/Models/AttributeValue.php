@@ -38,6 +38,6 @@ class AttributeValue extends Model
 
     public function products(): MorphToMany
     {
-        return $this->morphedByMany(Product::class, 'attributable');
+        return $this->morphedByMany(Product::class, 'attributable', 'attributable');
     }
 }
