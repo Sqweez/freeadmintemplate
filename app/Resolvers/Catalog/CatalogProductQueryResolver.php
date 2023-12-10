@@ -32,6 +32,12 @@ class CatalogProductQueryResolver
             $productQuery->isHit(Product::FILTER_IS_HIT);
         }
 
+        if (count($filters[Product::FILTER_FILTERS]) > 0) {
+            $productQuery->whereHasMorph('filters', function ($q) use ($filters) {
+                return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
+            });
+        }
+
         if (strlen($filters[Product::FILTER_SEARCH]) > 0) {
             $productQuery->ofTag($filters[Product::FILTER_SEARCH]);
         }

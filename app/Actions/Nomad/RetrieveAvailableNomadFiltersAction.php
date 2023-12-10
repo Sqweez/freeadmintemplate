@@ -20,7 +20,8 @@ class RetrieveAvailableNomadFiltersAction
             }])
             ->get()
             ->filter(function (Attribute $attribute) {
-                return count($attribute->values);
+                // Исключаем пустые фильтры, а также фильтры помеченные как "Ярлыки"
+                return count($attribute->values) && $attribute->id !== __hardcoded(14);
             })
             ->values();
     }
