@@ -154,7 +154,18 @@ class ProductController extends Controller {
     public function getProduct(Product $product) {
         return new ProductResource(
             Product::with([
-                'sku', 'sku.attributes', 'sku.batches', 'product_images', 'attributes', 'stocks', 'comments', 'comments.user', 'comments.client', 'manufacturer'])
+                'sku',
+                'sku.attributes',
+                'sku.batches',
+                'product_images',
+                'attributes',
+                'stocks',
+                'comments',
+                'comments.user',
+                'comments.client',
+                'manufacturer',
+                'filters'
+            ])
                 ->whereKey($product->id)
                 ->first()
         );

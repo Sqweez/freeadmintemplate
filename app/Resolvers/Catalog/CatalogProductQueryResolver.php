@@ -33,7 +33,7 @@ class CatalogProductQueryResolver
         }
 
         if (count($filters[Product::FILTER_FILTERS]) > 0) {
-            $productQuery->whereHasMorph('filters', function ($q) use ($filters) {
+            $productQuery->whereHas('filters', function ($q) use ($filters) {
                 return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
             });
         }

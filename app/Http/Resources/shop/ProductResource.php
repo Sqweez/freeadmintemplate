@@ -3,7 +3,6 @@
 namespace App\Http\Resources\shop;
 
 use App\Http\Controllers\api\v2\CommentController;
-use App\Http\Resources\ProductCommentResource;
 use App\Http\Resources\shop\v2\ProductSkuResource;
 use App\v2\Models\Product;
 use App\v2\Models\RelatedProduct;
@@ -58,7 +57,8 @@ class ProductResource extends JsonResource
             'manufacturer' => $this->manufacturer,
             'in_stock' => collect($skus)->reduce(function ($a, $c) {
                 return $a + $c['quantity'];
-            }, 0) > 0
+            }, 0) > 0,
+            'filters' => $this->filters,
         ];
     }
 }
