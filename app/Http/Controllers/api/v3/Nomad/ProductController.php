@@ -24,7 +24,7 @@ class ProductController extends Controller
         $query['brands'] = '608';
         $filters = $catalogFiltersResolver->resolve($query);
         $productQueryResolver = app(CatalogProductQueryResolver::class);
-        return $productQueryResolver->resolve($filters, __hardcoded(1), $query->user_token);
+        return $productQueryResolver->resolve($filters, __hardcoded(1), $request->user_token);
         return $filters;
     }
 }
