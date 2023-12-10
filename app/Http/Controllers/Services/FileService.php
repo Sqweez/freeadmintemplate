@@ -10,6 +10,7 @@ use Storage;
 class FileService {
     public static function upload(Request $request) {
         $file = $request->file('file');
+        \Log::info($file->getClientMimeType());
         $path = $request->get('path');
         $path = $file->store($path, 'public');
         return response( $path, 200);
