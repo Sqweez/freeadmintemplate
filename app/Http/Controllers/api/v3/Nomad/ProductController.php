@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\api\v3\Nomad;
 
-use App\Actions\Nomad\RetrieveAvailableNomadFiltersAction;
-use App\DTO\Nomad\NomadCatalogQueryDTO;
 use App\Http\Controllers\Controller;
+use App\Resolvers\Catalog\CatalogFiltersResolver;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -15,15 +14,14 @@ class ProductController extends Controller
         return [];
     }
 
-    private function buildParams()
-    {
 
-    }
-
-    public function getNomadFilters(Request $request, RetrieveAvailableNomadFiltersAction $action)
+    public function getNomadFilters(Request $request)
     {
+        $catalogFiltersResolver = app(CatalogFiltersResolver::class);
         $query = $request->all();
-        $store_id = __hardcoded(1);
-        return $action->handle(new NomadCatalogQueryDTO($query + ['store_id' => $store_id]));
+        $query['store_id'] = __hardcoded(1);
+        $query['brands'] = '608';
+        $filters = $catalogFiltersResolver->resolve($query);
+        return $filters;
     }
 }
