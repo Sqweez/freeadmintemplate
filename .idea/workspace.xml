@@ -5,17 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_05_150623_alter_table_attributable_column_filterable_column.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Actions/Nomad/RetrieveAvailableNomadFiltersAction.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/DTO/Nomad/NomadCatalogQueryDTO.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v3/Nomad/ProductController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/ProductSku.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/ProductSku.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/AttributeSegment.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/AttributeSegment.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/shop/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/shop/ProductController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -513,7 +508,12 @@
       <workItem from="1701168340200" duration="859000" />
       <workItem from="1701201560476" duration="185000" />
       <workItem from="1701766407583" duration="28000" />
-      <workItem from="1701766515489" duration="3852000" />
+      <workItem from="1701766515489" duration="4338000" />
+      <workItem from="1701946477542" duration="11000" />
+      <workItem from="1702046942756" duration="1285000" />
+      <workItem from="1702154987448" duration="167000" />
+      <workItem from="1702231454396" duration="79000" />
+      <workItem from="1702231538890" duration="1178000" />
     </task>
     <servers />
   </component>

@@ -38,11 +38,13 @@ class ProductController extends Controller {
         return $this->getFilters($query, $store_id);
     }
 
-    private function prepareSearchString($search) {
+    private function prepareSearchString($search): string
+    {
         return "%" . str_replace(' ', '%', $search) . "%";
     }
 
-    private function getFilters($query, $store_id) {
+    private function getFilters($query, $store_id): array
+    {
         $filters = $this->getFilterParametrs($query, $store_id);
         return [
             'brands' => $this->getBrands($filters, $store_id),
