@@ -16,6 +16,7 @@ class CatalogFiltersResolver
             Product::FILTER_IS_HIT => isset($params[Product::FILTER_IS_HIT]) ? ($params[Product::FILTER_IS_HIT] === 'true' ? 'true' : 'false') : 'false',
             Product::FILTER_IS_IHERB_HIT => isset($params[Product::FILTER_IS_IHERB_HIT]) ? ($params[Product::FILTER_IS_IHERB_HIT] === 'true' ? 'true' : 'false') : 'false',
             Product::FILTER_SEARCH => isset($params[Product::FILTER_SEARCH]) ? str_replace(' ', '%', $params[Product::FILTER_SEARCH]) . "%" : '',
+            PRODUCT::FILTER_STORE => $params['store_id'] ?? __hardcoded(1),
         ];
     }
 }
