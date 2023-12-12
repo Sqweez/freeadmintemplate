@@ -5,10 +5,10 @@
 </template>
 
 <script>
-    import moment from 'moment';
-    import axios from 'axios';
+import moment from 'moment';
+import axios from 'axios';
 
-    export default {
+export default {
         data: () => ({}),
         methods: {},
         computed: {},
@@ -17,7 +17,6 @@
             let config = {
                 headers: {
                     'Content-Type': 'application/vnd.api+json',
-                    'X-Auth-Token': 'ULDaKPxr8fZzzxHBSj8HLc9YZ0x+VKhYdAd6vQ1NgnI=',
                     'Access-Control-Allow-Origin': '*'
                 },
             };
