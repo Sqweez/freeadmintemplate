@@ -48,5 +48,10 @@ Route::prefix('print')->group(function () {
     Route::get('price/{id}', [PrintController::class, 'printPrice']);
 });
 
+Route::group(['prefix' => 'fit'], function () {
+    Route::get('/{any}', 'VueController@fit')->where('any', '.*');
+    Route::get('/', 'VueController@fit')->where('any', '.*');
+});
+
 
 Route::get('/{any}', 'VueController@index')->where('any', '.*');
