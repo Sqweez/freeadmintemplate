@@ -38,9 +38,9 @@
 </template>
 
 <script>
-    import LoadingSpinner from "../../components/Loaders/LoadingSpinner";
+import LoadingSpinner from '../../components/Loaders/LoadingSpinner';
 
-    export default {
+export default {
         components: {LoadingSpinner},
         data: () => ({
             login: '',
@@ -49,10 +49,16 @@
         }),
         methods: {
             async doLogin() {
-                await this.$store.dispatch('LOGIN', {
-                    login: this.login,
-                    password: this.password,
-                });
+                try {
+                    await this.$store.dispatch('LOGIN', {
+                        login: this.login,
+                        password: this.password,
+                    });
+                    window.location = '/';
+                } catch (e) {
+                    console.log(e);
+                    this.$toast.error(e.response.data.message);
+                }
             }
         },
     }
