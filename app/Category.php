@@ -48,6 +48,8 @@ use function foo\func;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereMetaTitle($value)
  * @property string $category_name_kaz
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereCategoryNameKaz($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\Product[] $products
+ * @property-read int|null $products_count
  */
 class Category extends Model
 {

@@ -6,20 +6,19 @@
                 <v-toolbar
                     dark
                     flat
+                    color="primary"
                 >
                     <v-toolbar-title>Fit | Вход</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
                     <v-form>
                         <v-text-field
-                            dark
                             label="Логин"
                             v-model="login"
                             prepend-icon="mdi-account"
                             type="text">
                         </v-text-field>
                         <v-text-field
-                            dark
                             @keypress.enter="doLogin"
                             label="Пароль"
                             v-model="password"
@@ -29,7 +28,7 @@
                     </v-form>
                 </v-card-text>
                 <v-card-actions class="d-flex justify-center">
-                    <v-btn v-if="!loading" color="red" block @click="doLogin">Войти</v-btn>
+                    <v-btn v-if="!loading" color="primary" dark block @click="doLogin">Войти</v-btn>
                     <v-progress-circular indeterminate size="40" color="red" v-else></v-progress-circular>
                 </v-card-actions>
             </v-card>
@@ -54,10 +53,10 @@ export default {
                     login: this.login,
                     password: this.password,
                 });
-                await this.$router.push('/');
+                await this.$router.push('/fit');
             } catch (e) {
-                console.log(e);
-                this.$toast.error(e.response.data.message);
+                console.log(e.response);
+                this.$toast.error(e);
             }
         }
     },

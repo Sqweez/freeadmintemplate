@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import router from './fitness/router/router';
 import vuetify from './fitness/utils/vuetify';
-import store from './store';
-import GlobalComponents from '@/components/GlobalComponents';
+import store from '@/fitness/store';
+import GlobalComponents from '@/fitness/components/GlobalComponents';
 import 'froala-editor/js/plugins.pkgd.min.js';
 import 'froala-editor/js/third_party/embedly.min';
 import 'froala-editor/js/third_party/font_awesome.min';
@@ -14,7 +14,7 @@ import './filters/filters';
 import loadingPlugin from './utils/loadingPlugin';
 import VueFroala from 'vue-froala-wysiwyg';
 import { VueEditor } from 'vue2-editor';
-import vuePlugins from '@/utils/vuePlugins';
+import vuePlugins from '@/fitness/utils/vuePlugins';
 import confirmationPlugin from '@/plugins/confirmationPlugin';
 import FitnessApp from '@/fitness/FitnessApp.vue';
 

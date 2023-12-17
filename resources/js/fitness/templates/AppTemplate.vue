@@ -3,11 +3,11 @@
         <v-app-bar app elevation="4">
             <div style="width: 100%; display: flex; align-items: center;">
                 <v-text-field
-                    placeholder="Поднесите карту или браслет к устройству считывания"
+                    placeholder="ПОДНЕСИТЕ КАРТУ ИЛИ БРАСЛЕТ К УСТРОЙСТВУ СЧИТЫВАНИЯ..."
                     prepend-icon="mdi-magnify"
                     hide-details="auto"
                 />
-                <v-btn icon title="Выйти из приложения" class="ml-4">
+                <v-btn @click="_onLogout" icon title="Выйти из приложения" class="ml-4">
                     <v-icon>
                         mdi-exit-to-app
                     </v-icon>
@@ -15,7 +15,8 @@
             </div>
         </v-app-bar>
         <v-main>
-            <v-container fluid>
+            <v-container>
+                <LoadingSpinner />
                 <slot></slot>
             </v-container>
         </v-main>
@@ -27,9 +28,17 @@
 </template>
 
 <script>
+import LoadingSpinner from '@/components/Loaders/LoadingSpinner.vue';
+
 export default {
+    components: {LoadingSpinner},
     data: () => ({}),
-    methods: {},
+    methods: {
+        async _onLogout () {
+            await this.$store.dispatch('LOGOUT');
+            window.location = '/fit';
+        }
+    },
     computed: {},
 };
 </script>

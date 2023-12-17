@@ -1,5 +1,6 @@
 import DashboardScreen from '@/fitness/views/DashboardScreen.vue';
 import LoginScreen from '@/fitness/views/LoginScreen.vue';
+import ClientsScreen from '@/fitness/views/ClientsScreen.vue';
 
 const routes = [
     {
@@ -9,6 +10,10 @@ const routes = [
     {
         path: '/',
         component: DashboardScreen,
+    },
+    {
+        path: '/clients',
+        component: ClientsScreen,
     },
     {
         path: '/login',

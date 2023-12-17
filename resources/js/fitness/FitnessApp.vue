@@ -1,7 +1,7 @@
 <template>
     <v-app style="background-color: #e9e9e9;">
         <div v-if="!loginChecked" class="fullscreen-overlay">
-            <v-progress-circular indeterminate color="red" size="60"></v-progress-circular>
+            <v-progress-circular indeterminate color="blue" size="60" />
         </div>
         <div v-if="isLoggedIn">
             <AppTemplate>
@@ -42,7 +42,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #000;
+    background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
