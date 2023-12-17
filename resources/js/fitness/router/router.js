@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from '../../fitness/router/routes';
-import store from '@/store';
+import store from '@/fitness/store';
 import ToastService from '@/utils/toastService';
 
 const $toast = new ToastService();
@@ -21,7 +21,6 @@ Router.beforeEach(async (to, from, next) => {
     if (!store.getters.LOGIN_CHECKED) {
         await store.dispatch('AUTH');
     }
-
     const CURRENT_ROLE = `IS_${store.getters.CURRENT_ROLE.toUpperCase()}`;
     const IS_GUEST = store.getters.IS_GUEST;
     const BASE_ROUTE = IS_GUEST ? '/login' : '/';

@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Attribute whereAttributeName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Attribute whereId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|AttributeValue[] $values
+ * @property-read int|null $values_count
  */
 class Attribute extends Model
 {

@@ -39,6 +39,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereMetaTitle($value)
  * @property string $subcategory_name_kaz
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereSubcategoryNameKaz($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\Product[] $products
+ * @property-read int|null $products_count
  */
 class Subcategory extends Model
 {

@@ -143,6 +143,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereProductDescriptionKaz($value)
  * @property int $margin_type_id
  * @method static Builder|Product whereMarginTypeId($value)
+ * @property-read Collection|\App\v2\Models\AttributeValue[] $filters
+ * @property-read int|null $filters_count
  */
 class Product extends Model
 {

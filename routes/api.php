@@ -494,3 +494,5 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
         });
     });
 });
+
+require __DIR__ . '/fit.api.php';

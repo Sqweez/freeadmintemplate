@@ -12,10 +12,10 @@
 
 <script>
 
-    import MainTemplate from './templates/MainTemplate';
-    import LoginTemplate from './templates/LoginTemplate';
+import MainTemplate from './templates/MainTemplate';
+import LoginTemplate from './templates/LoginTemplate';
 
-    export default {
+export default {
         components: {
             MainTemplate, LoginTemplate
         },

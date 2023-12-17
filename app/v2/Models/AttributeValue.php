@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|AttributeValue whereAttributeValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AttributeValue whereId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\Product[] $products
+ * @property-read int|null $products_count
  */
 class AttributeValue extends Model
 {
