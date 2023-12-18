@@ -1,4 +1,5 @@
 import axiosClient from '@/fitness/utils/fitAxiosClient';
+import { __hardcoded } from '@/utils/helpers';
 
 export default {
     state: {
@@ -30,6 +31,8 @@ export default {
         users: (s) => s.users,
         user: (s) => (id) => s.users.find((user) => user.id === id),
         roles: (s) => s.roles,
+        trainers: (s) =>
+            s.users.filter((user) => user.role.id === __hardcoded(5)),
     },
     mutations: {
         setUsers(state, users) {
@@ -53,7 +56,7 @@ export default {
             commit('setUsers', data.data);
         },
         async createUser({ commit }, payload) {
-            const { data } = await axiosClient.post('fit/v1//users', payload);
+            const { data } = await axiosClient.post('fit/v1/users', payload);
             commit('createUser', data.data);
         },
         async editUser({ commit }, payload) {

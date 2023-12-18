@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Resolvers\Fit\FitClientResolver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\FitClient
@@ -34,6 +36,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  * @property string|null $pass
  * @method static \Illuminate\Database\Eloquent\Builder|FitClient wherePass($value)
+ * @property int $balance
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FitTransaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|FitClient whereBalance($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FitServiceSale[] $activated_services
+ * @property-read int|null $activated_services_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FitServiceSale[] $purchased_services
+ * @property-read int|null $purchased_services_count
  */
 class FitClient extends Model
 {
@@ -47,5 +57,42 @@ class FitClient extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(FitUser::class, 'fit_user_id');
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(FitTransaction::class, 'client_id');
+    }
+
+    public function topUp($payload): Model
+    {
+        $transaction = $this->transactions()
+            ->create([
+                'type' => $payload['type'],
+                'amount' => $payload['amount'],
+                'description' => $payload['description'] ?? null,
+                'gym_id' => auth()->user()->gym_id,
+                'user_id' => auth()->id(),
+            ]);
+
+        $this->increment('balance', $payload['amount']);
+        return $transaction;
+    }
+
+    public function purchased_services(): HasMany
+    {
+        return $this->hasMany(FitServiceSale::class, 'client_id');
+    }
+
+    public function activated_services(): HasMany
+    {
+        return $this
+            ->hasMany(FitServiceSale::class, 'client_id')
+            ->where('is_activated', true);
+    }
+
+    public function retrieveClientResource(): FitClient
+    {
+        return FitClientResolver::i()->resolve($this);
     }
 }

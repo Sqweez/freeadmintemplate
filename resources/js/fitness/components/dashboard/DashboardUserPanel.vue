@@ -10,10 +10,10 @@
                 <v-card-title style="background-color: #F9690E; color: #fff;">
                     Список сотрудников
                 </v-card-title>
-                <v-card-text v-if="!users || !users.length">
+                <v-card-text v-if="!isReady">
                     <inline-loader />
                 </v-card-text>
-                <v-card-text v-if="users && users.length">
+                <v-card-text v-else>
                     <v-btn color="success" depressed class="my-4" @click="showUserModal = true;">
                         Добавить сотрудника
                     </v-btn>
@@ -43,6 +43,7 @@ import FitUserModal from '@/fitness/components/modals/FitUserModal.vue';
 export default {
     components: {FitUserModal, InlineLoader},
     data: () => ({
+        isReady: true,
         showUserModal: false,
         userId: null,
         headers: [
@@ -74,7 +75,7 @@ export default {
         }
     },
     async mounted() {
-        await this._getUsers();
+
     },
     computed: {
         users () {

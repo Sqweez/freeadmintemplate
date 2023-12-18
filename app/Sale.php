@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\FitClient;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -158,6 +159,11 @@ class Sale extends Model
         ])->withTrashed();
     }
 
+    public function fit_client(): BelongsTo
+    {
+        return $this->belongsTo(FitClient::class, 'fit_client_id');
+    }
+
     public function booking() {
         return $this->belongsTo('App\v2\Models\Booking');
     }
@@ -221,7 +227,7 @@ class Sale extends Model
     }
 
     public function scopeReport($q) {
-        return $q->with(['client:id,client_name,is_wholesale_buyer', 'user:id,name,store_id', 'store:id,name,type_id','products.product', 'products'])
+        return $q->with(['client:id,client_name,is_wholesale_buyer', 'fit_client:id,name','user:id,name,store_id', 'store:id,name,type_id','products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate', 'preorder'])
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes', 'promocode.partner:id,client_name']);

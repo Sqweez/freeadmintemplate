@@ -1,7 +1,10 @@
 <template>
     <div>
         <v-card>
-            <v-card-title>
+            <v-card-title :style="[
+                color ? {backgroundColor: color} : {},
+                color ? {color: '#fff'} : {},
+            ]">
                 {{ title }}
             </v-card-title>
             <v-card-text>
@@ -20,6 +23,10 @@ export default {
         title: {
             type: String,
             default: 'Страница'
+        },
+        color: {
+            type: String,
+            default: null,
         }
     }
 }
