@@ -10,13 +10,13 @@ class FitClientRepository
 {
     use UseQuickBindings;
 
-    public function search($type, $value)
+    public function search($type, $value): ?FitClient
     {
         $user = auth()->user();
         return FitClient::query()
             ->where('gym_id', $user->gym_id)
             ->where($type, $value)
-            ->firstOrFail();
+            ->first();
     }
 
     public function list()
@@ -33,8 +33,10 @@ class FitClientRepository
         return FitClient::create($data);
     }
 
-    public function update(FitClient $client, $data)
+    public function update(FitClient $client, $data): FitClient
     {
-
+        $client->update($data);
+        $client->fresh();
+        return $client;
     }
 }

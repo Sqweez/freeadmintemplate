@@ -273,7 +273,7 @@
                 </template>
                 <template v-slot:item.sale_data="{item}">
                     <v-list>
-                        <v-list-item>
+                        <v-list-item v-if="!item.fit_client">
                             <v-list-item-content>
                                 <v-list-item-title>
                                     {{ item.client.client_name }}
@@ -283,6 +283,14 @@
                                     </v-btn>
                                 </v-list-item-title>
                                 <v-list-item-subtitle>Клиент</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="item.fit_client">
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{ item.fit_client.name }}
+                                </v-list-item-title>
+                                <v-list-item-subtitle>Клиент (Зал)</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item>
@@ -627,12 +635,12 @@
 </template>
 
 <script>
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
 import moment from 'moment';
-import ReportCancelModal from "@/components/Modal/ReportCancelModal";
+import ReportCancelModal from '@/components/Modal/ReportCancelModal';
 import ACTIONS from '@/store/actions/index';
 import axios from 'axios';
-import SaleEditModal from "@/components/Modal/SaleEditModal";
+import SaleEditModal from '@/components/Modal/SaleEditModal';
 import WholeSaleConfirmation from '@/components/Modal/WholeSaleConfirmation';
 import DocumentsPage from '@/components/Documents/DocumentsPage';
 import {__deepClone} from '@/utils/helpers';

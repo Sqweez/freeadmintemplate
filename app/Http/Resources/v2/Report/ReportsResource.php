@@ -28,6 +28,7 @@ class ReportsResource extends JsonResource
         return [
             'id' => $this->id,
             'client' => $this->client,
+            'fit_client' => $this->fit_client,
             'date' => $this->date,
             'user' => $this->user,
             'store' => $this->store,

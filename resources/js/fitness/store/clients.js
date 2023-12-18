@@ -16,6 +16,9 @@ export default {
         singleClient: (s) => s.client,
     },
     mutations: {
+        setSearchedClient(s, p) {
+            s.searchedClient = p;
+        },
         setClients(state, p) {
             state.clients = p;
         },
@@ -29,6 +32,12 @@ export default {
                 }
                 return c;
             });
+            if (state.searchedClient?.id === p.id) {
+                state.searchedClient = {
+                    ...state.searchedClient,
+                    ...p,
+                };
+            }
         },
         deleteClient(state, id) {
             state.clients = state.clients.filter((c) => c.id !== id);
@@ -65,9 +74,36 @@ export default {
         },
     },
     actions: {
+        async searchClient({ commit }, payload = {}) {
+            const { data } = await axiosClient.get(
+                `fit/v1/clients/search?${new URLSearchParams(payload)}`,
+            );
+            commit('setSearchedClient', data.client);
+        },
         async getClients({ commit }) {
             const r = await axiosClient.get('fit/v1/clients');
             commit('setClients', r.data.data);
+        },
+        async createVisit({ commit }, payload) {
+            const { data } = await axiosClient.post(
+                `fit/v1/services/${payload.sale_id}/visit`,
+                payload,
+            );
+            commit('setSearchedClient', data.client);
+        },
+        async topUp({ commit }, payload) {
+            const { data } = await axiosClient.post(
+                `fit/v1/clients/${payload.client_id}/top-up`,
+                payload,
+            );
+            commit('setSearchedClient', data.client);
+        },
+        async createServiceSale({ commit }, payload) {
+            const { data } = await axiosClient.post(
+                `fit/v1/services/sales`,
+                payload,
+            );
+            commit('setSearchedClient', data.client);
         },
         async createClient({ commit }, payload) {
             try {
@@ -118,15 +154,7 @@ export default {
             await axiosClient.get(`/sales/${id}/cancel`);
             commit('cancelSubscription', id);
         },
-        async createVisit({ commit }, payload) {
-            const {
-                data: { data },
-            } = await axiosClient.post(
-                `/sales/${payload.sale_id}/visit`,
-                payload,
-            );
-            commit('updateSale', data);
-        },
+
         async updateSale({ commit }, payload) {
             const {
                 data: { data },

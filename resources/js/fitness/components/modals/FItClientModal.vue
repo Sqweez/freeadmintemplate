@@ -4,7 +4,7 @@
         :max-width="700"
         persistent
         @cancel="$emit('cancel')"
-        :title="id ? 'Редактирование клиента' : 'Создание клиента'"
+        :title="(id || selectedClient) ? 'Редактирование клиента' : 'Создание клиента'"
     >
         <template #default>
             <v-form>
@@ -162,6 +162,10 @@ export default {
         id: {
             type: Number,
             default: null
+        },
+        selectedClient: {
+            type: Object,
+            default: null,
         }
     },
     watch: {
@@ -180,6 +184,11 @@ export default {
                     this.avatarPreview = this.client.avatar;
                 }
             }
+
+            if (this.selectedClient) {
+                this.client = __deepClone(this.selectedClient);
+            }
+
             if (value) {
                 setTimeout(() => {
                     this.appendMask();

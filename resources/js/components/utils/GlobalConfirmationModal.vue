@@ -6,7 +6,9 @@
             @close="_reject"
         >
             <template #default>
-                {{ text }}
+                <div class="py-4">
+                    {{ text }}
+                </div>
             </template>
             <template #actions>
                 <v-btn text @click="_reject">

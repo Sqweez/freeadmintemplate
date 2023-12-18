@@ -1,5 +1,5 @@
 <template>
-    <v-row dense v-bind="$attrs">
+    <v-row dense v-bind="$attrs" v-if="stats">
         <v-col cols="12" lg="2" md="2" sm="12">
             <v-card
                 size="x-large"
@@ -12,7 +12,7 @@
                     <div class="ml-4" style="color: #fff;">
                         <h3>Выручка на сегодня</h3>
                         <h2>
-                            {{ 0 | priceFilters }}
+                            {{ stats.total_revenue | priceFilters }}
                         </h2>
                     </div>
                 </v-card-text>
@@ -28,7 +28,7 @@
                     <div class="ml-4">
                         <h3>Касса</h3>
                         <h2>
-                            {{ 0 | priceFilters }}
+                            {{ stats.cash_revenue | priceFilters }}
                         </h2>
                     </div>
                 </v-card-text>
@@ -44,7 +44,7 @@
                     <div class="ml-4">
                         <h3>Безналичные</h3>
                         <h2>
-                            {{ 0 | priceFilters }}
+                            {{ stats.cashless_revenue | priceFilters }}
                         </h2>
                     </div>
                 </v-card-text>
@@ -62,7 +62,7 @@
                     <div class="ml-4" style="color: #fff;">
                         <h3>Списания по картам</h3>
                         <h2>
-                            {{ 0 | priceFilters }}
+                            {{ stats.withdrawals | priceFilters }}
                         </h2>
                     </div>
                 </v-card-text>
@@ -70,6 +70,7 @@
         </v-col>
         <v-col cols="12" lg="2" md="2" sm="12">
             <v-card
+                to="/clients"
                 size="x-large"
                 color="#4DB6AC"
             >
@@ -80,7 +81,7 @@
                     <div class="ml-4" style="color: #fff;">
                         <h3>Активных клиентов</h3>
                         <h2>
-                            {{ 0 | priceFilters }}
+                            {{ stats.active_clients  }}
                         </h2>
                     </div>
                 </v-card-text>
@@ -88,6 +89,7 @@
         </v-col>
         <v-col cols="12" lg="2" md="2" sm="12">
             <v-card
+                to="/clients"
                 size="x-large"
                 color="#FFB74D"
             >
@@ -98,7 +100,7 @@
                     <div class="ml-4" style="color: #fff;">
                         <h3>Всего клиентов</h3>
                         <h2>
-                            {{ 0 | priceFilters }}
+                            {{ stats.clients_total }}
                         </h2>
                     </div>
                 </v-card-text>
@@ -111,7 +113,14 @@
 export default {
     data: () => ({}),
     methods: {},
-    computed: {},
+    mounted() {
+        this.$store.dispatch('getDashboardStats');
+    },
+    computed: {
+        stats () {
+            return this.$store.getters.dashboardStats;
+        }
+    },
 };
 </script>
 

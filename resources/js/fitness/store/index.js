@@ -6,6 +6,9 @@ import vuexPlugins from '@/store/plugins/vuexPlugins';
 import frontend from '@/fitness/store/frontend';
 import clients from '@/fitness/store/clients';
 import users from '@/fitness/store/users';
+import services from '@/fitness/store/services';
+import products from '@/fitness/store/products';
+import stats from '@/fitness/store/stats';
 
 Vue.use(Vuex);
 
@@ -16,10 +19,10 @@ const store = new Store({
     getters: {},
     mutations: {},
     actions: {},
-    modules: [authModule, frontend, clients, users],
+    modules: [authModule, frontend, clients, users, services, products, stats],
     plugins: [
         createPersistedState({
-            paths: [],
+            paths: ['stats.dashboardStats'],
         }),
         vuexPlugins,
     ],

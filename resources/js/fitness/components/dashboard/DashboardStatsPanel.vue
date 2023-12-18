@@ -32,7 +32,8 @@
 export default {
     data: () => ({}),
     methods: {},
-    computed: {},
+    computed: {
+    },
 };
 </script>
 
