@@ -5,58 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/api/Fit/v1/ProductController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/api/Fit/v1/ServiceController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/api/Fit/v1/StatsController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Fit/FitProductsResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Fit/FitPurchasedServiceResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Fit/FitServiceListResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Fit/FitSingleClientResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/FitService.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/FitServiceSale.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/FitTransaction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/FitVisit.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Resolvers/Fit/FitClientResolver.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_18_021239_create_fit_transactions_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_18_022343_alter_table_fit_clients_table_balance.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_18_023345_create_fit_services_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_18_035522_create_fit_service_sales_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_18_035559_create_fit_visits_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_18_044935_atler_table_fit_service_sale_column_activated_at.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_18_055424_alter_table_gymns_column_store_id.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_18_055735_alter_table_sales_gym_columns.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardCreateClient.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardSearchBar.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/components/modals/FitPriceModal.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/components/modals/FitServiceSaleModal.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/components/modals/FitWriteOffModal.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/store/products.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/store/services.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/store/stats.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_19_134800_atler_table_fit_clients_column_photo.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/fitness/utils/eventBus.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/Fit/v1/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/Fit/v1/ClientController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Fit/FitClientsListResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Fit/FitClientsListResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportsResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/FitClient.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/FitClient.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repository/Fitness/FitClientRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/Fitness/FitClientRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Fit/FitSingleClientResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Fit/FitSingleClientResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/utils/GlobalConfirmationModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/utils/GlobalConfirmationModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/utils/ICardPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/utils/ICardPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardBarPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardBarPanel.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardClientPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardClientPanel.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardPricePanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardPricePanel.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardCreateClient.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardCreateClient.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardSearchBar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardSearchBar.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardStats.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardStats.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardStatsPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardStatsPanel.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardUserPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardUserPanel.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/modals/FItClientModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/modals/FItClientModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/store/clients.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/store/clients.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/store/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/store/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/store/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/store/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardStatsPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardMainPanel.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/fitness/templates/AppTemplate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/templates/AppTemplate.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/views/ClientsScreen.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/views/ClientsScreen.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Reports/Reports.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/fit.api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/fit.api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/fitness/views/DashboardScreen.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/views/DashboardScreen.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -578,7 +539,9 @@
       <workItem from="1702478126611" duration="4855000" />
       <workItem from="1702492430578" duration="245000" />
       <workItem from="1702547249760" duration="8234000" />
-      <workItem from="1702829222821" duration="29218000" />
+      <workItem from="1702829222821" duration="29953000" />
+      <workItem from="1702892703943" duration="5000" />
+      <workItem from="1702966050966" duration="5153000" />
     </task>
     <servers />
   </component>

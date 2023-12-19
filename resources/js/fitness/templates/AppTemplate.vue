@@ -4,7 +4,7 @@
             <dashboard-search-bar />
         </v-app-bar>
         <v-main>
-            <v-container>
+            <v-container fluid>
                 <LoadingSpinner />
                 <slot></slot>
             </v-container>

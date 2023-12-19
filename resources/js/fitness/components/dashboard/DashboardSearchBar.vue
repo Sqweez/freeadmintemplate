@@ -24,13 +24,15 @@
 </template>
 
 <script>
+import {eventBus} from '@/fitness/utils/eventBus';
+
 export default {
     data: () => ({
         pass: '',
     }),
     methods: {
         canGoBack() {
-            return this.$router.history.length > 1;
+            return this.$router.history.length > 1 && !['/', '/fit'].includes(this.$route.path);
         },
         async _onLogout () {
             await this.$store.dispatch('LOGOUT');
@@ -47,14 +49,14 @@ export default {
                     value: this.pass
                 };
                 await this.$store.dispatch('searchClient', payload);
-                this.pass = '';
                 if (this.$route.path !== '/') {
                     await this.$router.push('/');
                 }
             } catch (e) {
-                console.log(e);
-                //this.$toast.error(e.response.data.message)
+                this.$toast.error(e.response.data.message)
+                eventBus.$emit('client:modal')
             } finally {
+                this.pass = '';
                 this.$loading.disable();
             }
         },
