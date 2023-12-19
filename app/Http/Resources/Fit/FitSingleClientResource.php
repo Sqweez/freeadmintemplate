@@ -25,7 +25,8 @@ class FitSingleClientResource extends JsonResource
             'balance' => $this->balance,
             'birth_date' => $this->birth_date,
             'birth_date_format' => format_date($this->birth_date),
-            'services' => FitPurchasedServiceResource::collection($this->purchased_services)
+            'services' => FitPurchasedServiceResource::collection($this->purchased_services),
+            'photo' => $this->photo ? url('/') . \Storage::url($this->photo) : null
         ];
     }
 }

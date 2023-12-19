@@ -10,6 +10,7 @@ use App\Repository\Fitness\FitClientRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Storage;
 
 class ClientController extends BaseApiController
 {
@@ -46,7 +47,13 @@ class ClientController extends BaseApiController
 
     public function update(FitClient $client, Request $request, FitClientRepository $clientRepository): FitSingleClientResource
     {
-        $data = $request->all();
+        $data = $request->except(['photo']);
+        if ($request->file('photo')) {
+            $data['photo'] = $request->file('photo')->store('public/fit/clients');
+        }
+        if ($client->photo) {
+            Storage::delete($client->photo);
+        }
         $client = $clientRepository->update($client, $data);
         $client = $client->retrieveClientResource();
         return new FitSingleClientResource($client);

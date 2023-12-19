@@ -19,12 +19,18 @@
 
 <script>
 import FItClientModal from '@/fitness/components/modals/FItClientModal.vue';
+import {eventBus} from '@/fitness/utils/eventBus';
 
 export default {
     components: {FItClientModal},
     data: () => ({
         showClientModal: false,
     }),
+    mounted() {
+        eventBus.$on('client:modal', () => {
+            this.showClientModal = true;
+        })
+    },
     methods: {},
     computed: {},
 };

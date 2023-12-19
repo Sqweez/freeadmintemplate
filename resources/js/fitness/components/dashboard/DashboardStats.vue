@@ -1,6 +1,6 @@
 <template>
     <v-row dense v-bind="$attrs" v-if="stats">
-        <v-col cols="12" lg="2" md="2" sm="12">
+        <v-col cols="12" xl="2" md="4" sm="12">
             <v-card
                 size="x-large"
                 color="#D81B60"
@@ -18,7 +18,7 @@
                 </v-card-text>
             </v-card>
         </v-col>
-        <v-col cols="12" lg="2" md="2" sm="12">
+        <v-col cols="12" xl="2" md="4" sm="12">
             <v-card
             >
                 <v-card-text class="d-flex">
@@ -34,7 +34,7 @@
                 </v-card-text>
             </v-card>
         </v-col>
-        <v-col cols="12" lg="2" md="2" sm="12">
+        <v-col cols="12" xl="2" md="4" sm="12">
             <v-card
             >
                 <v-card-text class="d-flex">
@@ -50,7 +50,7 @@
                 </v-card-text>
             </v-card>
         </v-col>
-        <v-col cols="12" lg="2" md="2" sm="12">
+        <v-col cols="12" xl="2" md="4" sm="12">
             <v-card
                 size="x-large"
                 color="#42A5F5"
@@ -68,7 +68,7 @@
                 </v-card-text>
             </v-card>
         </v-col>
-        <v-col cols="12" lg="2" md="2" sm="12">
+        <v-col cols="12" xl="2" md="4" sm="12">
             <v-card
                 to="/clients"
                 size="x-large"
@@ -87,7 +87,7 @@
                 </v-card-text>
             </v-card>
         </v-col>
-        <v-col cols="12" lg="2" md="2" sm="12">
+        <v-col cols="12" xl="2" md="4" sm="12">
             <v-card
                 to="/clients"
                 size="x-large"
@@ -110,11 +110,24 @@
 </template>
 
 <script>
+import store from '@/fitness/store';
+
 export default {
     data: () => ({}),
     methods: {},
     mounted() {
         this.$store.dispatch('getDashboardStats');
+        const actionsList = [
+            'createVisit',
+            'topUp',
+            'createServiceSale',
+            'createClient'
+        ];
+        store.subscribeAction((action) => {
+            if (actionsList.includes(action.type)) {
+                this.$store.dispatch('getDashboardStats');
+            }
+        });
     },
     computed: {
         stats () {

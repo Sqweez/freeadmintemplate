@@ -10,7 +10,7 @@
             @cancel="showWriteOffModal = false; currentSale = null;"
             @submit="_onWriteOff"
         />
-        <v-col cols="12" sm="12" md="9">
+        <v-col cols="12" sm="12" lg="9" md="12">
             <v-card v-if="!client">
                 <v-card-title style="background-color: #5C6BC0; color: white;">
                     Клиент
@@ -23,7 +23,7 @@
                     </div>
                 </v-card-text>
             </v-card>
-            <v-card v-if="client">
+            <v-card v-if="client" dark>
                 <v-card-title style="display: flex; align-items: center; justify-content: space-between; background-color: #5C6BC0; color: white;">
                     <span>
                         Данные о клиенте
@@ -43,6 +43,28 @@
                 </v-card-title>
                 <v-card-text>
                     <v-row class="pt-5">
+                        <v-col cols="12" md="12" lg="3">
+                            <div
+                                style="width: min(400px, 100%); aspect-ratio: 1/1"
+                            >
+                                <div
+                                    v-if="!client.photo"
+                                    style="background-color: #9e9c9c; width: 100%; height: 100%"
+                                >
+                                    <img src="https://img.icons8.com/pastel-glyph/180/person-male--v3.png" style="width: 100%; height: 100%; object-fit: contain">
+                                </div>
+                                <div
+                                    v-else
+                                    style="width: 100%; height: 100%"
+                                >
+                                    <img :src="client.photo" style="width: 100%; height: 100%; object-fit: contain">
+                                </div>
+                            </div>
+                            <input class="d-none" type="file" accept="image/*" ref="imageInput" @change="_onImageUpload">
+                            <v-btn class="mt-4" color="primary" block @click="$refs.imageInput.click()">
+                                Сменить фото
+                            </v-btn>
+                        </v-col>
                         <v-col cols="12" md="12" lg="3">
                             <v-list>
                                 <v-list-item>
@@ -112,8 +134,11 @@
                                 Пополнить <v-icon>mdi-check</v-icon>
                             </v-btn>
                         </v-col>
-                        <v-col cols="12" md="12" lg="6">
-                            <v-expansion-panels>
+                        <v-col cols="12" md="12" lg="12">
+                            <h2>
+                                Список купленных услуг:
+                            </h2>
+                            <v-expansion-panels class="mt-4">
                                 <v-expansion-panel v-for="sale of client.services" :key="sale.id">
                                     <v-expansion-panel-header color="darken-3" :color="sale.can_be_used ? 'green' : 'red'" style="color: #fff;">
                                         {{ sale.service.name }}
@@ -184,7 +209,7 @@
                 </v-card-text>
             </v-card>
         </v-col>
-        <v-col cols="12" sm="12" md="3">
+        <v-col cols="12" sm="12" lg="3" md="12">
             <dashboard-create-client />
         </v-col>
     </v-row>
@@ -194,6 +219,7 @@
 import FItClientModal from '@/fitness/components/modals/FItClientModal.vue';
 import FitWriteOffModal from '@/fitness/components/modals/FitWriteOffModal.vue';
 import DashboardCreateClient from '@/fitness/components/dashboard/DashboardCreateClient.vue';
+import {toFormData} from '@/utils/helpers';
 
 export default {
     components: {DashboardCreateClient, FitWriteOffModal, FItClientModal},
@@ -252,6 +278,23 @@ export default {
                 if (message) {
                     this.$toast.error(message);
                 }
+                console.log(e);
+            } finally {
+                this.$loading.disable();
+            }
+        },
+        async _onImageUpload (event) {
+            const file = event.target.files[0];
+            const payload = {
+                photo: file,
+            };
+            this.$loading.enable();
+            try {
+                await this.$store.dispatch('editClient', {
+                    id: this.client.id,
+                    payload: toFormData(payload)
+                })
+            } catch (e) {
                 console.log(e);
             } finally {
                 this.$loading.disable();
