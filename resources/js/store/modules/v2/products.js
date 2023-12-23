@@ -428,7 +428,7 @@ const actions = {
         }
     },
     async GET_CERTIFICATES({ commit }) {
-        const { data } = await axios.get('/api/v2/certificates');
+        const { data } = await axios.get('/api/v2/certificates?active=true');
         commit('SET_CERTIFICATES', data);
     },
     async CHANGE_COUNT_v2({ commit }, payload) {
