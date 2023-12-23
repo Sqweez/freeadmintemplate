@@ -14,8 +14,12 @@ class CertificateController extends Controller
         );
     }
 
-    public function index() {
-        return Certificate::all();
+    public function index(Request $request) {
+        return Certificate::query()
+            ->when($request->has('active'), function ($query) {
+                return $query->where('used_sale_id', '>', 0);
+            })
+            ->get();
     }
 
     public function delete($id) {

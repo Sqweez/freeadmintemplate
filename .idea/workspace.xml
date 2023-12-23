@@ -5,19 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/database/migrations/2023_12_19_134800_atler_table_fit_clients_column_photo.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/fitness/utils/eventBus.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/Fit/v1/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/Fit/v1/ClientController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Fit/FitSingleClientResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Fit/FitSingleClientResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardClientPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardClientPanel.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardCreateClient.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardCreateClient.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardSearchBar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardSearchBar.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardStats.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardStats.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardStatsPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/components/dashboard/DashboardMainPanel.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/templates/AppTemplate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/templates/AppTemplate.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/fitness/views/DashboardScreen.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/fitness/views/DashboardScreen.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/CertificateController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/CertificateController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/v2/products.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/v2/products.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -541,7 +531,8 @@
       <workItem from="1702547249760" duration="8234000" />
       <workItem from="1702829222821" duration="29953000" />
       <workItem from="1702892703943" duration="5000" />
-      <workItem from="1702966050966" duration="5153000" />
+      <workItem from="1702966050966" duration="5927000" />
+      <workItem from="1703325454700" duration="287000" />
     </task>
     <servers />
   </component>
