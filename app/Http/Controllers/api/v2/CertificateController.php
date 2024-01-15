@@ -8,21 +8,30 @@ use Illuminate\Http\Request;
 
 class CertificateController extends Controller
 {
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         return Certificate::create(
             $request->all()
         );
     }
 
-    public function index(Request $request) {
-        return Certificate::query()
-            ->when($request->has('active'), function ($query) {
-                return $query->where('used_sale_id', '>', 0);
-            })
+    public function index(Request $request)
+    {
+        return Certificate::query()->when($request->has('active'), function ($query) {
+            return $query
+                ->where(function ($q) {
+                    $q->whereDate('expired_at', '>=', today())
+                        ->orWhere('expired_at', '=', '0000-00-00');
+                })
+                ->where(function ($q) {
+                    $q->where('used_sale_id', 0)->orWhereNull('used_sale_id');
+                });
+        })
             ->get();
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         Certificate::find($id)->delete();
     }
 }
