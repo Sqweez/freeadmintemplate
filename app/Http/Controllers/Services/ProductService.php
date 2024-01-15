@@ -161,6 +161,9 @@ class ProductService
         $this->syncAdditionalSubcategories($product, $fields['additional_subcategories']);
         $this->syncKaspiPrices($product, $fields['kaspi_price']);
         $this->syncProductFilters($product, $fields['filters']);
+        ProductSku::whereProductId($product->id)->update([
+            'margin_type_id' => $fields['margin_type_id']
+        ]);
         $product->push();
     }
 
@@ -256,9 +259,6 @@ class ProductService
                 'filterable' => true,
             ]);
         }
-
-
-        $product->attributes()->sync($attributes->pluck('id')->toArray());
     }
 
     private function syncProductImages($product, array $images)
