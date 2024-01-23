@@ -437,7 +437,7 @@
                             </v-btn>
                         </div>
                         <v-divider></v-divider>
-                        <h5>Комментарии</h5>
+                        <h5>Отзывы</h5>
                         <v-list>
                             <v-list-item v-for="item of comments">
                                 <v-list-item-content>
@@ -474,12 +474,16 @@
                                 </v-list-item-content>
                             </v-list-item>
                         </v-list>
+                        <v-text-field
+                            placeholder="Имя"
+                            label="Имя"
+                            v-model="commentName"/>
                         <v-textarea
-                            :placeholder="currentComment ? `В ответ: ${currentComment.name}` : 'Комментарий'"
-                            label="Комментарий"
+                            :placeholder="currentComment ? `В ответ: ${currentComment.name}` : 'Текст'"
+                            label="Текст"
                             v-model="commentText"/>
                         <v-btn color="primary" @click="createComment">
-                            Отправить комментарий
+                            Создать отзыв
                             <v-icon>mdi-send</v-icon>
                         </v-btn>
                     </div>
@@ -704,6 +708,7 @@ export default {
         meta_title: '',
         meta_description: '',
         comments: [],
+        commentName: '',
         commentText: '',
         commentId: null,
         additionalSubcategories: [],
@@ -730,8 +735,9 @@ export default {
             }
             this.$loading.enable();
             const response = await axios.post('/api/v2/comment', {
+                fake_name: this.commentName,
                 comment: this.commentText,
-                user_id: this.user.id,
+                user_id: null,
                 product_id: this.product.product_id,
                 parent_id: this.commentId
             })
@@ -740,6 +746,7 @@ export default {
             this.$toast.success('Комментарий добавлен');
             this.commentId = null;
             this.commentText = '';
+            this.commentName = '';
             this.$loading.disable();
         },
         async deleteComment(id) {

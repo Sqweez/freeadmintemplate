@@ -6,11 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductCommentResource;
 use App\v2\Models\ProductComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class CommentController extends Controller
 {
     public function createComment(Request $request) {
-        $comment = ProductComment::create($request->all());
+        $startDate = Carbon::create(2022, 1, 1, 10, 0, 0); // 2022-01-01 00:00:00
+        $endDate = today()->endOfDay();
+        $randomTimestamp = mt_rand($startDate->timestamp, $endDate->timestamp);
+        $randomDate = Carbon::createFromTimestamp($randomTimestamp);
+        $payload = $request->all();
+        $payload['created_at'] = $randomDate->toDateTimeString();
+        $comment = ProductComment::create($payload);
         return self::parseComments(ProductComment::with(['user', 'client'])->whereProductId($comment->product_id)->get());
     }
 

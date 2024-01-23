@@ -46,7 +46,7 @@ class CreateProductReviews extends Command
         $jsonFilePath = app_path($realPath);
         $jsonContent = file_get_contents($jsonFilePath);
         $products = collect(json_decode($jsonContent, true));
-        
+
         $products = $products
             ->groupBy('id')
             ->each(function ($items, $id) {
@@ -266,7 +266,7 @@ class CreateProductReviews extends Command
     private function getDate(): string
     {
         // Задайте начальную и конечную даты и времена
-        $startDate = Carbon::create(2022, 1, 1, 0, 0, 0); // 2022-01-01 00:00:00
+        $startDate = Carbon::create(2022, 1, 1, 10, 0, 0); // 2022-01-01 00:00:00
         $endDate = Carbon::create(2023, 8, 25, 23, 59, 59); // 2023-08-25 23:59:59
 
         // Получите случайную дату и время в этом диапазоне
