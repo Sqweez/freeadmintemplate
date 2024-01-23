@@ -354,6 +354,8 @@ import SkuModal from '@/components/v2/Modal/SkuModal';
 import ProductPrintModal from '@/components/Modal/ProductPrintModal';
 import {__hardcoded} from '@/utils/helpers';
 
+const cachedProducts = new Map();
+
 export default {
     components: {
         ProductPrintModal,
@@ -467,46 +469,51 @@ export default {
         quantities() {
             return this.$store.getters.QUANTITIES_v2;
         },
-        products() {
+        products: function() {
+            // @TODO cache
+            console.time('products');
+            const cacheKey = JSON.stringify({
+                showMainProducts: this.showMainProducts,
+                hideNotInStock: this.hideNotInStock,
+                storeFilter: this.storeFilter,
+                manufacturerId: this.manufacturerId,
+                categoryId: this.categoryId,
+                subcategoryId: this.subcategoryId,
+                currentMarginType: this.currentMarginType,
+                isKaspiVisibleFilter: this.isKaspiVisibleFilter,
+            });
+
+            if (cachedProducts.has(cacheKey)) {
+                //console.log('get from cache');
+                //console.timeEnd('products');
+                //return cachedProducts.get(cacheKey);
+            }
+
+            console.log('not get from cache');
+
             let products = this.showMainProducts ? this.$store.getters.MAIN_PRODUCTS_v2 : this.$store.getters.PRODUCTS_v2;
-            if (this.hideNotInStock) {
-                if (this.storeFilter !== -1) {
-                    products = products.filter(product => product.quantity > 0);
-                } else {
-                    products = products.filter(product => {
+            let filteredProducts =  products.filter(product => {
+                if (this.manufacturerId !== -1 && product.manufacturer.id !== this.manufacturerId) return false;
+                if (this.categoryId !== -1 && product.category.id !== this.categoryId) return false;
+                if (this.subcategoryId !== -1 && product.subcategory_id !== this.subcategoryId) return false;
+                if (this.currentMarginType !== -1 && product.margin_type.id !== this.currentMarginType) return false;
+                if (this.isKaspiVisibleFilter !== -1 && product.is_kaspi_visible !== this.isKaspiVisibleFilter) return false;
+
+                if (this.hideNotInStock) {
+                    if (this.storeFilter !== -1) {
+                        if (product.quantity <= 0) return false;
+                    } else {
                         const qnts = this.quantities[product.id];
-                        if (!qnts) {
-                            return false;
-                        }
-                        const total = qnts.reduce((a, c) => {
-                            return a + c.quantity;
-                        }, 0);
-                        return total > 0;
-                    })
+                        if (!qnts || qnts.reduce((a, c) => a + c.quantity, 0) <= 0) return false;
+                    }
                 }
-            }
 
-            if (this.manufacturerId !== -1) {
-                products = products.filter(p => p.manufacturer.id === this.manufacturerId);
-            }
+                return true;
+            });
 
-            if (this.categoryId !== -1) {
-                products = products.filter(p => p.category.id === this.categoryId);
-            }
-
-            if (this.subcategoryId !== -1) {
-                products = products.filter(p => p.subcategory_id === this.subcategoryId);
-            }
-
-            if (this.currentMarginType !== -1) {
-                products = products.filter(p => p.margin_type.id === this.currentMarginType);
-            }
-
-            if (this.isKaspiVisibleFilter !== -1) {
-                products = products.filter(p => p.is_kaspi_visible === this.isKaspiVisibleFilter);
-            }
-
-            return products;
+            //cachedProducts.set(cacheKey, filteredProducts);
+            console.timeEnd('products');
+            return filteredProducts;
         },
         stores() {
             return [{
@@ -648,7 +655,8 @@ export default {
             };
 
             try {
-                const result = await this.$store.dispatch('CHANGE_COUNT_v2', params);
+                cachedProducts.clear();
+                await this.$store.dispatch('CHANGE_COUNT_v2', params);
             } catch (e) {
                 if (increment === 1) {
                     this.productId = id;
@@ -658,6 +666,7 @@ export default {
         },
         async deleteProduct() {
             try {
+                cachedProducts.clear();
                 await this.$store.dispatch('DELETE_PRODUCT_v2',
                     this.productId,
                 );
@@ -669,10 +678,6 @@ export default {
                 this.productId = null;
                 this.deleteModal = false;
             }
-        },
-        async groupProduct() {
-            await axios.get('/api/v2/products/group');
-            this.$toast.success('Товары успешно сгруппированы!')
         },
         updatePage(page) {
 
@@ -707,6 +712,7 @@ export default {
         },
         async addProductQuantity(batch) {
             try {
+                cachedProducts.clear();
                 await this.$store.dispatch('ADD_PRODUCT_QUANTITY_v2', {
                     id: this.productId,
                     batch,
