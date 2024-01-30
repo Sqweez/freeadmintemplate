@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Kaspi;
 
-use App\Actions\Kaspi\CreateKaspiPriceAction;
+use App\Builder\CreateKaspiActionBuilder;
 use App\v2\Models\KaspiEntity;
 use Illuminate\Console\Command;
 
@@ -44,9 +44,9 @@ class CreateKaspiPriceCommand extends Command
     public function handle()
     {
         ini_set('memory_limit', '512M');
-        $kaspiEntities = KaspiEntity::query()->where('id', 1)->get();
+        $kaspiEntities = KaspiEntity::query()->get();
         foreach ($kaspiEntities as $kaspiEntity) {
-            $action = new CreateKaspiPriceAction($kaspiEntity);
+            $action = CreateKaspiActionBuilder::build($kaspiEntity);
             $action->handle();
             $this->line('OK');
         }
