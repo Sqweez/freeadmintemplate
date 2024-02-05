@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\v2\Models\KaspiEntityStore;
 use App\v2\Models\ProductSku;
+use Illuminate\Support\Collection;
 
 class ProductRepository
 {
@@ -55,5 +56,26 @@ class ProductRepository
                     })->count() > 0 ? 'yes' : 'no', 'storeId' => 'PP' . ($store['kaspi_store_id'])];
                 })];
         })->toArray();
+    }
+
+    public function getFullAttributes(ProductSku $sku): Collection
+    {
+        if (!$sku->relationLoaded('attributes')) {
+            $sku->load('attributes');
+        }
+        if (!$sku->relationLoaded('product.attributes')) {
+            $sku->load('product.attributes');
+        }
+        return collect($sku->attributes ?? [])
+            ->merge(
+                collect($sku->product->attributes ?? [])
+            )
+            ->values();
+    }
+
+    public function getFullAttributeValues(ProductSku $sku): Collection
+    {
+        return $this->getFullAttributes($sku)
+            ->pluck('attribute_value');
     }
 }
