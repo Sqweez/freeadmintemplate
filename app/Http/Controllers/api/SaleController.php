@@ -145,6 +145,7 @@ class SaleController extends Controller {
     public function reports(Request $request): AnonymousResourceCollection
     {
         $reportOptionsDTO = ReportOptionsDTO::fromRequest($request);
+        $reportOptionsDTO->setUser(auth()->user());
         return ReportService::getReports($reportOptionsDTO);
     }
 
