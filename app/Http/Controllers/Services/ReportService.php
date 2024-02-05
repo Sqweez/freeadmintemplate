@@ -7,15 +7,12 @@ namespace App\Http\Controllers\Services;
 use App\DTO\Reports\ReportOptionsDTO;
 use App\Http\Resources\v2\Report\ReportsResource;
 use App\Sale;
-use App\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ReportService {
     /**
      */
     public static function getReports(ReportOptionsDTO $reportOptionsDTO): AnonymousResourceCollection {
-        /* @var User $authUser */
-        $authUser = auth()->user();
         $sales = Sale::query()
             ->when($reportOptionsDTO->user, function ($query) use ($reportOptionsDTO) {
                 return $query->where('store_id', $reportOptionsDTO->user->store_id);
@@ -23,11 +20,11 @@ class ReportService {
             ->when($reportOptionsDTO->store_id, function ($query) use ($reportOptionsDTO) {
                 return $query->where('store_id', $reportOptionsDTO->store_id);
             })
-            ->when(!$authUser->is_super_user, function ($query) {
+            ->when(!$reportOptionsDTO->currentUser->is_super_user, function ($query) {
                 return $query->where('is_confirmed', true);
             })
-            ->when($authUser->isFranchise(), function ($query) use ($authUser) {
-                return $query->whereIn('store_id', $authUser->storesInSameCity->pluck('id'));
+            ->when(!$reportOptionsDTO->currentUser->isFranchise(), function ($query) use ($reportOptionsDTO) {
+                return $query->whereIn('store_id', $reportOptionsDTO->currentUser->storesInSameCity->pluck('id'));
             })
             ->when($reportOptionsDTO->promocode_id, function ($query) use ($reportOptionsDTO) {
                 return $query->where('promocode_id', $reportOptionsDTO->promocode_id);
@@ -40,7 +37,7 @@ class ReportService {
             ->report()
             ->reportDate([$reportOptionsDTO->start, $reportOptionsDTO->finish])
             ->get();
-        
+
         return ReportsResource::collection($sales);
     }
 

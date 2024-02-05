@@ -13,6 +13,7 @@ class ReportOptionsDTO extends BaseDTO
     public $store_id;
     public $manufacturer_id;
     public $promocode_id;
+    public ?User $currentUser;
 
     public function __construct(array $data)
     {
@@ -26,6 +27,11 @@ class ReportOptionsDTO extends BaseDTO
         if ($this->promocode_id !== null && json_last_error() !== JSON_ERROR_NONE) {
             $this->promocode_id = null;
         }
+    }
+
+    public function setUser(?User $user)
+    {
+        $this->currentUser = $user;
     }
 
     protected static function mapDataFromRequest(Request $request): array
