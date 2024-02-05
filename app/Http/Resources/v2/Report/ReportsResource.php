@@ -76,13 +76,14 @@ class ReportsResource extends JsonResource
     protected function getProducts ($products): Collection
     {
         $products = $products instanceof Collection ? $products : collect($products);
-        $groupedProducts = $products->groupBy(['product_id', 'discount']);
+        $transformedProducts = $products->map(function (SaleProduct $product) {
+            return new ReportProductResource($product);
+        });
+        $groupedProducts = $transformedProducts->groupBy(['product_id', 'discount']);
         return $groupedProducts
             ->map(function (Collection $productsGroup) {
                 $product = $productsGroup->first();
-                $product = new SaleProduct($product->toArray());
-                $productDetails = ReportProductResource::make($product)->toArray(request());
-                return array_merge($productDetails, ['count' => $productsGroup->count()]);
+                return array_merge($product->toArray(), ['count' => $productsGroup->count()]);
             })
             ->values()
             ->when($this->certificate && $this->certificate->id, function (Collection $collection) {
