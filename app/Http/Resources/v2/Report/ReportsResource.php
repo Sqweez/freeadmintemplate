@@ -79,7 +79,8 @@ class ReportsResource extends JsonResource
         $groupedProducts = $products->groupBy(['product_id', 'discount']);
         return $groupedProducts
             ->map(function (Collection $productsGroup) {
-                $product = $productsGroup->first()->toModel(SaleProduct::class);
+                $product = $productsGroup->first();
+                $product = new SaleProduct($product->toArray());
                 $productDetails = ReportProductResource::make($product)->toArray(request());
                 return array_merge($productDetails, ['count' => $productsGroup->count()]);
             })
