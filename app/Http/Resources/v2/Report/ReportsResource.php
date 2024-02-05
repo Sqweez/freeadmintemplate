@@ -3,12 +3,14 @@
 namespace App\Http\Resources\v2\Report;
 
 use App\Sale;
+use App\SaleProduct;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 /**
  * Class Arrival
  *
- * @mixin \App\Sale
+ * @mixin Sale
  * */
 
 class ReportsResource extends JsonResource
@@ -36,25 +38,11 @@ class ReportsResource extends JsonResource
             'payment_type' => $this->payment_type,
             'discount' => $this->discount,
             'balance' => $this->balance,
-            'products' => collect(ReportProductResource::collection($this->products)->toArray($request))->groupBy(['product_id', 'discount'])->map(function ($product, $product_id) {
-                return collect($product)->map(function ($p, $discount) {
-                    return array_merge(['count' => count($p)], $p[0]);
-                });
-            })->flatten(1)->merge([$this->certificate->id ? collect([
-                'product_name' => $this->certificate->used ? 'Сертификат на сумму '.  $this->certificate->amount .' тенге (Использован)' : 'Сертификат на сумму '.  $this->certificate->amount .' тенге',
-                'count' => 1,
-                'discount' => 0,
-                'attributes' => [],
-                'manufacturer' => [
-                    'manufacturer_name' => ''
-                ],
-                'certificate_id' => $this->certificate->id,
-                'product_price' => $this->certificate->amount
-            ]) : []])->filter(function ($q) {return count($q) > 0;}),
-            'store_type' => intval($this->store->type_id),
+            'products' => $this->getProducts($this->products),
+            'store_type' => $this->store->type_id,
             'purchase_price' => $user_id ? $this->purchase_price : 0,
-            'fact_price' => $this->product_price + $this->certificate->final_amount,
-            'final_price' => $this->final_price - $this->preorder->amount,
+            'fact_price' => $this->getRealPrice(),
+            'final_price' => $this->final_price,
             'margin' => $this->margin,
             'certificate' => $this->used_certificate,
             'split_payment' => $this->split_payment !== null ?
@@ -77,6 +65,41 @@ class ReportsResource extends JsonResource
             'promocode' => $this->promocode,
             'paid_by_barter_balance' => $this->paid_by_barter_balance,
             'can_be_changed' => $canBeChanged
+        ];
+    }
+
+
+    /**
+     * @param  Collection|SaleProduct[]  $products
+     *
+     */
+    protected function getProducts ($products): Collection
+    {
+        $products = $products instanceof Collection ? $products : collect($products);
+        $groupedProducts = $products->groupBy(['product_id', 'discount']);
+        return $groupedProducts
+            ->map(function (Collection $productsGroup) {
+                $product = $productsGroup->first();
+                $productDetails = ReportProductResource::make($product)->toArray();
+                return array_merge($productDetails, ['count' => $productsGroup->count()]);
+            })
+            ->values()
+            ->when($this->certificate && $this->certificate->id, function (Collection $collection) {
+                return $collection->push($this->getCertificateDetails());
+            });
+    }
+
+    protected function getCertificateDetails (): array {
+        return [
+            'product_name' => $this->certificate->getCertificateName(),
+            'count' => 1,
+            'discount' => 0,
+            'attributes' => [],
+            'manufacturer' => [
+                'manufacturer_name' => ''
+            ],
+            'certificate_id' => $this->certificate->id,
+            'product_price' => $this->certificate->amount
         ];
     }
 }
