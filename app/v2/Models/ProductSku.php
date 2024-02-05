@@ -107,6 +107,7 @@ class ProductSku extends Model
 
     const WITH_PRODUCT = 'product:id,product_name,product_price,category_id,manufacturer_id';
 
+    /* TODO Переименовать отношение */
     public function attributes(): MorphToMany
     {
         return $this->morphToMany(AttributeValue::class, 'attributable', 'attributable')

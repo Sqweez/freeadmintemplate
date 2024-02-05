@@ -27,8 +27,12 @@ class ReportProductResource extends JsonResource
         return [
             'product_id' => $this->product_id,
             'product_name' => $this->product->product->product_name,
-            'attributes' => $this->productRepository->getFullAttributeValues($this->product),
-            '_attributes' => $this->productRepository->getFullAttributes($this->product),
+            'attributes' => collect($this->product->attributes)
+                ->pluck('attribute_value')
+                ->merge(collect($this->product->product->attributes ?? [])
+                    ->pluck('attribute_value')
+                )->values()->all(),
+            '_attributes' => collect($this->product->attributes)->merge(collect($this->product->product->attributes ?? [])),
             'manufacturer' => $this->product->manufacturer,
             'product_price' => $this->product_price,
           /*  'count' => $this->count,*/
