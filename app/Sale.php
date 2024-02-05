@@ -253,13 +253,15 @@ class Sale extends Model
             ->where('payment_type', '!=', 4);
     }
 
-    public function getPurchasePriceAttribute() {
+    public function getPurchasePriceAttribute(): int
+    {
         return intval($this->products->reduce(function ($a, $c) {
             return $a + $c->purchase_price;
         }, 0));
     }
 
-    public function getProductPriceAttribute() {
+    public function getProductPriceAttribute(): int
+    {
         return intval($this->products->reduce(function ($a, $c) {
             return $a + $c->product_price;
         }, 0));
@@ -284,7 +286,7 @@ class Sale extends Model
         $price -= $this->paid_by_barter_balance;
 
 
-        return ceil($price - $this->balance);
+        return ceil($price - $this->balance - optional($this->preorder)->amount);
     }
 
     public function getKaspiRedCommissionAttribute(): int {
@@ -311,7 +313,8 @@ class Sale extends Model
         return $productsMargin + $this->certificate->final_amount + $this->certificate_margin - $this->getKaspiRedCommissionAttribute();
     }
 
-    public function getDateAttribute() {
+    public function getDateAttribute(): string
+    {
         return Carbon::parse($this->created_at)->format('d.m.Y H:i:s');
     }
 
@@ -333,6 +336,11 @@ class Sale extends Model
 
     public function getConfirmationURL(): string {
         return sprintf('%s/api/sales/%s/confirm', config('app.url'), $this->id);
+    }
+
+    public function getRealPrice()
+    {
+        return $this->product_price + optional($this->certificate)->final_amount;
     }
 
     /* public function setCommentAttribute($value) {

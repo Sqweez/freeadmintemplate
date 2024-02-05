@@ -2,7 +2,10 @@
 
 namespace App\v2\Models;
 
+use App\Sale;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\v2\Models\Certificate
@@ -19,8 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $final_amount
  * @property-read mixed $used
- * @property-read \App\Sale $sale
- * @property-read \App\User $user
+ * @property-read Sale $sale
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Certificate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Certificate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Certificate query()
@@ -52,20 +55,34 @@ class Certificate extends Model
         'barcode', 'user_id', 'amount', 'expired_at', 'active', 'used_sale_id', 'sale_id'
     ];
 
-    public function user() {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo('App\User');
     }
 
-    public function sale() {
+    public function sale(): BelongsTo
+    {
         return $this->belongsTo('App\Sale');
     }
 
-    public function getUsedAttribute() {
+    public function getUsedAttribute(): bool
+    {
         return $this->used_sale_id !== 0;
     }
 
 
-    public function getFinalAmountAttribute() {
+    public function getFinalAmountAttribute(): int
+    {
         return ($this->used_sale_id === 0) ? $this->amount : 0;
+    }
+
+    public function getCertificateName(): string
+    {
+        return trim(
+            sprintf("Сертификат на сумму %s тенге %s",
+                $this->amount,
+                $this->used ? '(использован)' : ''
+            )
+        );
     }
 }

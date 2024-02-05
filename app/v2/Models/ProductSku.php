@@ -4,6 +4,7 @@ namespace App\v2\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
@@ -106,16 +107,19 @@ class ProductSku extends Model
 
     const WITH_PRODUCT = 'product:id,product_name,product_price,category_id,manufacturer_id';
 
-    public function attributes() {
+    public function attributes(): MorphToMany
+    {
         return $this->morphToMany(AttributeValue::class, 'attributable', 'attributable')
             ->where('filterable', false);
     }
 
-    public function product_images() {
+    public function product_images(): MorphToMany
+    {
         return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
-    public function product_thumbs() {
+    public function product_thumbs(): MorphToMany
+    {
         return $this->morphToMany('App\v2\Models\Thumb', 'thumbable', 'thumbable');
     }
 
@@ -140,23 +144,28 @@ class ProductSku extends Model
     }
 
 
-    public function getProductPriceAttribute() {
+    public function getProductPriceAttribute(): int
+    {
         return $this->self_price == 0 ? $this->product->product_price : $this->self_price;
     }
 
-    public function getProductNameAttribute() {
+    public function getProductNameAttribute(): string
+    {
         return $this->product->product_name ?? 'Неизвестно';
     }
 
-    public function getProductNameWebAttribute() {
+    public function getProductNameWebAttribute(): string
+    {
         return $this->product->product_name_web;
     }
 
-    public function getProductDescriptionAttribute() {
+    public function getProductDescriptionAttribute(): ?string
+    {
         return $this->product->product_description;
     }
 
-    public function getIsIherbAttribute() {
+    public function getIsIherbAttribute(): bool
+    {
         return $this->product->is_iherb;
     }
 
@@ -226,6 +235,21 @@ class ProductSku extends Model
 
     public function getIsKaspiVisibleAttribute() {
         return $this->product->is_kaspi_visible;
+    }
+
+    public function getFullAttributes(): Collection
+    {
+        return collect($this->attributes ?? [])
+            ->merge(
+                collect(
+                    $this->product->attributes ?? []
+                )
+            );
+    }
+
+    public function getFullAttributesValues(): Collection
+    {
+        return $this->getFullAttributes()->pluck('attribute_value');
     }
 
     public function mergeAttributes($attributes, $productAttributes): Collection {

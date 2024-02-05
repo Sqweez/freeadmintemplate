@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\v2\Models\ProductSku;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $purchase_price
  * @property int $product_price
  * @property int $discount
- * @property-read Product $product
+ * @property-read ProductSku $product
  * @property-read Sale $sale
  * @method static \Illuminate\Database\Eloquent\Builder|SaleProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SaleProduct newQuery()
@@ -51,15 +52,16 @@ class SaleProduct extends Model
         'discount' => 'integer'
     ];
 
-    public function product() {
-        return $this->belongsTo('App\v2\Models\ProductSku', 'product_id')->withDefault([
+    public function product(): BelongsTo {
+        return $this->belongsTo(ProductSku::class, 'product_id')->withDefault([
             'product_name' => 'Неизвестно',
             'attributes' => [],
             'manufacturer' => collect([])
         ])->withTrashed();
     }
 
-    public function sale() {
+    public function sale(): BelongsTo
+    {
         return $this->belongsTo('App\Sale', 'sale_id');
     }
 
@@ -96,6 +98,6 @@ class SaleProduct extends Model
     }
 
     public function batch(): BelongsTo {
-        return $this->belongsTo('App\ProductBatch', 'product_batch_id');
+        return $this->belongsTo(ProductBatch::class, 'product_batch_id');
     }
 }
