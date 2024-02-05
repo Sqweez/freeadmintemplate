@@ -23,7 +23,7 @@ class ReportService {
             ->when(!$reportOptionsDTO->currentUser->is_super_user, function ($query) {
                 return $query->where('is_confirmed', true);
             })
-            ->when(!$reportOptionsDTO->currentUser->isFranchise(), function ($query) use ($reportOptionsDTO) {
+            ->when($reportOptionsDTO->currentUser->isFranchise(), function ($query) use ($reportOptionsDTO) {
                 return $query->whereIn('store_id', $reportOptionsDTO->currentUser->storesInSameCity->pluck('id'));
             })
             ->when($reportOptionsDTO->promocode_id, function ($query) use ($reportOptionsDTO) {
