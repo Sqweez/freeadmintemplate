@@ -88,6 +88,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePromocodeId($value)
  * @property int $paid_by_barter_balance
  * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaidByBarterBalance($value)
+ * @property int|null $fit_client_id
+ * @property-read FitClient|null $fit_client
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereFitClientId($value)
  */
 class Sale extends Model
 {
@@ -220,9 +223,8 @@ class Sale extends Model
         $q->where('created_at', $date);
     }
 
-    public function scopeReportDate($q, $dates) {
-        return $q->whereDate('created_at', '>=', $dates[0])
-            ->whereDate('created_at', '<=', $dates[1])
+    public function scopeReportDate($q, array $dates) {
+        return $q->whereBetween($dates)
             ->orderByDesc('created_at');
     }
 
@@ -230,6 +232,7 @@ class Sale extends Model
         return $q->with(['client:id,client_name,is_wholesale_buyer', 'fit_client:id,name','user:id,name,store_id', 'store:id,name,type_id','products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate', 'preorder'])
+            ->with('promocode')
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes', 'promocode.partner:id,client_name']);
     }
 

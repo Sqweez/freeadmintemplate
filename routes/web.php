@@ -10,6 +10,7 @@ Route::prefix('console/artisan')->group(function () {
     });
 });
 
+
 Route::get('without-reviews', function () {
     $products =  \App\v2\Models\Product::query()
         ->whereHas('sku', function ($q) {

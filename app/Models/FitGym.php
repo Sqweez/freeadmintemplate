@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|FitGym whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FitGym whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int|null $store_id
+ * @method static \Illuminate\Database\Eloquent\Builder|FitGym whereStoreId($value)
  */
 class FitGym extends Model
 {
