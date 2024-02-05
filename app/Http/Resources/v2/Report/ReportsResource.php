@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
  *
  * @mixin Sale
  * */
-
 class ReportsResource extends JsonResource
 {
     /**
@@ -45,13 +44,11 @@ class ReportsResource extends JsonResource
             'final_price' => $this->final_price,
             'margin' => $this->margin,
             'certificate' => $this->used_certificate,
-            'split_payment' => $this->split_payment !== null ?
-                collect($this->split_payment)->map(function ($split) {
-                    $split['payment_text'] = Sale::PAYMENT_TYPES[intval($split['payment_type'])]['name'];
-                    $split['payment_type'] = intval($split['payment_type']);
-                    return $split;
-                })
-                : null,
+            'split_payment' => $this->split_payment !== null ? collect($this->split_payment)->map(function ($split) {
+                $split['payment_text'] = Sale::PAYMENT_TYPES[intval($split['payment_type'])]['name'];
+                $split['payment_type'] = intval($split['payment_type']);
+                return $split;
+            }) : null,
             'comment' => $this->comment,
             'preorder' => $this->preorder,
             'is_delivery' => $this->is_delivery,
@@ -73,25 +70,33 @@ class ReportsResource extends JsonResource
      * @param  Collection|SaleProduct[]  $products
      *
      */
-    protected function getProducts ($products): Collection
+    protected function getProducts($products): Collection
     {
-        $products = $products instanceof Collection ? $products : collect($products);
-        $transformedProducts = $products->map(function (SaleProduct $product) {
-            return ReportProductResource::make($product)->toArray(request());
-        });
-        $groupedProducts = $transformedProducts->groupBy(['product_id', 'discount']);
-        return $groupedProducts
-            ->map(function (Collection $productsGroup) {
-                $product = $productsGroup->first();
-                return array_merge($product->toArray(), ['count' => $productsGroup->count()]);
+        return collect(ReportProductResource::collection($products)->toArray(request()))
+            ->groupBy(['product_id', 'discount'])
+            ->flatMap(function ($product) {
+                return collect($product)->map(function ($p) {
+                    return array_merge(['count' => count($p)], $p[0]);
+                });
             })
-            ->values()
-            ->when($this->certificate && $this->certificate->id, function (Collection $collection) {
+            ->when($this->certificate && $this->certificate->id, function ($collection) {
                 return $collection->push($this->getCertificateDetails());
+            })
+            ->filter(function ($q) {
+                return count($q) > 0;
             });
+        $transformedProducts = collect(ReportProductResource::collection($products)->toArray(request()));
+        $groupedProducts = $transformedProducts->groupBy(['product_id', 'discount']);
+        return $groupedProducts->map(function (Collection $productsGroup) {
+            $product = $productsGroup->first();
+            return $product->toArray() + ['count' => $productsGroup->count()];
+        })->values()->when($this->certificate && $this->certificate->id, function (Collection $collection) {
+            return $collection->push($this->getCertificateDetails());
+        });
     }
 
-    protected function getCertificateDetails (): array {
+    protected function getCertificateDetails(): array
+    {
         return [
             'product_name' => $this->certificate->getCertificateName(),
             'count' => 1,
