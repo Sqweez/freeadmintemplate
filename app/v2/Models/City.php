@@ -2,7 +2,9 @@
 
 namespace App\v2\Models;
 
+use App\Store;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\v2\Models\City
@@ -23,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|City whereDeliveryThreshold($value)
  * @property string $kaspi_city_id
  * @method static \Illuminate\Database\Eloquent\Builder|City whereKaspiCityId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|Store[] $stores
+ * @property-read int|null $stores_count
  */
 class City extends Model
 {
@@ -32,4 +36,10 @@ class City extends Model
         'delivery_cost' => 'integer',
         'delivery_threshold' => 'integer'
     ];
+
+
+    public function stores(): HasMany
+    {
+        return $this->hasMany(Store::class, 'city_id');
+    }
 }

@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Builder/CreateKaspiActionBuilder.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Repository/ProductRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Service/Kaspi/KaspiProductXMLGenerator.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/DTO/Reports/BaseDTO.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/DTO/Reports/ReportOptionsDTO.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Actions/Kaspi/CreateKaspiPriceAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Actions/Kaspi/CreateKaspiPriceAction.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Kaspi/CreateKaspiPriceCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/Kaspi/CreateKaspiPriceCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/FitClient.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/FitClient.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/FitGym.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/FitGym.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/City.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/City.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -543,7 +548,10 @@
       <workItem from="1705315889981" duration="14000" />
       <workItem from="1706005345879" duration="34000" />
       <workItem from="1706005429242" duration="4040000" />
-      <workItem from="1706613248329" duration="3319000" />
+      <workItem from="1706613248329" duration="5509000" />
+      <workItem from="1706619980355" duration="3640000" />
+      <workItem from="1706896993926" duration="1253000" />
+      <workItem from="1707129915334" duration="751000" />
     </task>
     <servers />
   </component>

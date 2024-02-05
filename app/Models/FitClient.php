@@ -44,6 +44,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $activated_services_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FitServiceSale[] $purchased_services
  * @property-read int|null $purchased_services_count
+ * @property string|null $photo
+ * @method static \Illuminate\Database\Eloquent\Builder|FitClient wherePhoto($value)
  */
 class FitClient extends Model
 {

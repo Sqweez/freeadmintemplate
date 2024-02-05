@@ -6,6 +6,7 @@ use App\Actions\Sale\UpdateSaleAction;
 use App\Client;
 use App\ClientSale;
 use App\ClientTransaction;
+use App\DTO\Reports\ReportOptionsDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ReportService;
 use App\Http\Controllers\Services\SaleService;
@@ -31,6 +32,7 @@ use App\v2\Models\ProductSku;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -140,14 +142,10 @@ class SaleController extends Controller {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function reports(Request $request) {
-        $start = $request->get('start');
-        $finish = $request->get('finish');
-        $user_id = $request->get('user_id', null);
-        $is_supplier = $request->has('is_supplier');
-        $store_id = $request->get('store_id', null);
-        $manufacturer_id = $request->get('manufacturer_id', null);
-        return ReportService::getReports($start, $finish, $user_id, $is_supplier, $store_id, $manufacturer_id);
+    public function reports(Request $request): AnonymousResourceCollection
+    {
+        $reportOptionsDTO = ReportOptionsDTO::fromRequest($request);
+        return ReportService::getReports($reportOptionsDTO);
     }
 
     public function getSaleById(Sale $sale): ReportsResource {
