@@ -3,12 +3,13 @@
 namespace App\DTO\Reports;
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ReportOptionsDTO extends BaseDTO
 {
-    public $start;
-    public $finish;
+    public string $start;
+    public string $finish;
     public ?User $user;
     public $store_id;
     public $manufacturer_id;
@@ -17,8 +18,8 @@ class ReportOptionsDTO extends BaseDTO
 
     public function __construct(array $data)
     {
-        $this->start = $data['start'];
-        $this->finish = $data['finish'];
+        $this->start = (Carbon::parse($data['start'] ?? today()))->startOfDay()->toDateTimeString();
+        $this->finish = (Carbon::parse($data['finish'] ?? today()))->endOfDay()->toDateTimeString();
         $this->user = $data['user_id'] ? User::find($data['user_id']) : null;
         $this->store_id = $data['store_id'] ?? null;
         $this->manufacturer_id = $data['manufacturer_id'] ?? null;

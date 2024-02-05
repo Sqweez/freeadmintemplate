@@ -224,7 +224,7 @@ class Sale extends Model
     }
 
     public function scopeReportDate($q, array $dates) {
-        return $q->whereBetween($dates)
+        return $q->whereBetween('created_at', $dates)
             ->orderByDesc('created_at');
     }
 
