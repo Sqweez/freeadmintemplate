@@ -34,11 +34,14 @@ class ReportService {
                     return $subQuery->where('manufacturer_id', $reportOptionsDTO->manufacturer_id);
                 });
             })
+            ->with('products')
             ->report()
             ->reportDate([$reportOptionsDTO->start, $reportOptionsDTO->finish])
-            ->get();
+            ;
 
-        return ReportsResource::collection($sales);
+        \Log::info($sales->toSql());
+
+        return ReportsResource::collection($sales->get());
     }
 
     public static function getClientReports($client_id): AnonymousResourceCollection {
