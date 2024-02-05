@@ -77,7 +77,7 @@ class ReportsResource extends JsonResource
     {
         $products = $products instanceof Collection ? $products : collect($products);
         $transformedProducts = $products->map(function (SaleProduct $product) {
-            return new ReportProductResource($product);
+            return ReportProductResource::make($product)->toArray(request());
         });
         $groupedProducts = $transformedProducts->groupBy(['product_id', 'discount']);
         return $groupedProducts
