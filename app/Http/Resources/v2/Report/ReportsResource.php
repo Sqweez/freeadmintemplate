@@ -80,7 +80,7 @@ class ReportsResource extends JsonResource
         return $groupedProducts
             ->map(function (Collection $productsGroup) {
                 $product = $productsGroup->first();
-                $productDetails = ReportProductResource::make($product)->toArray();
+                $productDetails = ReportProductResource::make($product)->toArray(request());
                 return array_merge($productDetails, ['count' => $productsGroup->count()]);
             })
             ->values()

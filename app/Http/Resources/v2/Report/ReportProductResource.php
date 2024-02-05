@@ -16,7 +16,7 @@ class ReportProductResource extends JsonResource
      * @mixin SaleProduct
      * @return array
      */
-    public function toArray($request = null): array
+    public function toArray($request): array
     {
         return [
             'product_id' => $this->product_id,

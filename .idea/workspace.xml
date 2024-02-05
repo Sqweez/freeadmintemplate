@@ -8,10 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportProductResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Report/ReportsResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/SaleProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/SaleProduct.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/Certificate.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Certificate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/ProductSku.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/ProductSku.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -547,7 +543,7 @@
       <workItem from="1706613248329" duration="5509000" />
       <workItem from="1706619980355" duration="3640000" />
       <workItem from="1706896993926" duration="1253000" />
-      <workItem from="1707129915334" duration="8688000" />
+      <workItem from="1707129915334" duration="8850000" />
     </task>
     <servers />
   </component>
