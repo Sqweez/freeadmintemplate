@@ -7,7 +7,6 @@ use App\Client;
 use App\ClientSale;
 use App\ClientTransaction;
 use App\DTO\Reports\ReportOptionsDTO;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Services\ReportService;
 use App\Http\Controllers\Services\SaleService;
 use App\Http\Resources\ClientResource;
@@ -37,7 +36,7 @@ use Illuminate\Support\Collection;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class SaleController extends Controller {
+class SaleController extends BaseApiController {
 
     public function store(Request $request, SaleService $saleService) {
         try {
@@ -144,8 +143,10 @@ class SaleController extends Controller {
      */
     public function reports(Request $request): AnonymousResourceCollection
     {
+        $user = $this->retrieveAnyUser();
+        abort_if(!$user, 403);
         $reportOptionsDTO = ReportOptionsDTO::fromRequest($request);
-        $reportOptionsDTO->setUser(auth()->user());
+        $reportOptionsDTO->setUser($user);
         return ReportService::getReports($reportOptionsDTO);
     }
 
