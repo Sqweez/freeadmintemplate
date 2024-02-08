@@ -70,7 +70,12 @@ class SaleProduct extends Model
     }
 
     public function getFinalPriceAttribute() {
-        return $this->product_price - ($this->discount /  100) * $this->product_price;
+        return $this->product_price - $this->discountAmount();
+    }
+
+    public function discountAmount()
+    {
+        return $this->discount / 100 * $this->product_price;
     }
 
     public function getKaspiRedAttribute(): bool {

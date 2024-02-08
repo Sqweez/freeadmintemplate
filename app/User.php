@@ -2,9 +2,7 @@
 
 namespace App;
 
-use App\v2\Models\City;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,8 +46,6 @@ use Illuminate\Support\Facades\Hash;
  * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
  * @mixin \Eloquent
  * @property-read mixed $is_super_user
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Store[] $storesInSameCity
- * @property-read int|null $stores_in_same_city_count
  */
 class User extends Authenticatable
 {
@@ -69,13 +65,17 @@ class User extends Authenticatable
     }
 
     public function store(): BelongsTo {
-        return $this->belongsTo('App\Store', 'store_id');
+        return $this->belongsTo(Store::class, 'store_id');
     }
 
-    public function storesInSameCity(): HasManyThrough
+
+    /**
+     * @returns Store[]
+     * */
+    public function storesInSameCity()
     {
-        return $this
-            ->hasManyThrough(Store::class, City::class, 'id', 'city_id', 'store_id');
+        $cityId = $this->store->city_id;
+        return Store::where('city_id', $cityId)->get();
     }
 
     public function role(): BelongsTo {
