@@ -163,18 +163,16 @@ class SaleController extends BaseApiController {
         $role = $request->get('role');
         $store_id = $request->get('store_id');
 
-        $salesQuery = Sale::query()
-            ->whereDate('created_at', '>=', $dateFilter)
+        $sales = Sale::query()
+            ->where('created_at', '>=', Carbon::parse($dateFilter)->startOfDay())
             ->where('is_confirmed', true)
-            ->with(['products'])
-            ->with(['certificate']);
-
-        if ($role === UserRole::ROLE_FRANCHISE) {
-            $salesQuery = $salesQuery
-                ->where('store_id', $store_id);
-        }
-
-        $sales = $salesQuery->get();
+            ->with(['products:id,product_price,discount'])
+            ->with(['certificate'])
+            ->select(['id', 'certificate_id', 'store_id', 'payment_type', 'is_opt', 'promocode_fixed_amount', 'paid_by_barter_balance', 'balance'])
+            ->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
+                return $query->where('store_id', $store_id);
+            })
+            ->get();
 
         $bookingSales = collect([
             9999 => [
