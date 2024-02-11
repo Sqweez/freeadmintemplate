@@ -166,9 +166,8 @@ class SaleController extends BaseApiController {
         $sales = Sale::query()
             ->where('created_at', '>=', Carbon::parse($dateFilter)->startOfDay())
             ->where('is_confirmed', true)
-            ->with(['products:id,product_price,discount'])
+            ->with(['products'])
             ->with(['certificate'])
-            ->select(['id', 'certificate_id', 'store_id', 'payment_type', 'is_opt', 'promocode_fixed_amount', 'paid_by_barter_balance', 'balance'])
             ->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
                 return $query->where('store_id', $store_id);
             })
