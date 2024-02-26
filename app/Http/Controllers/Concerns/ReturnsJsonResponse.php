@@ -46,4 +46,9 @@ trait ReturnsJsonResponse {
     public function respondSuccessNoReport(array $data): JsonResponse {
         return $this->respondSuccess($data + ['unreportable' => true]);
     }
+
+    public function responseException(\Exception $exception): JsonResponse
+    {
+        return $this->respondError($exception->getMessage(), $exception->getCode() !== 0 ? $exception->getCode() : __hardcoded(500));
+    }
 }

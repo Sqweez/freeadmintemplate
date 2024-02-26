@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property int $id
  * @property int $store_id
- * @property array $products
+ * @property array{id: int, count: int} $products
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Store $store
@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Matrix whereStoreId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Matrix whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property array $products
  */
 class Matrix extends Model
 {

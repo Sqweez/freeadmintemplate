@@ -35,6 +35,7 @@ use App\Http\Controllers\api\v3\WorkingScheduleController;
 use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\CronController;
 use App\Http\Middleware\AuthorizationMiddleware;
+use App\Http\Middleware\ExceptionHandlingMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Authorization
@@ -56,7 +57,7 @@ Route::get('set-partner-expired-at', 'HelpController@setPartnerExpiredAt');
 Route::get('backup', 'Services\BackupController@backup');
 
 
-Route::middleware(AuthorizationMiddleware::class)->group(function () {
+Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandlingMiddleware::class]], function () {
     Route::prefix('shop')->group(function () {
         Route::prefix('iherb')->group(function () {
             Route::get('hits', [\App\Http\Controllers\api\shop\ProductController::class, 'getIherbHitProducts']);
@@ -441,6 +442,7 @@ Route::middleware(AuthorizationMiddleware::class)->group(function () {
             Route::patch('/{matrix}', [MatrixController::class, 'update']);
             Route::get('/', [MatrixController::class, 'index']);
             Route::post('/', [MatrixController::class, 'store']);
+            Route::get('/{store}/transfer/{parent}', [MatrixController::class, 'retrieveTransfer']);
         });
 
         Route::post('legal-entity/bank-account', [LegalEntityController::class, 'createBankAccount']);

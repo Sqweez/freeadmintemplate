@@ -14319,6 +14319,16 @@
          *
          * @static 
          */ 
+        public static function search($search)
+        {
+                        /** @var \App\Http\Controllers\Services\ProductService $instance */
+                        return $instance->search($search);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function create($_product, $_attributes)
         {
                         /** @var \App\Http\Controllers\Services\ProductService $instance */
