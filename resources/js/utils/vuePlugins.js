@@ -7,12 +7,21 @@ import BarcodeService from '@/utils/barcodeService';
 import store from '@/store';
 import { mapGetters } from 'vuex';
 import EconomyService from '@/utils/economyService';
+import { _extractError } from '@/utils/helpers';
 
 export default {
     install(Vue, options) {
         Vue.mixin({
             methods: {
                 $evaluate: (param) => eval('this.' + param),
+                $report(error) {
+                    /**
+                     * @type {ToastService}
+                     * */
+                    const $toast = this.$toast;
+                    const errorMessage = _extractError(error);
+                    return $toast.error(errorMessage);
+                },
             },
             computed: {
                 ...mapGetters({
@@ -26,6 +35,9 @@ export default {
                 $barcode() {
                     return new BarcodeService();
                 },
+                /**
+                 * @return {ToastService}
+                 * */
                 $toast() {
                     return new ToastService();
                 },

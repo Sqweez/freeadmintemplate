@@ -19,12 +19,12 @@ use Illuminate\Support\Facades\Http;
 class ProductController extends Controller {
 
 
-    private $filtersResolver;
-    private $catalogProductQueryResolver;
+    private CatalogFiltersResolver $filtersResolver;
+    private CatalogProductQueryResolver $catalogProductQueryResolver;
     public function __construct()
     {
-        $this->filtersResolver = new CatalogFiltersResolver();
-        $this->catalogProductQueryResolver = new CatalogProductQueryResolver();
+        $this->filtersResolver = app(CatalogFiltersResolver::class);
+        $this->catalogProductQueryResolver = app(CatalogProductQueryResolver::class);
     }
 
     public function getProducts(Request $request) {
@@ -63,14 +63,16 @@ class ProductController extends Controller {
         ];
 
     }
-    private function getBrands($filters, $store_id) {
+    private function getBrands($filters, $store_id): Collection
+    {
         $_filters = $filters;
         $_filters['brands'] = [];
         $ids = $this->getProductWithFilter($_filters, $store_id)->without(['subcategory', 'attributes', 'product_images'])->select(['manufacturer_id'])->groupBy(['manufacturer_id'])->get()->pluck('manufacturer_id');
         return Manufacturer::whereIn('id', $ids)->get();
     }
 
-    private function getPrices($filters, $store_id) {
+    private function getPrices($filters, $store_id): array
+    {
         $_filters = $filters;
         $_filters['prices'] = [];
         $productsPrices = $this->getProductWithFilter($_filters, $store_id)->without(['subcategory', 'attributes', 'product_images'])->groupBy('product_price')->select(['product_price'])->get()->pluck('product_price');
@@ -80,7 +82,8 @@ class ProductController extends Controller {
         ];
     }
 
-    private function convertToArray($filters) {
+    private function convertToArray($filters): array
+    {
         $array = [];
 
         foreach ($filters as $key => $filter) {
@@ -151,7 +154,8 @@ class ProductController extends Controller {
     }
 
 
-    public function getProduct(Product $product) {
+    public function getProduct(Product $product): ProductResource
+    {
         return new ProductResource(
             Product::with([
                 'sku',
@@ -171,7 +175,8 @@ class ProductController extends Controller {
         );
     }
 
-    public function getStockProducts(Request $request) {
+    public function getStockProducts(Request $request): AnonymousResourceCollection
+    {
         $store_id = intval($request->get('store_id')) || -1;
         $user_token = $request->get('user_token');
         $stock_id = $request->get('stock_id');

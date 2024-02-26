@@ -81,3 +81,48 @@ export function _generateImagePreview(file) {
     }
     return createObjectURL(file);
 }
+
+export function isObject(variable) {
+    return (
+        typeof variable === 'object' &&
+        variable !== null &&
+        !Array.isArray(variable) &&
+        !(variable instanceof Function)
+    );
+}
+
+export function _extractError(error) {
+    if (!isObject(error) || !isObject(error.response)) {
+        return 'Неизвестная ошибка';
+    }
+
+    if (error.response.status === 500) {
+        console.error(error.response);
+        return 'На сервере произошла ошибка';
+    }
+
+    if (error.response.data && error.response.data.message) {
+        // Проверяем, является ли message массивом
+        if (Array.isArray(error.response.data.message)) {
+            // Возвращаем все сообщения, объединенные в одну строку
+            return error.response.data.message.join(', ');
+        }
+        // Возвращаем сообщение, если оно не массив
+        return error.response.data.message;
+    }
+
+    if (error.response.message) {
+        return error.response.message;
+    }
+
+    // Проверка на наличие других возможных полей, где может быть сообщение
+    if (error.response.error) {
+        return error.response.error;
+    }
+
+    if (error.response.statusText) {
+        return error.response.statusText;
+    }
+
+    return 'Неизвестная ошибка';
+}

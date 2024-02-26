@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\api\v2;
 
+use App\Actions\Transfers\RetrieveMatrixBasedTransferAction;
 use App\Http\Controllers\api\BaseApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\Matrix\MatrixListResource;
+use App\Store;
 use App\v2\Models\Matrix;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,6 +24,17 @@ class MatrixController extends BaseApiController
             'products' => $products
         ]);
         return $this->respondSuccess();
+    }
+
+    /**
+     * @throws
+     */
+    public function retrieveTransfer(Store $store, Store $parent, RetrieveMatrixBasedTransferAction $action): JsonResponse
+    {
+        $transfer = $action->handle($store, $parent);
+        return $this->respondSuccess([
+            'transfer' => $transfer,
+        ]);
     }
 
     public function index(): AnonymousResourceCollection {

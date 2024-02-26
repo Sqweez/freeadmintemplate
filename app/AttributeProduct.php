@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\AttributeProduct
@@ -29,7 +30,8 @@ class AttributeProduct extends Model
 
     public $timestamps = false;
 
-    public function attribute_name() {
+    public function attribute_name(): BelongsTo
+    {
         return $this->belongsTo('App\Attribute', 'attribute_id');
     }
 }

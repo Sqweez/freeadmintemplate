@@ -415,6 +415,13 @@ class Product extends Model
         //return $query->
     }
 
+    public function getPackaging($attributes)
+    {
+        $packagingIds = [2, 5, 6];
+        $needle = collect($attributes)->whereIn('attribute_id', $packagingIds)->first();
+        return optional($needle)['attribute_value'] ?? null;
+    }
+
     protected static function boot() {
         parent::boot();
         static::creating(function ($query) {

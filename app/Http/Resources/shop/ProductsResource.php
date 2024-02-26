@@ -49,7 +49,8 @@ class ProductsResource extends JsonResource
             'has_stock' => $this->stock_price !== $this->product_price,
             'iherb_price' => $this->iherb_price ?: $this->product_price,
             'product_price_rub' => $this->product_price_rub,
-            'is_recommended' => $this->margin_type_id === 4 || $this->margin_type_id === 1
+            'is_recommended' => $this->margin_type_id === 4 || $this->margin_type_id === 1,
+            'packaging' => $this->getPackaging($this->attributes)
         ];
     }
 }

@@ -259,16 +259,17 @@
 </template>
 
 <script>
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-import WayBillModal from "@/components/Modal/WayBillModal";
-import ACTIONS from "@/store/actions";
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
+import WayBillModal from '@/components/Modal/WayBillModal';
+import ACTIONS from '@/store/actions';
 import axios from 'axios';
-import uploadFile, {deleteFile} from "@/api/upload";
-import product from "@/mixins/product";
-import product_search from "@/mixins/product_search";
-import cart from "@/mixins/cart";
+import uploadFile, {deleteFile} from '@/api/upload';
+import product from '@/mixins/product';
+import product_search from '@/mixins/product_search';
+import cart from '@/mixins/cart';
 import {__hardcoded} from '@/utils/helpers';
 import axiosClient from '@/utils/axiosClient';
+import transfersApi from '@/services/TransfersApi';
 
 export default {
         components: {
@@ -351,24 +352,33 @@ export default {
         },
         mixins: [product, product_search, cart],
         methods: {
-            createByMatrix () {
-                const matrix = this.matrixes.find(m => m.store.id === this.child_store);
-                if (!matrix) {
-                    return this.$toast.warning('Товарная матрица для этого склада не создана!');
+            async createByMatrix () {
+                try {
+                    this.$loading.enable();
+                    const { data } = await transfersApi.retrieveMatrixTransfer(this.child_store, this.storeFilter);
+                    console.log(data);
+                    /*const matrix = this.matrixes.find(m => m.store.id === this.child_store);
+                    if (!matrix) {
+                        return this.$toast.warning('Товарная матрица для этого склада не создана!');
+                    }
+                    matrix.products.forEach(product => {
+                        const needleProduct = this.products.find(p => p.id === product.id);
+                        if (needleProduct && needleProduct.quantity > 0) {
+                            this.cart.push({
+                                ...needleProduct,
+                                count: Math.min(needleProduct.quantity, product.count),
+                                product_price: needleProduct.product_price,
+                                discount: 0,
+                                uuid: Math.random(),
+                                initial_price: needleProduct.product_price
+                            })
+                        }
+                    });*/
+                } catch (e) {
+                    this.$report(e);
+                } finally {
+                    this.$loading.disable();
                 }
-                matrix.products.forEach(product => {
-                   const needleProduct = this.products.find(p => p.id === product.id);
-                   if (needleProduct && needleProduct.quantity > 0) {
-                       this.cart.push({
-                           ...needleProduct,
-                           count: Math.min(needleProduct.quantity, product.count),
-                           product_price: needleProduct.product_price,
-                           discount: 0,
-                           uuid: Math.random(),
-                           initial_price: needleProduct.product_price
-                       })
-                   }
-                });
             },
             async uploadPhoto(e) {
                 const file = e.target.files[0];
