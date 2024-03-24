@@ -5,18 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/database/migrations/2024_03_02_003636_add_indexes_to_sale_products.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c86d0892-4e42-4450-a76b-d981d275a83a.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/c86d0892-4e42-4450-a76b-d981d275a83a.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/AuthController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Middleware/OptAuthMiddleware.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/User/AuthUserResource.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Service/Opt/AuthService.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/v2/Models/Country.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/v2/Models/WholesaleClient.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_03_24_190257_create_countries_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_03_24_190430_alter_table_cities_column_country_id.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_03_24_190557_create_wholesale_clients_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_03_24_191142_alter_table_wholesale_clients_column_access_token.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_03_25_022103_alter_table_products_column_is_opt.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/opt.api.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ReportService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/SaleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/shop/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/shop/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/SaleProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/SaleProduct.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/app.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/AttributeProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/AttributeProduct.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Concerns/ReturnsJsonResponse.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Concerns/ReturnsJsonResponse.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductsResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/City.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/City.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/ProductSku.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/ProductSku.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Products/Products.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Products/Products.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -225,36 +237,39 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Code/Laravel/IronAddicts&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Code\\Laravel\\iron-crm\\node_modules\\prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Sqweez\\AppData\\Local\\Programs\\PhpStorm\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Code/Laravel/IronAddicts",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "npm.hot.executor": "Run",
+    "npm.prod.executor": "Run",
+    "php.override.implement.member.chooser.php.doc": "NONE",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Code\\Laravel\\iron-crm\\node_modules\\prettier",
+    "settings.editor.selected.configurable": "terminal",
+    "ts.external.directory.path": "C:\\Users\\Sqweez\\AppData\\Local\\Programs\\PhpStorm\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Code\Laravel\iron-crm\public\images" />
@@ -300,6 +315,7 @@
         <script value="prod" />
       </scripts>
       <node-interpreter value="project" />
+      <package-manager value="npm" />
       <envs />
       <method v="2" />
     </configuration>
@@ -325,8 +341,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.hot" />
         <item itemvalue="npm.prod" />
+        <item itemvalue="npm.hot" />
         <item itemvalue="npm.watch-poll" />
         <item itemvalue="npm.watch" />
         <item itemvalue="npm.dev" />
@@ -577,6 +593,7 @@
       <workItem from="1710845318603" duration="1003000" />
       <workItem from="1711029022633" duration="1000" />
       <workItem from="1711052627502" duration="3000" />
+      <workItem from="1711288686107" duration="9360000" />
     </task>
     <servers />
   </component>

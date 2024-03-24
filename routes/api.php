@@ -499,3 +499,4 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
 });
 
 require __DIR__ . '/fit.api.php';
+require __DIR__ . '/opt.api.php';

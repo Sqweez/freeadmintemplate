@@ -55,6 +55,7 @@ class ProductsResource extends JsonResource
             'is_iherb' => $this->is_iherb,
             'iherb_price' => $this->iherb_price,
             'is_dubai' => $this->product->is_dubai,
+            'is_opt' => $this->product->is_opt,
         ];
     }
 }

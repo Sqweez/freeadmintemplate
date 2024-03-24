@@ -176,6 +176,17 @@
                                         </v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            <v-icon color="success" v-if="item.is_opt">mdi-check</v-icon>
+                                            <v-icon color="error" v-else>mdi-close</v-icon>
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            Оптовый товар
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
                             </v-list>
                         </template>
                         <template v-slot:item.quantity="{item}">
@@ -349,10 +360,10 @@ import axios from 'axios';
 import PriceTagModal from '@/components/Modal/PriceTagModal';
 import product from '@/mixins/product';
 import product_search from '@/mixins/product_search';
-import {PRODUCT_MODAL_EVENTS} from '@/config/consts';
+import { PRODUCT_MODAL_EVENTS } from '@/config/consts';
 import SkuModal from '@/components/v2/Modal/SkuModal';
 import ProductPrintModal from '@/components/Modal/ProductPrintModal';
-import {__hardcoded} from '@/utils/helpers';
+import { __hardcoded } from '@/utils/helpers';
 
 const cachedProducts = new Map();
 

@@ -220,7 +220,8 @@ class Product extends Model
         'manufacturer_id' => 'integer',
         'is_iherb' => 'boolean',
         'is_iherb_hit' => 'boolean',
-        'is_dubai' => 'boolean'
+        'is_dubai' => 'boolean',
+        'is_opt' => 'boolean'
     ];
 
     public $timestamps = true;

@@ -27,10 +27,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|City whereKaspiCityId($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|Store[] $stores
  * @property-read int|null $stores_count
+ * @property int $country_id
+ * @method static \Illuminate\Database\Eloquent\Builder|City whereCountryId($value)
  */
 class City extends Model
 {
-    protected $fillable = ['name', 'region_id', 'delivery_cost'];
+    protected $fillable = ['name', 'region_id', 'delivery_cost', 'country_id'];
     public $timestamps = false;
     protected $casts = [
         'delivery_cost' => 'integer',
