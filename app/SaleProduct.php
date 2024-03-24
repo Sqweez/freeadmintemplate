@@ -99,7 +99,7 @@ class SaleProduct extends Model
     }
 
     public function getMarginAttribute() {
-        return ceil($this->discount === 100 ? 0 : $this->final_price - $this->purchase_price);
+        return ($this->discount === 100 ? 0 : $this->final_price - $this->purchase_price);
     }
 
     public function batch(): BelongsTo {

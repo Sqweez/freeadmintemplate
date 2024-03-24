@@ -183,6 +183,7 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
     Route::get('reports/plan', 'api\SaleController@getPlanReports');
     Route::get('reports/total', 'api\SaleController@getTotal');
     Route::post('reports/products', 'api\SaleController@getReportProducts');
+    Route::get('reports/summary', 'api\SaleController@getSummaryReports');
     Route::get('reports/{sale}', 'api\SaleController@getSaleById');
 
 

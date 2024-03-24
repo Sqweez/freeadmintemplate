@@ -33,6 +33,10 @@ class ProductController extends Controller {
         if ($store_id === 0) {
             $store_id = 16;
         }
+        /*if ($store_id === 16) {
+            $request->merge(['store_id' => 31]);
+            $store_id = 31;
+        }*/
         $user_token = $request->get('user_token');
         $all_products = $request->has('all_products');
         if ($all_products) {

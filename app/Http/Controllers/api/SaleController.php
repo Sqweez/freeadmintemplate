@@ -33,6 +33,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -149,6 +150,79 @@ class SaleController extends BaseApiController {
         $reportOptionsDTO->setUser($user);
         return ReportService::getReports($reportOptionsDTO);
     }
+
+    public function getSummaryReports(Request $request)
+    {
+
+        try {
+            $start =today()->subDays(3)->startOfDay();
+            $finish = today()->subDay()->endOfDay();
+
+            $saleProductsSubQuery = DB::table('sale_products')
+                ->select(
+                    'sale_id',
+                    DB::raw('SUM(product_price - (discount / 100 * product_price)) as total_product_price'),
+                    DB::raw('SUM(purchase_price) as total_purchase_price'),
+                    DB::raw('SUM(CASE WHEN discount = 100 THEN 0 ELSE (product_price - (discount / 100 * product_price)) - purchase_price END) as total_margin')
+                )->groupBy('sale_id');
+
+            $results = DB::table('sales')
+                /*->selectRaw('
+                    SUM(sps.total_product_price) as total_product_price,
+                    SUM(sps.total_purchase_price) as total_purchase_price,
+                    SUM(sps.total_margin) as total_margin,
+                    SUM(purchased_certs.amount) as total_certificates_sold,
+                    SUM(used_certificates.amount) as total_certificates_paid,
+                    SUM(sales.balance) as total_balance,
+                    (
+                        SUM(sps.total_product_price)
+                        + SUM(purchased_certs.amount)
+                        - SUM(used_certificates.amount)
+                        - SUM(sales.balance)
+                    ) * AVG(CASE WHEN sales.kaspi_red THEN 0.89 ELSE 1 END) as total_final_price
+                ')*/->selectRaw('
+                    SUM(sps.total_product_price) as total_product_price,
+                    SUM(sps.total_purchase_price) as total_purchase_price,
+                    SUM(sps.total_margin) as total_margin,
+                    SUM(purchased_certs.amount) as total_certificates_sold,
+                    SUM(used_certificates.amount) as total_certificates_paid,
+                    SUM(sales.balance) as total_balance,
+                    (
+                        SUM(sps.total_product_price)
+                         - SUM(sales.balance)
+                         + SUM(purchased_certs.amount)
+                         - SUM(sales.promocode_fixed_amount)
+                    ) as total_final_price'
+                )
+                // Добавить сертификат - закуп, т.е. сертификат - финальная стоимость товара 
+                ->leftJoinSub($saleProductsSubQuery, 'sps', function ($join) {
+                    $join->on('sales.id', '=', 'sps.sale_id'); // Убедитесь, что это условие соединения корректно, так как подзапрос не содержит sale_id
+                })
+                ->selectRaw('COUNT(*) as sales_count')
+                ->leftJoin('certificates as purchased_certs', function($join) {
+                    $join->on('sales.id', '=', 'purchased_certs.sale_id')
+                        ->where(function($query) {
+                            $query->whereNull('purchased_certs.used_sale_id')
+                                ->orWhere('purchased_certs.used_sale_id', '=', 0);
+                        });
+                })
+                ->leftJoin('certificates as used_certificates', 'sales.id', '=', 'used_certificates.used_sale_id')
+                ->whereDate('sales.created_at', '>=', Carbon::parse('2023-10-01')->startOfDay())
+                ->whereDate('sales.created_at', '<=', Carbon::parse('2023-10-01')->endOfDay())
+                ->get();
+
+
+            return [
+                'results' => $results,
+                'start' => $start,
+                'end' => $finish,
+            ];
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+
+    }
+
 
     public function getSaleById(Sale $sale): ReportsResource {
         return ReportsResource::make($sale);
