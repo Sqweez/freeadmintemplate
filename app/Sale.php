@@ -233,6 +233,7 @@ class Sale extends Model
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate', 'preorder'])
             ->with('promocode')
+            ->with('used_certificate')
             ->with(['products.product.product.manufacturer', 'products.product.product.attributes', 'products.product.attributes', 'promocode.partner:id,client_name']);
     }
 
@@ -286,11 +287,11 @@ class Sale extends Model
         $price -= $this->paid_by_barter_balance;
 
 
-        return ceil($price - $this->balance - optional($this->preorder)->amount);
+        return ($price - $this->balance - optional($this->preorder)->amount);
     }
 
     public function getKaspiRedCommissionAttribute(): int {
-        return $this->kaspi_red ? ceil($this->getFinalPriceAttribute() * self::KASPI_RED_PERCENT) : 0;
+        return $this->kaspi_red ? ($this->getFinalPriceAttribute() * self::KASPI_RED_PERCENT) : 0;
     }
 
     public function getFinalPriceWithoutRedAttribute() {
@@ -303,7 +304,7 @@ class Sale extends Model
             $price -= $this->booking->paid_sum;
         }
 
-        return ceil($price - $this->balance);
+        return ($price - $this->balance);
     }
 
     public function getMarginAttribute() {
