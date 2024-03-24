@@ -311,6 +311,7 @@ class ProductService
             'iherb_price',
             'is_iherb_hit',
             'is_dubai',
+            'is_opt'
         ]);
 
         $product[Product::CATEGORY_ID] = $request->get(Product::CATEGORY);

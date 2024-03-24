@@ -73,6 +73,7 @@ class ProductResource extends JsonResource
             'is_dubai' => $this->product->is_dubai,
             'margin_type_id' => $this->margin_type_id,
             'kaspi_price' => $this->product->kaspi_price,
+            'is_opt' => $this->product->is_opt,
             'filters' => collect($this->product->filters)
                 ->map(function ($filter) {
                     return [

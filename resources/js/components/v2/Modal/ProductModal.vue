@@ -290,6 +290,10 @@
                             label="Виден в Kaspi магазине"
                             v-model="is_kaspi_visible"
                         />
+                        <v-checkbox
+                            label="Оптовый товар"
+                            v-model="is_opt"
+                        />
                         <p>
                             Отвечает за видимость на сайте iron-addicts.kz
                             <br>
@@ -511,15 +515,15 @@
 </template>
 
 <script>
-import {VSelect} from 'vuetify/lib';
+import { VSelect } from 'vuetify/lib';
 import ManufacturerModal from '@/components/Modal/ManufacturerModal';
-import uploadFile, {deleteFile} from '@/api/upload';
-import {Quill, VueEditor} from 'vue2-editor';
-import {PRODUCT_MODAL_EVENTS} from '@/config/consts';
-import {generateThumb} from '@/api/image';
+import uploadFile, { deleteFile } from '@/api/upload';
+import { Quill, VueEditor } from 'vue2-editor';
+import { PRODUCT_MODAL_EVENTS } from '@/config/consts';
+import { generateThumb } from '@/api/image';
 import axios from 'axios';
 import ImageResize from 'quill-image-resize-vue';
-import {_getFileType} from '@/utils/helpers';
+import { _getFileType } from '@/utils/helpers';
 
 Quill.register('modules/imageResize', ImageResize);
 
@@ -672,6 +676,7 @@ export default {
         kaspi_product_price: 0,
         kaspi_product_price_2: 0,
         iherb_price: 0,
+        is_opt: false,
         product_attributes: [
             {
                 attribute_id: null,
@@ -790,6 +795,7 @@ export default {
             this.margin_type_id = null;
             this.kaspi_price = [];
             this.filters = [];
+            this.is_opt = false;
         },
         assignFields() {
             this.margin_type_id = this.product.margin_type_id;
@@ -816,6 +822,7 @@ export default {
             this.iherb_price = this.product.iherb_price;
             this.is_dubai = this.product.is_dubai;
             this.comments = this.product.comments;
+            this.is_opt = this.product.is_opt;
             this.additionalSubcategories = this.product.additional_subcategories ? this.product.additional_subcategories : [];
             if (this.grouping_attribute_id === null) {
                 this.withoutAnotherSku = true;
@@ -985,7 +992,8 @@ export default {
                 is_dubai: this.is_dubai,
                 margin_type_id: this.margin_type_id,
                 kaspi_price: this.kaspi_price,
-                filters: this.filters.filter(f => f.attribute_value)
+                filters: this.filters.filter(f => f.attribute_value),
+                is_opt: this.is_opt,
             };
         },
         validate(product) {
