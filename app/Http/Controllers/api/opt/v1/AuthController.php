@@ -47,7 +47,7 @@ class AuthController extends BaseApiController
                 'user' => AuthUserResource::make($user)
             ], 'Вы были успешно авторизованы');
         } catch (\Exception $exception) {
-            return $this->respondError($exception->getMessage());
+            return $this->respondError($exception->getMessage(),500, ['s']);
         }
     }
 }
