@@ -34,7 +34,7 @@ return [
     /*
      * Matches the request origin. `[*]` allows all origins.
      */
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['https://iron-opt.vercel.app/', 'http://localhost:3008', 'https://ironadmin.ariesdev.kz', 'https://iron-addicts.kz'],
 
     /*
      * Matches the request origin with, similar to `Request::is()`
