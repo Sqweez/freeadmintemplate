@@ -274,7 +274,7 @@
                             label="IHerb"
                             v-model="is_iherb"
                         />
-                        <v-checkbox
+<!--                        <v-checkbox
                             label="Хит продаж IHerb"
                             v-model="is_iherb_hit"
                         />
@@ -293,6 +293,10 @@
                         <v-checkbox
                             label="Оптовый товар"
                             v-model="is_opt"
+                        />-->
+                        <v-checkbox
+                            label="Виден на сайте"
+                            v-model="is_site_visible"
                         />
                         <p>
                             Отвечает за видимость на сайте iron-addicts.kz
@@ -653,6 +657,7 @@ export default {
             return this.$store.getters.MARGIN_TYPES;
         }
     },
+
     data: () => ({
         filters: [],
         editorSettings: {
@@ -722,8 +727,9 @@ export default {
     }),
     methods: {
         async generateBarcode() {
+            const barcode = await this.$barcode.generate(this.id);
             this.$nextTick(async () => {
-                this.product_barcode = await this.$barcode.generate(this.id);
+                this.product_barcode = barcode;
             });
         },
         addSubcategoriesSelect() {

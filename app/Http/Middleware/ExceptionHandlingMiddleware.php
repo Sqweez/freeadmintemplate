@@ -18,10 +18,6 @@ class ExceptionHandlingMiddleware
      */
     public function handle($request, Closure $next)
     {
-        try {
-            return $next($request);
-        } catch (\Exception $exception) {
-            return $this->responseException($exception);
-        }
+        return $next($request);
     }
 }

@@ -46,6 +46,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read string $full_name
  */
 class WholesaleClient extends Model implements Authenticatable
 {

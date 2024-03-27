@@ -138,6 +138,7 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
     });
 
     Route::resource('category', 'api\CategoryController');
+    Route::get('attributes/currency', 'api\AttributeController@getCurrencies');
     Route::resource('attributes', 'api\AttributeController');
     Route::resource('manufacturers', 'api\ManufacturerController');
 

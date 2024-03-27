@@ -35,8 +35,9 @@ trait ReturnsJsonResponse
      * @return JsonResponse
      */
 
-    public function respondError($message = null, int $errorCode = 500, array $data = []): JsonResponse
+    public function respondError($message = null,  $errorCode = 500, array $data = []): JsonResponse
     {
+        \Log::info($errorCode);
         return response()->json(
             $data + [
                 'success' => false,
@@ -60,7 +61,7 @@ trait ReturnsJsonResponse
     {
         return $this->respondError(
             $exception->getMessage(),
-            $exception->getCode() !== 0 ? $exception->getCode() : __hardcoded(500)
+            $exception->getCode() !== 0 ? intval($exception->getCode()) : __hardcoded(500)
         );
     }
 }

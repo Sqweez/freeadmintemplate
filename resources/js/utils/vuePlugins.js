@@ -22,6 +22,11 @@ export default {
                     const errorMessage = _extractError(error);
                     return $toast.error(errorMessage);
                 },
+                $formatPrice(value, currency = '₸') {
+                    return `${new Intl.NumberFormat('ru-RU').format(
+                        Math.ceil(value),
+                    )} ${currency}`;
+                },
             },
             computed: {
                 ...mapGetters({
@@ -31,6 +36,7 @@ export default {
                     $users: 'users',
                     $userFilters: 'user_filters',
                     $cities: 'cities',
+                    $currencies: 'currencies',
                 }),
                 $barcode() {
                     return new BarcodeService();
@@ -72,7 +78,15 @@ export default {
                     return this.$store.getters.IS_BOSS;
                 },
                 IS_SUPERUSER() {
-                    return this.IS_BOSS || this.isAdmin || this.IS_MARKETOLOG;
+                    return (
+                        this.IS_BOSS ||
+                        this.isAdmin ||
+                        this.IS_MARKETOLOG ||
+                        this.IS_OPT_MANAGER
+                    );
+                },
+                IS_OPT_MANAGER() {
+                    return this.$store.getters.IS_OPT_MANAGER;
                 },
                 IS_MARKETOLOG() {
                     return this.$store.getters.IS_MARKETOLOG;

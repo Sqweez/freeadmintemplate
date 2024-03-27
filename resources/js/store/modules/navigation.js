@@ -375,6 +375,23 @@ const navigationModule = {
                 url: '/companion/products',
             },
         ],
+        opt_managerMenu: [
+            {
+                title: 'Товары',
+                icon: 'dashboard',
+                url: '/opt/products',
+            },
+            {
+                title: 'Клиенты',
+                icon: 'dashboard',
+                url: '/opt/clients',
+            },
+            {
+                title: 'Заказы',
+                icon: 'dashboard',
+                url: '/opt/orders',
+            },
+        ],
         moderatorMenu: [
             {
                 title: 'Главная страница',

@@ -14,6 +14,7 @@ use App\Http\Resources\v2\Product\ProductResource;
 use App\Http\Resources\v2\Product\ProductsResource;
 use App\MarginType;
 use App\ProductBatch;
+use App\Repository\ProductRepository;
 use App\v2\Models\BestBefore;
 use App\v2\Models\Product;
 use App\v2\Models\ProductSaleEarning;
@@ -26,8 +27,11 @@ use Illuminate\Support\Facades\Validator;
 use ProductService;
 
 class ProductController extends Controller {
-    public function index(Request $request, ProductServiceStatic $service) {
-        return ProductsResource::collection($service->all($request));
+    public function index(Request $request, ProductRepository $productRepository): AnonymousResourceCollection
+    {
+        return ProductsResource::collection(
+            $productRepository->getProducts($request->all())
+        );
     }
 
     /*
@@ -41,8 +45,11 @@ class ProductController extends Controller {
         );
     }
 
-    public function show($id) {
-        return new ProductResource(ProductService::get($id));
+    public function show($id, ProductRepository $productRepository): ProductResource
+    {
+        return new ProductResource(
+            $productRepository->getById($id)
+        );
     }
 
     /*

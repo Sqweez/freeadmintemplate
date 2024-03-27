@@ -76,6 +76,41 @@
             </v-row>
             <v-divider />
             <h3 class="ml-3">
+                Оптовый склад
+            </h3>
+            <v-row>
+                <v-col>
+                    <v-simple-table>
+                        <template v-slot:default>
+                            <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Город</th>
+                                <th>Тип</th>
+                                <th>Действие</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(store, idx) of wholesale_stores" :key="idx">
+                                <td>{{ store.name }}</td>
+                                <td>{{ store.city }}</td>
+                                <td>{{ store.type.type }}</td>
+                                <td>
+                                    <v-btn icon @click="storeId = store.id; storeModal = true;">
+                                        <v-icon>mdi-pencil</v-icon>
+                                    </v-btn>
+                                    <v-btn icon @click="confirmationModal = true; storeId = store.id;">
+                                        <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </template>
+                    </v-simple-table>
+                </v-col>
+            </v-row>
+            <v-divider />
+            <h3 class="ml-3">
                 Магазины партнеров
             </h3>
             <v-row>
@@ -138,13 +173,13 @@
 </template>
 
 <script>
-    import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-    import StoreModal from "@/components/Modal/StoreModal";
-    import {mapGetters} from 'vuex';
-    import ACTIONS from "@/store/actions";
-    import CompanionBalanceModal from "@/components/Modal/CompanionBalanceModal";
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
+import StoreModal from '@/components/Modal/StoreModal';
+import { mapGetters } from 'vuex';
+import ACTIONS from '@/store/actions';
+import CompanionBalanceModal from '@/components/Modal/CompanionBalanceModal';
 
-    export default {
+export default {
         data: () => ({
             storeId: null,
             confirmationModal: false,
@@ -157,7 +192,7 @@
             ConfirmationModal
         },
         computed: {
-            ...mapGetters(['shops', 'warehouses', 'partner_stores'])
+            ...mapGetters(['shops', 'warehouses', 'partner_stores', 'wholesale_stores'])
         },
         methods: {
             async deleteStore() {

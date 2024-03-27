@@ -14327,6 +14327,7 @@
                     /**
          * 
          *
+         * @throws Exception
          * @static 
          */ 
         public static function create($_product, $_attributes)

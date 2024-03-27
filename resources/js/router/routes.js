@@ -86,6 +86,7 @@ import LegalEntityUpdate from '@/views/LegalEntity/LegalEntityUpdate';
 import BankAccountCreate from '@/views/LegalEntity/BankAccountCreate';
 import WorkingScheduleIndex from '@/views/WorkingSchedule/WorkingScheduleIndex';
 import PromocodeClients from '@/views/Promocodes/PromocodeClients';
+import optRoutes from '@/router/opt.routes';
 
 const routes = [
     {
@@ -815,6 +816,7 @@ const routes = [
         path: '/working-schedule/index',
         component: WorkingScheduleIndex,
     },
+    ...optRoutes,
 ];
 
 export default routes;

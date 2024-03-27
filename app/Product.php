@@ -111,6 +111,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Product whereProductDescriptionKaz($value)
  * @property int $margin_type_id
  * @method static Builder|Product whereMarginTypeId($value)
+ * @property int $is_opt
+ * @method static Builder|Product whereIsOpt($value)
  */
 class Product extends Model {
 
