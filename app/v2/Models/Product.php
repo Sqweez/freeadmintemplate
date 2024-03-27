@@ -149,6 +149,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|\App\v2\Models\WholesalePrice[] $wholesale_prices
  * @property-read int|null $wholesale_prices_count
  * @method static Builder|Product whereIsOpt($value)
+ * @method static Builder|Product optProducts()
  */
 class Product extends Model
 {
@@ -423,6 +424,11 @@ class Product extends Model
 
     public function scopeOfStocks($query) {
         //return $query->
+    }
+
+    public function scopeOptProducts($query)
+    {
+        return $query->where('is_opt', true);
     }
 
     public function getPackaging($attributes)
