@@ -5,52 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/v2/Models/Currency.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/v2/Models/WholesalePrice.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2024_03_26_171032_create_currencies_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2024_03_26_173927_create_wholesale_prices_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/router/opt.routes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/views/Opt/Clients/ClientsIndex.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/views/Opt/Orders/OrdersIndex.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/views/Opt/Products/ProductsCreate.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/views/Opt/Products/ProductsEdit.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/views/Opt/Products/ProductsIndex.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_ide_helper.php" beforeDir="false" afterPath="$PROJECT_DIR$/_ide_helper.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Exceptions/Handler.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Exceptions/Handler.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Concerns/ReturnsJsonResponse.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Concerns/ReturnsJsonResponse.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Services/ProductService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/AttributeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/AttributeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Middleware/ExceptionHandlingMiddleware.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Middleware/ExceptionHandlingMiddleware.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductsResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repository/ProductRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/ProductRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/WholesaleClient.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/WholesaleClient.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/cors.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/cors.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/fit.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/fit.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Modal/ProductQuantityModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Modal/ProductQuantityModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/utils/ICardPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/utils/ICardPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Modal/ProductModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Modal/SkuModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Modal/SkuModal.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/router/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/router/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/actions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/attributes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/attributes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/categories.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/stores.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/stores.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/store/mutations/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/mutations/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/utils/vuePlugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/utils/vuePlugins.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Stores/Stores.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Stores/Stores.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/v3/Products/Products.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/v3/Products/Products.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Opt/Products/ProductsCreate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Opt/Products/ProductsCreate.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -621,7 +576,7 @@
       <workItem from="1711452211315" duration="14000" />
       <workItem from="1711452239421" duration="7718000" />
       <workItem from="1711548735546" duration="5505000" />
-      <workItem from="1711559888067" duration="1399000" />
+      <workItem from="1711559888067" duration="2093000" />
     </task>
     <servers />
   </component>

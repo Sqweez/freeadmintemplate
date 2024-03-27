@@ -472,9 +472,19 @@ export default {
             this.$store.dispatch(Actions.GET_CATEGORIES),
             this.$store.dispatch(Actions.GET_MANUFACTURERS),
             this.$store.dispatch(Actions.GET_ATTRIBUTES),
-            this.$store.dispatch('GET_PRODUCT_v2', this.$route.query.id)
         ])
-        this.assignFields();
+        if (this.$route.query.id) {
+            await this.$store.dispatch('GET_PRODUCT_v2', this.$route.query.id)
+            this.assignFields();
+        } else {
+            this.currency_price = this.$currencies.map((currency) => {
+                return {
+                    currency_id: currency.id,
+                    label: currency.name,
+                    value: null
+                };
+            });
+        }
     },
     methods: {
         async generateBarcode() {
