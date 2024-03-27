@@ -31,6 +31,7 @@
                         item-value="id"
                         item-text="name"
                         v-model="batch.store_id"
+                        :disabled="storeId"
                     />
                 </v-form>
             </v-card-text>
@@ -54,6 +55,10 @@
                 type: Boolean,
                 default: false,
             },
+            storeId: {
+                type: Number,
+                default: -1,
+            }
         },
         watch: {
             state() {
@@ -62,6 +67,10 @@
                     purchase_price: 0,
                     store_id: null,
                 };
+
+                if (this.storeId) {
+                    this.$set(this.batch, 'store_id', this.storeId);
+                }
             }
         },
         data: () => ({

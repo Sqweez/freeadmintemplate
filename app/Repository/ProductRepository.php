@@ -78,4 +78,37 @@ class ProductRepository
         return $this->getFullAttributes($sku)
             ->pluck('attribute_value');
     }
+
+    public function getProducts($payload = [])
+    {
+        return ProductSku::with(ProductSku::PRODUCT_SKU_WITH_ADMIN_LIST)
+            ->when(isset($payload['iherb']), function ($query) {
+                return $query->whereHas('product', function ($subQuery) {
+                    return $subQuery->where('is_iherb', true);
+                });
+            })
+            ->when(isset($payload['only_opt']), function ($query) {
+                return $query->whereHas('product', function ($subQuery) {
+                    return $subQuery->where('is_opt', true);
+                })->with('product.wholesale_prices.currency');
+            })
+            ->when(!isset($payload['only_opt']), function ($query) {
+                return $query->whereHas('product', function ($subQuery) {
+                    return $subQuery->where('is_opt', false);
+                });
+            })
+            ->orderBy('product_id')
+            ->orderBy('id')
+            ->get()
+            ->sortBy('product_name');
+    }
+
+    public function getById($id)
+    {
+        $sku = ProductSku::withCount('relativeSku')->whereKey($id)->first();
+        $sku->load('product.kaspi_price');
+        $sku->load('product.filters.attribute_name');
+        $sku->load('product.wholesale_prices.currency');
+        return $sku;
+    }
 }

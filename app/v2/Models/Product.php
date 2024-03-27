@@ -145,6 +145,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereMarginTypeId($value)
  * @property-read Collection|\App\v2\Models\AttributeValue[] $filters
  * @property-read int|null $filters_count
+ * @property bool $is_opt
+ * @property-read Collection|\App\v2\Models\WholesalePrice[] $wholesale_prices
+ * @property-read int|null $wholesale_prices_count
+ * @method static Builder|Product whereIsOpt($value)
  */
 class Product extends Model
 {
@@ -319,6 +323,11 @@ class Product extends Model
 
     public function favorite() {
         return $this->hasOne('App\v2\Models\Favorite', 'product_id');
+    }
+
+    public function wholesale_prices(): HasMany
+    {
+        return $this->hasMany(WholesalePrice::class, 'product_id');
     }
 
     public function kaspi_price(): HasMany

@@ -112,9 +112,9 @@
 </template>
 
 <script>
-import uploadFile, {deleteFile} from "@/api/upload";
-import {generateThumb} from "@/api/image";
-import {_getFileType} from '@/utils/helpers';
+import uploadFile, { deleteFile } from '@/api/upload';
+import { generateThumb } from '@/api/image';
+import { _getFileType } from '@/utils/helpers';
 
 export default {
         data: () => ({
@@ -154,9 +154,7 @@ export default {
         },
         methods: {
             async generateBarcode () {
-                this.$nextTick(async () => {
-                    this.product_barcode = await this.$barcode.generate(this.id);
-                })
+                this.product_barcode = await this.$barcode.generate(this.id);
             },
             async onSubmit() {
                 const product = this.getProduct();

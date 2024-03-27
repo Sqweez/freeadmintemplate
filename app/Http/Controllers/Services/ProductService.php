@@ -13,6 +13,7 @@ use App\v2\Models\KaspiEntityProduct;
 use App\v2\Models\Product;
 use App\v2\Models\ProductSku;
 use App\v2\Models\Thumb;
+use App\v2\Models\WholesalePrice;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,9 @@ class ProductService
                         return $subQuery->where('is_iherb', true);
                     });
                 }
-            )->orderBy('product_id')->orderBy('id')->get()->sortBy('product_name'));
+            )->orderBy('product_id')->orderBy('id')->whereHas('product', function ($q) {
+                return $q->where('is_opt', false);
+        })->get()->sortBy('product_name'));
     }
 
     public function get($id)
@@ -37,6 +40,7 @@ class ProductService
         $sku = ProductSku::withCount('relativeSku')->whereId($id)->first();
         $sku->load('product.kaspi_price');
         $sku->load('product.filters.attribute_name');
+        $sku->load('product.wholesale_prices.currency');
         return $sku;
     }
 
@@ -49,6 +53,9 @@ class ProductService
             })->orderBy('product_id')->orderBy('id')->get()->sortBy('product_name'));
     }
 
+    /**
+     * @throws Exception
+     */
     public function create(array $_product, array $_attributes)
     {
         try {
@@ -59,7 +66,7 @@ class ProductService
             return $product;
         } catch (Exception $e) {
             DB::rollBack();
-            throw $e;
+            throw new Exception($e->getMessage(), 500);
             return response()->json([
                 'message' => $e->getMessage(),
                 'stack' => $e->getTrace(),
@@ -82,12 +89,12 @@ class ProductService
     private function createTags(Product $product)
     {
         $tags = [];
-        array_push($tags, ['name' => $product->product_name]);
-        array_push($tags, ['name' => $product->manufacturer->manufacturer_name]);
-        array_push($tags, ['name' => $product->category->category_name]);
-        array_push($tags, ['name' => $product->subcategory->subcategory_name]);
+        $tags[] = ['name' => $product->product_name];
+        $tags[] = ['name' => $product->manufacturer->manufacturer_name];
+        $tags[] = ['name' => $product->category->category_name];
+        $tags[] = ['name' => $product->subcategory->subcategory_name];
         if (strlen($product->product_name_web)) {
-            array_push($tags, ['name' => $product->product_name_web]);
+            $tags[] = ['name' => $product->product_name_web];
         }
         return $tags;
     }
@@ -113,12 +120,13 @@ class ProductService
     {
         try {
             DB::beginTransaction();
-            $product_sku = $this->createProductSku($product, $_attributes);
-            $this->updateProductSkuRelations($product_sku, $_attributes, $product->grouping_attribute_id);
+            $productSku = $this->createProductSku($product, $_attributes);
+            $this->updateProductSkuRelations($productSku, $_attributes, $product->grouping_attribute_id);
             DB::commit();
-            $product_sku = ProductSku::find($product_sku->id);
-            $product_sku->load('product');
-            return new ProductsResource($product_sku);
+            $productSku = ProductSku::find($productSku->id);
+            $productSku->load('product');
+            $productSku->load('product.wholesale_prices.currency');
+            return new ProductsResource($productSku);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -140,6 +148,7 @@ class ProductService
             $this->updateProductSkuRelations($productSku, $_attributes, $productSku->grouping_attribute_id);
             DB::commit();
             $productSku->fresh();
+            $productSku->load('product.wholesale_prices.currency');
             return new ProductsResource($productSku);
         } catch (Exception $exception) {
             \Log::info($exception->getMessage());
@@ -164,6 +173,17 @@ class ProductService
         ProductSku::whereProductId($product->id)->update([
             'margin_type_id' => $fields['margin_type_id']
         ]);
+        $currencyPrice = \request()->get('currency_price', []);
+        foreach ($currencyPrice as $item) {
+            if ($item['value']) {
+                WholesalePrice::updateOrCreate([
+                    'product_id' => $product->id,
+                    'currency_id' => $item['currency_id']
+                ], [
+                    'price' => $item['value'],
+                ]);
+            }
+        }
         $product->push();
     }
 

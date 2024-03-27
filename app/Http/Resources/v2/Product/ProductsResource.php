@@ -20,7 +20,7 @@ class ProductsResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [
+        $product =  [
             'id' => $this->id,
             'product_name' => $this->product_name,
             'category' => $this->category,
@@ -33,13 +33,15 @@ class ProductsResource extends JsonResource
                     'attribute_name' => $attribute->attribute_name->attribute_name,
                     'is_main' => false
                 ];
-            })->merge(collect($this->product->attributes)->map(function ($attribute) {
-                return [
-                    'attribute_value' => $attribute->attribute_value,
-                    'attribute_name' => $attribute->attribute_name->attribute_name,
-                    'is_main' => true
-                ];
-            })),
+            })->merge(
+                collect($this->product->attributes)->map(function ($attribute) {
+                    return [
+                        'attribute_value' => $attribute->attribute_value,
+                        'attribute_name' => $attribute->attribute_name->attribute_name,
+                        'is_main' => true
+                    ];
+                })
+            ),
             'product_barcode' => $this->product_barcode,
             'product_price' => $this->product_price,
             'base_price' => $this->product_price,
@@ -50,12 +52,33 @@ class ProductsResource extends JsonResource
             'product_id' => $this->product_id,
             'prices' => $this->prices,
             'product_name_web' => $this->product_name_web,
-            'margin_type' => $this->margin_type ? $this->margin_type->only(['id', 'title']) : MarginType::find($this->margin_type_id),
+            'margin_type' => $this->margin_type ? $this->margin_type->only(['id', 'title']) : MarginType::find(
+                $this->margin_type_id
+            ),
             'is_kaspi_visible' => $this->is_kaspi_visible,
             'is_iherb' => $this->is_iherb,
             'iherb_price' => $this->iherb_price,
             'is_dubai' => $this->product->is_dubai,
             'is_opt' => $this->product->is_opt,
         ];
+
+        if ( $this->isNestedRelationLoaded($this, ['product', 'wholesale_prices'])) {
+            $product['wholesale_prices'] = $this->product->wholesale_prices;
+        }
+
+        return $product;
+    }
+
+    protected function isNestedRelationLoaded($model, array $relations): bool
+    {
+        foreach ($relations as $relation) {
+            if (!$model->relationLoaded($relation)) {
+                return false;
+            }
+
+            $model = $model->getRelation($relation);
+        }
+
+        return true;
     }
 }

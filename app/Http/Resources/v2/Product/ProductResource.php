@@ -80,7 +80,8 @@ class ProductResource extends JsonResource
                         'attribute_id' => $filter['attribute_id'],
                         'attribute_value' => $filter['attribute_value']
                     ];
-                })
+                }),
+            'wholesale_prices' => $this->product->wholesale_prices,
         ];
     }
 }

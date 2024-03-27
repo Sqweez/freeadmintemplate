@@ -1,15 +1,15 @@
 <template>
     <div>
         <v-card>
-            <v-card-title :style="[
-                color ? {backgroundColor: color} : {},
-                color ? {color: '#fff'} : {},
-            ]">
+            <v-card-title>
                 {{ title }}
             </v-card-title>
             <v-card-text>
                 <slot />
             </v-card-text>
+            <v-card-actions>
+                <slot name="actions"></slot>
+            </v-card-actions>
         </v-card>
     </div>
 </template>

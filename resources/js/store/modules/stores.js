@@ -38,6 +38,7 @@ const storeModule = {
         legal_entity_by_id: (state) => (id) =>
             state.legal_entities.find((l) => l.id === +id),
         kaspi_entities: (state) => state.kaspi_entities,
+        wholesale_stores: (state) => state.stores.filter((s) => s.type_id == 4),
     },
     mutations: {
         async [MUTATIONS.DELETE_STORE](state, payload) {

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Attribute;
-use App\Http\Controllers\Controller;
+use App\v2\Models\Currency;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class AttributeController extends Controller
+class AttributeController extends BaseApiController
 {
     /**
      * Display a listing of the resource.
@@ -42,6 +43,11 @@ class AttributeController extends Controller
         return $attribute;
     }
 
+    public function show()
+    {
+        
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -52,5 +58,12 @@ class AttributeController extends Controller
     public function destroy(Attribute $attribute)
     {
         $attribute->delete();
+    }
+
+    public function getCurrencies(): JsonResponse
+    {
+        return $this->respondSuccess([
+            'currencies' => Currency::all(),
+        ]);
     }
 }
