@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Storage;
  * @property-read int|null $products_count
  * @property bool $show_on_main
  * @method static \Illuminate\Database\Eloquent\Builder|Manufacturer whereShowOnMain($value)
+ * @property-read string|null $full_path_image
  */
 class Manufacturer extends Model
 {
