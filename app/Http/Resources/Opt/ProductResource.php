@@ -16,14 +16,12 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $payload =  [
             'id' => $this->id,
             'product_name' => $this->product_name,
             'isFavorite' => null,
             'subcategory' => $this->subcategory,
             'product_image' => null,
-            'price' => $this->price,
-            'original_price' => null,
             'has_stock' => false,
             'slug' => $this->getOptLink(),
             'brand_id' => $this->manufacturer_id,
@@ -31,6 +29,20 @@ class ProductResource extends JsonResource
                 'text' => null,
                 'color' => null
             ],
+        ];
+
+        array_merge_recursive($payload, $this->getPrice());
+        return $payload;
+    }
+
+    private function getPrice(): array
+    {
+        $prices = $this->wholesale_prices->first();
+        return [
+            'currencySign' => optional($prices)->currency->unicode_symbol,
+            'original_price' => null,
+            'price' => optional($prices)->price,
+            'isPriceSet' => !empty($prices)
         ];
     }
 }

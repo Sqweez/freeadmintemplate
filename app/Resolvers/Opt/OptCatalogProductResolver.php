@@ -9,6 +9,7 @@ class OptCatalogProductResolver
 {
     public function resolver(array $filters, ?WholesaleClient $client)
     {
+        $currencyId = $this->retrieveCurrency($client);
         $query = Product::query()
             ->OptProducts()
             ->when(!empty($filters[Product::FILTER_CATEGORIES]), function ($query) use ($filters) {
@@ -31,10 +32,16 @@ class OptCatalogProductResolver
                     return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
                 });
             })
-            ->with([
-                'subcategory'
-            ]);
+            ->with('subcategory')
+            ->with(['wholesale_prices' => function ($query) use ($currencyId) {
+                return $query->where('currency_id', $currencyId);
+            }]);
 
         return $query;
+    }
+
+    private function retrieveCurrency(?WholesaleClient $client)
+    {
+        return optional($client)->preferred_currency_id ?? __hardcoded(2);
     }
 }

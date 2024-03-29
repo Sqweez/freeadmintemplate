@@ -47,6 +47,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient whereUpdatedAt($value)
  * @mixin Eloquent
  * @property-read string $full_name
+ * @property int $preferred_currency_id
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient wherePreferredCurrencyId($value)
  */
 class WholesaleClient extends Model implements Authenticatable
 {
