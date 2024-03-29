@@ -31,8 +31,7 @@ class ProductResource extends JsonResource
             ],
         ];
 
-        array_merge_recursive($payload, $this->getPrice());
-        return $payload;
+        return array_merge($payload, $this->getPrice());
     }
 
     private function getPrice(): array
