@@ -27,9 +27,5 @@ class Thumb extends Model
     protected $hidden = ['pivot'];
 
     protected $fillable = ['image'];
-
-    public function getFullImagePath(): ?string
-    {
-        return $this->image ? url('/') . \Storage::url($this->image) : null;
-    }
+    
 }

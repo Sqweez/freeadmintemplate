@@ -205,6 +205,8 @@ class Product extends Model
 
     const CACHE_PREFIX = 'PRODUCTS_CACHE';
 
+    const DEFAULT_IMAGE = 'products/product_image_default.jpg';
+
     const PRODUCT_STORES_ID = [
         1, 2, 3, 4, 5, 6
     ];
@@ -414,17 +416,18 @@ class Product extends Model
 
         $discount = $stocks->first()['stock']['discount'] / 100;
         return ceil($this->product_price *  (1 - $discount));
-
-        /*$stock = $this->stocks;
-        if ($stock && $stock->count() > 0) {
-            $discount = $stock->first()->discount / 100;
-            return $this->product_price * (1 - $discount);
-        }
-        return $this->product_price;*/
     }
 
     public function scopeOfStocks($query) {
         //return $query->
+    }
+
+    public function retrieveProductThumb(): string
+    {
+        if ($this->product_thumbs) {
+            return $this->product_thumbs->first()->getFullImagePath();
+        }
+        return url('/') . '/storage' . self::DEFAULT_IMAGE;
     }
 
     public function scopeOptProducts($query)

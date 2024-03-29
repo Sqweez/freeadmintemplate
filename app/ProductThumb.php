@@ -25,4 +25,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProductThumb extends Model
 {
     protected $guarded = [];
+
+    public function getFullImagePath(): ?string
+    {
+        return $this->product_image ? url('/') . \Storage::url($this->product_image) : null;
+    }
 }
