@@ -19,20 +19,21 @@ class OptCatalogFiltersResolver
         $arrayFilters = [];
         foreach (self::FILTER_ARRAY_KEYS as $key) {
             if (isset($params[$key])) {
-                $result = $this->prepareArrayFilters(json_decode($params[$key], true));
-                if (!empty($result)) {
-                    $arrayFilters[$key] = $result;
-                }
+                $result = $this->prepareArrayFilters(json_decode($params[$key]));
+                $arrayFilters[$key] = $result;
             }
         }
 
-        return $arrayFilters;
+        if (isset($params[Product::FILTER_SEARCH])) {
+            $arrayFilters[Product::FILTER_SEARCH] = str_replace(' ', '%', $params[Product::FILTER_SEARCH]) . "%";
+        }
+
+        return array_filter($arrayFilters);
     }
 
-    private function prepareArrayFilters($filters): array
+    private function prepareArrayFilters($filters): ?array
     {
         return collect($filters)
-            ->filter()
             ->map(function ($value) {
                 if (preg_match('/^\d+$/', $value)) {
                     return $value;
@@ -40,7 +41,6 @@ class OptCatalogFiltersResolver
                     return \Arr::last(explode('-', $value));
                 }
             })
-            ->filter()
             ->values()
             ->toArray();
     }

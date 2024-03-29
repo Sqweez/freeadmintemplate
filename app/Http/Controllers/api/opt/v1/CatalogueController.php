@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\api\opt\v1;
 
 use App\Http\Controllers\api\BaseApiController;
+use App\Http\Resources\Opt\ProductResource;
 use App\Repository\Opt\BrandRepository;
 use App\Repository\Opt\CategoryRepository;
 use App\Resolvers\Opt\OptCatalogFiltersResolver;
+use App\Resolvers\Opt\OptCatalogProductResolver;
 use App\v2\Models\Currency;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,9 +32,13 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function getProducts(Request $request, OptCatalogFiltersResolver $filtersResolver)
+    public function getProducts(Request $request, OptCatalogFiltersResolver $filtersResolver, OptCatalogProductResolver $productResolver): JsonResponse
     {
         $filters = $filtersResolver->resolve($request->all());
-        return $filters;
+        $client = auth()->user();
+        $productResolver = $productResolver->resolver($filters, $client);
+        return $this->respondSuccessNoReport([
+            'products' => ProductResource::make($productResolver->get())
+        ]);
     }
 }
