@@ -38,7 +38,7 @@ class CatalogueController extends BaseApiController
         $client = auth()->user();
         $productResolver = $productResolver->resolver($filters, $client);
         return $this->respondSuccessNoReport([
-            'products' => ProductResource::make($productResolver->get())
+            'products' => ProductResource::collection($productResolver->get())
         ]);
     }
 }
