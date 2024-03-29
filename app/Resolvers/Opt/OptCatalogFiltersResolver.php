@@ -19,7 +19,7 @@ class OptCatalogFiltersResolver
         $arrayFilters = [];
         foreach (self::FILTER_ARRAY_KEYS as $key) {
             if (isset($params[$key])) {
-                $result = $this->prepareArrayFilters($params[$key]);
+                $result = $this->prepareArrayFilters(json_decode($params[$key], true));
                 if (!empty($result)) {
                     $arrayFilters[$key] = $result;
                 }
