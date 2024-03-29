@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\traits\HasOptCatalogLink;
 use App\v2\Models\SeoText;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -44,6 +45,9 @@ use Illuminate\Support\Carbon;
  */
 class Subcategory extends Model
 {
+
+    use HasOptCatalogLink;
+
     protected $guarded = [];
 
     public function scopeOfSlug($query, $slug) {
@@ -62,4 +66,5 @@ class Subcategory extends Model
     {
         return $this->hasMany(\App\v2\Models\Product::class, 'subcategory_id');
     }
+
 }
