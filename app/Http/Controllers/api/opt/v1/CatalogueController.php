@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api\opt\v1;
 use App\Http\Controllers\api\BaseApiController;
 use App\Repository\Opt\BrandRepository;
 use App\Repository\Opt\CategoryRepository;
-use App\Resolvers\Catalog\CatalogFiltersResolver;
+use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\v2\Models\Currency;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function getProducts(Request $request, CatalogFiltersResolver $filtersResolver)
+    public function getProducts(Request $request, OptCatalogFiltersResolver $filtersResolver)
     {
         $filters = $filtersResolver->resolve($request->all());
         return $filters;
