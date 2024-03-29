@@ -5,6 +5,7 @@ namespace App;
 use App\Models\traits\HasOptCatalogLink;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * App\Manufacturer
@@ -51,5 +52,10 @@ class Manufacturer extends Model
     public function getOptLink(): string
     {
         return sprintf('/catalog/brand/%s', $this->id);
+    }
+
+    public function getFullPathImageAttribute(): ?string
+    {
+        return $this->manufacturer_img ? url('/') . Storage::url($this->manufacturer_img) : null;
     }
 }

@@ -21,6 +21,8 @@ class BrandResource extends JsonResource
             'name' => $this->manufacturer_name,
             'is_new' => false,
             'link' => $this->getOptLink(),
+            'image' => $this->getFullPathImageAttribute(),
+            'description' => $this->manufacturer_description,
         ];
     }
 }
