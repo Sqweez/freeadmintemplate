@@ -26,6 +26,7 @@ class ProductResource extends JsonResource
             'original_price' => null,
             'has_stock' => false,
             'slug' => $this->getOptLink(),
+            'brand_id' => $this->manufacturer_id,
             'quantity_type' => [
                 'text' => null,
                 'color' => null
