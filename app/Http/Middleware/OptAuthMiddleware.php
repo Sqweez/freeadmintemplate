@@ -21,8 +21,8 @@ class OptAuthMiddleware extends BaseApiController
         $token = $request->bearerToken();
         if ($token && $user = WholesaleClient::whereAccessToken($token)->first()) {
             \Auth::login($user);
-            return $next($request);
         }
+        return $next($request);
         return $this->respondErrorNoReport('Данные авторизации устарели', 401);
     }
 }
