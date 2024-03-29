@@ -5,6 +5,7 @@ namespace App\v2\Models;
 use App\AttributeProduct;
 use App\Category;
 use App\Manufacturer;
+use App\Models\traits\HasOptCatalogLink;
 use App\Price;
 use App\ProductBatch;
 use App\ProductImage;
@@ -153,7 +154,7 @@ use Illuminate\Support\Carbon;
  */
 class Product extends Model
 {
-
+    use HasOptCatalogLink;
     use SoftDeletes;
 
     // product fields
