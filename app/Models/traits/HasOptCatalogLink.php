@@ -5,6 +5,7 @@ namespace App\Models\traits;
 use App\Category;
 use App\Manufacturer;
 use App\Subcategory;
+use App\v2\Models\Product;
 
 trait HasOptCatalogLink
 {
@@ -18,6 +19,8 @@ trait HasOptCatalogLink
                 return sprintf('/catalog/subcategory/%s', $this->subcategory_slug);
             case Manufacturer::class:
                 return sprintf('/catalog/brand/%s', $this->id);
+            case Product::class:
+                return sprintf('/product/%s/%s', \Str::slug($this->product_name), $this->id);
             default:
                 return '';
         }
