@@ -20,6 +20,7 @@ class BrandResource extends JsonResource
             'id' => $this->id,
             'name' => $this->manufacturer_name,
             'is_new' => false,
+            'link' => $this->getOptLink(),
         ];
     }
 }
