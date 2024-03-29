@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\traits\HasOptCatalogLink;
 use App\v2\Models\SeoText;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -53,6 +54,9 @@ use function foo\func;
  */
 class Category extends Model
 {
+
+    use HasOptCatalogLink;
+
     protected $guarded = [];
 
     protected $hidden = ['pivot'];
@@ -110,5 +114,4 @@ class Category extends Model
     public function scopeSite($q) {
         return $q->where('is_site_visible', true);
     }
-
 }

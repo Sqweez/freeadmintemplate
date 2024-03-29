@@ -22,6 +22,7 @@ class CategoryResource extends JsonResource
             'name' => $this->category_name,
             'is_new' => false,
             'subcategories' => SubcategoryResource::collection($this->subcategories),
+            'link' => $this->getOptLink(),
         ];
     }
 }

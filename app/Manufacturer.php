@@ -2,9 +2,9 @@
 
 namespace App;
 
+use App\Models\traits\HasOptCatalogLink;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * App\Manufacturer
@@ -32,6 +32,9 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  */
 class Manufacturer extends Model
 {
+
+    use HasOptCatalogLink;
+
     protected $guarded = [
         'id'
     ];
@@ -43,5 +46,10 @@ class Manufacturer extends Model
 
     public function products(): HasMany {
         return $this->hasMany(\App\v2\Models\Product::class);
+    }
+
+    public function getOptLink(): string
+    {
+        return sprintf('/catalog/brand/%s', $this->id);
     }
 }

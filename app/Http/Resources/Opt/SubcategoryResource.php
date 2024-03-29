@@ -20,6 +20,7 @@ class SubcategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->subcategory_name,
             'is_new' => false,
+            'link' => $this->getOptLink(),
         ];
     }
 }
