@@ -30,7 +30,10 @@ class OptCatalogProductResolver
                 return $query->whereHas('filters', function ($q) use ($filters) {
                     return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
                 });
-            });
+            })
+            ->with([
+                'subcategory'
+            ]);
 
         return $query;
     }
