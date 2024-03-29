@@ -33,6 +33,7 @@ class OptCatalogProductResolver
                 });
             })
             ->with('subcategory')
+            ->with('product_thumbs')
             ->whereHas('wholesale_prices', function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
             })
