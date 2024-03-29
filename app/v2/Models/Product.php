@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 /**
@@ -424,10 +425,8 @@ class Product extends Model
 
     public function retrieveProductThumb(): string
     {
-        if ($this->product_thumbs->count()) {
-            return $this->product_thumbs->first()->getFullImagePath();
-        }
-        return url('/') . '/storage' . self::DEFAULT_IMAGE;
+        return url('/') . Storage::url($this->product_thumbs[0]->image ?? 'products/product_image_default.jpg');
+
     }
 
     public function scopeOptProducts($query)

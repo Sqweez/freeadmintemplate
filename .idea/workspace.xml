@@ -7,6 +7,7 @@
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/ProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/ProductResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ProductThumb.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/ProductThumb.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -581,7 +582,7 @@
       <workItem from="1711559888067" duration="6415000" />
       <workItem from="1711719478448" duration="1854000" />
       <workItem from="1711722117815" duration="157000" />
-      <workItem from="1711722296060" duration="5698000" />
+      <workItem from="1711722296060" duration="5977000" />
     </task>
     <servers />
   </component>
