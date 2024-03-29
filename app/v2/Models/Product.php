@@ -424,7 +424,7 @@ class Product extends Model
 
     public function retrieveProductThumb(): string
     {
-        if ($this->product_thumbs) {
+        if ($this->product_thumbs->count()) {
             return $this->product_thumbs->first()->getFullImagePath();
         }
         return url('/') . '/storage' . self::DEFAULT_IMAGE;
