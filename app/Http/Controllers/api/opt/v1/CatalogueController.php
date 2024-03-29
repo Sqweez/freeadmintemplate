@@ -6,6 +6,7 @@ use App\Http\Controllers\api\BaseApiController;
 use App\Http\Resources\Opt\ProductResource;
 use App\Repository\Opt\BrandRepository;
 use App\Repository\Opt\CategoryRepository;
+use App\Resolvers\Meta\OptMetaCatalogResolver;
 use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\Resolvers\Opt\OptCatalogProductResolver;
 use App\v2\Models\Currency;
@@ -32,13 +33,19 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function getProducts(Request $request, OptCatalogFiltersResolver $filtersResolver, OptCatalogProductResolver $productResolver): JsonResponse
+    public function getProducts(
+        Request $request,
+        OptCatalogFiltersResolver $filtersResolver,
+        OptCatalogProductResolver $productResolver,
+        OptMetaCatalogResolver $metaCatalogResolver
+    ): JsonResponse
     {
         $filters = $filtersResolver->resolve($request->all());
         $client = auth()->user();
         $productResolver = $productResolver->resolver($filters, $client);
         return $this->respondSuccessNoReport([
             'products' => ProductResource::collection($productResolver->get()),
+            'meta' => $metaCatalogResolver->resolver($filters),
             'client' => $client,
         ]);
     }
