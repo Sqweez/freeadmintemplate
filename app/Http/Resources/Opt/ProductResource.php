@@ -21,7 +21,7 @@ class ProductResource extends JsonResource
             'product_name' => $this->product_name,
             'isFavorite' => null,
             'subcategory' => $this->subcategory,
-            'product_image' => $this->product_thumbs,
+            'product_image' => $this->retrieveProductThumb(),
             'has_stock' => false,
             'slug' => $this->getOptLink(),
             'brand_id' => $this->manufacturer_id,
