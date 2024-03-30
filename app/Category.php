@@ -51,6 +51,7 @@ use function foo\func;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereCategoryNameKaz($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\Product[] $products
  * @property-read int|null $products_count
+ * @property-read string $name
  */
 class Category extends Model
 {
@@ -113,5 +114,10 @@ class Category extends Model
 
     public function scopeSite($q) {
         return $q->where('is_site_visible', true);
+    }
+
+    public function getNameAttribute(): string
+    {
+        return $this->category_name;
     }
 }

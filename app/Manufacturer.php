@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Storage;
  * @property bool $show_on_main
  * @method static \Illuminate\Database\Eloquent\Builder|Manufacturer whereShowOnMain($value)
  * @property-read string|null $full_path_image
+ * @property-read string $name
  */
 class Manufacturer extends Model
 {
@@ -58,5 +59,10 @@ class Manufacturer extends Model
     public function getFullPathImageAttribute(): ?string
     {
         return $this->manufacturer_img ? url('/') . Storage::url($this->manufacturer_img) : null;
+    }
+
+    public function getNameAttribute(): string
+    {
+        return $this->manufacturer_name;
     }
 }

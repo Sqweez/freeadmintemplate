@@ -5,6 +5,7 @@ namespace App;
 use App\Models\traits\HasOptCatalogLink;
 use App\v2\Models\SeoText;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
 
@@ -42,6 +43,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Subcategory whereSubcategoryNameKaz($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\Product[] $products
  * @property-read int|null $products_count
+ * @property-read string $name
  */
 class Subcategory extends Model
 {
@@ -62,9 +64,14 @@ class Subcategory extends Model
         return $this->morphOne(SeoText::class, 'entity');
     }
 
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(\App\v2\Models\Product::class, 'subcategory_id');
+    }
+
+    public function getNameAttribute(): string
+    {
+        return $this->subcategory_name;
     }
 
 }

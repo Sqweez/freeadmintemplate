@@ -41,6 +41,7 @@ class CatalogueController extends BaseApiController
     ): JsonResponse
     {
         $filters = $filtersResolver->resolve($request->all());
+        \Log::info('filters', $filters);
         $client = auth()->user();
         $productResolver = $productResolver->resolver($filters, $client);
         return $this->respondSuccessNoReport([
