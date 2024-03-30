@@ -90,17 +90,17 @@ class OptCatalogProductResolver
         $filters = [];
         $filters[] = [
             'attribute_name' => 'Категория',
-            'id' => 'categories',
+            'id' => Product::FILTER_CATEGORIES,
             'values' => $categoriesFilters->toArray(),
         ];
         $filters[] = [
             'attribute_name' => 'Подкатегория',
-            'id' => 'subcategories',
+            'id' => Product::FILTER_SUBCATEGORIES,
             'values' => $subcategoryFilters->toArray(),
         ];
         $filters[] = [
             'attribute_name' => 'Бренды',
-            'id' => 'brands',
+            'id' => Product::FILTER_BRANDS,
             'values' => $brandFilters->toArray(),
         ];
         $filters = collect($filters)
