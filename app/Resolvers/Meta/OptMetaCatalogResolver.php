@@ -13,11 +13,12 @@ class OptMetaCatalogResolver
     public function resolver(array $params)
     {
         return \Cache::remember($this->getCacheKey($params), 60 * 60, function () use ($params) {
+            $entity = $this->getEntity($params);
             return [
-                'heading' => $this->getHeading($params),
+                'heading' => $this->getHeading($entity),
                 'description' => 'Iron-Addicts.KZ | оптовые товары',
                 'keywords' => ['каталог'],
-                'title' => $this->getTitle($params),
+                'title' => $this->getTitle($entity),
             ];
         });
 
@@ -28,18 +29,18 @@ class OptMetaCatalogResolver
         return json_encode($params);
     }
 
-    private function getTitle(array $params): string
+    private function getTitle($entity = null): string
     {
-        if ($entity = $this->getEntity($params)) {
+        if ($entity) {
             return sprintf('Купить %s оптом по лучшим ценам', $entity->getNameAttribute());
         }
 
         return 'Iron-Addicts.KZ | оптовые товары';
     }
 
-    private function getHeading(array $params): string
+    private function getHeading($entity = null): string
     {
-        if ($entity = $this->getEntity($params)) {
+        if ($entity) {
             return $entity->getNameAttribute();
         }
 
