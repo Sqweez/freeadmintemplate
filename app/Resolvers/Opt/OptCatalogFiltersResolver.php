@@ -19,15 +19,11 @@ class OptCatalogFiltersResolver
         $arrayFilters = [];
         \Log::info('pararams', $params);
         foreach (self::FILTER_ARRAY_KEYS as $key) {
-            if (isset($params[$key])) {
+            if (!empty($params[$key])) {
                 $result = $this->prepareArrayFilters(json_decode($params[$key]));
                 $arrayFilters[$key] = $result;
             }
         }
-
-       /* if (isset($params[Product::FILTER_PRICES])) {
-            $arrayFilters[Product::FILTER_PRICES] = explode(',', $params[Product::FILTER_PRICES]);
-        }*/
 
         if (isset($params[Product::FILTER_SEARCH])) {
             $arrayFilters[Product::FILTER_SEARCH] = str_replace(' ', '%', $params[Product::FILTER_SEARCH]) . "%";
