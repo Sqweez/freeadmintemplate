@@ -23,8 +23,12 @@ class OptCatalogProductResolver
             return $query->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
         })->when(!empty($filters[Product::FILTER_BRANDS]), function ($query) use ($filters) {
             return $query->ofBrand($filters[Product::FILTER_BRANDS]);
-        })->when(!empty($filters[Product::FILTER_PRICES]), function ($query) use ($filters) {
-            return $query->ofPrice($filters[Product::FILTER_PRICES]);
+        })->when(!empty($filters[Product::FILTER_PRICES]), function ($query) use ($filters, $currencyId) {
+            return $query->whereHas('wholesale_prices', function ($subQuery) use ($filters, $currencyId) {
+                return $subQuery
+                    ->where('currency_id', $currencyId)
+                    ->whereBetween('price', $filters[Product::FILTER_PRICES]);
+            });
         })->when(!empty($filters[Product::FILTER_SEARCH]), function ($query) use ($filters) {
             return $query->ofTag($filters[Product::FILTER_SEARCH]);
         })->when(!empty($filters[Product::FILTER_FILTERS]), function ($query) use ($filters) {
