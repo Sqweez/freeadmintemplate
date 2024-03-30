@@ -111,7 +111,7 @@ class OptCatalogProductResolver
 
         return [
             'attribute_name' => 'Цена',
-            'id' => 'price_range',
+            'id' => 'prices',
             'type' => 'range',
             'min' => $prices->min('price'),
             'max' => $prices->max('price'),
