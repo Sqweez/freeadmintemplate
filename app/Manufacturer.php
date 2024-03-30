@@ -53,7 +53,7 @@ class Manufacturer extends Model
 
     public function getOptLink(): string
     {
-        return sprintf('/catalog/brand/%s', $this->id);
+        return sprintf('/catalog/brands/%s', $this->id);
     }
 
     public function getFullPathImageAttribute(): ?string
