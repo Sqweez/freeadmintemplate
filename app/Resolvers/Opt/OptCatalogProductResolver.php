@@ -2,7 +2,9 @@
 
 namespace App\Resolvers\Opt;
 
+use App\Category;
 use App\Manufacturer;
+use App\Subcategory;
 use App\v2\Models\Product;
 use App\v2\Models\WholesaleClient;
 
@@ -52,7 +54,9 @@ class OptCatalogProductResolver
     public function getFilters($query): array
     {
         return [
-            'brands' => Manufacturer::find($query->select(['id', 'manufacturer_id'])->pluck('manufacturer_id'))
+            'brands' => Manufacturer::find($query->select(['id', 'manufacturer_id'])->pluck('manufacturer_id')),
+            'categories' => Category::find($query->select(['id', 'category_id'])->pluck('category_id')),
+            'subcategories' => Subcategory::find($query->select(['id', 'subcategory_id'])->pluck('subcategory_id')),
         ];
     }
 
