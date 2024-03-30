@@ -10,6 +10,7 @@ use App\Resolvers\Meta\OptMetaCatalogResolver;
 use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\Resolvers\Opt\OptCatalogProductResolver;
 use App\v2\Models\Currency;
+use App\v2\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
@@ -65,6 +66,13 @@ class CatalogueController extends BaseApiController
         });
         return $this->respondSuccessNoReport([
             'products' => ProductResource::collection($products->get()),
+        ]);
+    }
+
+    public function getProduct(Product $product): JsonResponse
+    {
+        return $this->respondSuccess([
+            'product' => $product,
         ]);
     }
 }

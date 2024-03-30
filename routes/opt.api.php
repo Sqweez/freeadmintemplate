@@ -14,6 +14,7 @@ Route::prefix('opt')->group(function () {
                 Route::get('/', [CatalogueController::class, 'getCatalogEntities']);
                 Route::get('/products', [CatalogueController::class, 'getProducts']);
                 Route::get('/search', [CatalogueController::class, 'search']);
+                Route::get('/product/{product}', [CatalogueController::class, 'getProduct']);
             });
         });
     });
