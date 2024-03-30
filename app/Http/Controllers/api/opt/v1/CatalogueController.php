@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\opt\v1;
 
 use App\Http\Controllers\api\BaseApiController;
 use App\Http\Resources\Opt\ProductResource;
+use App\Http\Resources\Opt\SingleProductResource;
 use App\Repository\Opt\BrandRepository;
 use App\Repository\Opt\CategoryRepository;
 use App\Resolvers\Meta\OptMetaCatalogResolver;
@@ -71,8 +72,11 @@ class CatalogueController extends BaseApiController
 
     public function getProduct(Product $product): JsonResponse
     {
+        $product->load('manufacturer');
+        $product->load('category');
+        $product->load('attributes');
         return $this->respondSuccess([
-            'product' => $product,
+            'product' => SingleProductResource::make($product),
         ]);
     }
 }
