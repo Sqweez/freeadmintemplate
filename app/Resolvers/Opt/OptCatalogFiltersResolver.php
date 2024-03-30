@@ -43,7 +43,7 @@ class OptCatalogFiltersResolver
                 if (preg_match('/^\d+$/', $value)) {
                     return $value;
                 } else {
-                    return \Arr::last(explode('-', $value));
+                    return explode(',', $value);
                 }
             })
             ->values()
