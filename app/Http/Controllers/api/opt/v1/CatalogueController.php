@@ -40,7 +40,6 @@ class CatalogueController extends BaseApiController
         OptMetaCatalogResolver $metaCatalogResolver
     ): JsonResponse {
         $filters = $filtersResolver->resolve($request->all());
-        \Log::info('filters', $filters);
         $client = auth()->user();
         $productQuery = $productResolver->getProductQuery($filters, $client);
         $products = $productQuery->tap(function ($query) use ($productResolver) {
@@ -54,11 +53,18 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function search(Request $request): JsonResponse
+    public function search( Request $request,
+        OptCatalogFiltersResolver $filtersResolver,
+        OptCatalogProductResolver $productResolver): JsonResponse
     {
-        $query = $request->get('query');
-        return $this->respondSuccess([
-            'query' => $query,
+        $filters = $filtersResolver->resolve(['search' => $request->get('query')]);
+        $client = auth()->user();
+        $productQuery = $productResolver->getProductQuery($filters, $client);
+        $products = $productQuery->tap(function ($query) use ($productResolver) {
+            return $productResolver->attachAdditionalEntities($query);
+        });
+        return $this->respondSuccessNoReport([
+            'products' => ProductResource::collection($products->get()),
         ]);
     }
 }
