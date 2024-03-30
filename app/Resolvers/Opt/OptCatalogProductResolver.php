@@ -80,13 +80,11 @@ class OptCatalogProductResolver
         ];
     }
 
-    private function getPrices($products): array
+    private function getPrices($products)
     {
-        $prices = $products->flatMap(function ($product) {
+        return $products->flatMap(function ($product) {
             return collect($product['wholesale_prices']);
         });
-
-        return $prices;
 
         $maxPrice = $products->flatMap(function ($product) {
             return collect($product['wholesale_prices'])->pluck('price');
