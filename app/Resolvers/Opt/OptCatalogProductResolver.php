@@ -75,7 +75,7 @@ class OptCatalogProductResolver
                     'name' => $item->subcategory_name
                 ];
             }),
-            'prices' => $query->wholesale_prices,
+            'prices' => $query->get(),
         ];
     }
 
