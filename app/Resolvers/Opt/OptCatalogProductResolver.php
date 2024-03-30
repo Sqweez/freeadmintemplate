@@ -36,9 +36,12 @@ class OptCatalogProductResolver
                 return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
             });
         })
-        ->whereHas('wholesale_prices', function ($query) use ($currencyId) {
-            return $query->where('currency_id', $currencyId);
-        })->with([
+        ->when(empty($filters[Product::FILTER_PRICES]), function ($query) use ($currencyId) {
+            return $query->whereHas('wholesale_prices', function ($query) use ($currencyId) {
+                return $query->where('currency_id', $currencyId);
+            });
+        })
+        ->with([
             'wholesale_prices' => function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
             }
