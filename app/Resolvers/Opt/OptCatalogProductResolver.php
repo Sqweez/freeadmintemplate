@@ -81,12 +81,12 @@ class OptCatalogProductResolver
         $filters = [];
         $filters[] = [
             'attribute_name' => 'Категория',
-            'id' => 'brands',
+            'id' => 'categories',
             'values' => $categoriesFilters->toArray(),
         ];
         $filters[] = [
             'attribute_name' => 'Подкатегория',
-            'id' => 'brands',
+            'id' => 'subcategories',
             'values' => $subcategoryFilters->toArray(),
         ];
         $filters[] = [
