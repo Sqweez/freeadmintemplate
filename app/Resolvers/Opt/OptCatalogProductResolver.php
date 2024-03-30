@@ -76,7 +76,23 @@ class OptCatalogProductResolver
                     'name' => $item->subcategory_name
                 ];
             }),
-            'prices' => $query->get(),
+            'prices' => $this->getPrices($query->get())
+        ];
+    }
+
+    private function getPrices($products): array
+    {
+        $maxPrice = $products->flatMap(function ($product) {
+            return collect($product['wholesale_prices'])->pluck('price');
+        })->max();
+
+        $minPrice = $products->flatMap(function ($product) {
+            return collect($product['wholesale_prices'])->pluck('price');
+        })->min();
+
+        return [
+            'min' => $minPrice,
+            'max' => $maxPrice
         ];
     }
 
