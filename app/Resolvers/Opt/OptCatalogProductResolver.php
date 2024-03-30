@@ -27,7 +27,8 @@ class OptCatalogProductResolver
             return $query->whereHas('wholesale_prices', function ($subQuery) use ($filters, $currencyId) {
                 return $subQuery
                     ->where('currency_id', $currencyId)
-                    ->whereBetween('price', $filters[Product::FILTER_PRICES]);
+                    ->where('price', '>=', $filters[Product::FILTER_PRICES][0])
+                    ->where('price', '<=', $filters[Product::FILTER_PRICES][1]);
             });
         })->when(!empty($filters[Product::FILTER_SEARCH]), function ($query) use ($filters) {
             return $query->ofTag($filters[Product::FILTER_SEARCH]);
