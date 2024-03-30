@@ -17,6 +17,7 @@ class OptCatalogFiltersResolver
     public function resolve(array $params): array
     {
         $arrayFilters = [];
+        \Log::info('pararams', $params);
         foreach (self::FILTER_ARRAY_KEYS as $key) {
             if (isset($params[$key])) {
                 $result = $this->prepareArrayFilters(json_decode($params[$key]));
