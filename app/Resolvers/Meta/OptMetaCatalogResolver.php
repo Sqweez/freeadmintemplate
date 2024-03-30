@@ -40,7 +40,7 @@ class OptMetaCatalogResolver
     private function getHeading(array $params): string
     {
         if ($entity = $this->getEntity($params)) {
-            return $entity->name;
+            return $entity->getNameAttribute();
         }
 
         return 'Каталог';
