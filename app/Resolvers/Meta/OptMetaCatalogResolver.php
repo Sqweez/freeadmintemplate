@@ -50,15 +50,15 @@ class OptMetaCatalogResolver
     private function getEntity(array $params)
     {
         if (isset($params[Product::FILTER_CATEGORIES])) {
-            return Category::find($params[Product::FILTER_CATEGORIES]);
+            return Category::find($params[Product::FILTER_CATEGORIES][0]);
         }
 
         if (isset($params[Product::FILTER_SUBCATEGORIES])) {
-            return Subcategory::find($params[Product::FILTER_SUBCATEGORIES]);
+            return Subcategory::find($params[Product::FILTER_SUBCATEGORIES][0]);
         }
 
         if (isset($params[Product::FILTER_BRANDS])) {
-            return Manufacturer::find($params[Product::FILTER_BRANDS]);
+            return Manufacturer::find($params[Product::FILTER_BRANDS][0]);
         }
 
         return null;
