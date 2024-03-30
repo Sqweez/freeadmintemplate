@@ -25,6 +25,7 @@ class OptCatalogProductResolver
             return $query->ofBrand($filters[Product::FILTER_BRANDS]);
         })->when(!empty($filters[Product::FILTER_PRICES]), function ($query) use ($filters, $currencyId) {
             return $query->whereHas('wholesale_prices', function ($subQuery) use ($filters, $currencyId) {
+                \Log::info('prices', $filters[Product::FILTER_FILTERS]);
                 return $subQuery
                     ->where('currency_id', $currencyId)
                     ->where('price', '>=', $filters[Product::FILTER_PRICES][0])

@@ -40,6 +40,7 @@ class CatalogueController extends BaseApiController
         OptMetaCatalogResolver $metaCatalogResolver
     ): JsonResponse {
         $filters = $filtersResolver->resolve($request->all());
+        \Log::info('filters', $filters);
         $client = auth()->user();
         $productQuery = $productResolver->getProductQuery($filters, $client);
         $products = $productQuery->tap(function ($query) use ($productResolver) {

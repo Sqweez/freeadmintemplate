@@ -16,7 +16,6 @@ class OptCatalogFiltersResolver
 
     public function resolve(array $params): array
     {
-        \Log::info('params', $params);
         $arrayFilters = [];
         foreach (self::FILTER_ARRAY_KEYS as $key) {
             if (isset($params[$key])) {
