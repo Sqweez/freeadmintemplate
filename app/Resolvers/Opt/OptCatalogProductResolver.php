@@ -14,49 +14,67 @@ class OptCatalogProductResolver
     public function getProductQuery(array $filters, ?WholesaleClient $client)
     {
         $currencyId = $this->retrieveCurrency($client);
-        return Product::query()
-            ->OptProducts()
-            ->when(!empty($filters[Product::FILTER_CATEGORIES]), function ($query) use ($filters) {
-                return $query->ofCategory($filters[Product::FILTER_CATEGORIES]);
-            })
-            ->when(!empty($filters[Product::FILTER_SUBCATEGORIES]), function ($query) use ($filters) {
-                return $query->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
-            })
-            ->when(!empty($filters[Product::FILTER_BRANDS]), function ($query) use ($filters) {
-                return $query->ofBrand($filters[Product::FILTER_BRANDS]);
-            })
-            ->when(!empty($filters[Product::FILTER_PRICES]), function ($query) use ($filters) {
-                return $query->ofPrice($filters[Product::FILTER_PRICES]);
-            })
-            ->when(!empty($filters[Product::FILTER_SEARCH]), function ($query) use ($filters) {
-                return $query->ofTag($filters[Product::FILTER_SEARCH]);
-            })
-            ->when(!empty($filters[Product::FILTER_FILTERS]), function ($query) use ($filters) {
-                return $query->whereHas('filters', function ($q) use ($filters) {
-                    return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
-                });
-            })
-            ->whereHas('wholesale_prices', function ($query) use ($currencyId) {
+        return Product::query()->OptProducts()->when(
+            !empty($filters[Product::FILTER_CATEGORIES]), function ($query) use ($filters) {
+            return $query->ofCategory($filters[Product::FILTER_CATEGORIES]);
+        }
+        )->when(!empty($filters[Product::FILTER_SUBCATEGORIES]), function ($query) use ($filters) {
+            return $query->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
+        })->when(!empty($filters[Product::FILTER_BRANDS]), function ($query) use ($filters) {
+            return $query->ofBrand($filters[Product::FILTER_BRANDS]);
+        })->when(!empty($filters[Product::FILTER_PRICES]), function ($query) use ($filters) {
+            return $query->ofPrice($filters[Product::FILTER_PRICES]);
+        })->when(!empty($filters[Product::FILTER_SEARCH]), function ($query) use ($filters) {
+            return $query->ofTag($filters[Product::FILTER_SEARCH]);
+        })->when(!empty($filters[Product::FILTER_FILTERS]), function ($query) use ($filters) {
+            return $query->whereHas('filters', function ($q) use ($filters) {
+                return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
+            });
+        })->whereHas('wholesale_prices', function ($query) use ($currencyId) {
+            return $query->where('currency_id', $currencyId);
+        })->with([
+            'wholesale_prices' => function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
-            })
-            ->with(['wholesale_prices' => function ($query) use ($currencyId) {
-                return $query->where('currency_id', $currencyId);
-            }]);
+            }
+        ]);
     }
 
     public function attachAdditionalEntities($query)
     {
-        return $query
-            ->with('subcategory')
-            ->with('product_thumbs');
+        return $query->with('subcategory')->with('product_thumbs');
     }
 
     public function getFilters($query): array
     {
+        $items = $query->select(['id', 'manufacturer_id', 'category_id', 'subcategory_id']);
         return [
-            'brands' => Manufacturer::find($query->select(['id', 'manufacturer_id'])->pluck('manufacturer_id')),
-            'categories' => Category::find($query->select(['id', 'category_id'])->pluck('category_id')),
-            'subcategories' => Subcategory::find($query->select(['id', 'subcategory_id'])->pluck('subcategory_id')),
+            'brands' => Manufacturer::query()->whereIn(
+                'id',
+                $items->pluck('manufacturer_id')
+            )->get()->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->manufacturer_name
+                ];
+            }),
+            'categories' => Category::query()->whereIn(
+                'id',
+                $items->pluck('category_id')
+            )->get()->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->category_name
+                ];
+            }),
+            'subcategories' => Subcategory::query()->whereIn(
+                'id',
+                $items->pluck('subcategory_id')
+            )->get()->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->subcategory_name
+                ];
+            }),
         ];
     }
 
