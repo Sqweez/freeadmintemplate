@@ -49,7 +49,7 @@ class CatalogueController extends BaseApiController
             'products' => ProductResource::collection($products->get()),
             'meta' => $metaCatalogResolver->resolver($filters),
             'client' => $client,
-            'filters' => $request->has('no_filters') ? null : $productResolver->getFilters($productQuery),
+            'filters' => $request->has('no-filters') ? null : $productResolver->getFilters($productQuery),
         ]);
     }
 }
