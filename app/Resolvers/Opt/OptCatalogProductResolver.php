@@ -30,7 +30,8 @@ class OptCatalogProductResolver
             return $query->whereHas('filters', function ($q) use ($filters) {
                 return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
             });
-        })->whereHas('wholesale_prices', function ($query) use ($currencyId) {
+        })
+        ->whereHas('wholesale_prices', function ($query) use ($currencyId) {
             return $query->where('currency_id', $currencyId);
         })->with([
             'wholesale_prices' => function ($query) use ($currencyId) {
@@ -75,7 +76,7 @@ class OptCatalogProductResolver
                     'name' => $item->subcategory_name
                 ];
             }),
-            'prices' => $query->get(),
+            'prices' => $query->get()->wholesale_prices,
         ];
     }
 
