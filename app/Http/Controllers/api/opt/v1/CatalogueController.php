@@ -53,4 +53,12 @@ class CatalogueController extends BaseApiController
             'filters' => $request->has('no-filters') ? null : $productResolver->getFilters($productQuery),
         ]);
     }
+
+    public function search(Request $request): JsonResponse
+    {
+        $query = $request->get('query');
+        return $this->respondSuccess([
+            'query' => $query,
+        ]);
+    }
 }
