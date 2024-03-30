@@ -76,7 +76,7 @@ class OptCatalogProductResolver
                     'name' => $item->subcategory_name
                 ];
             }),
-            'prices' => $this->getPrices($query->get())
+            'prices' => $query->get()
         ];
     }
 
