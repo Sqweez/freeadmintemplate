@@ -49,36 +49,58 @@ class OptCatalogProductResolver
     public function getFilters($query): array
     {
         $items = $query->select(['id', 'manufacturer_id', 'category_id', 'subcategory_id']);
-        return [
-            'brands' => Manufacturer::query()->whereIn(
-                'id',
-                $items->pluck('manufacturer_id')
-            )->get()->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'name' => $item->manufacturer_name
-                ];
-            }),
-            'categories' => Category::query()->whereIn(
-                'id',
-                $items->pluck('category_id')
-            )->get()->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'name' => $item->category_name
-                ];
-            }),
-            'subcategories' => Subcategory::query()->whereIn(
-                'id',
-                $items->pluck('subcategory_id')
-            )->get()->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'name' => $item->subcategory_name
-                ];
-            }),
-            'prices' => $this->getPrices($query->get())
+        $brandFilters = Manufacturer::query()->whereIn(
+            'id',
+            $items->pluck('manufacturer_id')
+        )->get()->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'attribute_value' => $item->manufacturer_name
+            ];
+        });
+        $categoriesFilters = Category::query()->whereIn(
+            'id',
+            $items->pluck('category_id')
+        )->get()->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'attribute_value' => $item->category_name
+            ];
+        });
+        $subcategoryFilters = Subcategory::query()->whereIn(
+            'id',
+            $items->pluck('subcategory_id')
+        )->get()->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'attribute_value' => $item->subcategory_name
+            ];
+        });
+
+        $priceFilters = $this->getPrices($query->get());
+        $filters = [];
+        $filters[] = [
+            'attribute_name' => 'Категория',
+            'id' => 'brands',
+            'values' => $categoriesFilters->toArray(),
         ];
+        $filters[] = [
+            'attribute_name' => 'Подкатегория',
+            'id' => 'brands',
+            'values' => $subcategoryFilters->toArray(),
+        ];
+        $filters[] = [
+            'attribute_name' => 'Бренды',
+            'id' => 'brands',
+            'values' => $brandFilters->toArray(),
+        ];
+        $filters = collect($filters)
+            ->filter(function ($item) {
+                return count($item['values']) > 1;
+            })
+            ->toArray();
+        array_unshift($filters, $priceFilters);
+        return $filters;
     }
 
     private function getPrices($products)
@@ -88,6 +110,9 @@ class OptCatalogProductResolver
         });
 
         return [
+            'attribute_name' => 'Цена',
+            'id' => 'price_range',
+            'type' => 'range',
             'min' => $prices->min('price'),
             'max' => $prices->max('price'),
             'currencySign' => Currency::find($prices->first()['currency_id'])->unicode_symbol
