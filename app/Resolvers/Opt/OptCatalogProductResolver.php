@@ -76,12 +76,18 @@ class OptCatalogProductResolver
                     'name' => $item->subcategory_name
                 ];
             }),
-            'prices' => $query->get()
+            'prices' => $this->getPrices($query->get())
         ];
     }
 
     private function getPrices($products): array
     {
+        $prices = $products->flatMap(function ($product) {
+            return collect($product['wholesale_prices']);
+        });
+
+        return $prices;
+
         $maxPrice = $products->flatMap(function ($product) {
             return collect($product['wholesale_prices'])->pluck('price');
         })->max();
@@ -92,7 +98,8 @@ class OptCatalogProductResolver
 
         return [
             'min' => $minPrice,
-            'max' => $maxPrice
+            'max' => $maxPrice,
+            'currencySign'
         ];
     }
 
