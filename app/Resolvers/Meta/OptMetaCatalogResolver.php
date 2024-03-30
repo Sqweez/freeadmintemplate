@@ -31,7 +31,7 @@ class OptMetaCatalogResolver
     private function getTitle(array $params): string
     {
         if ($entity = $this->getEntity($params)) {
-            return sprintf('Купить %s оптом по лучшим ценам', $entity->name);
+            return sprintf('Купить %s оптом по лучшим ценам', $entity->getNameAttribute());
         }
 
         return 'Iron-Addicts.KZ | оптовые товары';
