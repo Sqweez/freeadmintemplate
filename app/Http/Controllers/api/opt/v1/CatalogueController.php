@@ -75,6 +75,7 @@ class CatalogueController extends BaseApiController
         $product->load('manufacturer');
         $product->load('category');
         $product->load('attributes');
+        $product->load('product_images');
         return $this->respondSuccess([
             'product' => SingleProductResource::make($product),
         ]);
