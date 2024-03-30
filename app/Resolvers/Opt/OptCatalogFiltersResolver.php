@@ -11,6 +11,7 @@ class OptCatalogFiltersResolver
         Product::FILTER_CATEGORIES,
         Product::FILTER_SUBCATEGORIES,
         Product::FILTER_BRANDS,
+        Product::FILTER_PRICES
     ];
 
     public function resolve(array $params): array
@@ -23,9 +24,9 @@ class OptCatalogFiltersResolver
             }
         }
 
-        if (isset($params[Product::FILTER_PRICES])) {
+       /* if (isset($params[Product::FILTER_PRICES])) {
             $arrayFilters[Product::FILTER_PRICES] = explode(',', $params[Product::FILTER_PRICES]);
-        }
+        }*/
 
         if (isset($params[Product::FILTER_SEARCH])) {
             $arrayFilters[Product::FILTER_SEARCH] = str_replace(' ', '%', $params[Product::FILTER_SEARCH]) . "%";
