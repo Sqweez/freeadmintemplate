@@ -34,6 +34,7 @@ class OptCatalogFiltersResolver
 
     private function prepareArrayFilters($filters): ?array
     {
+        \Log::info('f', $filters);
         return collect($filters)
             ->map(function ($value) {
                 \Log::info('value: ' . $value);
