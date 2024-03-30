@@ -40,6 +40,7 @@ class OptCatalogFiltersResolver
     {
         return collect($filters)
             ->map(function ($value) {
+                \Log::info('value: ' . $value);
                 if (preg_match('/^\d+$/', $value)) {
                     return $value;
                 } else {
