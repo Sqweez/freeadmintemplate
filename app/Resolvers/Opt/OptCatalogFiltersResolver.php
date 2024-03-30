@@ -20,7 +20,7 @@ class OptCatalogFiltersResolver
         \Log::info('pararams', $params);
         foreach (self::FILTER_ARRAY_KEYS as $key) {
             if (!empty($params[$key])) {
-                $result = $this->prepareArrayFilters(json_decode($params[$key]));
+                $result = $this->prepareArrayFilters($params[$key]);
                 $arrayFilters[$key] = $result;
             }
         }
@@ -34,15 +34,9 @@ class OptCatalogFiltersResolver
 
     private function prepareArrayFilters($filters): ?array
     {
-        \Log::info('f', $filters);
-        return collect($filters)
+        return collect(explode(',', $filters))
             ->map(function ($value) {
-                \Log::info('value: ' . $value);
-                if (preg_match('/^\d+$/', $value)) {
-                    return $value;
-                } else {
-                    return explode(',', $value);
-                }
+                return $value;
             })
             ->values()
             ->toArray();
