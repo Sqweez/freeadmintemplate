@@ -5,6 +5,7 @@ namespace App\Resolvers\Opt;
 use App\Category;
 use App\Manufacturer;
 use App\Subcategory;
+use App\v2\Models\Currency;
 use App\v2\Models\Product;
 use App\v2\Models\WholesaleClient;
 
@@ -82,22 +83,14 @@ class OptCatalogProductResolver
 
     private function getPrices($products)
     {
-        return $products->flatMap(function ($product) {
+        $prices = $products->flatMap(function ($product) {
             return collect($product['wholesale_prices']);
         });
 
-        $maxPrice = $products->flatMap(function ($product) {
-            return collect($product['wholesale_prices'])->pluck('price');
-        })->max();
-
-        $minPrice = $products->flatMap(function ($product) {
-            return collect($product['wholesale_prices'])->pluck('price');
-        })->min();
-
         return [
-            'min' => $minPrice,
-            'max' => $maxPrice,
-            'currencySign'
+            'min' => $prices->min('price'),
+            'max' => $prices->max('price'),
+            'currencySign' => Currency::find($prices->first()['currency_id'])->unicode_symbol
         ];
     }
 
