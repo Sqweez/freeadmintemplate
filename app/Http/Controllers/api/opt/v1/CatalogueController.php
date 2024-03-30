@@ -38,8 +38,7 @@ class CatalogueController extends BaseApiController
         OptCatalogFiltersResolver $filtersResolver,
         OptCatalogProductResolver $productResolver,
         OptMetaCatalogResolver $metaCatalogResolver
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $filters = $filtersResolver->resolve($request->all());
         $client = auth()->user();
         $productQuery = $productResolver->getProductQuery($filters, $client);
@@ -50,7 +49,7 @@ class CatalogueController extends BaseApiController
             'products' => ProductResource::collection($products->get()),
             'meta' => $metaCatalogResolver->resolver($filters),
             'client' => $client,
-            'filters' => $productResolver->getFilters($productQuery)
+            'filters' => !$request->has('no_filters') ? $productResolver->getFilters($productQuery) : [],
         ]);
     }
 }
