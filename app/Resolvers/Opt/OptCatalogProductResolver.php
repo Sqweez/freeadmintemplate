@@ -2,15 +2,17 @@
 
 namespace App\Resolvers\Opt;
 
+use App\Manufacturer;
 use App\v2\Models\Product;
 use App\v2\Models\WholesaleClient;
 
 class OptCatalogProductResolver
 {
-    public function resolver(array $filters, ?WholesaleClient $client)
+
+    public function getProductQuery(array $filters, ?WholesaleClient $client)
     {
         $currencyId = $this->retrieveCurrency($client);
-        $query = Product::query()
+        return Product::query()
             ->OptProducts()
             ->when(!empty($filters[Product::FILTER_CATEGORIES]), function ($query) use ($filters) {
                 return $query->ofCategory($filters[Product::FILTER_CATEGORIES]);
@@ -32,16 +34,26 @@ class OptCatalogProductResolver
                     return $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
                 });
             })
-            ->with('subcategory')
-            ->with('product_thumbs')
             ->whereHas('wholesale_prices', function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
             })
             ->with(['wholesale_prices' => function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
             }]);
+    }
 
-        return $query;
+    public function attachAdditionalEntities($query)
+    {
+        return $query
+            ->with('subcategory')
+            ->with('product_thumbs');
+    }
+
+    public function getFilters($query): array
+    {
+        return [
+            'brands' => Manufacturer::find($query->select(['id', 'manufacturer_id'])->pluck('manufacturer_id'))
+        ];
     }
 
     private function retrieveCurrency(?WholesaleClient $client)

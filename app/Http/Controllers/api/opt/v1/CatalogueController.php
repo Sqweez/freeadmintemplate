@@ -41,13 +41,14 @@ class CatalogueController extends BaseApiController
     ): JsonResponse
     {
         $filters = $filtersResolver->resolve($request->all());
-        \Log::info('filters', $filters);
         $client = auth()->user();
-        $productResolver = $productResolver->resolver($filters, $client);
+        $productQuery = $productResolver->getProductQuery($filters, $client);
+        $products = $productQuery->tap($productResolver->attachAdditionalEntities($productQuery));
         return $this->respondSuccessNoReport([
-            'products' => ProductResource::collection($productResolver->get()),
+            'products' => ProductResource::collection($products->get()),
             'meta' => $metaCatalogResolver->resolver($filters),
             'client' => $client,
+            'filters' => $productResolver->getFilters($productQuery)
         ]);
     }
 }
