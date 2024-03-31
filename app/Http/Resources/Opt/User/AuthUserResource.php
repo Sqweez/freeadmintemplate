@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Opt\User;
 
+use App\Repository\Opt\CartRepository;
 use App\v2\Models\WholesaleClient;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -13,15 +14,18 @@ class AuthUserResource extends JsonResource
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
+     * @throws \Exception
      */
     public function toArray($request)
     {
+        $cartData = (new CartRepository($this))->getTotal();
+
         return [
             'id' => $this->id,
             'name' => $this->getFullNameAttribute(),
             'access_token' => $this->access_token,
             'cart_length' => 10,
             'cart_total' => 35000
-        ];
+        ] + $cartData;
     }
 }
