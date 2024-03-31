@@ -102,7 +102,7 @@ class CatalogueController extends BaseApiController
             'variants' => VariantResource::collection(
                 $variants
             ),
-            'in_stock' => $variants->count(),
+            'in_stock' => $variants->count() > 0,
             'same_products' => ProductResource::collection($sameProducts),
             'user' => auth()->user(),
             'headers' => $request->headers
