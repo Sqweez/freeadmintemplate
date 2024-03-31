@@ -86,8 +86,8 @@ class WholesaleOrder extends Model
         }
 
         WholesaleOrderStatusHistory::create([
-            'order_id' => $this->id,
-            'status_id' => $statusId,
+            'wholesale_order_id' => $this->id,
+            'wholesale_status_id' => $statusId,
             'changed_at' => now(),
         ]);
 
