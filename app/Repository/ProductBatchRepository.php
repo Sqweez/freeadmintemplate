@@ -33,4 +33,15 @@ class ProductBatchRepository
             ->get()
             ->sum('total_quantity');
     }
+
+    public function getWholesaleProductsQuantity($productId)
+    {
+        return ProductBatch::query()
+            ->where('store_id', Store::wholesaleStore()->pluck('id'))
+            ->where('product_id', $productId)
+            ->selectRaw('product_id, CAST(SUM(quantity) as SIGNED) as total_quantity')
+            ->where('quantity', '>', 0)
+            ->get()
+            ->sum('total_quantity');
+    }
 }
