@@ -20,6 +20,7 @@ Route::prefix('opt')->group(function () {
 
             Route::prefix('cart')->group(function () {
                 Route::post('/', [CartController::class, 'create']);
+                Route::get('/total', [CartController::class, 'getTotal']);
                 Route::get('/', [CartController::class, 'get']);
                 Route::patch('/', [CartController::class, 'update']);
                 Route::delete('/{product}', [CartController::class, 'delete']);
