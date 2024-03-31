@@ -78,6 +78,7 @@ class CatalogueController extends BaseApiController
         $product->load('product_images');
         return $this->respondSuccess([
             'product' => SingleProductResource::make($product),
+            'variants' => $product->sku()->with(['attributes'])
         ]);
     }
 }
