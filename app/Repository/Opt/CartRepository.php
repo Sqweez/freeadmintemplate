@@ -37,6 +37,11 @@ class CartRepository
         if ($quantityDelta < 0) {
             throw new \Exception('Недостаточно товара');
         }
+        $this->cart->items()->updateOrCreate([
+            'product_id'
+        ], [
+            'count' => $inCartCount + $count,
+        ]);
         return [
             'inCart' => $inCartCount,
             'available'=> $availableQuantity,
