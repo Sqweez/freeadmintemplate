@@ -29,6 +29,14 @@ class CartRepository
         $this->productBatchRepository = new ProductBatchRepository();
     }
 
+    public function getCart(): \Illuminate\Database\Eloquent\Collection
+    {
+        $cartItems = $this->cart->items()->with(['products.product.wholesale_prices' => function ($q) {
+            return $q->where('currency_id', $this->client->preferred_currency_id);
+        }])->get();
+        return $cartItems;
+    }
+
     /**
      * @throws Exception
      */
