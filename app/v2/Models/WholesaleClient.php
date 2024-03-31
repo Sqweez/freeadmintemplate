@@ -64,7 +64,7 @@ class WholesaleClient extends Model implements Authenticatable
 
     public function cart(): MorphOne
     {
-        return $this->morphOne(UserCart::class, 'userable', 'userable_type', 'userable_id');
+        return $this->morphOne(UserCart::class, 'userable', 'userable_type', 'user_id');
     }
 
     public function getAuthIdentifierName()

@@ -14,7 +14,7 @@ class UserCart extends Model
 
     public function user(): MorphTo
     {
-        return $this->morphTo(WholesaleClient::class, 'userable_type', 'user_id');
+        return $this->morphTo(WholesaleClient::class, 'userable_type', 'cart_id');
     }
 
     public function items(): HasMany
