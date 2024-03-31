@@ -6,6 +6,7 @@ use App\Repository\ProductBatchRepository;
 use App\Store;
 use App\v2\Models\UserCart;
 use App\v2\Models\WholesaleClient;
+use App\v2\Models\WholesalePrice;
 use Exception;
 
 class CartRepository
@@ -37,11 +38,30 @@ class CartRepository
         return $cartItems;
     }
 
-    public function getTotal()
+    public function getTotal(): array
     {
         $cartItems = $this->cart->items()->with('product')->get();
-        $prices = $cartItems->pluck('product.product_id');
-        return $prices;
+        $prices = WholesalePrice::query()
+            ->whereIn('product_id', $cartItems->pluck('product.product_id')->toArray())
+            ->where('currency_id', $this->client->preferred_currency_id)
+            ->get();
+        $subTotal = 0;
+        $discountTotal = 0;
+        $total = 0;
+        foreach ($cartItems as $cartItem) {
+            $needlePrice = $prices->where('product_id', $cartItem['product']['product_id'])->first()->price;
+            $price = $cartItem['count'] * $needlePrice;
+            $subTotal += $price;
+            if ($cartItem['discount'] !== 0) {
+                $discountTotal += $price - ($price * $cartItem['discount'] / 100);
+            }
+            $total += $subTotal - $discountTotal;
+        }
+        return [
+            'subTotal' => $subTotal,
+            'discountTotal' => $discountTotal,
+            'total' => $total
+        ];
     }
 
     /**
