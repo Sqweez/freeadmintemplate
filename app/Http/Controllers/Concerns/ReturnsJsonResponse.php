@@ -61,7 +61,7 @@ trait ReturnsJsonResponse
     {
         return $this->respondError(
             $exception->getMessage(),
-            $exception->getCode() !== 0 ? intval($exception->getCode()) : __hardcoded(500)
+            500,
         );
     }
 }
