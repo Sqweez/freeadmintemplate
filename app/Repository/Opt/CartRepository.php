@@ -26,11 +26,17 @@ class CartRepository
         $this->store = $this->retrieveStore();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function addToCart(int $product_id, int $count)
     {
         $availableQuantity = app(ProductBatchRepository::class)->getProductQuantityInStore($product_id, $this->store);
-        //$quantityDelta = $availableQuantity - $count;
-        return $availableQuantity;
+        $quantityDelta = $availableQuantity - $count;
+        if ($quantityDelta < 0) {
+            throw new \Exception('Недостаточно товара');
+        }
+        return $quantityDelta;
     }
 
     private function retrieveCart(): UserCart
