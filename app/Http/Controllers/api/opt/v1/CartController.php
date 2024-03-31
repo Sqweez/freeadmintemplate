@@ -40,10 +40,11 @@ class CartController extends BaseApiController
     public function create(Request $request): JsonResponse
     {
         $cartRepository = new CartRepository(auth()->user());
-        $result = $cartRepository->addProductToCart($request->get('product_id'), $request->get('count'));
+        $cartRepository->addProductToCart($request->get('product_id'), $request->get('count'));
+        $result = $cartRepository->getTotal();
         return $this->respondSuccess([
             'cart' => $result,
-            'user' => auth()->user(),
+            'message' => 'Товар добавлен в корзину'
         ]);
     }
 
