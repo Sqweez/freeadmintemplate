@@ -11,7 +11,6 @@ use App\Repository\Opt\CategoryRepository;
 use App\Resolvers\Meta\OptMetaCatalogResolver;
 use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\Resolvers\Opt\OptCatalogProductResolver;
-use App\Store;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
 use App\v2\Models\ProductSku;
@@ -85,7 +84,7 @@ class CatalogueController extends BaseApiController
                 ProductSku::whereProductId($product->id)
                     ->with(['attributes'])
                     ->with(['batches' => function ($query) {
-                        return $query->where('store_id', Store::whereTypeId(4)->pluck('id'))->select(['id', 'store_id', 'quantity']);
+                        return $query->select(['id', 'store_id', 'quantity']);
                     }])
                     ->get()
             ),
