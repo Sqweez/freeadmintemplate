@@ -5,6 +5,7 @@ namespace App\v2\Models;
 use Eloquent;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -59,6 +60,11 @@ class WholesaleClient extends Model implements Authenticatable
         return trim(
             sprintf("%s %s %s", $this->first_name, $this->last_name, $this->patronymic)
         );
+    }
+
+    public function cart(): MorphOne
+    {
+        return $this->morphOne(UserCart::class, 'userable');
     }
 
     public function getAuthIdentifierName()

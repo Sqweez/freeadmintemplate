@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\opt\v1\AuthController;
+use App\Http\Controllers\api\Opt\v1\CartController;
 use App\Http\Controllers\api\opt\v1\CatalogueController;
 use App\Http\Middleware\OptAuthMiddleware;
 
@@ -15,6 +16,12 @@ Route::prefix('opt')->group(function () {
                 Route::get('/products', [CatalogueController::class, 'getProducts']);
                 Route::get('/search', [CatalogueController::class, 'search']);
                 Route::get('/product/{product}', [CatalogueController::class, 'getProduct']);
+            });
+
+            Route::prefix('cart')->group(function () {
+                Route::post('/', [CartController::class, 'create']);
+                Route::get('/', [CartController::class, 'get']);
+                Route::patch('/', [CartController::class, 'update']);
             });
         });
     });
