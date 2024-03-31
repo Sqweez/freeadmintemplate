@@ -45,7 +45,7 @@ class CartController extends BaseApiController
         $result = $cartRepository->getTotal();
         return $this->respondSuccess([
             'cart' => $result,
-            'message' => 'Товар добавлен в корзину'
+            'message' => 'Корзина обновлена'
         ]);
     }
 
