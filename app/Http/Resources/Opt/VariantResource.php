@@ -31,6 +31,6 @@ class VariantResource extends JsonResource
         if (!$user) {
             return 0;
         }
-        return $user->cart()->items()->where('product_id', $this->id)->sum('count');
+        return $user->cart->items()->where('product_id', $this->id)->sum('count');
     }
 }
