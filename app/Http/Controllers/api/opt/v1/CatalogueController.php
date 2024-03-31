@@ -11,10 +11,8 @@ use App\Repository\Opt\CategoryRepository;
 use App\Resolvers\Meta\OptMetaCatalogResolver;
 use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\Resolvers\Opt\OptCatalogProductResolver;
-use App\Store;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
-use App\v2\Models\ProductSku;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
@@ -82,12 +80,7 @@ class CatalogueController extends BaseApiController
         return $this->respondSuccess([
             'product' => SingleProductResource::make($product),
             'variants' => VariantResource::collection(
-                ProductSku::whereProductId($product->id)
-                    ->with(['attributes'])
-                    ->with(['batches' => function ($query) {
-                        return $query->where('store_id', Store::whereTypeId(4)->pluck('id'))->select(['id', 'product_id', 'store_id', 'quantity']);
-                    }])
-                    ->get()
+
             ),
         ]);
     }
