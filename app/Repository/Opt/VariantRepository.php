@@ -27,7 +27,7 @@ class VariantRepository
             })
             ->get();
 
-        $cartItems = $client->cart->items();
+        $cartItems = $client->cart->items;
         return $productSkus
             ->map(function (ProductSku $productSku) use ($cartItems) {
                 $needle = $cartItems->where('product_id', $productSku->id)->sum('count');
