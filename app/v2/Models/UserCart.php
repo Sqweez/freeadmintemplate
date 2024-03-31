@@ -14,11 +14,11 @@ class UserCart extends Model
 
     public function user(): MorphTo
     {
-        return $this->morphTo(WholesaleClient::class, 'userable_type', 'cart_id');
+        return $this->morphTo(WholesaleClient::class, 'userable_type', 'user_id');
     }
 
     public function items(): HasMany
     {
-        return $this->hasMany(UserCartItem::class);
+        return $this->hasMany(UserCartItem::class, 'cart_id');
     }
 }
