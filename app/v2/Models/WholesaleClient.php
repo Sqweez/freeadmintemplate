@@ -50,6 +50,7 @@ use Illuminate\Support\Carbon;
  * @property-read string $full_name
  * @property int $preferred_currency_id
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient wherePreferredCurrencyId($value)
+ * @property-read \App\v2\Models\UserCart|null $cart
  */
 class WholesaleClient extends Model implements Authenticatable
 {

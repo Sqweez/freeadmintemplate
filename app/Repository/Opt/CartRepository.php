@@ -32,10 +32,18 @@ class CartRepository
 
     public function getCart(): \Illuminate\Database\Eloquent\Collection
     {
-        $cartItems = $this->cart->items()->with(['product.product.wholesale_prices' => function ($q) {
-            return $q->where('currency_id', $this->client->preferred_currency_id);
-        }])->get();
-        return $cartItems;
+        return $this->cart
+            ->items()
+            ->with(['product.product.wholesale_prices' => function ($q) {
+                return $q->where('currency_id', $this->client->preferred_currency_id);
+            }])
+            ->with(['product.product.product_thumbs'])
+            ->with(['product.product.attributes'])
+            ->with(['product.attributes'])
+            ->with(['product.batches' => function ($query) {
+                return $query->where('store_id', Store::whereTypeId(4)->first()->id)->where('quantity', '>', 0);
+            }])
+            ->get();
     }
 
     public function getTotal(): array

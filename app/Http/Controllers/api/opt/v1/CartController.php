@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\Opt\v1;
 
 use App\Http\Controllers\api\BaseApiController;
+use App\Http\Resources\Opt\CartResource;
 use App\Repository\Opt\CartRepository;
 use App\v2\Models\ProductSku;
 use Exception;
@@ -18,8 +19,8 @@ class CartController extends BaseApiController
     public function get(): JsonResponse
     {
         $cartRepository = new CartRepository(auth()->user());
-        return $this->respondSuccess([
-            'cart' => $cartRepository->getCart(),
+        return $this->respondSuccessNoReport([
+            'cart' => CartResource::collection($cartRepository->getCart()),
         ]);
     }
 
