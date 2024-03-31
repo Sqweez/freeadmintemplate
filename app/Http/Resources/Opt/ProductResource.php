@@ -18,7 +18,9 @@ class ProductResource extends JsonResource
     {
         $payload =  [
             'id' => $this->id,
-            'product_name' => $this->product_name,
+            'product_name' => trim(
+                sprintf("%s %s", $this->product_name, $this->attributes->pluck('attribute_value')->join(','))
+            ),
             'isFavorite' => null,
             'subcategory' => $this->subcategory,
             'product_image' => $this->retrieveProductThumb(),
