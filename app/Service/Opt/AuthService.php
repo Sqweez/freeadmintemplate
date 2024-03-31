@@ -52,7 +52,7 @@ class AuthService
         $client->patronymic = $payload['patronymic'];
         $client->city_id = City::firstOrCreate([
             'name' => $payload['city'],
-            'country_id' => $payload['countryId']
+            'country_id' => $client->country_id
         ])->id;
         $client->phone = trim($payload['phone']);
         $client->save();
