@@ -24,7 +24,7 @@ class CartController extends BaseApiController
     public function create(Request $request)
     {
         $cartRepository = new CartRepository(auth()->user());
-        $result = $cartRepository->addToCart(...$request->all());
+        $result = $cartRepository->addToCart($request->get('product_id'), $request->get('count'));
         return $this->respondSuccess([
             'cart' => $result,
             'user' => auth()->user(),
