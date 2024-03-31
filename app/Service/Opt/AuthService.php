@@ -44,7 +44,7 @@ class AuthService
         return $user;
     }
 
-    public function updateProfile($payload, WholesaleClient $client)
+    public function updateProfile($payload, WholesaleClient $client): WholesaleClient
     {
         $client->iin = $payload['iin'];
         $client->first_name = $payload['first_name'];
