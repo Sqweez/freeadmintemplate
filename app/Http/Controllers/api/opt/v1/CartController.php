@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api\Opt\v1;
 use App\Http\Controllers\api\BaseApiController;
 use App\Http\Resources\Opt\CartResource;
 use App\Repository\Opt\CartRepository;
-use App\v2\Models\ProductSku;
+use App\v2\Models\UserCartItem;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -52,10 +52,10 @@ class CartController extends BaseApiController
     /**
      * @throws Exception
      */
-    public function delete(ProductSku $product)
+    public function delete(UserCartItem $product)
     {
         $cartRepository = new CartRepository(auth()->user());
-        $cartRepository->removeProductFromCart($product->id);
+        $cartRepository->removeProductFromCart($product);
         return $this->respondSuccess();
     }
 

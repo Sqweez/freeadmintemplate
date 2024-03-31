@@ -5,6 +5,7 @@ namespace App\Repository\Opt;
 use App\Repository\ProductBatchRepository;
 use App\Store;
 use App\v2\Models\UserCart;
+use App\v2\Models\UserCartItem;
 use App\v2\Models\WholesaleClient;
 use App\v2\Models\WholesalePrice;
 use Exception;
@@ -103,10 +104,8 @@ class CartRepository
     /**
      * @throws Exception
      */
-    public function removeProductFromCart(int $productId): void
+    public function removeProductFromCart(?UserCartItem $item): void
     {
-        $item = $this->cart->items()->where('product_id', $productId)->first();
-
         if ($item) {
             $item->delete();
         } else {
