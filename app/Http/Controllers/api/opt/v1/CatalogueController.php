@@ -72,7 +72,7 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function getProduct(Product $product, OptCatalogProductResolver $productResolver): JsonResponse
+    public function getProduct(Product $product, OptCatalogProductResolver $productResolver, Request $request): JsonResponse
     {
         $product->load('manufacturer');
         $product->load('category');
@@ -99,6 +99,8 @@ class CatalogueController extends BaseApiController
             ),
             'in_stock' => $variants->count() > 0,
             'same_products' => ProductResource::collection($sameProducts),
+            'user' => auth()->user(),
+            'headers' => $request->headers
         ]);
     }
 }
