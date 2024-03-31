@@ -78,11 +78,13 @@ class CatalogueController extends BaseApiController
         $product->load('category');
         $product->load('attributes');
         $product->load('product_images');
+        $variants = app(VariantRepository::class)->get($product);
         return $this->respondSuccess([
             'product' => SingleProductResource::make($product),
             'variants' => VariantResource::collection(
-                app(VariantRepository::class)->get($product)
+                $variants
             ),
+            'in_stock' => $variants->count() > 0
         ]);
     }
 }
