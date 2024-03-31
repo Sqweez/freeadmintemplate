@@ -72,19 +72,31 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function getProduct(Product $product): JsonResponse
+    public function getProduct(Product $product, OptCatalogProductResolver $productResolver): JsonResponse
     {
         $product->load('manufacturer');
         $product->load('category');
         $product->load('attributes');
         $product->load('product_images');
         $variants = app(VariantRepository::class)->get($product);
+        $sameProducts = Product::query()
+            ->where('is_opt', true)
+            ->tap(function ($query) use ($productResolver) {
+                return $productResolver->attachAdditionalEntities($query);
+            })
+            ->with([
+                'wholesale_prices' => function ($query) use ($productResolver) {
+                    return $query->where('currency_id', $productResolver->retrieveCurrency(auth()->user()));
+                }
+            ])
+            ->get();
         return $this->respondSuccess([
             'product' => SingleProductResource::make($product),
             'variants' => VariantResource::collection(
                 $variants
             ),
-            'in_stock' => $variants->count() > 0
+            'in_stock' => $variants->count() > 0,
+            'same_products' => ProductResource::collection($sameProducts),
         ]);
     }
 }
