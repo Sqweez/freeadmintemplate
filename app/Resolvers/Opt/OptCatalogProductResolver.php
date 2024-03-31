@@ -137,7 +137,7 @@ class OptCatalogProductResolver
         ];
     }
 
-    private function retrieveCurrency(?WholesaleClient $client)
+    public function retrieveCurrency(?WholesaleClient $client)
     {
         return optional($client)->preferred_currency_id ?? __hardcoded(2);
     }
