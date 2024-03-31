@@ -12,9 +12,15 @@ use Illuminate\Http\Request;
 class CartController extends BaseApiController
 {
 
-    public function get()
+    /**
+     * @throws Exception
+     */
+    public function get(): JsonResponse
     {
-
+        $cartRepository = new CartRepository(auth()->user());
+        return $this->respondSuccess([
+            'cart' => $cartRepository->getCart(),
+        ]);
     }
 
     /**
