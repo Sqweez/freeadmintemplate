@@ -52,7 +52,7 @@ class OptCatalogProductResolver
 
     public function attachAdditionalEntities($query)
     {
-        return $query->with('subcategory')->with('product_thumbs');
+        return $query->with('subcategory')->with('product_thumbs')->with('attributes');
     }
 
     public function getFilters($query): array
