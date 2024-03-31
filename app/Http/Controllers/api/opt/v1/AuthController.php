@@ -43,6 +43,7 @@ class AuthController extends BaseApiController
         $password = $request->get('password');
         try {
             $user = $authService->login($email, $password);
+            \Auth::login($user);
             return $this->respondSuccess([
                 'user' => AuthUserResource::make($user)
             ], 'Вы были успешно авторизованы');
