@@ -5,6 +5,7 @@ namespace App\v2\Models;
 use Eloquent;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
 
@@ -51,6 +52,13 @@ use Illuminate\Support\Carbon;
  * @property int $preferred_currency_id
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient wherePreferredCurrencyId($value)
  * @property-read \App\v2\Models\UserCart|null $cart
+ * @property int $has_russian_passport
+ * @property int $legal_type_id
+ * @property string|null $passport
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient whereHasRussianPassport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient whereLegalTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleClient wherePassport($value)
+ * @property-read \App\v2\Models\City $city
  */
 class WholesaleClient extends Model implements Authenticatable
 {
@@ -61,6 +69,11 @@ class WholesaleClient extends Model implements Authenticatable
         return trim(
             sprintf("%s %s %s", $this->first_name, $this->last_name, $this->patronymic)
         );
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 
     public function cart(): MorphOne
