@@ -89,6 +89,7 @@ class CatalogueController extends BaseApiController
                     return $query->where('currency_id', $productResolver->retrieveCurrency(auth()->user()));
                 }
             ])
+            ->whereKeyNot($product->id)
             ->where('category_id', $product->category_id)
             ->get();
         return $this->respondSuccess([
