@@ -32,8 +32,8 @@ class CartRepository
     public function addToCart(int $product_id, int $count)
     {
         $availableQuantity = app(ProductBatchRepository::class)->getProductQuantityInStore($product_id, $this->store);
-        $quantityDelta = $availableQuantity - $count;
         $inCartCount = $this->getInCartProductCount($product_id);
+        $quantityDelta = $availableQuantity - $count - $inCartCount;
         if ($quantityDelta < 0) {
             throw new \Exception('Недостаточно товара');
         }
