@@ -108,15 +108,24 @@ class OptCatalogProductResolver
                 return count($item['values']) > 1;
             })
             ->toArray();
-        array_unshift($filters, $priceFilters);
+        if ($priceFilters) {
+            array_unshift($filters, $priceFilters);
+        }
         return $filters;
     }
 
-    private function getPrices($products)
+    private function getPrices($products): ?array
     {
         $prices = $products->flatMap(function ($product) {
             return collect($product['wholesale_prices']);
         });
+
+        $priceMax = $prices->max('price');
+        $priceMin = $prices->min('price');
+
+        if ($priceMax === $priceMin) {
+            return null;
+        }
 
         return [
             'attribute_name' => 'Цена',
