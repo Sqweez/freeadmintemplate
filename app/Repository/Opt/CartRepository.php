@@ -6,47 +6,68 @@ use App\Repository\ProductBatchRepository;
 use App\Store;
 use App\v2\Models\UserCart;
 use App\v2\Models\WholesaleClient;
+use Exception;
 
 class CartRepository
 {
     private ?WholesaleClient $client;
     private UserCart $cart;
     private Store $store;
+    private ProductBatchRepository $productBatchRepository;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(?WholesaleClient $client)
     {
         $this->client = $client;
         if (!$this->client) {
-            throw new \Exception('При добавлении товара в корзину произошла ошибка');
+            throw new Exception('При добавлении товара в корзину произошла ошибка');
         }
         $this->cart = $this->retrieveCart();
         $this->store = $this->retrieveStore();
+        $this->productBatchRepository = new ProductBatchRepository();
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function addToCart(int $product_id, int $count)
+    public function addProductToCart(int $productId, int $count): array
     {
-        $availableQuantity = app(ProductBatchRepository::class)->getProductQuantityInStore($product_id, $this->store);
-        $inCartCount = $this->getInCartProductCount($product_id);
+        $availableQuantity = $this->productBatchRepository->getProductQuantityInStore($productId, $this->store);
+        $inCartCount = $this->getInCartProductCount($productId);
+
         $quantityDelta = $availableQuantity - $count - $inCartCount;
+
         if ($quantityDelta < 0) {
-            throw new \Exception('Недостаточно товара');
+            throw new Exception('Недостаточно товара');
         }
+
         $this->cart->items()->updateOrCreate([
-            'product_id' => $product_id,
+            'product_id' => $productId,
         ], [
             'count' => $inCartCount + $count,
         ]);
+
         return [
-            'inCart' => $inCartCount,
-            'available'=> $availableQuantity,
-            'needle' => $count
+            'inCart' => $inCartCount + $count,
+            'available' => $availableQuantity,
+            'added' => $count
         ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function removeProductFromCart(int $productId): void
+    {
+        $item = $this->cart->items()->where('product_id', $productId)->first();
+
+        if ($item) {
+            $item->delete();
+        } else {
+            throw new Exception('Товар не найден в корзине');
+        }
     }
 
     private function getInCartProductCount($productId)
