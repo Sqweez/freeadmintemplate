@@ -107,6 +107,7 @@ class ProductController extends Controller {
 
         $productQuery = $this->catalogProductQueryResolver->resolve($filters, $store_id, $user_token);
 
+        $productQuery->where('is_opt', false);
         $productQuery->with(['subcategory', 'attributes', 'product_thumbs', 'product_images', 'stocks']);
         $productQuery->with(['favorite' => function ($query) use ($user_token) {
             return $query->where('user_token', $user_token);
