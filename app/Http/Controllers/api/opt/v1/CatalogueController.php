@@ -14,6 +14,7 @@ use App\Resolvers\Opt\OptCatalogProductResolver;
 use App\Store;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
+use App\v2\Models\ProductSku;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
@@ -80,13 +81,14 @@ class CatalogueController extends BaseApiController
         $product->load('product_images');
         return $this->respondSuccess([
             'product' => SingleProductResource::make($product),
-            'variants' => VariantResource::collection($product
-                ->sku()
-                ->with(['attributes'])
-                ->with(['batches' => function ($query) {
-                    return $query->where('store_id', Store::whereTypeId(4))->select(['id', 'store_id', 'quantity']);
-                }])
-                ->get()),
+            'variants' => VariantResource::collection(
+                ProductSku::whereProductId($product->id)
+                    ->with(['attributes'])
+                    ->with(['batches' => function ($query) {
+                        return $query->where('store_id', Store::whereTypeId(4)->pluck('id'))->select(['id', 'store_id', 'quantity']);
+                    }])
+                    ->get()
+            ),
         ]);
     }
 }
