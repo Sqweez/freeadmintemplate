@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class CartController extends BaseApiController
 {
+
+    public function __construct()
+    {
+        if (!auth()->user()) {
+            return $this->respondError('Вы не авторизованы');
+        }
+    }
+
     public function get()
     {
 
