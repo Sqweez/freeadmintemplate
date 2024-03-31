@@ -60,7 +60,8 @@ class CartRepository
         return [
             'subTotal' => $subTotal,
             'discountTotal' => $discountTotal,
-            'total' => $total
+            'total' => $total,
+            'itemsTotal' => $cartItems->sum('count')
         ];
     }
 
