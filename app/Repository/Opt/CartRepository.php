@@ -38,7 +38,7 @@ class CartRepository
             throw new \Exception('Недостаточно товара');
         }
         $this->cart->items()->updateOrCreate([
-            'product_id'
+            'product_id' => $product_id,
         ], [
             'count' => $inCartCount + $count,
         ]);
