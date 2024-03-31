@@ -37,6 +37,13 @@ class CartRepository
         return $cartItems;
     }
 
+    public function getTotal()
+    {
+        $cartItems = $this->cart->items()->with('product')->get();
+        $prices = $cartItems->pluck('product.product_id');
+        return $prices;
+    }
+
     /**
      * @throws Exception
      */

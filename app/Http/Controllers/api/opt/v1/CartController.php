@@ -26,6 +26,17 @@ class CartController extends BaseApiController
     /**
      * @throws Exception
      */
+    public function getTotal()
+    {
+        $cartRepository = new CartRepository(auth()->user());
+        return [
+            'total' => $cartRepository->getTotal(),
+        ];
+    }
+
+    /**
+     * @throws Exception
+     */
     public function create(Request $request): JsonResponse
     {
         $cartRepository = new CartRepository(auth()->user());
