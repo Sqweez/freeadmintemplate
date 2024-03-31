@@ -29,8 +29,8 @@ class CartRepository
     public function addToCart(int $product_id, int $count)
     {
         $availableQuantity = app(ProductBatchRepository::class)->getProductTotalQuantities([$product_id], $this->store);
-        $quantityDelta = $availableQuantity - $count;
-        return $quantityDelta;
+        //$quantityDelta = $availableQuantity - $count;
+        return $availableQuantity;
     }
 
     private function retrieveCart(): UserCart
