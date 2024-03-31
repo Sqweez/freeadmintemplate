@@ -38,8 +38,22 @@ class UserCartItem extends Model
         return $this->belongsTo(ProductSku::class, 'product_id');
     }
 
-    public function cart()
+    public function cart(): BelongsTo
     {
         return $this->belongsTo(UserCart::class, 'cart_id');
+    }
+
+    public function getPrice()
+    {
+        $basePrice = $this->product->product->wholesale_prices->first()->price;
+        if (!$this->discount) {
+            return $basePrice;
+        }
+        return $basePrice * (1 - $this->discount / 100);
+    }
+
+    public function getBasePrice()
+    {
+        return $this->product->product->wholesale_prices->first()->price;
     }
 }

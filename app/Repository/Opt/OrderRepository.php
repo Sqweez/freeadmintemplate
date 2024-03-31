@@ -52,6 +52,15 @@ class OrderRepository
             if ($existingQuantities < $cartProduct['count']) {
                 throw new \Exception('Некоторых товаров недостаточно на складе');
             }
+            for ($i = 0; $i < $cartProduct['count']; $i++) {
+                $batch = $this->productBatchRepository->changeWholesaleProductQuantity($cartProduct['product_id'], -1);
+                $order->products()
+                    ->create([
+                        'product_id' => $cartProduct['product_id'],
+                        'currency_id' => $client->preferred_currency_id,
+                        'purchase_price' => $batch->purchase_price,
+                    ]);
+            }
         }
     }
 }

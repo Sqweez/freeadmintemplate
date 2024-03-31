@@ -30,16 +30,7 @@ class CartResource extends JsonResource
             'cart_id' => $this->cart_id,
             'link' => $this->product->product->getOptLink(),
             'is_editing_blocked' => $this->getPrice() === 0,
-            'base_price' => $this->product->product->wholesale_prices->first()->price,
+            'base_price' => $this->getBasePrice()
         ];
-    }
-
-    private function getPrice()
-    {
-        $basePrice = $this->product->product->wholesale_prices->first()->price;
-        if (!$this->discount) {
-            return $basePrice;
-        }
-        return $basePrice * (1 - $this->discount / 100);
     }
 }

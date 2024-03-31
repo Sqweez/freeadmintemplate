@@ -41,6 +41,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  * @property-read \App\v2\Models\WholesaleOrderDeliveryType $deliveryType
  * @property-read \App\v2\Models\WholesaleOrderPaymentType $paymentType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\WholesaleOrderProduct[] $products
+ * @property-read int|null $products_count
  */
 class WholesaleOrder extends Model
 {
@@ -49,6 +51,11 @@ class WholesaleOrder extends Model
     public function statusHistory(): HasMany
     {
         return $this->hasMany(WholesaleOrderStatusHistory::class, 'wholesale_order_id');
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(WholesaleOrderProduct::class);
     }
 
 
