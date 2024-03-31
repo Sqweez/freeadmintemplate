@@ -48,8 +48,10 @@ class OrderRepository
     {
         $cartProducts = $client->cart->items;
         foreach ($cartProducts as $cartProduct) {
-            //throw new \Exception('Некоторых товаров недостаточно на складе');
             $existingQuantities = $this->productBatchRepository->getWholesaleProductsQuantity($cartProduct['product_id']);
+            if ($existingQuantities < $cartProduct['count']) {
+                throw new \Exception('Некоторых товаров недостаточно на складе');
+            }
         }
     }
 }
