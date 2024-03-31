@@ -44,4 +44,16 @@ class ProductBatchRepository
             ->get()
             ->sum('total_quantity');
     }
+
+    public function changeWholesaleProductQuantity($productId, $quantity): ProductBatch
+    {
+        $batch = ProductBatch::query()
+            ->where('store_id', Store::wholesaleStore()->pluck('id'))
+            ->where('product_id', $productId)
+            ->where('quantity', '>', 0)
+            ->first();
+        $batch->quantity += $quantity;
+        $batch->save();
+        return $batch;
+    }
 }
