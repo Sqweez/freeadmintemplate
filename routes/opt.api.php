@@ -22,6 +22,7 @@ Route::prefix('opt')->group(function () {
                 Route::post('/', [CartController::class, 'create']);
                 Route::get('/', [CartController::class, 'get']);
                 Route::patch('/', [CartController::class, 'update']);
+                Route::delete('/{product}', [CartController::class, 'delete']);
             });
         });
     });
