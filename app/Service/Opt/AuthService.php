@@ -43,4 +43,19 @@ class AuthService
         }
         return $user;
     }
+
+    public function updateProfile($payload, WholesaleClient $client)
+    {
+        $client->iin = $payload['iin'];
+        $client->first_name = $payload['first_name'];
+        $client->last_name = $payload['last_name'];
+        $client->patronymic = $payload['patronymic'];
+        $client->city_id = City::firstOrCreate([
+            'name' => $payload['city'],
+            'country_id' => $payload['countryId']
+        ])->id;
+        $client->phone = trim($payload['phone']);
+        $client->save();
+        return $client;
+    }
 }
