@@ -29,6 +29,7 @@ class CartResource extends JsonResource
             'id' => $this->id,
             'cart_id' => $this->cart_id,
             'link' => $this->product->product->getOptLink(),
+            'is_editing_blocked' => $this->getPrice() === 0,
         ];
     }
 
