@@ -16,6 +16,9 @@ class OrderRepository
         $this->productBatchRepository = new ProductBatchRepository();
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function create(WholesaleClient $client, array $payload)
     {
         \DB::transaction(function () use ($client, $payload) {
@@ -38,10 +41,14 @@ class OrderRepository
         return $wholesaleOrder;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function createOrderProducts(WholesaleOrder $order, WholesaleClient $client)
     {
         $cartProducts = $client->cart->items;
         foreach ($cartProducts as $cartProduct) {
+            throw new \Exception('Некоторых товаров недостаточно на складе');
             $existingQuantities = $this->productBatchRepository->getWholesaleProductsQuantity($cartProduct['product_id']);
         }
     }
