@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\opt\v1\AuthController;
 use App\Http\Controllers\api\opt\v1\CartController;
 use App\Http\Controllers\api\opt\v1\CatalogueController;
+use App\Http\Controllers\api\opt\v1\OrderController;
 use App\Http\Middleware\OptAuthMiddleware;
 
 Route::prefix('opt')->group(function () {
@@ -25,6 +26,10 @@ Route::prefix('opt')->group(function () {
                 Route::get('/', [CartController::class, 'get']);
                 Route::patch('/', [CartController::class, 'update']);
                 Route::delete('/{product}', [CartController::class, 'delete']);
+            });
+
+            Route::prefix('order')->group(function () {
+                Route::post('/', [OrderController::class, 'create']);
             });
         });
     });

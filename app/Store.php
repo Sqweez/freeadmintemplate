@@ -53,6 +53,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Store whereIin($value)
  * @property string $partner_cashback_percent
  * @method static \Illuminate\Database\Eloquent\Builder|Store wherePartnerCashbackPercent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Store wholesaleStore()
  */
 class Store extends Model
 {
@@ -93,5 +94,10 @@ class Store extends Model
 
     public function scopeShops($q) {
         return $q->whereTypeId(1);
+    }
+
+    public function scopeWholesaleStore($query)
+    {
+        return $query->where('type_id', 4);
     }
 }
