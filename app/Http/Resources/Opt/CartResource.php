@@ -38,6 +38,6 @@ class CartResource extends JsonResource
         if (!$this->discount) {
             return $basePrice;
         }
-        return $basePrice * (1 - $this->discount / 100)l
+        return $basePrice * (1 - $this->discount / 100);
     }
 }
