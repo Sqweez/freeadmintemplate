@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\opt\v1\AuthController;
-use App\Http\Controllers\api\Opt\v1\CartController;
+use App\Http\Controllers\api\opt\v1\CartController;
 use App\Http\Controllers\api\opt\v1\CatalogueController;
 use App\Http\Middleware\OptAuthMiddleware;
 
