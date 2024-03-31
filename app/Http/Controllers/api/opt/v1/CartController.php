@@ -27,7 +27,7 @@ class CartController extends BaseApiController
     /**
      * @throws Exception
      */
-    public function getTotal()
+    public function getTotal(): array
     {
         $cartRepository = new CartRepository(auth()->user());
         return [
@@ -52,7 +52,7 @@ class CartController extends BaseApiController
     /**
      * @throws Exception
      */
-    public function delete(UserCartItem $product)
+    public function delete(UserCartItem $product): JsonResponse
     {
         $cartRepository = new CartRepository(auth()->user());
         $cartRepository->removeProductFromCart($product);
