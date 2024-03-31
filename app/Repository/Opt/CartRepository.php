@@ -33,10 +33,20 @@ class CartRepository
     {
         $availableQuantity = app(ProductBatchRepository::class)->getProductQuantityInStore($product_id, $this->store);
         $quantityDelta = $availableQuantity - $count;
+        $inCartCount = $this->getInCartProductCount($product_id);
         if ($quantityDelta < 0) {
             throw new \Exception('Недостаточно товара');
         }
-        return $quantityDelta;
+        return [
+            'inCart' => $inCartCount,
+            'available'=> $availableQuantity,
+            'needle' => $count
+        ];
+    }
+
+    private function getInCartProductCount($productId)
+    {
+        return $this->cart->items()->where('product_id', $productId)->sum('count');
     }
 
     private function retrieveCart(): UserCart
