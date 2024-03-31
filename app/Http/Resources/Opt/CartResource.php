@@ -25,10 +25,19 @@ class CartResource extends JsonResource
             'quantity' => $this->product->batches->sum('quantity'),
             'count' => $this->count,
             'type' => $this->product->attributes->pluck('attribute_value')->join(' ') ?: '-',
-            'price' => $this->product->product->wholesale_prices->first()->price,
+            'price' => $this->getPrice(),
             'id' => $this->id,
             'cart_id' => $this->cart_id,
             'link' => $this->product->product->getOptLink(),
         ];
+    }
+
+    private function getPrice()
+    {
+        $basePrice = $this->product->product->wholesale_prices->first()->price;
+        if (!$this->discount) {
+            return $basePrice;
+        }
+        return $basePrice * (1 - $this->discount / 100)l
     }
 }
