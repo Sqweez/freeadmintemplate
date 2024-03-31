@@ -56,7 +56,11 @@ class CartController extends BaseApiController
     {
         $cartRepository = new CartRepository(auth()->user());
         $cartRepository->removeProductFromCart($product);
-        return $this->respondSuccess();
+        $result = $cartRepository->getTotal();
+        return $this->respondSuccess([
+            'cart' => $result,
+            'message' => 'Корзина обновлена'
+        ]);
     }
 
     public function update(Request $request)
