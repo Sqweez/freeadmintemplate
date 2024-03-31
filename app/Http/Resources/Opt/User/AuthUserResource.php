@@ -24,8 +24,6 @@ class AuthUserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->getFullNameAttribute(),
             'access_token' => $this->access_token,
-            'cart_length' => 10,
-            'cart_total' => 35000
         ] + $cartData;
     }
 }
