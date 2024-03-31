@@ -56,16 +56,19 @@ class CartRepository
             ->get();
         $subTotal = 0;
         $discountTotal = 0;
-        $total = 0;
         foreach ($cartItems as $cartItem) {
             $needlePrice = $prices->where('product_id', $cartItem['product']['product_id'])->first()->price;
             $price = $cartItem['count'] * $needlePrice;
             $subTotal += $price;
+
+            // Скидка применяется только если она не равна 0
             if ($cartItem['discount'] !== 0) {
-                $discountTotal += $price - ($price * $cartItem['discount'] / 100);
+                $discountAmount = $price * ($cartItem['discount'] / 100);
+                $discountTotal += $discountAmount;
             }
-            $total += $subTotal - $discountTotal;
         }
+
+        $total = $subTotal - $discountTotal;
         return [
             'subTotal' => $subTotal,
             'discountTotal' => $discountTotal,
