@@ -37,6 +37,15 @@ class AuthController extends BaseApiController
         ]);
     }
 
+    public function update(Request $request, AuthService $authService)
+    {
+        $authService->updateProfile($request->all(), auth()->user());
+        return $this->respondSuccess([
+            'user' => AuthUserResource::make(auth()->user()),
+            'message' => 'Ваши данные успешно обновлены'
+        ]);
+    }
+
     public function login(Request $request, AuthService $authService): JsonResponse
     {
         $email = $request->get('email');

@@ -10,6 +10,7 @@ Route::prefix('opt')->group(function () {
         Route::post('auth/register', [AuthController::class, 'register']);
         Route::get('auth/me', [AuthController::class, 'me'])->middleware([OptAuthMiddleware::class]);
         Route::post('auth/login', [AuthController::class, 'login']);
+        Route::patch('auth/profile', [AuthController::class, 'update']);
         Route::group(['middleware' => OptAuthMiddleware::class], function () {
             Route::prefix('/catalogue')->group(function () {
                 Route::get('/', [CatalogueController::class, 'getCatalogEntities']);
