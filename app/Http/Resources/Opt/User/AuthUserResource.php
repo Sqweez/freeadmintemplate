@@ -18,7 +18,7 @@ class AuthUserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $cartData = (new CartRepository($this))->getTotal();
+        $cartData = (new CartRepository(auth()->user()))->getTotal();
 
         return [
             'id' => $this->id,
