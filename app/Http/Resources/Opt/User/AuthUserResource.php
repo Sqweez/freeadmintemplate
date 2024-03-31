@@ -33,7 +33,8 @@ class AuthUserResource extends JsonResource
                 'iin' => $this->iin,
                 'passport' => $this->passport,
                 'delivery_address' => $this->delivery_address,
-                'city' => $this->city->only(['id', 'name'])
+                'city' => $this->city->only(['id', 'name']),
+                'email' => $this->email,
             ] + $cartData;
     }
 }
