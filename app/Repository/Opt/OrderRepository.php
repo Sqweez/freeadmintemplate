@@ -21,9 +21,12 @@ class OrderRepository
      */
     public function create(WholesaleClient $client, array $payload)
     {
-        \DB::transaction(function () use ($client, $payload) {
+        return \DB::transaction(function () use ($client, $payload) {
             $order = $this->createOrder($client, $payload);
-            $products = $this->createOrderProducts($order, $client);
+            $this->createOrderProducts($order, $client);
+            $order->setStatusCreate();
+            $this->clearCart($client);
+            return true;
         });
     }
 
@@ -59,8 +62,14 @@ class OrderRepository
                         'product_id' => $cartProduct['product_id'],
                         'currency_id' => $client->preferred_currency_id,
                         'purchase_price' => $batch->purchase_price,
+                        'price' => $cartProduct->getPrice(),
                     ]);
             }
         }
+    }
+
+    private function clearCart(WholesaleClient $client)
+    {
+        return $client->cart->items()->delete();
     }
 }

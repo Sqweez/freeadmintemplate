@@ -73,4 +73,32 @@ class WholesaleOrder extends Model
     {
         return $this->belongsTo(WholesaleOrderDeliveryType::class, 'delivery_type_id');
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function changeStatus($statusId): WholesaleOrder
+    {
+        // Проверьте, существует ли данный статус
+        $status = WholesaleOrderStatus::find($statusId);
+        if (!$status) {
+            throw new \Exception('Неверный статус');
+        }
+
+        WholesaleOrderStatusHistory::create([
+            'order_id' => $this->id,
+            'status_id' => $statusId,
+            'changed_at' => now(),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function setStatusCreate(): WholesaleOrder
+    {
+        return $this->changeStatus(__hardcoded(1));
+    }
 }
