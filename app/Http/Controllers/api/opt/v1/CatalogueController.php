@@ -72,13 +72,18 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function getProduct(Product $product, OptCatalogProductResolver $productResolver, Request $request): JsonResponse
     {
         $product->load('manufacturer');
         $product->load('category');
         $product->load('attributes');
         $product->load('product_images');
-        $variants = app(VariantRepository::class)->get($product);
+        $variants =
+            app(VariantRepository::class)->get($product, auth()->user());
         $sameProducts = Product::query()
             ->where('is_opt', true)
             ->tap(function ($query) use ($productResolver) {
@@ -97,7 +102,7 @@ class CatalogueController extends BaseApiController
             'variants' => VariantResource::collection(
                 $variants
             ),
-            'in_stock' => $variants->count() > 0,
+            'in_stock' => $variants->count(),
             'same_products' => ProductResource::collection($sameProducts),
             'user' => auth()->user(),
             'headers' => $request->headers
