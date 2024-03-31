@@ -24,7 +24,7 @@ class CartResource extends JsonResource
             'product_sub_name' => $this->product->product->attributes->pluck('attribute_value')->join(' '),
             'quantity' => $this->product->batches->sum('quantity'),
             'count' => $this->count,
-            'type' => $this->product->attributes->pluck('attribute_value')->join(' '),
+            'type' => $this->product->attributes->pluck('attribute_value')->join(' ') ?: '-',
             'price' => $this->product->product->wholesale_prices->first()->price,
             'id' => $this->id,
             'cart_id' => $this->cart_id,
