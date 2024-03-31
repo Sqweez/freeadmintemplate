@@ -31,7 +31,7 @@ class CartRepository
 
     public function getCart(): \Illuminate\Database\Eloquent\Collection
     {
-        $cartItems = $this->cart->items()->with(['products.product.wholesale_prices' => function ($q) {
+        $cartItems = $this->cart->items()->with(['product.product.wholesale_prices' => function ($q) {
             return $q->where('currency_id', $this->client->preferred_currency_id);
         }])->get();
         return $cartItems;
