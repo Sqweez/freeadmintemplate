@@ -50,6 +50,10 @@ class AuthService
         $client->first_name = $payload['first_name'];
         $client->last_name = $payload['last_name'];
         $client->patronymic = $payload['patronymic'];
+        $client->has_russian_passport = $payload['has_russian_passport'];
+        $client->legal_type_id = $payload['legal_type_id'];
+        $client->passport = $payload['passport'];
+        $client->patronymic = $payload['patronymic'];
         $client->city_id = City::firstOrCreate([
             'name' => $payload['city'],
             'country_id' => $client->country_id
