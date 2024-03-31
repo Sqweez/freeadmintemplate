@@ -89,6 +89,7 @@ class CatalogueController extends BaseApiController
                     return $query->where('currency_id', $productResolver->retrieveCurrency(auth()->user()));
                 }
             ])
+            ->where('category_id', $product->category_id)
             ->get();
         return $this->respondSuccess([
             'product' => SingleProductResource::make($product),
