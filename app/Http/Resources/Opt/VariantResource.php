@@ -20,7 +20,7 @@ class VariantResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->attributes->pluck('attribute_value')->join(',') ?: 'Стандартный',
-            'quantity' => $this->batches->sum('quantity') - $this->inCartCount(),
+            'quantity' => $this->quantity,
         ];
     }
 
