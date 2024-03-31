@@ -16,7 +16,6 @@ use App\SaleProduct;
 use App\User;
 use App\v2\Models\Image;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Response;
