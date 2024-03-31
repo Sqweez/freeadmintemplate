@@ -8,6 +8,7 @@ use App\Http\Resources\Opt\SingleProductResource;
 use App\Http\Resources\Opt\VariantResource;
 use App\Repository\Opt\BrandRepository;
 use App\Repository\Opt\CategoryRepository;
+use App\Repository\Opt\VariantRepository;
 use App\Resolvers\Meta\OptMetaCatalogResolver;
 use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\Resolvers\Opt\OptCatalogProductResolver;
@@ -80,7 +81,7 @@ class CatalogueController extends BaseApiController
         return $this->respondSuccess([
             'product' => SingleProductResource::make($product),
             'variants' => VariantResource::collection(
-
+                app(VariantRepository::class)->get($product)
             ),
         ]);
     }
