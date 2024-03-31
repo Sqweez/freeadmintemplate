@@ -53,7 +53,7 @@ class AuthService
         $client->has_russian_passport = $payload['has_russian_passport'];
         $client->legal_type_id = $payload['legal_type_id'];
         $client->passport = $payload['passport'];
-        $client->patronymic = $payload['patronymic'];
+        $client->delivery_address = $payload['address'];
         $client->city_id = City::firstOrCreate([
             'name' => $payload['city'],
             'country_id' => $client->country_id
