@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\v2\Models\WholesaleOrder
@@ -66,9 +67,9 @@ class WholesaleOrder extends Model
     }
 
 
-    public function currentStatus(): HasMany
+    public function currentStatus(): HasOne
     {
-        return $this->statusHistory()->latest('changed_at')->limit(1);
+        return $this->hasOne(WholesaleOrderStatusHistory::class, 'wholesale_order_id')->latest('changed_at');
     }
 
     public function paymentType(): BelongsTo
