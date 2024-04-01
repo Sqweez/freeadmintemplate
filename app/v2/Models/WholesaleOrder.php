@@ -43,6 +43,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \App\v2\Models\WholesaleOrderPaymentType $paymentType
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\WholesaleOrderProduct[] $products
  * @property-read int|null $products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder byClient(int $clientId)
  */
 class WholesaleOrder extends Model
 {
@@ -100,5 +101,15 @@ class WholesaleOrder extends Model
     public function setStatusCreate(): WholesaleOrder
     {
         return $this->changeStatus(__hardcoded(1));
+    }
+
+    public function scopeByClient($query, int $clientId)
+    {
+        return $query->where('wholesale_client_id', $clientId);
+    }
+
+    public function getTotalPriceAttribute()
+    {
+        return $this->products->sum('price');
     }
 }

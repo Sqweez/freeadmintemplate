@@ -30,6 +30,15 @@ class OrderRepository
         });
     }
 
+    public function getOrdersHistory(WholesaleClient $client)
+    {
+        return WholesaleOrder::query()
+            ->byClient($client->id)
+            ->with('products:id,count,product_id,price')
+            ->with('status_history.status')
+            ->get();
+    }
+
     private function createOrder(WholesaleClient $client, array $payload): WholesaleOrder
     {
         $wholesaleOrder = new WholesaleOrder();
