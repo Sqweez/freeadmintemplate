@@ -31,4 +31,9 @@ use Illuminate\Database\Eloquent\Model;
 class WholesaleOrderProduct extends Model
 {
     protected $guarded = ['id'];
+
+    public function product()
+    {
+        return $this->belongsTo(ProductSku::class, 'product_id');
+    }
 }
