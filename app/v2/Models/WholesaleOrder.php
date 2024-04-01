@@ -2,6 +2,7 @@
 
 namespace App\v2\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -117,4 +118,13 @@ class WholesaleOrder extends Model
     {
         return $this->products->pluck('product_id')->unique()->count();
     }
+
+    public function getFormattedExpectedArrivalDateAttribute(): ?string
+    {
+        if ($this->expected_arrival_date) {
+            return Carbon::parse($this->expected_arrival_date)->format('d.m.Y');
+        }
+        return  null;
+    }
+
 }
