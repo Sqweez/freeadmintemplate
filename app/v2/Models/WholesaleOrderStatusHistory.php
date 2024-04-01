@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrderStatusHistory whereWholesaleOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrderStatusHistory whereWholesaleStatusId($value)
  * @mixin \Eloquent
+ * @property-read \App\v2\Models\WholesaleOrder $status
  */
 class WholesaleOrderStatusHistory extends Model
 {
