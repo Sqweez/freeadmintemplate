@@ -16,7 +16,7 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        $quantity = $this->sku->pluck('batches')->sum('amount');
+        $quantity = $this->batches->sum('amount');
 
         $payload =  [
             'id' => $this->id,
@@ -29,7 +29,8 @@ class ProductResource extends JsonResource
             'has_stock' => false,
             'slug' => $this->getOptLink(),
             'brand_id' => $this->manufacturer_id,
-            'quantity_type' => $this->getWholesaleQuantityType($quantity)
+            'quantity_type' => $this->getWholesaleQuantityType($quantity),
+            'quantity' => $quantity,
         ];
 
         return array_merge($payload, $this->getPrice());

@@ -50,12 +50,12 @@ class OptCatalogProductResolver
         ->with(['wholesaleFavorite' => function ($query) use ($client) {
             return $query->where('wholesale_client_id', optional($client)->id);
         }])
-        ->whereHas('sku.batches', function ($query) {
+        ->whereHas('batches', function ($query) {
             return $query
                 ->where('store_id', Store::wholesaleStore()->pluck('id')->toArray())
                 ->where('quantity', '>', 0);
         })
-        ->with(['sku.batches' => function($query) {
+        ->with(['batches' => function($query) {
             return $query
                 ->where('store_id', Store::wholesaleStore()->pluck('id')->toArray())
                 ->where('quantity', '>', 0);
