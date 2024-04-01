@@ -109,15 +109,15 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function getFavorites()
+    public function getFavorites(OptCatalogProductResolver $productResolver)
     {
         $productIds =  WholesaleFavorite::whereWholesaleClientId(auth()->user()->id)->pluck('product_id')->toArray();
+        $productQuery = $productResolver->getProductQuery(['product_ids' => $productIds], auth()->user());
+        $products = $productQuery->tap(function ($query) use ($productResolver) {
+            return $productResolver->attachAdditionalEntities($query);
+        });
         return $this->respondSuccessNoReport([
-            'favorites' => ProductResource::collection(
-                Product::query()
-                    ->whereIn('id', $productIds)
-                    ->get()
-            ),
+            'favorites' => ProductResource::collection($products->get()),
         ]);
     }
 }
