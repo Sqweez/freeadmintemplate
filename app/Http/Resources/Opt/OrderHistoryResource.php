@@ -24,7 +24,7 @@ class OrderHistoryResource extends JsonResource
             'comment' => $this->comment,
             'total_price' => $this->getTotalPriceAttribute(),
             'position_count' => $this->getPositionCountAttribute(),
-            'products_count' => $this->products_count,
+            'products_count' => $this->products->count(),
             'delivery_price' => $this->delivery_price,
         ];
     }
