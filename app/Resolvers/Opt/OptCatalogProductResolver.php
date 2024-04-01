@@ -50,20 +50,20 @@ class OptCatalogProductResolver
         ->with(['wholesaleFavorite' => function ($query) use ($client) {
             return $query->where('wholesale_client_id', optional($client)->id);
         }])
-        ->with(['sku.batches' => function ($q) {
-            $wholesaleStoreId = Store::wholesaleStore()->first()->id;
+        ->with(['batches' => function ($q) {
+            $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
             return $q
                 ->where('store_id', $wholesaleStoreId)
                 ->where('quantity', '>', 0);
         }])
-        ->whereHas('sku', function ($query) {
+       /* ->whereHas('sku', function ($query) {
             $wholesaleStoreId = Store::wholesaleStore()->first()->id;
             return $query->whereHas('batches', function ($query) use ($wholesaleStoreId) {
                 return $query
                     ->where('store_id', $wholesaleStoreId)
                     ->where('quantity', '>', 0);
             });
-        })
+        })*/
         ->with([
             'wholesale_prices' => function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
