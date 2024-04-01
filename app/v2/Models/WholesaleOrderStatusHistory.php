@@ -34,7 +34,7 @@ class WholesaleOrderStatusHistory extends Model
 
     public function status(): BelongsTo
     {
-        return $this->belongsTo(WholesaleOrder::class, 'wholesale_status_id');
+        return $this->belongsTo(WholesaleOrderStatus::class, 'wholesale_status_id');
     }
 
 }
