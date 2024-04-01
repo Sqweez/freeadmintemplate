@@ -3,6 +3,7 @@ import ProductsCreate from '@/views/Opt/Products/ProductsCreate.vue';
 import ProductsEdit from '@/views/Opt/Products/ProductsEdit.vue';
 import OrdersIndex from '@/views/Opt/Orders/OrdersIndex.vue';
 import ClientsIndex from '@/views/Opt/Clients/ClientsIndex.vue';
+import OrdersShow from '@/views/Opt/Orders/OrdersShow.vue';
 
 export default [
     {
@@ -20,6 +21,10 @@ export default [
     {
         path: '/opt/orders',
         component: OrdersIndex,
+    },
+    {
+        path: '/opt/orders/:id',
+        component: OrdersShow,
     },
     {
         path: '/opt/clients',

@@ -4,6 +4,8 @@ namespace App\Http\Resources\Opt\User;
 
 use App\Repository\Opt\CartRepository;
 use App\v2\Models\WholesaleClient;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /* @mixin WholesaleClient */
@@ -12,14 +14,22 @@ class AuthUserResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
-        $cartData = (new CartRepository(auth()->user()))->getTotal();
-
+        try {
+            $cartData = (new CartRepository(auth()->user()))->getTotal();
+        } catch (Exception $exception) {
+            $cartData =  [
+                'subTotal' => 0,
+                'discountTotal' => 0,
+                'total' => 0,
+                'itemsTotal' => 0
+            ];
+        }
         return [
                 'id' => $this->id,
                 'name' => $this->getFullNameAttribute(),

@@ -57,6 +57,10 @@ class WholesaleOrder extends Model
 {
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'is_paid' => 'boolean'
+    ];
+
     public function statusHistory(): HasMany
     {
         return $this->hasMany(WholesaleOrderStatusHistory::class, 'wholesale_order_id');
@@ -65,6 +69,11 @@ class WholesaleOrder extends Model
     public function products(): HasMany
     {
         return $this->hasMany(WholesaleOrderProduct::class);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(WholesaleClient::class, 'wholesale_client_id');
     }
 
 
