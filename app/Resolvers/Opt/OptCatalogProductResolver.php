@@ -4,7 +4,6 @@ namespace App\Resolvers\Opt;
 
 use App\Category;
 use App\Manufacturer;
-use App\Store;
 use App\Subcategory;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
@@ -50,7 +49,8 @@ class OptCatalogProductResolver
         ->with(['wholesaleFavorite' => function ($query) use ($client) {
             return $query->where('wholesale_client_id', optional($client)->id);
         }])
-        ->whereHas('sku.batches', function ($query) {
+            ->with(['sku.batches'])
+        /*->whereHas('sku.batches', function ($query) {
             return $query
                 ->where('store_id', Store::wholesaleStore()->pluck('id')->toArray())
                 ->where('quantity', '>', 0);
@@ -59,7 +59,7 @@ class OptCatalogProductResolver
             return $query
                 ->where('store_id', Store::wholesaleStore()->pluck('id')->toArray())
                 ->where('quantity', '>', 0);
-        }])
+        }])*/
         ->with([
             'wholesale_prices' => function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
