@@ -51,9 +51,20 @@ class OrderController extends BaseApiController
                        'manufacturer' => $product->product->product->manufacturer->manufacturer_name,
                        'product_sub_name' => $product->product->product->attributes->pluck('attribute_value')->join(' '),
                        'total_price' => $items->sum('price'),
-                       'items' => $items->map(function (WholesaleOrderProduct $product) use ($items){
-                           return $items;
-                       }),
+                       'items' => $items
+                            ->groupBy('product_id')
+                            ->map(function ($items, $product_id) {
+                                /* @var WholesaleOrderProduct $product */
+                                $product = $items->first();
+                                return [
+                                    'id' => $product->id,
+                                    'count' => $items->count(),
+                                    'total_price' => $items->sum('price'),
+                                    'type' => $product->product->attributes->pluck('attribute_value')->join(' '),
+                                ];
+                            })
+                            ->values()
+
                    ];
                })
                 ->values()
