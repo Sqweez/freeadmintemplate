@@ -16,7 +16,7 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        $quantity = $this->batches->sum('amount');
+        $quantity = $this->sku->pluck('batches')->sum('amount');
 
         $payload =  [
             'id' => $this->id,
