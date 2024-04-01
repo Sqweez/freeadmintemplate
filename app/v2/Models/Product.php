@@ -457,4 +457,25 @@ class Product extends Model
             $query->product_name_web = $query->product_name_web ?? '';
         });
     }
+
+    public function getWholesaleQuantityType($quantity): array
+    {
+        switch ($quantity) {
+            case $quantity < 10:
+                return [
+                    'text' => 'Мало',
+                    'color' => '#E63534',
+                ];
+            case $quantity < 50:
+                return [
+                    'text' => 'Среднее кол-во',
+                    'color' => '#E3B511',
+                ];
+            default:
+                return [
+                    'text' => 'Много',
+                    'color' => '#2A972E',
+                ];
+        }
+    }
 }

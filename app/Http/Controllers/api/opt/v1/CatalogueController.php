@@ -109,7 +109,7 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function getFavorites(OptCatalogProductResolver $productResolver)
+    public function getFavorites(OptCatalogProductResolver $productResolver): JsonResponse
     {
         $productIds = WholesaleFavorite::whereWholesaleClientId(auth()->user()->id)->pluck('product_id')->toArray();
         $productQuery = $productResolver->getProductQuery(['product_ids' => $productIds], auth()->user());
@@ -121,7 +121,7 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
-    public function toggleFavorite(Product $product)
+    public function toggleFavorite(Product $product): JsonResponse
     {
 
         $payload = [
