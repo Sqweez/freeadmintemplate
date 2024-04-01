@@ -113,7 +113,7 @@ class CatalogueController extends BaseApiController
     {
         return $this->respondSuccessNoReport([
             'favorites' => ProductResource::collection(
-                Product::where('id', WholesaleFavorite::where('wholesale_client_id', auth()->id())->pluck('product_id')->toArray())
+                Product::whereIn('id', WholesaleFavorite::query()->where('wholesale_client_id', auth()->id())->pluck('product_id')->toArray())
                 ->get()
             ),
         ]);
