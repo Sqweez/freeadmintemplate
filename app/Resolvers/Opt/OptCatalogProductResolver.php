@@ -62,14 +62,6 @@ class OptCatalogProductResolver
                 ->where('store_id', $wholesaleStoreId)
                 ->where('quantity', '>', 0);
         })
-       /* ->whereHas('sku', function ($query) {
-            $wholesaleStoreId = Store::wholesaleStore()->first()->id;
-            return $query->whereHas('batches', function ($query) use ($wholesaleStoreId) {
-                return $query
-                    ->where('store_id', $wholesaleStoreId)
-                    ->where('quantity', '>', 0);
-            });
-        })*/
         ->with([
             'wholesale_prices' => function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
