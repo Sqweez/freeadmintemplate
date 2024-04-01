@@ -62,4 +62,21 @@ class AuthService
         $client->save();
         return $client;
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function updatePassword(array $payload, WholesaleClient $client): bool
+    {
+        if (!\Hash::check($payload['password'], $client->password)) {
+            throw new \Exception('Старый пароль не верен');
+        }
+        if (\Hash::check($payload['newPassword'], $client->password)) {
+            throw new \Exception('Новый пароль должен отличатся от предыдущего');
+        }
+        $client->update([
+            'password' => \Hash::make($payload['newPassword'])
+        ]);
+        return true;
+    }
 }
