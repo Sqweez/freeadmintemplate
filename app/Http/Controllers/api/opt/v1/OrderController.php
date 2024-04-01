@@ -29,7 +29,7 @@ class OrderController extends BaseApiController
 
     public function getOrdersHistory()
     {
-        return $this->respondSuccess([
+        return $this->respondSuccessNoReport([
             'orders' => OrderHistoryResource::collection($this->orderRepository->getOrdersHistory(auth()->user())),
         ]);
     }
