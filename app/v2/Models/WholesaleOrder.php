@@ -112,4 +112,9 @@ class WholesaleOrder extends Model
     {
         return $this->products->sum('price');
     }
+
+    public function getPositionCountAttribute()
+    {
+        return $this->products->pluck('product_id')->unique()->count();
+    }
 }
