@@ -52,7 +52,7 @@ class OrderController extends BaseApiController
                        'product_sub_name' => $product->product->product->attributes->pluck('attribute_value')->join(' '),
                        'total_price' => $items->sum('price'),
                        'items' => $items->map(function (WholesaleOrderProduct $product) use ($items){
-                           return [];
+                           return $items;
                        }),
                    ];
                })
