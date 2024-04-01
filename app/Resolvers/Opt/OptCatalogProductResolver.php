@@ -46,6 +46,9 @@ class OptCatalogProductResolver
                 return $query->where('currency_id', $currencyId);
             });
         })
+        ->with(['wholesaleFavorite' => function ($query) use ($client) {
+            return $query->where('wholesale_client_id', optional($client)->id);
+        }])
         ->with([
             'wholesale_prices' => function ($query) use ($currencyId) {
                 return $query->where('currency_id', $currencyId);
@@ -55,7 +58,10 @@ class OptCatalogProductResolver
 
     public function attachAdditionalEntities($query)
     {
-        return $query->with('subcategory')->with('product_thumbs')->with('attributes');
+        return $query
+            ->with('subcategory')
+            ->with('product_thumbs')
+            ->with('attributes');
     }
 
     public function getFilters($query): array

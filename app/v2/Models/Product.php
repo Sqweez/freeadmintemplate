@@ -441,6 +441,11 @@ class Product extends Model
         return optional($needle)['attribute_value'] ?? null;
     }
 
+    public function wholesaleFavorite(): HasMany
+    {
+        return $this->hasMany(WholesaleFavorite::class, 'product_id');
+    }
+
     protected static function boot() {
         parent::boot();
         static::creating(function ($query) {
