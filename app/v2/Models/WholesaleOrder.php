@@ -48,6 +48,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read string|null $formatted_expected_arrival_date
  * @property-read mixed $position_count
  * @property-read mixed $total_price
+ * @property string|null $expected_arrival_date
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereExpectedArrivalDate($value)
  */
 class WholesaleOrder extends Model
 {

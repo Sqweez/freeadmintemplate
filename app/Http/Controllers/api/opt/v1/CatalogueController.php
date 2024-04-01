@@ -119,6 +119,7 @@ class CatalogueController extends BaseApiController
                     ->get()
             ),*/
             'ids' => $productIds,
+            'id' => auth()->id(),
         ]);
     }
 }
