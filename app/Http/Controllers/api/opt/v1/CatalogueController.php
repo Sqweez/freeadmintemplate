@@ -83,6 +83,10 @@ class CatalogueController extends BaseApiController
         $product->load('category');
         $product->load('attributes');
         $product->load('product_images');
+        $currency = $productResolver->retrieveCurrency(auth()->user());
+        $product->load(['wholesale_price' => function ($query) use ($currency) {
+            return $query->where('currency_id', $currency);
+        }]);
         $variants =
             app(VariantRepository::class)->get($product, auth()->user());
         $sameProducts = Product::query()
@@ -91,8 +95,8 @@ class CatalogueController extends BaseApiController
                 return $productResolver->attachAdditionalEntities($query);
             })
             ->with([
-                'wholesale_prices' => function ($query) use ($productResolver) {
-                    return $query->where('currency_id', $productResolver->retrieveCurrency(auth()->user()));
+                'wholesale_prices' => function ($query) use ($currency) {
+                    return $query->where('currency_id', $currency);
                 }
             ])
             ->whereKeyNot($product->id)
