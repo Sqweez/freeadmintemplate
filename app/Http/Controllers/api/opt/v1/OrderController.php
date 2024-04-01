@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api\opt\v1;
 
 use App\Http\Controllers\api\BaseApiController;
 use App\Http\Resources\Opt\OrderHistoryResource;
-use App\Http\Resources\Opt\OrderProductsHistoryResource;
 use App\Repository\Opt\OrderRepository;
 use App\v2\Models\WholesaleOrder;
 use Illuminate\Http\Request;
@@ -32,7 +31,7 @@ class OrderController extends BaseApiController
     public function getOrderProductsHistory(WholesaleOrder $order)
     {
         return $this->respondSuccessNoReport([
-           'order' => OrderProductsHistoryResource::collection(
+           'order' =>
                $order->products()->with([
                    'product.product',
                    'product.product.attributes',
@@ -57,7 +56,6 @@ class OrderController extends BaseApiController
                    ];
                })*/
             /*   ->values()*/
-           )
         ]);
     }
 
