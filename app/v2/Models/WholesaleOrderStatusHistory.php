@@ -3,6 +3,7 @@
 namespace App\v2\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\v2\Models\WholesaleOrderStatusHistory
@@ -29,5 +30,10 @@ use Illuminate\Database\Eloquent\Model;
 class WholesaleOrderStatusHistory extends Model
 {
     protected $guarded = ['id'];
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(WholesaleOrder::class, 'wholesale_status_id');
+    }
 
 }
