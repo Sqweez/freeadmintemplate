@@ -66,9 +66,9 @@ class WholesaleOrder extends Model
     }
 
 
-    public function currentStatus()
+    public function currentStatus(): HasMany
     {
-        return $this->statusHistory()->latest('changed_at')->first();
+        return $this->statusHistory()->latest('changed_at')->limit(1);
     }
 
     public function paymentType(): BelongsTo
