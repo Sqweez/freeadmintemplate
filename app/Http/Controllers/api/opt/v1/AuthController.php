@@ -69,6 +69,6 @@ class AuthController extends BaseApiController
         return $this->respondSuccess([
             'success' => $authService->updatePassword($request->all(), auth()->user()),
             'message' => 'Ваш пароль успешно обновлен'
-        ])
+        ]);
     }
 }
