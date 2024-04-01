@@ -38,4 +38,7 @@ Route::prefix('opt')->group(function () {
             });
         });
     });
+
+    require __DIR__ . '/opt.api.admin.php';
+
 });

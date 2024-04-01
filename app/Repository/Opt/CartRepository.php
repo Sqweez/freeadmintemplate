@@ -61,7 +61,6 @@ class CartRepository
             $price = $cartItem['count'] * $needlePrice;
             $subTotal += $price;
 
-            // Скидка применяется только если она не равна 0
             if ($cartItem['discount'] !== 0) {
                 $discountAmount = $price * ($cartItem['discount'] / 100);
                 $discountTotal += $discountAmount;
