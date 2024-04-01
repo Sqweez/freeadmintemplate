@@ -26,6 +26,7 @@ class OrderHistoryResource extends JsonResource
             'position_count' => $this->getPositionCountAttribute(),
             'products_count' => $this->products->count(),
             'delivery_price' => $this->delivery_price,
+            'status' => $this->currentStatus(),
         ];
     }
 }
