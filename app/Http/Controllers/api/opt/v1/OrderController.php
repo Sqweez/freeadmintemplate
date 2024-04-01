@@ -6,6 +6,7 @@ use App\Http\Controllers\api\BaseApiController;
 use App\Http\Resources\Opt\OrderHistoryResource;
 use App\Repository\Opt\OrderRepository;
 use App\v2\Models\WholesaleOrder;
+use App\v2\Models\WholesaleOrderProduct;
 use Illuminate\Http\Request;
 
 class OrderController extends BaseApiController
@@ -40,8 +41,8 @@ class OrderController extends BaseApiController
                    'product.product.manufacturer'
                ])
                ->get()
-               //->groupBy('product.product_id')
-               /*->map(function ($items) {
+               ->groupBy('product.product_id')
+               ->map(function ($items) {
                    $product = $items->first();
                    return [
                        'id' => $product->id,
@@ -54,8 +55,8 @@ class OrderController extends BaseApiController
                            return [];
                        }),
                    ];
-               })*/
-            /*   ->values()*/
+               })
+                ->values()
         ]);
     }
 
