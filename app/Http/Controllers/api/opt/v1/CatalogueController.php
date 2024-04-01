@@ -12,6 +12,7 @@ use App\Repository\Opt\VariantRepository;
 use App\Resolvers\Meta\OptMetaCatalogResolver;
 use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\Resolvers\Opt\OptCatalogProductResolver;
+use App\Store;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
 use App\v2\Models\WholesaleFavorite;
@@ -99,6 +100,21 @@ class CatalogueController extends BaseApiController
                     return $query->where('currency_id', $currency);
                 }
             ])
+            ->with(['wholesaleFavorite' => function ($query) {
+                return $query->where('wholesale_client_id', auth()->user()->id);
+            }])
+            ->with(['batches' => function ($q) {
+                $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
+                return $q
+                    ->where('store_id', $wholesaleStoreId)
+                    ->where('quantity', '>', 0);
+            }])
+            ->whereHas('batches', function ($q) {
+                $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
+                return $q
+                    ->where('store_id', $wholesaleStoreId)
+                    ->where('quantity', '>', 0);
+            })
             ->whereKeyNot($product->id)
             ->where('category_id', $product->category_id)
             ->get();
