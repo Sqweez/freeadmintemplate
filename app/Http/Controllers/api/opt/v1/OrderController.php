@@ -41,7 +41,7 @@ class OrderController extends BaseApiController
                    'product.product.manufacturer'
                ])
                ->get()
-               ->groupBy('product.product_id')
+               //->groupBy('product.product_id')
                /*->map(function ($items) {
                    $product = $items->first();
                    return [
@@ -56,7 +56,7 @@ class OrderController extends BaseApiController
                        }),
                    ];
                })*/
-               ->values()
+            /*   ->values()*/
            )
         ]);
     }
