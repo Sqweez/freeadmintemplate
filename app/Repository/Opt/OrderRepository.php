@@ -36,6 +36,7 @@ class OrderRepository
             ->byClient($client->id)
             ->with('products:id,product_id,price,wholesale_order_id')
             ->with('status.status')
+            ->orderByDesc('created_at')
             ->get();
     }
 
