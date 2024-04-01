@@ -152,6 +152,8 @@ use Illuminate\Support\Facades\Storage;
  * @property-read int|null $wholesale_prices_count
  * @method static Builder|Product whereIsOpt($value)
  * @method static Builder|Product optProducts()
+ * @property-read Collection|\App\v2\Models\WholesaleFavorite[] $wholesaleFavorite
+ * @property-read int|null $wholesale_favorite_count
  */
 class Product extends Model
 {

@@ -51,6 +51,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read mixed $total_price
  * @property string|null $expected_arrival_date
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereExpectedArrivalDate($value)
+ * @property-read \App\v2\Models\WholesaleOrderStatusHistory|null $status
  */
 class WholesaleOrder extends Model
 {
@@ -69,7 +70,7 @@ class WholesaleOrder extends Model
 
     public function status(): HasOne
     {
-        return $this->hasOne(WholesaleOrderStatusHistory::class, 'wholesale_order_id')->latest('changed_at');
+        return $this->hasOne(WholesaleOrderStatusHistory::class, 'wholesale_order_id');
     }
 
     public function paymentType(): BelongsTo
