@@ -111,7 +111,7 @@ class CatalogueController extends BaseApiController
 
     public function getFavorites(OptCatalogProductResolver $productResolver)
     {
-        $productIds =  WholesaleFavorite::whereWholesaleClientId(auth()->user()->id)->pluck('product_id')->toArray();
+        $productIds = WholesaleFavorite::whereWholesaleClientId(auth()->user()->id)->pluck('product_id')->toArray();
         $productQuery = $productResolver->getProductQuery(['product_ids' => $productIds], auth()->user());
         $products = $productQuery->tap(function ($query) use ($productResolver) {
             return $productResolver->attachAdditionalEntities($query);
@@ -119,5 +119,24 @@ class CatalogueController extends BaseApiController
         return $this->respondSuccessNoReport([
             'favorites' => ProductResource::collection($products->get()),
         ]);
+    }
+
+    public function toggleFavorite(Product $product)
+    {
+
+        $payload = [
+            'wholesale_client_id' => auth()->user()->id,
+            'product_id' => $product->id
+        ];
+       $favorite = WholesaleFavorite::where($payload)->first();
+       if (!$favorite) {
+           WholesaleFavorite::create([
+               'wholesale_client_id' => auth()->user()->id,
+               'product_id' => $product->id
+           ]);
+       } else {
+           $favorite->delete();
+       }
+       return $this->respondSuccessNoReport([]);
     }
 }
