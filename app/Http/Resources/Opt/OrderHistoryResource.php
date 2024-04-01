@@ -20,7 +20,7 @@ class OrderHistoryResource extends JsonResource
         return [
             'id' => $this->id,
             'created_at' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
-            'expected_arrival_date' => null,
+            'expected_arrival_date' => Carbon::parse($this->expected_arrival_date)->format('d.m.Y') ?? null,
             'comment' => $this->comment,
             'total_price' => $this->getTotalPriceAttribute(),
             'position_count' => $this->getPositionCountAttribute(),
