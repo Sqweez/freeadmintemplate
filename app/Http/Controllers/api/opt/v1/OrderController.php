@@ -7,7 +7,6 @@ use App\Http\Resources\Opt\OrderHistoryResource;
 use App\Http\Resources\Opt\OrderProductsHistoryResource;
 use App\Repository\Opt\OrderRepository;
 use App\v2\Models\WholesaleOrder;
-use App\v2\Models\WholesaleOrderProduct;
 use Illuminate\Http\Request;
 
 class OrderController extends BaseApiController
@@ -43,8 +42,7 @@ class OrderController extends BaseApiController
                ])
                ->get()
                ->groupBy('product.product_id')
-               ->map(function ($items) {
-                   /* @var WholesaleOrderProduct $product */
+               /*->map(function ($items) {
                    $product = $items->first();
                    return [
                        'id' => $product->id,
@@ -57,7 +55,7 @@ class OrderController extends BaseApiController
                            return [];
                        }),
                    ];
-               })
+               })*/
                ->values()
            )
         ]);
