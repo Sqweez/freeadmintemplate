@@ -15,6 +15,7 @@ Route::prefix('opt')->group(function () {
         Route::group(['middleware' => OptAuthMiddleware::class], function () {
             Route::prefix('/catalogue')->group(function () {
                 Route::get('favorites', [CatalogueController::class, 'getFavorites']);
+                Route::get('favorites/{product}', [CatalogueController::class, 'toggleFavorite']);
                 Route::get('/', [CatalogueController::class, 'getCatalogEntities']);
                 Route::get('/products', [CatalogueController::class, 'getProducts']);
                 Route::get('/search', [CatalogueController::class, 'search']);
