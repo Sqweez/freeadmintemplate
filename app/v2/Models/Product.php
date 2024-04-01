@@ -460,22 +460,23 @@ class Product extends Model
 
     public function getWholesaleQuantityType($quantity): array
     {
-        switch ($quantity) {
-            case $quantity < 10:
-                return [
-                    'text' => 'Мало',
-                    'color' => '#E63534',
-                ];
-            case $quantity < 50:
-                return [
-                    'text' => 'Среднее кол-во',
-                    'color' => '#E3B511',
-                ];
-            default:
-                return [
-                    'text' => 'Много',
-                    'color' => '#2A972E',
-                ];
+        if ($quantity < 10) {
+            return [
+                'text' => 'Мало',
+                'color' => '#E63534',
+            ];
         }
+
+        if ($quantity < 50) {
+            return [
+                'text' => 'Среднее кол-во',
+                'color' => '#E3B511',
+            ];
+        }
+
+        return [
+            'text' => 'Много',
+            'color' => '#2A972E',
+        ];
     }
 }
