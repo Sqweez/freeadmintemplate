@@ -29,6 +29,7 @@ Route::prefix('opt')->group(function () {
             });
 
             Route::prefix('order')->group(function () {
+                Route::get('/history', [OrderController::class, 'getOrdersHistory']);
                 Route::post('/', [OrderController::class, 'create']);
             });
         });
