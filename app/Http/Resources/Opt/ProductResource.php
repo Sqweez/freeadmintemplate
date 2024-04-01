@@ -30,7 +30,7 @@ class ProductResource extends JsonResource
             'slug' => $this->getOptLink(),
             'brand_id' => $this->manufacturer_id,
             'quantity_type' => $this->getWholesaleQuantityType($quantity),
-            'quantity' => $this->sku->batches,
+            'quantity' => $this->sku,
         ];
 
         return array_merge($payload, $this->getPrice());
