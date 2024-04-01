@@ -69,7 +69,7 @@ class WholesaleOrder extends Model
 
     public function currentStatus(): HasOne
     {
-        return $this->hasOne(WholesaleOrderStatusHistory::class, 'wholesale_order_id')->latest('changed_at');
+        return $this->hasOne(WholesaleOrderStatusHistory::class, 'wholesale_order_id')->latest('changed_at')->with('status');
     }
 
     public function paymentType(): BelongsTo
