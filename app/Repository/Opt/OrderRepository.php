@@ -34,7 +34,7 @@ class OrderRepository
     {
         return WholesaleOrder::query()
             ->byClient($client->id)
-            ->with('products:id,count,product_id,price')
+            ->with('products:id,product_id,price')
             ->with('status_history.status')
             ->get();
     }
