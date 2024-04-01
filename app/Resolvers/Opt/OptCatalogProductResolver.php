@@ -56,6 +56,12 @@ class OptCatalogProductResolver
                 ->where('store_id', $wholesaleStoreId)
                 ->where('quantity', '>', 0);
         }])
+        ->whereHas('batches', function ($q) {
+            $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
+            return $q
+                ->where('store_id', $wholesaleStoreId)
+                ->where('quantity', '>', 0);
+        })
        /* ->whereHas('sku', function ($query) {
             $wholesaleStoreId = Store::wholesaleStore()->first()->id;
             return $query->whereHas('batches', function ($query) use ($wholesaleStoreId) {
