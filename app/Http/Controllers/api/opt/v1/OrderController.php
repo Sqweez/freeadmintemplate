@@ -7,6 +7,7 @@ use App\Http\Resources\Opt\OrderHistoryResource;
 use App\Http\Resources\Opt\OrderProductsHistoryResource;
 use App\Repository\Opt\OrderRepository;
 use App\v2\Models\WholesaleOrder;
+use App\v2\Models\WholesaleOrderProduct;
 use Illuminate\Http\Request;
 
 class OrderController extends BaseApiController
@@ -41,6 +42,23 @@ class OrderController extends BaseApiController
                    'product.product.manufacturer'
                ])
                ->get()
+               ->groupBy('product.product_id')
+               ->map(function ($items) {
+                   /* @var WholesaleOrderProduct $product */
+                   $product = $items->first();
+                   return [
+                       'id' => $product->id,
+                       'product_image' => $product->product->product->retrieveProductThumb(),
+                       'product_name' => $product->product->product->product_name,
+                       'manufacturer' => $product->product->product->manufacturer->manufacturer_name,
+                       'product_sub_name' => $product->product->product->attributes->pluck('attribute_value')->join(' '),
+                       'total_price' => $items->sum('price'),
+                       'items' => $items->map(function (WholesaleOrderProduct $product) use ($items){
+                           return [];
+                       }),
+                   ];
+               })
+               ->values()
            )
         ]);
     }

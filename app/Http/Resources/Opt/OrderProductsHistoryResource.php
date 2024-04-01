@@ -19,6 +19,8 @@ class OrderProductsHistoryResource extends JsonResource
         return [
             'id' => $this->id,
             'product_image' => $this->product->product->retrieveProductThumb(),
+            'product_name' => $this->product->product->product_name,
+            'manufacturer' => $this->product->product->manufacturer->manufacturer_name,
         ];
     }
 }

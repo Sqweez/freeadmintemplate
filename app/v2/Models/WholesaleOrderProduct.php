@@ -27,12 +27,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrderProduct whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrderProduct whereWholesaleOrderId($value)
  * @mixin \Eloquent
+ * @property-read \App\v2\Models\ProductSku $product
  */
 class WholesaleOrderProduct extends Model
 {
     protected $guarded = ['id'];
 
-    public function product()
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ProductSku::class, 'product_id');
     }

@@ -45,6 +45,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\WholesaleOrderProduct[] $products
  * @property-read int|null $products_count
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder byClient(int $clientId)
+ * @property-read string|null $formatted_expected_arrival_date
+ * @property-read mixed $position_count
+ * @property-read mixed $total_price
  */
 class WholesaleOrder extends Model
 {
