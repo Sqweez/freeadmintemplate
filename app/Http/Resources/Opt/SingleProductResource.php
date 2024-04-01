@@ -17,6 +17,8 @@ class SingleProductResource extends JsonResource
      */
     public function toArray($request)
     {
+        $quantity = $this->batches->sum('quantity');
+
         return [
             'id' => $this->id,
             'product_name' => $this->product_name,
@@ -28,6 +30,7 @@ class SingleProductResource extends JsonResource
             'product_images' => $this->product_images->count() > 0 ? $this->product_images->pluck('image')->map(function ($image) {
                 return url('/') . Storage::url($image);
             })->toArray() : [url('/') . Storage::url('products/product_image_default.jpg')],
+            'quantity_type' => $this->getWholesaleQuantityType($quantity)
         ];
     }
 }
