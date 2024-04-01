@@ -60,4 +60,15 @@ class AuthController extends BaseApiController
             return $this->respondError($exception->getMessage(),500,);
         }
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function updatePassword(Request $request, AuthService $authService): JsonResponse
+    {
+        return $this->respondSuccess([
+            'success' => $authService->updatePassword($request->all(), auth()->user()),
+            'message' => 'Ваш пароль успешно обновлен'
+        ])
+    }
 }
