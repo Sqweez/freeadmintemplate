@@ -14,6 +14,7 @@ use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\Resolvers\Opt\OptCatalogProductResolver;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
+use App\v2\Models\WholesaleFavorite;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
@@ -105,7 +106,16 @@ class CatalogueController extends BaseApiController
             'in_stock' => $variants->count() > 0,
             'same_products' => ProductResource::collection($sameProducts),
             'user' => auth()->user(),
-            'headers' => $request->headers
+        ]);
+    }
+
+    public function getFavorites()
+    {
+        return $this->respondSuccessNoReport([
+            'favorites' => ProductResource::collection(
+                Product::where('id', WholesaleFavorite::where('wholesale_client_id', auth()->id())->pluck('product_id')->toArray())
+                ->get()
+            ),
         ]);
     }
 }
