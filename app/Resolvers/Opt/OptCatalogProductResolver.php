@@ -55,10 +55,12 @@ class OptCatalogProductResolver
                 ->where('store_id', Store::wholesaleStore()->pluck('id')->toArray())
                 ->where('quantity', '>', 0);
         }])
-        ->whereHas('sku.batches', function ($query) {
-            return $query
-                ->where('store_id', Store::wholesaleStore()->pluck('id')->toArray())
-                ->where('quantity', '>', 0);
+        ->whereHas('sku', function ($query) {
+            return $query->whereHas('batches', function ($query) {
+                return $query
+                    ->where('store_id', Store::wholesaleStore()->pluck('id')->toArray())
+                    ->where('quantity', '>', 0);
+            });
         })
         ->with([
             'wholesale_prices' => function ($query) use ($currencyId) {
