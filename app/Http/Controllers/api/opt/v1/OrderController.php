@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\opt\v1;
 use App\Http\Controllers\api\BaseApiController;
 use App\Http\Resources\Opt\OrderHistoryResource;
 use App\Repository\Opt\OrderRepository;
+use App\v2\Models\WholesaleClient;
 use App\v2\Models\WholesaleOrder;
 use App\v2\Models\WholesaleOrderProduct;
 use Illuminate\Http\Request;
@@ -73,10 +74,14 @@ class OrderController extends BaseApiController
         ]);
     }
 
-    public function getOrdersHistory()
+    public function getOrdersHistory(): \Illuminate\Http\JsonResponse
     {
+        /* @var WholesaleClient $client */
+        $client = auth()->user();
         return $this->respondSuccessNoReport([
-            'orders' => OrderHistoryResource::collection($this->orderRepository->getOrdersHistory(auth()->user())),
+            'orders' => OrderHistoryResource::collection(
+                $this->orderRepository->getOrdersHistory($client)
+            ),
         ]);
     }
 }
