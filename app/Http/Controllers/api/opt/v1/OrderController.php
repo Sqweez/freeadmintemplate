@@ -43,6 +43,7 @@ class OrderController extends BaseApiController
                ->get()
                ->groupBy('product.product_id')
                ->map(function ($items) {
+                   /* @var WholesaleOrderProduct $product */
                    $product = $items->first();
                    return [
                        'id' => $product->id,
@@ -51,6 +52,7 @@ class OrderController extends BaseApiController
                        'manufacturer' => $product->product->product->manufacturer->manufacturer_name,
                        'product_sub_name' => $product->product->product->attributes->pluck('attribute_value')->join(' '),
                        'total_price' => $items->sum('price'),
+                       'link' => $product->product->product->getOptLink(),
                        'items' => $items
                             ->groupBy('product_id')
                             ->map(function ($items, $product_id) {
