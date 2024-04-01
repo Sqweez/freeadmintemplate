@@ -59,6 +59,9 @@ class OrderRepository
     private function createOrderProducts(WholesaleOrder $order, WholesaleClient $client)
     {
         $cartProducts = $client->cart->items;
+        $cartProducts->load(['wholesale_prices' => function ($query) use ($client) {
+            return $query->where('currency_id', $client->preferred_currency_id);
+        }]);
         foreach ($cartProducts as $cartProduct) {
             $existingQuantities = $this->productBatchRepository->getWholesaleProductsQuantity($cartProduct['product_id']);
             if ($existingQuantities < $cartProduct['count']) {
