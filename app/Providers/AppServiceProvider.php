@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Listeners\ProductAvailabilityListener;
+use App\Observers\ProductAvailabilityObserver;
 use App\ProductBatch;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        ProductBatch::observe(ProductAvailabilityListener::class);
+        ProductBatch::observe(ProductAvailabilityObserver::class);
     }
 }
