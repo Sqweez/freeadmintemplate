@@ -49,6 +49,7 @@ class ProductBatch extends Model
 
     protected $guarded = [];
 
+
     protected $casts = [
         'quantity' => 'integer',
         'product_id' => 'integer',
@@ -90,4 +91,23 @@ class ProductBatch extends Model
             ->select(['id', 'store_id', 'quantity', 'product_id']);
     }
 
+    // Метод для реагирования на событие создания записи
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $model->updateAvailability();
+        });
+
+        static::updated(function ($model) {
+            $model->updateAvailability();
+        });
+    }
+
+
+    private function updateAvailabilities(ProductBatch $model)
+    {
+        \Log::info('Обновление остатков для модели ' . get_class($model) . ' с ID ' . $model->id . '. Текущий остаток ' . $model->quantity);
+    }
 }
