@@ -97,7 +97,6 @@ class ProductBatch extends Model
         parent::boot();
         static::saving(function ($model) {
             \Log::info('Обновление остатков для модели ' . get_class($model) . ' с ID ' . $model->id . '. Текущий остаток ' . $model->quantity);
-            $model->updateAvailability();
         });
     }
 
