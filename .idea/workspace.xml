@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Console/Commands/Products/UpdateProductAvailabilitiesCommand.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/v2/Models/ProductAvailability.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2024_04_03_030001_create_product_availabilities_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -586,7 +583,7 @@
       <workItem from="1711807225446" duration="16366000" />
       <workItem from="1711891209819" duration="25621000" />
       <workItem from="1711926435538" duration="23820000" />
-      <workItem from="1712094936304" duration="5338000" />
+      <workItem from="1712094936304" duration="5434000" />
     </task>
     <servers />
   </component>

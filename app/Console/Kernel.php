@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
 use App\Console\Commands\Kaspi\CreateKaspiPriceCommand;
+use App\Console\Commands\Products\UpdateProductAvailabilitiesCommand;
 use App\Console\Commands\Trainers\CollectCashback;
 use App\Console\Commands\Utils\ClearClientCarts;
 use App\Console\Commands\Utils\ReformatMarginTypes;
@@ -47,6 +48,8 @@ class Kernel extends ConsoleKernel
             ->weeklyOn(7, '10:00');
         $schedule->command(CreateKaspiPriceCommand::class)
             ->everyThirtyMinutes();
+        $schedule->command(UpdateProductAvailabilitiesCommand::class)
+            ->everyTenMinutes();
         // $schedule->command('inspire')
         //          ->hourly();
     }
