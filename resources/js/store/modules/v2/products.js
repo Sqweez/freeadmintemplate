@@ -378,6 +378,7 @@ const actions = {
             }
         } catch (e) {
             console.log(e);
+            throw e;
         } finally {
             this.$loading.disable();
         }

@@ -95,7 +95,7 @@ class ProductController extends Controller {
     }
 
     public function addProductQuantity($id, Request $request) {
-        $validator = Validator::make($request->all(), ['store_id' => 'required|numeric', 'quantity' => 'required|numeric', 'purchase_price' => 'required|numeric']);
+        $validator = Validator::make($request->all(), ['store_id' => 'required|numeric|min:1', 'quantity' => 'required|numeric', 'purchase_price' => 'required|numeric']);
 
         if ($validator->fails()) {
             return response()->json(['message' => 'Переданы некорректные данные'], 422);

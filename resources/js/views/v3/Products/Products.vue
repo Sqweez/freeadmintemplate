@@ -322,6 +322,7 @@
             :state="productQuantityModal"
             @cancel="productQuantityModal = false; productId = -1;"
             @submit="addProductQuantity"
+            :store-id="storeFilter"
         />
         <SkuModal
             @cancel="$store.commit('modals/closeProductSkuModal')"
