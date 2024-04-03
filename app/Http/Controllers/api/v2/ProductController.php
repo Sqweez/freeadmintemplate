@@ -84,7 +84,7 @@ class ProductController extends Controller {
                 $storesQuantity = collect($product)->map(function ($store, $storeId) {
                     return ['store_id' => $storeId, 'quantity' => collect($store)->reduce(function ($a, $c) {
                         return $a + $c['quantity'];
-                    }, 0), 'name' => optional(collect($store)->first())['store']['name']];
+                    }, 0), 'name' => optional(collect($store)->first())['store']['name'] ?? 'Неизестный склад'];
                 })->values()->sortBy('store_id')->all();
                 $totalQuantity = collect($storesQuantity)->reduce(function ($a, $c) {
                     return $a + $c['quantity'];
