@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 
 class PromocodeController extends BaseApiController
 {
-    private $promocodeRepository;
+    private PromocodeRepository $promocodeRepository;
 
     public function __construct()
     {
