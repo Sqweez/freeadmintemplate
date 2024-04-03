@@ -31,7 +31,7 @@
                         item-value="id"
                         item-text="name"
                         v-model="batch.store_id"
-                        :disabled="storeId"
+                        :disabled="storeId !== -1"
                     />
                 </v-form>
             </v-card-text>
