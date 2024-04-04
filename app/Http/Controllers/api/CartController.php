@@ -205,7 +205,32 @@ class CartController extends Controller {
                         'discount' => 100,
                     ]);
                 }
+            }
+            if ($stock === 'udvoy-svoy-rezultat') {
+                $gainerSkuId = $this->retrieveSpecialItemIdById(9396, $store_id);
+                $giftId = $this->retrieveSpecialItemIdById(6617, $store_id);
+                $cart = Cart
+                    ::where('user_token', $user_token)
+                    ->firstOrCreate([
+                            'user_token' => $user_token,
+                            'type' => 'web',
+                            'store_id' => $store_id
+                        ]
+                    );
 
+                if ($gainerSkuId && $giftId) {
+
+                    $cart->products()->firstOrCreate([
+                        'product_id' => $gainerSkuId,
+                        'count' => 1,
+                        'discount' => 0,
+                    ]);
+                    $cart->products()->firstOrCreate([
+                        'product_id' => $giftId,
+                        'count' => 1,
+                        'discount' => 100,
+                    ]);
+                }
             }
         }
         $cart = Cart::with([
