@@ -75,8 +75,10 @@ class StoreController extends Controller
         return StoreType::all();
     }
 
-    public function getCities() {
-        return City::all();
+    public function getCities(Request $request) {
+        return City::query()
+            ->when($request->has('store_id'), fn ($q) => $q->where('store_id', $request->get('store_id')))
+            ->all();
     }
 
     public function getStoresForApplication() {
