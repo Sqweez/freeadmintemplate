@@ -153,9 +153,61 @@ class CartController extends Controller {
 
     }
 
+    private function retrieveSpecialItemIdById($id, $store_id)
+    {
+        $gainerSkus = ProductSku::find($id)->relativeSku;
+        $gainerSkus->load(['batches' => function ($q) use ($store_id) {
+            return $q->where('store_id', $store_id)->where('quantity', '>', 0);
+        }]);
+        $skuId = $gainerSkus->map(function ($sku) {
+            return [
+                'id' => $sku->id,
+                'quantity' => $sku->batches->sum('quantity')
+            ];
+        })->sortByDesc('quantity')->first();
+        return $skuId ? $skuId['id'] : null;
+    }
+
+
     public function getCart(Request $request) {
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
+        if ($request->has('stock')) {
+            $stock = $request->get('stock');
+            if ($stock === 'moshch-i-obem-v-odnom-nabore') {
+                $gainerSkuId = $this->retrieveSpecialItemIdById(9400, $store_id);
+                $creatineId = $this->retrieveSpecialItemIdById(9387, $store_id);
+                $giftId = $this->retrieveSpecialItemIdById(6617, $store_id);
+                $cart = Cart
+                    ::where('user_token', $user_token)
+                    ->firstOrCreate([
+                            'user_token' => $user_token,
+                            'type' => 'web',
+                            'store_id' => $store_id
+                        ]
+                    );
+
+                if ($gainerSkuId && $creatineId && $giftId) {
+
+                    $cart->products()->firstOrCreate([
+                        'product_id' => $gainerSkuId,
+                        'count' => 1,
+                        'discount' => 0,
+                    ]);
+                    $cart->products()->firstOrCreate([
+                        'product_id' => $creatineId,
+                        'count' => 1,
+                        'discount' => 0,
+                    ]);
+                    $cart->products()->firstOrCreate([
+                        'product_id' => $giftId,
+                        'count' => 1,
+                        'discount' => 100,
+                    ]);
+                }
+
+            }
+        }
         $cart = Cart::with([
             'products', 'products.product',
             'products.product.product.stocks',
