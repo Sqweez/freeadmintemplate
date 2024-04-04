@@ -51,7 +51,7 @@ class CartProductResource extends JsonResource
             'variants' => $this->product->relativeSku->map(function ($item) {
                 return [
                     'id' => $item['id'],
-                    'attribute_value' => $item->attributes->pluck('attribute_value')->join(' ') ?? 'Стандартный',
+                    'attribute_value' => $item->attributes->pluck('attribute_value')->join(' ') ?: 'Стандартный',
                     'quantity' => $item->batches->sum('quantity'),
                 ];
             })
