@@ -48,6 +48,7 @@ class CartProductResource extends JsonResource
             'manufacturer_id' => $this->product->product->manufacturer_id,
             'category_id' => $this->product->product->category_id,
             'cart_product_id' => $this->id,
+            'variants' => $this->product->relativeSku,
         ];
     }
 }

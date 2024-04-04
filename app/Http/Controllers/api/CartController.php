@@ -146,6 +146,7 @@ class CartController extends Controller {
         $cart = Cart::with([
             'products', 'products.product',
             'products.product.product.stocks',
+            'products.product.relativeSku',
             'products.product.attributes', 'products.product.product.attributes'])
             ->ofUser($user_token)
             ->with(['products.product.batches' => function ($q) use ($store_id) {
