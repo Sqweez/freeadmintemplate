@@ -78,7 +78,7 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
         Route::get('filters', 'api\shop\ProductController@filters');
         // Cart Controller
 
-        Route::patch('cart/change', 'ap\CartController@changeCart');
+        Route::patch('cart/change', 'api\CartController@changeCart');
         Route::post('cart/order', 'api\CartController@order');
         Route::post('cart/add', 'api\CartController@addCart');
         Route::post('cart/increase', 'api\CartController@increaseCount');
