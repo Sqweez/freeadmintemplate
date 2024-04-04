@@ -204,12 +204,13 @@
                 </v-expansion-panels>
             </div>
             <v-text-field
-                v-if="[1, 2].includes(promocode.promocode_type_id)"
+                v-if="[1, 2, 5].includes(promocode.promocode_type_id)"
                 v-model="promocode.discount"
-                label="Скидка"
+                :label="getDiscountFieldLabel"
                 type="number"
             />
             <v-select
+                v-if="promocode.promocode_type_id !== 5"
                 v-model="promocode.promocode_condition_id"
                 :disabled="isCascadePromocodeTypeChosen"
                 :items="conditions"
@@ -575,7 +576,7 @@
 
 <script>
 import ACTIONS from '@/store/actions';
-import {__debounce, __hardcoded} from '@/utils/helpers';
+import { __debounce, __hardcoded } from '@/utils/helpers';
 import axiosClient from '@/utils/axiosClient';
 
 export default {
@@ -655,6 +656,15 @@ export default {
         this.$loading.disable();
     },
     computed: {
+        getDiscountFieldLabel () {
+            if ([1, 2].includes(this.promocode.promocode_type_id)) {
+                return 'Скидка';
+            }
+            if ([5].includes(this.promocode.promocode_type_id)) {
+                return 'Стоимость набора';
+            }
+            return 'Неизвестно';
+        },
         filteredProducts() {
             let products = this.products;
             if (this.manufacturerId !== -1) {
@@ -740,6 +750,16 @@ export default {
 
                 if (this.promocode.promocode_type_id === 1 && this.promocode.discount > 100) {
                     return this.$toast.error('Значение скидки не должно превышать 100%');
+                }
+            }
+
+            if ([5].includes(this.promocode.promocode_type_id)) {
+                if (!this.promocode.discount) {
+                    return this.$toast.error('Укажите стоимость набора');
+                }
+
+                if (!this.purposeProducts.length) {
+                    return this.$toast.error('Выберите необходимые товары входящие в набор');
                 }
             }
 
