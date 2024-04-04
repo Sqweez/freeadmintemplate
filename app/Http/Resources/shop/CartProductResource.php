@@ -55,7 +55,9 @@ class CartProductResource extends JsonResource
                     'attribute_value' => $item->attributes->pluck('attribute_value')->join(' ') ?: 'Стандартный',
                     'quantity' => $item->batches->sum('quantity'),
                 ];
-            })
+            })->filter(function ($item) {
+                return $item['quantity'] > 0;
+            })->values()
         ];
     }
 }
