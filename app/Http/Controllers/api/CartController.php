@@ -151,9 +151,10 @@ class CartController extends Controller {
             ->with(['products.product.batches' => function ($q) use ($store_id) {
                 return $q/*->where('store_id', $store_id)*/->where('quantity', '>', 0);
             }])
-            ->with(['products.product.relativeSku.attributes.batches' => function ($q) use ($store_id) {
+            ->with(['products.product.relativeSku.batches' => function ($q) use ($store_id) {
                 return $q->where('quantity', '>', 0)->where('store_id', $store_id);
             }])
+            ->with('products.product.relativeSku.attributes')
             ->first() ?? null;
         if ($cart && $store_id != $cart['store_id']) {
             CartProduct::where('cart_id', $cart['id'])->delete();
