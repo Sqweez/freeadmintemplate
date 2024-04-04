@@ -146,11 +146,13 @@ class CartController extends Controller {
         $cart = Cart::with([
             'products', 'products.product',
             'products.product.product.stocks',
-            'products.product.relativeSku',
             'products.product.attributes', 'products.product.product.attributes'])
             ->ofUser($user_token)
             ->with(['products.product.batches' => function ($q) use ($store_id) {
                 return $q/*->where('store_id', $store_id)*/->where('quantity', '>', 0);
+            }])
+            ->with(['products.product.relativeSku.attributes.batches' => function ($q) use ($store_id) {
+                return $q->where('quantity', '>', 0)->where('store_id', $store_id);
             }])
             ->first() ?? null;
         if ($cart && $store_id != $cart['store_id']) {
