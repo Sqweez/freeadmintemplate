@@ -76,12 +76,13 @@ use Illuminate\Support\Carbon;
  */
 class Promocode extends Model {
     const GOV_PROMOCODE_ID = 165;
-    
+
     const TYPES = [
         1 => 'Процентный',
         2 => 'Фиксированный',
         3 => 'Подарок',
         4 => 'Каскадный процентный',
+        5 => 'Набор'
     ];
     const CONDITIONS = [
         1 => 'Без условия',

@@ -28,6 +28,9 @@ class BannerResource extends JsonResource
             'is_active' => $this->is_active,
             'website' => $this->website,
             'cities' => $this->cities,
+            'slug' => $this->when($this->description && \Str::length($this->description) > 1, function () {
+                return \Str::slug($this->description);
+            })
         ];
     }
 }
