@@ -98,8 +98,6 @@ class CartController extends Controller {
 
     public function changeCart(Request $request): ?CartResource
     {
-        $cart = $request->get('cart');
-        $userToken = $request->get('user_token');
         $cartItem = CartProduct::find($request->get('cart_item_id'));
         if ($cartItem) {
             $cartItem->update([
