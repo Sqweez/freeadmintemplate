@@ -96,6 +96,21 @@ class CartController extends Controller {
         ], 200);
     }
 
+    public function changeCart(Request $request): ?CartResource
+    {
+        $cart = $request->get('cart');
+        $userToken = $request->get('user_token');
+        $cartItem = CartProduct::find($request->get('cart_item_id'));
+        if ($cartItem) {
+            $cartItem->update([
+                'count' => 1,
+                'product_id' => $request->get('product_id')
+            ]);
+        }
+
+        return $this->getCart($request);
+    }
+
     public function deleteCart(Request $request): JsonResponse
     {
 
