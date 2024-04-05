@@ -17,7 +17,6 @@ use App\Sale;
 use App\Store;
 use App\User;
 use App\v2\Models\ProductSku;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use TelegramService;
@@ -109,7 +108,7 @@ class CartController extends Controller {
         return $this->getCart($request);
     }
 
-    public function deleteCart(Request $request): JsonResponse
+    public function deleteCart(Request $request): ?CartResource
     {
 
         $cart = $request->get('cart');
@@ -117,15 +116,30 @@ class CartController extends Controller {
 
         $product = $request->get('product');
 
-        CartProduct::query()
+        $cartProduct = CartProduct::query()
             ->where(function ($query) use ($cart, $userToken) {
                 return $query
                     ->where('cart_id', $cart);
             })
             ->where('product_id', $product)
-            ->delete();
+            ->first();
 
-        return response()->json([]);
+        if ($cartProduct) {
+            if ($cartProduct->kit_slug) {
+                CartProduct::query()
+                    ->where(function ($query) use ($cart, $userToken) {
+                        return $query
+                            ->where('cart_id', $cart);
+                    })
+                    ->whereKeyNot($cartProduct->id)
+                    ->where('kit_slug', $cartProduct->kit_slug)
+                    ->first();
+            }
+
+            $cartProduct->delete();
+        }
+
+        return $this->getCart($request);
 
     }
 
