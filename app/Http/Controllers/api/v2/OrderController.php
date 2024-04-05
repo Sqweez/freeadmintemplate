@@ -172,7 +172,7 @@ class OrderController extends Controller
             'client_id' => $order['client_id'],
             'store_id' => $store_id,
             'user_id' => User::IRON_WEB_STORE,
-            'discount' => $order['discount'],
+            'discount' => 0,
             'kaspi_red' => 0,
             'balance' => $order['balance'] ?? 0,
             'order_id' => $order->id,
@@ -190,7 +190,7 @@ class OrderController extends Controller
                 'sale_id' => $sale['id'],
                 'purchase_price' => $product['purchase_price'],
                 'product_price' => $product['product_price'],
-                'discount' => max($product->discount, $sale->discount)
+                'discount' => ($product->discount)
             ]);
         });
 
