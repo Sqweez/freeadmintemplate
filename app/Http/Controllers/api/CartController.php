@@ -127,13 +127,10 @@ class CartController extends Controller {
         if ($cartProduct) {
             if ($cartProduct->kit_slug) {
                 CartProduct::query()
-                    ->where(function ($query) use ($cart, $userToken) {
-                        return $query
-                            ->where('cart_id', $cart);
-                    })
+                    ->where('cart_id', $cartProduct->cart_id)
                     ->whereKeyNot($cartProduct->id)
                     ->where('kit_slug', $cartProduct->kit_slug)
-                    ->first();
+                    ->delete();
             }
 
             $cartProduct->delete();
