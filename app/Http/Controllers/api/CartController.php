@@ -197,8 +197,6 @@ class CartController extends Controller {
                             'store_id' => $store_id
                         ]
                     );
-                $cart->products()->delete();
-
 
                 if ($gainerSkuId && $creatineId && $giftId) {
 
@@ -233,8 +231,6 @@ class CartController extends Controller {
                             'store_id' => $store_id
                         ]
                     );
-
-                $cart->products()->delete();
 
                 if ($gainerSkuId && $giftId) {
 
