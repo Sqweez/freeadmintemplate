@@ -57,7 +57,8 @@ class CartProductResource extends JsonResource
                 ];
             })->filter(function ($item) {
                 return $item['quantity'] > 0;
-            })->values()
+            })->values(),
+            'has_other_discounts' => $this->has_other_discounts
         ];
     }
 }
