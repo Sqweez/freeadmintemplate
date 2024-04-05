@@ -195,16 +195,19 @@ class CartController extends Controller {
                         'product_id' => $gainerSkuId,
                         'count' => 1,
                         'discount' => 0,
+                        'kit_slug' => $stock
                     ]);
                     $cart->products()->firstOrCreate([
                         'product_id' => $creatineId,
                         'count' => 1,
                         'discount' => 0,
+                        'kit_slug' => $stock
                     ]);
                     $cart->products()->firstOrCreate([
                         'product_id' => $giftId,
                         'count' => 1,
                         'discount' => 100,
+                        'kit_slug' => $stock
                     ]);
                 }
             }
@@ -228,11 +231,13 @@ class CartController extends Controller {
                         'product_id' => $gainerSkuId,
                         'count' => 1,
                         'discount' => 0,
+                        'kit_slug' => $stock
                     ]);
                     $cart->products()->firstOrCreate([
                         'product_id' => $giftId,
                         'count' => 1,
                         'discount' => 100,
+                        'kit_slug' => $stock
                     ]);
                 }
             }
