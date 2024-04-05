@@ -5,6 +5,7 @@ namespace App\Http\Resources\v2\Order;
 use App\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+
 /* @mixin Order */
 class OrderResource extends JsonResource
 {
@@ -44,9 +45,7 @@ class OrderResource extends JsonResource
             'comment' => $this->comment,
             'total_price' => ceil($this->items->reduce(function($a, $c) {
                 return $a + ($c['product_price'] * ((100 - intval($c['discount'])) / 100));
-            }, 0)  - $this->items->reduce(function($a, $c) {
-                    return $a + intval($c['product_price']);
-                }, 0) * ($this->discount / 100)),
+            }, 0)),
             'products' => collect(OrderProductsResource::collection($items)->toArray($request))->toArray(),
             '_products' => collect(OrderProductsResource::collection($this->items)->toArray($request))->toArray(),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
