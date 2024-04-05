@@ -263,21 +263,36 @@ class CartController extends Controller {
                 }
             }
 
-            if ($stock === 'mnogo-belka-dolgaya-sytost-i-udobstvo-v-odnom-nabore') {
+            if ($stock === 'mnogo-belka-dolgaya-sytost-i-udobstvo-v-odnom-nabore-whey') {
                 $product1 = $this->retrieveSpecialItemIdById(9014, $store_id);
-                $product2 = $this->retrieveSpecialItemIdById(9026, $store_id);
                 $giftId = $this->retrieveSpecialItemIdById(6617, $store_id);
                 CartProduct::where([
                     'cart_id' => $cart->id,
                     'kit_slug' => $stock
                 ])->delete();
-                if ($product1 && $product2 && $giftId) {
+                if ($product1 && $giftId) {
                     $cart->products()->firstOrCreate([
                         'product_id' => $product1,
                         'count' => 1,
                         'discount' => 0,
                         'kit_slug' => $stock
                     ]);
+                    $cart->products()->firstOrCreate([
+                        'product_id' => $giftId,
+                        'count' => 1,
+                        'discount' => 100,
+                        'kit_slug' => $stock
+                    ]);
+                }
+            }
+            if ($stock === 'mnogo-belka-dolgaya-sytost-i-udobstvo-v-odnom-nabore-casein') {
+                $product2 = $this->retrieveSpecialItemIdById(9026, $store_id);
+                $giftId = $this->retrieveSpecialItemIdById(6617, $store_id);
+                CartProduct::where([
+                    'cart_id' => $cart->id,
+                    'kit_slug' => $stock
+                ])->delete();
+                if ($product2 && $giftId) {
                     $cart->products()->firstOrCreate([
                         'product_id' => $product2,
                         'count' => 1,
@@ -292,6 +307,7 @@ class CartController extends Controller {
                     ]);
                 }
             }
+
         }
         $cart = Cart::with([
             'products', 'products.product',
