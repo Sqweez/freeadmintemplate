@@ -235,7 +235,7 @@ class CartController extends Controller {
             }
             if ($stock === 'udvoy-svoy-rezultat') {
                 $gainerSkuId = $this->retrieveSpecialItemIdById(9396, $store_id);
-                $giftId = $this->retrieveSpecialItemIdById(6617, $store_id);
+                $giftId = $this->retrieveSpecialItemIdById(9387, $store_id);
                 CartProduct::where([
                     'cart_id' => $cart->id,
                     'kit_slug' => $stock
