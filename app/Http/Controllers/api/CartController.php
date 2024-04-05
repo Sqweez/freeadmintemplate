@@ -629,6 +629,10 @@ class CartController extends Controller {
                             'discount' => max($product['discount'], $order['discount'])
                         ];
 
+                        if (!$product['has_other_discounts']) {
+                            $product_sale['discount'] = $product['discount'];
+                        }
+
                         OrderProduct::create($product_sale);
 
                         $quantity = $product_batch['quantity'] - 1;
