@@ -183,9 +183,22 @@ class CartController extends Controller {
     public function getCart(Request $request) {
         $user_token = $request->get('user_token');
         $store_id = $request->get('store_id');
+        $cart = Cart
+            ::where('user_token', $user_token)
+            ->firstOrCreate([
+                    'user_token' => $user_token,
+                    'type' => 'web',
+                    'store_id' => $store_id
+                ]
+            );
+
         if ($request->has('stock')) {
             $stock = $request->get('stock');
             if ($stock === 'moshch-i-obem-v-odnom-nabore') {
+                CartProduct::where([
+                    'cart_id' => $cart->id,
+                    'kit_slug' => $stock
+                ])->delete();
                 $gainerSkuId = $this->retrieveSpecialItemIdById(9400, $store_id);
                 $creatineId = $this->retrieveSpecialItemIdById(9387, $store_id);
                 $giftId = $this->retrieveSpecialItemIdById(6617, $store_id);
@@ -223,14 +236,10 @@ class CartController extends Controller {
             if ($stock === 'udvoy-svoy-rezultat') {
                 $gainerSkuId = $this->retrieveSpecialItemIdById(9396, $store_id);
                 $giftId = $this->retrieveSpecialItemIdById(6617, $store_id);
-                $cart = Cart
-                    ::where('user_token', $user_token)
-                    ->firstOrCreate([
-                            'user_token' => $user_token,
-                            'type' => 'web',
-                            'store_id' => $store_id
-                        ]
-                    );
+                CartProduct::where([
+                    'cart_id' => $cart->id,
+                    'kit_slug' => $stock
+                ])->delete();
 
                 if ($gainerSkuId && $giftId) {
 
