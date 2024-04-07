@@ -23,7 +23,6 @@ class ProductResource extends JsonResource
             'product_name' => trim(
                 sprintf("%s %s", $this->product_name, $this->attributes->pluck('attribute_value')->join(','))
             ),
-            'is_favorite' => $this->wholesaleFavorite->count() > 0,
             'subcategory' => $this->subcategory,
             'product_image' => $this->retrieveProductThumb(),
             'has_stock' => false,
