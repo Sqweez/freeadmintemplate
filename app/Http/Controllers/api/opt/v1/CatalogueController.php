@@ -100,9 +100,6 @@ class CatalogueController extends BaseApiController
                     return $query->where('currency_id', $currency);
                 }
             ])
-            ->with(['wholesaleFavorite' => function ($query) {
-                return $query->where('wholesale_client_id', auth()->user()->id);
-            }])
             ->with(['batches' => function ($q) {
                 $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
                 return $q
