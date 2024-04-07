@@ -56,6 +56,7 @@ class CatalogueController extends BaseApiController
             'meta' => $metaCatalogResolver->resolver($filters),
             'client' => $client,
             'filters' => $request->has('no-filters') ? null : $productResolver->getFilters($productQuery),
+           'no_filters' => $request->has('no-filters')
            // 'filters' => $productResolver->getFilters($productQuery),
         ]);
     }
