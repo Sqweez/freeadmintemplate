@@ -47,9 +47,6 @@ class OptCatalogProductResolver
                 return $query->where('currency_id', $currencyId);
             });
         })
-        ->with(['wholesaleFavorite' => function ($query) use ($client) {
-            return $query->where('wholesale_client_id', optional($client)->id);
-        }])
         ->with(['batches' => function ($q) {
             $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
             return $q
