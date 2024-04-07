@@ -24,9 +24,8 @@ class OptCatalogProductResolver
             return $query->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
         })->when(!empty($filters[Product::FILTER_BRANDS]), function ($query) use ($filters) {
             return $query->ofBrand($filters[Product::FILTER_BRANDS]);
-        })->when(!empty($filters[Product::FILTER_PRICES]), function ($query) use ($filters, $currencyId) {
+        })->when(!empty($filters[Product::FILTER_PRICES]) && count($filters[Product::FILTER_PRICES]) === 2, function ($query) use ($filters, $currencyId) {
             return $query->whereHas('wholesale_prices', function ($subQuery) use ($filters, $currencyId) {
-                \Log::info('prices', $filters[Product::FILTER_PRICES]);
                 return $subQuery
                     ->where('currency_id', $currencyId)
                     ->where('price', '>=', $filters[Product::FILTER_PRICES][0])
