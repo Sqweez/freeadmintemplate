@@ -68,10 +68,9 @@ class UpdateProductAvailabilitiesCommand extends Command
                             ProductAvailability::updateOrCreate([
                                 'product_sku_id' => $product->id,
                                 'product_id' => $product->product_id,
-                                'store_id' => $store_id
-                            ], [
-                                'quantity' => $quantity
-                            ]);
+                                'store_id' => $store_id,
+                                'quantity' => $quantity,
+                            ], []);
                         });
                 }
             });
