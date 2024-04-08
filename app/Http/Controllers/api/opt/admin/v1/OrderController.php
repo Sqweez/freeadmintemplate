@@ -90,7 +90,7 @@ class OrderController extends BaseApiController
     {
         $file = $request->file('waybill');
         $fileName = $order->getWaybillFileName() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('public/opt/waybills', $fileName, 'public');
+        $path = $file->storeAs('opt/waybills', $fileName, 'public');
         $order->update(['waybill' => $path]);
         return $this->respondSuccess([
             'waybill' => url('/') . \Storage::url($path),

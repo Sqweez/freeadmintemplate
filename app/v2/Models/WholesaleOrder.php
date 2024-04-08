@@ -175,11 +175,11 @@ class WholesaleOrder extends Model
 
     public function getWaybillFileName(): string
     {
-        return 'Накладная' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        return 'Накладная' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10);
     }
 
     public function getInvoiceFileName(): string
     {
-        return 'Счет_на_оплату' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        return 'Счет_на_оплату' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10);
     }
 }
