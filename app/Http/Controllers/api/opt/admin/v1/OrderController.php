@@ -78,7 +78,7 @@ class OrderController extends BaseApiController
     public function uploadInvoice(Request $request, WholesaleOrder $order): JsonResponse
     {
         $file = $request->file('invoice');
-        $fileName = $order->getInvoiceFileName();
+        $fileName = $order->getInvoiceFileName() . '.' . $file->getClientOriginalExtension();;
         $path = $file->storeAs('public/opt/invoices', $fileName, 'public');
         $order->update(['invoice' => $path]);
         return $this->respondSuccess([
@@ -89,7 +89,7 @@ class OrderController extends BaseApiController
     public function uploadWaybill(Request $request, WholesaleOrder $order): JsonResponse
     {
         $file = $request->file('waybill');
-        $fileName = $order->getWaybillFileName();
+        $fileName = $order->getWaybillFileName() . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs('public/opt/waybills', $fileName, 'public');
         $order->update(['waybill' => $path]);
         return $this->respondSuccess([
