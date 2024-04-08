@@ -1,3 +1,8 @@
+/storage/*
+!/storage/app/
+/storage/app/*
+!/storage/app/document_templates/
+!/storage/app/document_templates/**
 /node_modules
 /public/hot
 /public/storage
