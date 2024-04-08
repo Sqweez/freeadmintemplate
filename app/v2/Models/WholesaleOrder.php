@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 /**
  * App\v2\Models\WholesaleOrder
@@ -170,5 +171,15 @@ class WholesaleOrder extends Model
             return null;
         }
         return $this->invoice ? (url('/') . \Storage::url($this->invoice)) : null;
+    }
+
+    public function getWaybillFileName(): string
+    {
+        return 'Накладная' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+    }
+
+    public function getInvoiceFileName(): string
+    {
+        return 'Счет_на_оплату' . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
     }
 }
