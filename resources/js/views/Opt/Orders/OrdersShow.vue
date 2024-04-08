@@ -101,12 +101,13 @@
                         <thead>
                         <tr>
                             <th>Товар</th>
-                            <th>Состав</th>
+                            <th>Тип</th>
+                            <th>Количество</th>
                             <th>Итого</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="product of products" :key="product.id">
+                        <tr v-for="(product, index) of orderProducts" :key="product.id">
                             <td>
                                 <div style="display: flex; column-gap: 16px;">
                                     <v-img
@@ -125,16 +126,16 @@
                                 </div>
                             </td>
                             <td>
-                                <v-list>
-                                    <v-list-item v-for="item of product.items" :key="`${product.id}-${item.id}`">
-                                        <v-list-item-content>
-                                            <v-list-item-title>
-                                                {{ (item.type || 'Стандартный') }} | {{ item.count }} шт. |
-                                                {{ item.total_price | priceFiltersRub }}
-                                            </v-list-item-title>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                </v-list>
+                                {{ product.type }}
+                            </td>
+                            <td>
+                                <v-text-field
+                                    type="number"
+                                    v-model.number="orderProducts[index].count"
+                                    persistent-hint
+                                    :hint="`Доступно на складе ${product.stock_count} шт`"
+                                    @blur="onCountInputBlur(index, $event.target.value)"
+                                />
                             </td>
                             <td>
                                 {{ product.total_price | priceFiltersRub }}
@@ -144,23 +145,178 @@
                     </template>
                 </v-simple-table>
             </div>
+
+            <div>
+                <v-expansion-panels>
+                    <v-expansion-panel
+                        @change="onPanelChange"
+                    >
+                        <v-expansion-panel-header>
+                            <h4>Товары</h4>
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            <v-card class="background-iron-darkgrey">
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col cols="12" xl="10">
+                                            <v-text-field
+                                                class="mt-2"
+                                                v-on:input="searchInput"
+                                                v-model="searchValue"
+                                                solo
+                                                clearable
+                                                label="Поиск товара"
+                                                single-line
+                                                hide-details
+                                            ></v-text-field>
+                                        </v-col>
+                                        <!--                            <v-col cols="12" xl="4">
+                                                                        <v-autocomplete
+                                                                            :items="categories"
+                                                                            item-text="name"
+                                                                            v-model="categoryId"
+                                                                            item-value="id"
+                                                                            label="Категория"
+                                                                        />
+                                                                    </v-col>
+                                                                    <v-col cols="12" xl="4">
+                                                                        <v-autocomplete
+                                                                            :items="manufacturers"
+                                                                            item-text="manufacturer_name"
+                                                                            v-model="manufacturerId"
+                                                                            item-value="id"
+                                                                            label="Бренд"
+                                                                        />
+                                                                    </v-col>
+                                                                    <v-col cols="12" xl="4">
+                                                                        <v-select
+                                                                            :items="$stores"
+                                                                            item-text="name"
+                                                                            v-model="storeFilter"
+                                                                            item-value="id"
+                                                                            label="Склад"
+                                                                        />
+                                                                    </v-col>-->
+                                    </v-row>
+                                    <v-data-table
+                                        class="background-iron-grey fz-18"
+                                        no-results-text="Нет результатов"
+                                        no-data-text="Нет данных"
+                                        :headers="headers"
+                                        :search="searchQuery"
+                                        loading-text="Идет загрузка товаров..."
+                                        :items="products"
+                                        :footer-props="{
+                            'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
+                            'items-per-page-text': 'Записей на странице',
+                        }"
+                                    >
+                                        <template v-slot:item.product_name="{item}">
+                                            <v-list flat>
+                                                <v-list-item>
+                                                    <v-list-item-content>
+                                                        <v-list-item-title>
+                                                            {{ item.product_name }}
+                                                        </v-list-item-title>
+                                                        <v-list-item-subtitle>
+                                                            {{ item.attributes.map(a => a.attribute_value).join(', ') }},
+                                                            {{ item.manufacturer.manufacturer_name }}
+                                                        </v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                </v-list-item>
+                                            </v-list>
+                                        </template>
+                                        <template v-slot:item.product_price="{ item }">
+                                            <ul v-if="item.wholesale_prices">
+                                                <li v-for="price of item.wholesale_prices" :key="price.id">
+                                                    {{ price.currency.name }}: {{ $formatPrice(price.price, price.currency.unicode_symbol) }}
+                                                </li>
+                                            </ul>
+                                            <div v-if="item.wholesale_prices && item.wholesale_prices.length === 0">
+                                   <span>
+                                       Цены не установлены
+                                   </span>
+                                            </div>
+                                        </template>
+                                        <template v-slot:item.attributes="{ item }">
+                                            {{ item.attributes.map(a => a.attribute_value).join(', ') }}
+                                        </template>
+                                        <template v-slot:item.actions="{item}">
+                                            <v-btn icon color="success">
+                                                <v-icon>mdi-plus</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <template v-slot:item.quantity="{item}">
+                                            {{ item.quantity }}
+                                        </template>
+                                        <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
+                                            {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
+                                        </template>
+                                    </v-data-table>
+                                </v-card-text>
+                            </v-card>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
+            </div>
         </div>
     </i-card-page>
 </template>
 
 <script>
 import axiosClient from '@/utils/axiosClient';
+import ACTIONS from '@/store/actions';
+import product from '@/mixins/product';
+import product_search from '@/mixins/product_search';
 
 export default {
     data: () => ({
+        headers: [
+            {
+                text: 'Наименование',
+                value: 'product_name',
+                sortable: false,
+                align: ' fz-18'
+            },
+            {
+                text: 'Атрибуты',
+                value: 'attributes',
+                align: ' d-none'
+            },
+            {
+                value: 'manufacturer.manufacturer_name',
+                text: 'Производитель',
+                align: ' d-none'
+            },
+            {
+                text: 'Остаток',
+                value: 'quantity'
+            },
+            {
+                text: 'Стоимость',
+                value: 'product_price'
+            },
+            {
+                text: 'Добавить',
+                value: 'actions'
+            },
+            {
+                text: 'Штрих-код',
+                value: 'product_barcode',
+                align: ' d-none'
+            }
+        ],
         isReady: false,
         order: null,
         statuses: [],
-        products: [],
+        orderProducts: [],
         statusId: null,
         deliveryPrice: null,
         invoice: null,
-        waybill: null
+        waybill: null,
+        storeFilter: null,
+        isPanelOpened: false,
+        productsWasLoaded: false,
     }),
     methods: {
         async onWaybillChange(event) {
@@ -173,7 +329,7 @@ export default {
             formData.append('waybill', file);
             const { data } = await axiosClient.post('/opt/admin/v1/order/' + this.$route.params.id + '/waybill',
                 formData);
-            console.log(data);
+            this.$toast.success('Накладная успешно загружена');
 
             this.waybill = data.waybill;
             this.$loading.disable();
@@ -189,10 +345,35 @@ export default {
             formData.append('invoice', file);
             const { data } = await axiosClient.post('/opt/admin/v1/order/' + this.$route.params.id + '/invoice',
                 formData);
-            console.log(data);
             this.invoice = data.invoice;
+            this.$toast.success('Счет успешно загружен');
             this.$loading.disable();
-        }
+        },
+        onCountInputBlur (index, value) {
+            this.$nextTick(() => {
+                const product = this.orderProducts.at(index);
+                this.$set(this.orderProducts, index, {
+                    ...product,
+                    count: Math.min(product.stock_count, Math.max(1, product.count))
+                })
+            })
+        },
+        async onPanelChange (e, v) {
+            if (this.productsWasLoaded) {
+                return undefined;
+            }
+            this.$loading.enable();
+            await this.loadProducts();
+            this.$loading.disable();
+            this.productsWasLoaded = true;
+        },
+        async loadProducts () {
+            await this.$store.dispatch('GET_PRODUCTS_v2', {
+                only_opt: true
+            });
+            await this.$store.dispatch(ACTIONS.GET_STORES);
+            this.storeFilter = this.$stores.at(-1).id;
+        },
     },
     computed: {
         getTitle() {
@@ -201,7 +382,13 @@ export default {
             } else {
                 return 'Загрузка...';
             }
-        }
+        },
+        products () {
+            return this.$store.getters.PRODUCTS_v2
+                .filter(product => {
+                    return product.quantity > 0;
+            });
+        },
     },
     async mounted() {
         this.$loading.enable();
@@ -213,12 +400,13 @@ export default {
         this.waybill = this.order.waybill;
         this.invoice = this.order.invoice;
         this.statuses = data.statuses;
-        this.products = data.products;
+        this.orderProducts = data.products;
         this.$nextTick(() => {
             this.isReady = true;
             this.$loading.disable();
         });
-    }
+    },
+    mixins: [product, product_search]
 };
 </script>
 
