@@ -5,25 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Service/Documents/Products/ProductsResolverFactory.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Service/Documents/Products/ProductsResolverInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Service/Documents/Products/WholesaleOrderProductsResolver.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2024_04_08_224656_atler_table_wholesale_orders_column_currency_id.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/CartProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/CartProduct.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/OrderController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/OrderController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderInvoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderInvoice.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderWaybill.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderWaybill.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/ProductBatch.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/ProductBatch.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repository/Opt/OrderRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/Opt/OrderRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Service/Documents/BaseDocumentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Documents/BaseDocumentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Service/Documents/InvoiceDocumentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Documents/InvoiceDocumentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Service/Documents/WaybillDocumentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Documents/WaybillDocumentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/Currency.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Currency.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/ProductAvailability.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/ProductAvailability.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/OrderHistoryResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/OrderHistoryResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/v2/Models/WholesaleOrder.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/WholesaleOrder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/app/document_templates/waybill_template.xls" beforeDir="false" afterPath="$PROJECT_DIR$/storage/app/document_templates/waybill_template.xls" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -608,7 +592,7 @@
       <workItem from="1712226373161" duration="8074000" />
       <workItem from="1712309829965" duration="6499000" />
       <workItem from="1712519745094" duration="3445000" />
-      <workItem from="1712569031783" duration="12337000" />
+      <workItem from="1712569031783" duration="12765000" />
     </task>
     <servers />
   </component>
