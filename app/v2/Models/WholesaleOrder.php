@@ -52,6 +52,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $expected_arrival_date
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereExpectedArrivalDate($value)
  * @property-read \App\v2\Models\WholesaleOrderStatusHistory|null $status
+ * @property string|null $waybill
+ * @property string|null $invoice
+ * @property int $currency_id
+ * @property-read \App\v2\Models\WholesaleClient $client
+ * @property-read \App\v2\Models\Currency $currency
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereWaybill($value)
  */
 class WholesaleOrder extends Model
 {
@@ -64,6 +72,11 @@ class WholesaleOrder extends Model
     public function statusHistory(): HasMany
     {
         return $this->hasMany(WholesaleOrderStatusHistory::class, 'wholesale_order_id');
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class, 'currency_id');
     }
 
     public function products(): HasMany

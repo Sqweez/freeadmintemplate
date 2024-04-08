@@ -32,6 +32,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|CartProduct product($product_id)
  * @property int $discount
  * @method static \Illuminate\Database\Eloquent\Builder|CartProduct whereDiscount($value)
+ * @property int|null $kit_id
+ * @property string|null $kit_slug
+ * @property int $has_other_discounts
+ * @method static \Illuminate\Database\Eloquent\Builder|CartProduct whereHasOtherDiscounts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CartProduct whereKitId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CartProduct whereKitSlug($value)
  */
 class CartProduct extends Model
 {
