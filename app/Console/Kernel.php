@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(CreateKaspiPriceCommand::class)
             ->everyThirtyMinutes();
         $schedule->command(UpdateProductAvailabilitiesCommand::class)
-            ->everyTenMinutes();
+            ->everyMinute()->withoutOverlapping();
         // $schedule->command('inspire')
         //          ->hourly();
     }
