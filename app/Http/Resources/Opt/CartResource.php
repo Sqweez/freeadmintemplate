@@ -30,7 +30,8 @@ class CartResource extends JsonResource
             'cart_id' => $this->cart_id,
             'link' => $this->product->product->getOptLink(),
             'is_editing_blocked' => $this->getPrice() === 0,
-            'base_price' => $this->getBasePrice()
+            'base_price' => $this->getBasePrice(),
+            'manufacturer' => $this->product->product->manufacturer->manufacturer_name
         ];
     }
 }
