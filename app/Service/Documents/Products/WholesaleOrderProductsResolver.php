@@ -21,7 +21,7 @@ class WholesaleOrderProductsResolver implements ProductsResolverInterface
         $this->order->load('products.product.product.attributes');
         $this->order->load('products.product.attributes');
         $orderProducts = $this->order->products
-            ->groupBy('product.product_id')
+            ->groupBy('product_id')
             ->map(function ($items) {
                 return [
                     'product' => $items->first(),

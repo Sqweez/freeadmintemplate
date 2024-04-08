@@ -23,6 +23,7 @@ class OrdersResource extends JsonResource
             'created_at' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
             'expected_arrival_date' => $this->getFormattedExpectedArrivalDateAttribute(),
             'comment' => $this->comment,
+            'currency_id' => $this->currency_id,
             'total_price' => $this->getTotalPriceAttribute(),
             'position_count' => $this->getPositionCountAttribute(),
             'products_count' => $this->products->count(),

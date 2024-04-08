@@ -42,8 +42,11 @@ class OrderController extends BaseApiController
                    'product.product.product_thumbs',
                    'product.product.manufacturer'
                ])
+                   ->with(['product.batches' => function ($query) {
+                       return $query->whereStoreId(32);
+                   }])
                    ->get()
-                   ->groupBy('product.product_id')
+                   ->groupBy('product_id')
                    ->map(function ($items) {
                        /* @var WholesaleOrderProduct $product */
                        $product = $items->first();
@@ -53,22 +56,11 @@ class OrderController extends BaseApiController
                            'product_name' => $product->product->product->product_name,
                            'manufacturer' => $product->product->product->manufacturer->manufacturer_name,
                            'product_sub_name' => $product->product->product->attributes->pluck('attribute_value')->join(' '),
-                           'total_price' => $items->sum('price'),
                            'link' => $product->product->product->getOptLink(),
-                           'items' => $items
-                               ->groupBy('product_id')
-                               ->map(function ($items, $product_id) {
-                                   /* @var WholesaleOrderProduct $product */
-                                   $product = $items->first();
-                                   return [
-                                       'id' => $product->id,
-                                       'count' => $items->count(),
-                                       'total_price' => $items->sum('price'),
-                                       'type' => $product->product->attributes->pluck('attribute_value')->join(' '),
-                                   ];
-                               })
-                               ->values()
-
+                           'count' => $items->count(),
+                           'type' => $product->product->attributes->pluck('attribute_value')->join(' '),
+                           'stock_count' => $product->product->batches->sum('quantity'),
+                           'total_price' => $items->sum('price'),
                        ];
                    })
                    ->values()
@@ -79,7 +71,7 @@ class OrderController extends BaseApiController
     {
         $file = $request->file('invoice');
         $fileName = $order->getInvoiceFileName() . '.' . $file->getClientOriginalExtension();;
-        $path = $file->storeAs('public/opt/invoices', $fileName, 'public');
+        $path = $file->storeAs('opt/invoices', $fileName, 'public');
         $order->update(['invoice' => $path]);
         return $this->respondSuccess([
             'invoice' => url('/') . \Storage::url($path),

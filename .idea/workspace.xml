@@ -7,7 +7,13 @@
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/admin/v1/OrderController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/admin/v1/OrderController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/WholesaleOrder.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/WholesaleOrder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/Admin/OrdersResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/Admin/OrdersResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderInvoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderInvoice.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Service/Documents/InvoiceDocumentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Documents/InvoiceDocumentService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Service/Documents/Products/WholesaleOrderProductsResolver.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Documents/Products/WholesaleOrderProductsResolver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Opt/Orders/OrdersShow.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Opt/Orders/OrdersShow.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/app/document_templates/invoice_payment_template.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/storage/app/document_templates/invoice_payment_template.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -322,8 +328,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.hot" />
         <item itemvalue="npm.prod" />
+        <item itemvalue="npm.hot" />
         <item itemvalue="npm.watch-poll" />
         <item itemvalue="npm.watch" />
         <item itemvalue="npm.dev" />
@@ -592,7 +598,7 @@
       <workItem from="1712226373161" duration="8074000" />
       <workItem from="1712309829965" duration="6499000" />
       <workItem from="1712519745094" duration="3445000" />
-      <workItem from="1712569031783" duration="13677000" />
+      <workItem from="1712569031783" duration="19128000" />
     </task>
     <servers />
   </component>
