@@ -1,4 +1,5 @@
 *
 !public/
+!document_templates/
+!document_templates/**
 !.gitignore
-!document_templates/*
