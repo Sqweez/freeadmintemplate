@@ -78,6 +78,6 @@ class UpdateProductAvailabilitiesCommand extends Command
         $end = microtime(true);
         $executionTime = round($end - $start, 2);
         $this->info('Время выполнения команды: ' . $executionTime . ' секунд');
-
+        \Log::info('Время выполнения команды: ' . $executionTime . ' секунд');
     }
 }
