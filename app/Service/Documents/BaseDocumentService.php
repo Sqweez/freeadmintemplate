@@ -7,8 +7,10 @@ use App\Resolvers\LegalEntityResolver;
 use App\Service\Documents\Products\ProductsResolverFactory;
 use App\Service\Documents\Products\ProductsResolverInterface;
 use App\v2\Models\WholesaleOrder;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
@@ -68,5 +70,10 @@ abstract class BaseDocumentService
             return $this->entity->currency->code ?? __hardcoded('KZT');
         }
         return __hardcoded('KZT');
+    }
+
+    public function getFileName(): string
+    {
+        return Document::DOCUMENT_TYPES[$this->getDocumentType()] . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
     }
 }

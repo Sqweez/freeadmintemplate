@@ -3,8 +3,6 @@
 namespace App\Service\Documents;
 
 use App\Document;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -28,12 +26,12 @@ class WaybillDocumentService extends BaseDocumentService
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function create()
+    public function create(): string
     {
         $template = $this->loadTemplateFile();
         $this->fillExcelSheet($template);
         $excelWriter = new Xlsx($template);
-        $fileName =  Document::DOCUMENT_TYPES[$this->getDocumentType()] . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
+        $fileName = $this->getFileName();
         $shortPath = 'opt/waybills/' . $fileName;
         $fullPath = storage_path('app/public/' . $shortPath);
         $directory = dirname($fullPath);

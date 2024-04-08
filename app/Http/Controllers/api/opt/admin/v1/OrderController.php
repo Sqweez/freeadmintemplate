@@ -75,20 +75,22 @@ class OrderController extends BaseApiController
         ]);
     }
 
-    public function uploadInvoice(Request $request, WholesaleOrder $order)
+    public function uploadInvoice(Request $request, WholesaleOrder $order): JsonResponse
     {
         $file = $request->file('invoice');
-        $path = $file->store('public/opt/invoices');
+        $fileName = $order->getInvoiceFileName();
+        $path = $file->storeAs('public/opt/invoices', $fileName, 'public');
         $order->update(['invoice' => $path]);
         return $this->respondSuccess([
             'invoice' => url('/') . \Storage::url($path),
         ]);
     }
 
-    public function uploadWaybill(Request $request, WholesaleOrder $order)
+    public function uploadWaybill(Request $request, WholesaleOrder $order): JsonResponse
     {
         $file = $request->file('waybill');
-        $path = $file->store('public/opt/waybills');
+        $fileName = $order->getWaybillFileName();
+        $path = $file->storeAs('public/opt/waybills', $fileName, 'public');
         $order->update(['waybill' => $path]);
         return $this->respondSuccess([
             'waybill' => url('/') . \Storage::url($path),
