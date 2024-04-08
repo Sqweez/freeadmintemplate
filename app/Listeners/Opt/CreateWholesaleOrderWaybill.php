@@ -3,6 +3,7 @@
 namespace App\Listeners\Opt;
 
 use App\Events\Opt\WholesaleOrderCreated;
+use App\Service\Documents\WaybillDocumentService;
 
 class CreateWholesaleOrderWaybill
 {
@@ -21,9 +22,18 @@ class CreateWholesaleOrderWaybill
      *
      * @param  WholesaleOrderCreated  $event
      * @return void
+     * @throws \Exception
      */
     public function handle(WholesaleOrderCreated $event)
     {
-        \Log::info('creating invoice with id ' . $event->order->id);
+        try {
+            $service = new WaybillDocumentService($event->order);
+            $path = $service->create();
+            if ($path) {
+                $event->order->update(['waybill' => $path]);
+            }
+        } catch (\Exception $exception) {
+            \Log::error($exception);
+        }
     }
 }

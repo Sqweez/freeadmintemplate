@@ -30,7 +30,7 @@ class OrderController extends BaseApiController
         ]);
     }
 
-    public function getOrderProductsHistory(WholesaleOrder $order)
+    public function getOrderProductsHistory(WholesaleOrder $order): \Illuminate\Http\JsonResponse
     {
         return $this->respondSuccessNoReport([
            'order' =>

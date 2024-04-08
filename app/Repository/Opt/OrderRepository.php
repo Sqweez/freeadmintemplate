@@ -52,6 +52,7 @@ class OrderRepository
         $wholesaleOrder->delivery_type_id = $payload['delivery_type_id'];
         $wholesaleOrder->name = $payload['name'];
         $wholesaleOrder->comment = $payload['comment'];
+        $wholesaleOrder->currency_id = $client->preferred_currency_id;
         $wholesaleOrder->save();
         return $wholesaleOrder;
     }
