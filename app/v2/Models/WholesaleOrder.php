@@ -156,4 +156,19 @@ class WholesaleOrder extends Model
         return  null;
     }
 
+    public function getWaybillURL(): ?string
+    {
+        if ($this->status->status->id === 1) {
+            return null;
+        }
+        return $this->waybill ? (url('/') . \Storage::url($this->waybill)) : null;
+    }
+
+    public function getInvoiceURL(): ?string
+    {
+        if ($this->status->status->id === 1) {
+            return null;
+        }
+        return $this->invoice ? (url('/') . \Storage::url($this->invoice)) : null;
+    }
 }

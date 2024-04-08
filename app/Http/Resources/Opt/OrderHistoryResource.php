@@ -15,7 +15,7 @@ class OrderHistoryResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,
@@ -27,8 +27,8 @@ class OrderHistoryResource extends JsonResource
             'products_count' => $this->products->count(),
             'delivery_price' => $this->delivery_price,
             'status' => $this->status->status->description,
-            'waybill' => $this->waybill ? (url('/') . \Storage::url($this->waybill)) : null,
-            'invoice' => $this->invoice ? (url('/') . \Storage::url($this->invoice)) : null,
+            'waybill' => $this->getWaybillURL(),
+            'invoice' => $this->getInvoiceURL(),
         ];
     }
 }
