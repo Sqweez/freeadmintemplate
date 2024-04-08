@@ -15,6 +15,7 @@ class OptCatalogProductResolver
 
     public function getProductQuery(array $filters, ?WholesaleClient $client)
     {
+        $wholesaleStoreIds = Store::wholesaleStore()->pluck('id')->toArray();
         $currencyId = $this->retrieveCurrency($client);
         return Product::query()->OptProducts()->when(
             !empty($filters[Product::FILTER_CATEGORIES]), function ($query) use ($filters) {
@@ -46,11 +47,13 @@ class OptCatalogProductResolver
                 return $query->where('currency_id', $currencyId);
             });
         })
-        ->with(['batches' => function ($q) {
-            $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
+        ->with(['batches' => function ($q) use ($wholesaleStoreIds) {
             return $q
-                ->where('store_id', $wholesaleStoreId)
+                ->where('store_id', $wholesaleStoreIds)
                 ->where('quantity', '>', 0);
+        }])
+        ->with(['quantities' => function ($q) use ($wholesaleStoreIds) {
+            return $q->whereIn('store_id', $wholesaleStoreIds);
         }])
         ->whereHas('batches', function ($q) {
             $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();

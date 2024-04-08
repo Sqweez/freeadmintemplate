@@ -30,6 +30,7 @@ class ProductResource extends JsonResource
             'brand_id' => $this->manufacturer_id,
             'quantity_type' => $this->getWholesaleQuantityType($quantity),
             'quantity' => $quantity,
+            'quantity_merged' => $this->quantities->sum('quantity')
         ];
 
         return array_merge($payload, $this->getPrice());
