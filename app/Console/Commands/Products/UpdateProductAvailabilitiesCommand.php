@@ -65,12 +65,22 @@ class UpdateProductAvailabilitiesCommand extends Command
                         ->groupBy('store_id')
                         ->each(function ($batches, $store_id) use ($product) {
                             $quantity = $batches->sum('quantity');
-                            ProductAvailability::updateOrCreate([
+                            $availability = ProductAvailability::where([
                                 'product_sku_id' => $product->id,
                                 'product_id' => $product->product_id,
                                 'store_id' => $store_id,
-                                'quantity' => $quantity,
-                            ], []);
+                            ])->first();
+                            if ($availability) {
+                                $availability->quantity = $quantity;
+                                $availability->save();
+                            } else {
+                                ProductAvailability::create([
+                                    'product_sku_id' => $product->id,
+                                    'product_id' => $product->product_id,
+                                    'store_id' => $store_id,
+                                    'quantity' => $quantity
+                                ]);
+                            }
                         });
                 }
             });
