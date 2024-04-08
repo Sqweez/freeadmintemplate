@@ -2,6 +2,7 @@
 
 namespace App\Repository\Opt;
 
+use App\Events\Opt\WholesaleOrderCreated;
 use App\Repository\ProductBatchRepository;
 use App\v2\Models\WholesaleClient;
 use App\v2\Models\WholesaleOrder;
@@ -26,6 +27,7 @@ class OrderRepository
             $this->createOrderProducts($order, $client);
             $order->setStatusCreate();
             $this->clearCart($client);
+            WholesaleOrderCreated::dispatch($order);
             return true;
         });
     }

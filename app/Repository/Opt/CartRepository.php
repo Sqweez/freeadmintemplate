@@ -9,6 +9,7 @@ use App\v2\Models\UserCartItem;
 use App\v2\Models\WholesaleClient;
 use App\v2\Models\WholesalePrice;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 
 class CartRepository
 {
@@ -24,20 +25,21 @@ class CartRepository
     {
         $this->client = $client;
         if (!$this->client) {
-            throw new Exception('При добавлении товара в корзину произошла ошибка');
+            throw new Exception('Вы должны быть авторизованы, для просмотра этой страницы');
         }
         $this->cart = $this->retrieveCart();
         $this->store = $this->retrieveStore();
         $this->productBatchRepository = new ProductBatchRepository();
     }
 
-    public function getCart(): \Illuminate\Database\Eloquent\Collection
+    public function getCart(): Collection
     {
         return $this->cart
             ->items()
             ->with(['product.product.wholesale_prices' => function ($q) {
                 return $q->where('currency_id', $this->client->preferred_currency_id);
             }])
+            ->with(['product.product.manufacturer:id,manufacturer_name'])
             ->with(['product.product.product_thumbs'])
             ->with(['product.product.attributes'])
             ->with(['product.attributes'])

@@ -2,12 +2,16 @@
 
 namespace App\Providers;
 
-use App\Http\Controllers\Services\BackupController;
+use App\Events\Opt\WholesaleOrderCreated;
 use App\Listeners\BackupCreatedListener;
+use App\Listeners\Opt\CreateWholesaleOrderInvoice;
+use App\Listeners\Opt\CreateWholesaleOrderWaybill;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Spatie\Backup\Events\BackupZipWasCreated;
+
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -21,6 +25,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         BackupZipWasCreated::class => [
             BackupCreatedListener::class
+        ],
+        WholesaleOrderCreated::class => [
+            CreateWholesaleOrderInvoice::class,
+            CreateWholesaleOrderWaybill::class,
         ]
     ];
 
