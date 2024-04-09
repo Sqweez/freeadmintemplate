@@ -28,7 +28,7 @@ class CreateWholesaleOrderWaybill implements ShouldQueue
     public function handle(WholesaleOrderCreated $event)
     {
         if ($event->shouldQueue) {
-            CreateWaybillDocument::dispatch($event->order);
+            CreateWaybillDocument::dispatch($event->order)->onConnection('database');
         } else {
             try {
                 CreateWaybillDocument::dispatch($event->order)->onConnection('sync');
