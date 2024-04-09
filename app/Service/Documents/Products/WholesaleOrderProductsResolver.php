@@ -52,6 +52,9 @@ class WholesaleOrderProductsResolver implements ProductsResolverInterface
                 'total_price' => $this->formatPrice($currentPrice * $product['count']),
             ];
         }
+
+        $totalPrice = $totalPrice * (1 - $this->order->discount / 100);
+
         return [
             'products' => $products,
             'totalPrice' => $this->formatPrice($totalPrice),
