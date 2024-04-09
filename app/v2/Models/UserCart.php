@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder|UserCart whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCart whereUserableType($value)
  * @mixin \Eloquent
+ * @property int $discount
+ * @method static \Illuminate\Database\Eloquent\Builder|UserCart whereDiscount($value)
  */
 class UserCart extends Model
 {

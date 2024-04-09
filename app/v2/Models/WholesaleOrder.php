@@ -62,6 +62,8 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereInvoice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereWaybill($value)
  * @property-read bool $is_editing_disabled
+ * @property int $discount
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereDiscount($value)
  */
 class WholesaleOrder extends Model
 {
