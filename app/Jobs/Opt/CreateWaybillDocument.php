@@ -37,14 +37,14 @@ class CreateWaybillDocument implements ShouldQueue
         $service = new WaybillDocumentService($this->order);
         $path = $service->create();
         if ($path) {
-            if ($this->order->waybill) {
-                try {
+            try {
+                if ($this->order->waybill) {
                     \Storage::disk('public')->delete($this->order->waybill);
-                } catch (\Exception $exception) {
-
-                } finally {
-                    $this->order->update(['waybill' => $path]);
                 }
+            } catch (\Exception $exception) {
+
+            } finally {
+                $this->order->update(['waybill' => $path]);
             }
         }
     }
