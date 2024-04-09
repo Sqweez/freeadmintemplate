@@ -28,6 +28,7 @@ class WaybillDocumentService extends BaseDocumentService
      */
     public function create(): string
     {
+        \Log::info('CREATING WAYBILL');
         $template = $this->loadTemplateFile();
         $this->fillExcelSheet($template);
         $excelWriter = new Xlsx($template);

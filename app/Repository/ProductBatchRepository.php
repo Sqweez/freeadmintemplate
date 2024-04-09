@@ -56,4 +56,14 @@ class ProductBatchRepository
         $batch->save();
         return $batch;
     }
+
+    public function increaseBatchQuantity($batchId, $quantity)
+    {
+        $batch = ProductBatch::query()
+            ->where('id', $batchId)
+            ->firstOrFail();
+        $batch->update([
+            'quantity' => $batch->quantity + $quantity,
+        ]);
+    }
 }

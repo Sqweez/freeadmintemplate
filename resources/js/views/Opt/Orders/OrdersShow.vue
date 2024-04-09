@@ -1,6 +1,29 @@
 <template>
     <i-card-page :title="getTitle">
         <div v-if="isReady">
+<!--            <v-tabs
+                v-model="tab"
+                align-with-title
+            >
+                <v-tabs-slider></v-tabs-slider>
+
+                <v-tab
+                    v-for="item in items"
+                    :key="item"
+                >
+                    {{ item }}
+                </v-tab>
+            </v-tabs>
+            <v-tabs-items v-model="tab">
+                <v-tab-item v-for="tab of items">
+                    <div v-if="tab === 'Основная информация'">
+                        <order-base-info :order="order" />
+                    </div>
+                    <div v-if="tab === 'Состав заказа'">
+                        <order-products :order="order" :order-products="orderProducts" />
+                    </div>
+                </v-tab-item>
+            </v-tabs-items>-->
             <v-simple-table v-if="order">
                 <template #default>
                     <thead>
@@ -60,14 +83,14 @@
                     item-text="description"
                     v-model="statusId"
                 />
-                <v-text-field
+<!--                <v-text-field
                     class="mx-4"
                     label="Стоимость доставки"
                     type="number"
                     v-model="deliveryPrice"
-                />
-                <v-btn color="primary" class="ml-4">
-                    Обновить
+                />-->
+                <v-btn color="primary" class="ml-4" @click="updateOrderInfo" :loading="orderInfoUpdating">
+                    Обновить <v-icon>mdi-refresh</v-icon>
                 </v-btn>
             </div>
             <div class="d-flex align-center my-4">
@@ -81,12 +104,12 @@
                 </v-btn>
             </div>
             <div class="d-flex align-center my-4">
-                <v-btn @click="$refs.waybillInputRef.click()" class="mr-4" color="primary">
+                <v-btn @click="$refs.waybillInputRef.click()" class="mr-4" color="primary" :disabled="order.is_editing_disabled">
                     Загрузить накладную
                     <v-icon>mdi-upload</v-icon>
                 </v-btn>
                 <input type="file" ref="waybillInputRef" @change="onWaybillChange" class="d-none">
-                <v-btn @click="$refs.invoiceInputRef.click()" class="mr-4" color="primary">
+                <v-btn @click="$refs.invoiceInputRef.click()" class="mr-4" color="primary" :disabled="order.is_editing_disabled">
                     Загрузить счет на оплату
                     <v-icon>mdi-upload</v-icon>
                 </v-btn>
@@ -95,7 +118,7 @@
             <p class="text-h6">
                 Состав заказа:
             </p>
-            <div v-if="products">
+            <div>
                 <v-simple-table>
                     <template #default>
                         <thead>
@@ -103,18 +126,16 @@
                             <th>Товар</th>
                             <th>Тип</th>
                             <th>Количество</th>
+                            <th>Цена за ед.</th>
+                            <th>Скидка</th>
                             <th>Итого</th>
+                            <th>Удалить</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="(product, index) of orderProducts" :key="product.id">
                             <td>
                                 <div style="display: flex; column-gap: 16px;">
-                                    <v-img
-                                        max-height="250"
-                                        max-width="250"
-                                        :src="product.product_image"
-                                    />
                                     <div>
                                         <p class="title">
                                             {{ product.product_name }}
@@ -129,21 +150,54 @@
                                 {{ product.type }}
                             </td>
                             <td>
+                                <div style="display: flex; align-items: center;">
+                                    <v-btn icon color="error" @click="onCountInputBlur(index, product.count - 1)">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                    <v-text-field
+                                        style="max-width: 250px;"
+                                        type="number"
+                                        v-model.number="orderProducts[index].count"
+                                        persistent-hint
+                                        :hint="`Максимальное количество ${product.stock_count} шт`"
+                                        @blur="onCountInputBlur(index, $event.target.value)"
+                                        readonly
+                                    />
+                                    <v-btn icon color="success" @click="onCountInputBlur(index, product.count + 1)">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </div>
+                            </td>
+                            <td>
                                 <v-text-field
-                                    type="number"
-                                    v-model.number="orderProducts[index].count"
-                                    persistent-hint
-                                    :hint="`Доступно на складе ${product.stock_count} шт`"
-                                    @blur="onCountInputBlur(index, $event.target.value)"
+                                    label="Стоимость за шт"
+                                    @blur="onPriceChange"
+                                    v-model="orderProducts[index].price_per_item"
+
                                 />
                             </td>
                             <td>
-                                {{ product.total_price | priceFiltersRub }}
+                                <v-text-field
+                                    @blur="onPriceChange"
+                                    label="Скидка"
+                                    v-model="orderProducts[index].discount"
+                                />
+                            </td>
+                            <td>
+                                {{ getSubtotalPrice(product) | priceFiltersRub }}
+                            </td>
+                            <td>
+                                <v-btn icon color="error" @click="onProductDelete(index, product)">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
                             </td>
                         </tr>
                         </tbody>
                     </template>
                 </v-simple-table>
+                <v-btn color="primary" class="my-4 mx-4" @click="updateOrderProducts(true)">
+                    Обновить состав заказа <v-icon>mdi-refresh</v-icon>
+                </v-btn>
             </div>
 
             <div>
@@ -242,12 +296,12 @@
                                             {{ item.attributes.map(a => a.attribute_value).join(', ') }}
                                         </template>
                                         <template v-slot:item.actions="{item}">
-                                            <v-btn icon color="success">
+                                            <v-btn icon color="success" @click="pushToOrder(item)">
                                                 <v-icon>mdi-plus</v-icon>
                                             </v-btn>
                                         </template>
                                         <template v-slot:item.quantity="{item}">
-                                            {{ item.quantity }}
+                                            {{ retrieveQuantity(item) }}
                                         </template>
                                         <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
                                             {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
@@ -268,8 +322,12 @@ import axiosClient from '@/utils/axiosClient';
 import ACTIONS from '@/store/actions';
 import product from '@/mixins/product';
 import product_search from '@/mixins/product_search';
+import OrderBaseInfo from '@/components/Opt/OrderBaseInfo.vue';
+import OrderProducts from '@/components/Opt/OrderProducts.vue';
+import { debounce } from 'lodash';
 
 export default {
+    components: { OrderProducts, OrderBaseInfo },
     data: () => ({
         headers: [
             {
@@ -317,8 +375,32 @@ export default {
         storeFilter: null,
         isPanelOpened: false,
         productsWasLoaded: false,
+        orderInfoUpdating: false,
+        deletedProducts: [],
+        tab: 'Основная информация',
+        items: [
+            'Основная информация', 'Состав заказа'
+        ]
     }),
     methods: {
+        onPriceChange: debounce(function() {
+            this.updateOrderProducts(false);
+        }, 500),
+        async updateOrderInfo () {
+            this.orderInfoUpdating = true;
+            try {
+                const payload = {
+                    status_id: this.statusId,
+                };
+                const { data } = await axiosClient.patch('/opt/admin/v1/order/' + this.order.id, payload);
+                this.assignOrderFields(data);
+                this.$toast.success('Данные заказа обновлены')
+            } catch (e) {
+                this.$toast.error('Что-то пошло не так')
+            } finally {
+                this.orderInfoUpdating = false;
+            }
+        },
         async onWaybillChange(event) {
             const file = event.target.files[0];
             if (!file) {
@@ -350,13 +432,15 @@ export default {
             this.$loading.disable();
         },
         onCountInputBlur (index, value) {
-            this.$nextTick(() => {
-                const product = this.orderProducts.at(index);
-                this.$set(this.orderProducts, index, {
-                    ...product,
-                    count: Math.min(product.stock_count, Math.max(1, product.count))
-                })
+            const product = this.orderProducts.at(index);
+            const count = Math.min(product.stock_count, Math.max(1, value));
+            this.$set(this.orderProducts, index, {
+                ...product,
+                count
             })
+            if (count !== product.count) {
+                this.updateOrderProducts(false);
+            }
         },
         async onPanelChange (e, v) {
             if (this.productsWasLoaded) {
@@ -374,6 +458,90 @@ export default {
             await this.$store.dispatch(ACTIONS.GET_STORES);
             this.storeFilter = this.$stores.at(-1).id;
         },
+        retrieveQuantity (product) {
+            const inOrderProduct = this.orderProducts.find(p => p.product_id === product.id)
+            if (!inOrderProduct || inOrderProduct.count === inOrderProduct.initial_count) {
+                return product.quantity;
+            }
+            return product.quantity - (inOrderProduct.count - inOrderProduct.initial_count);
+        },
+        pushToOrder (product) {
+            const inOrderProduct = this.orderProducts.findIndex(p => p.product_id === product.id && p.id === null)
+            if (inOrderProduct === -1) {
+                const needlePrice = product.wholesale_prices.find(wp => wp.currency_id === this.order.currency_id);
+                if (!needlePrice) {
+                    return this.$toast.error('Для товара не установлена стоимость в валюте заказа');
+                }
+                this.orderProducts.push({
+                    'id': null,
+                    'product_image': null,
+                    'product_name': product.product_name,
+                    'manufacturer': product.manufacturer.manufacturer_name,
+                    'product_sub_name': product.attributes.map(a => a.attribute_value).join(', '),
+                    'link' : null,
+                    'count' : 1,
+                    'type': product.attributes.map(a => a.attribute_value).join(', '),
+                    'stock_count': product.quantity,
+                    'price_per_item': needlePrice.price,
+                    'initial_count': 0,
+                    'product_id': product.id,
+                    discount: 0,
+                });
+            } else {
+                this.onCountInputBlur(inOrderProduct, this.orderProducts[inOrderProduct].count + 1);
+            }
+        },
+        getSubtotalPrice (product) {
+            return (product.price_per_item * product.count * (1 - product.discount / 100))
+        },
+        updateOrderProducts: debounce(async function (refreshDocs = false) {
+            try {
+                this.$loading.enable();
+                const products = [];
+                this.orderProducts.forEach(product => {
+                    const productObject = {
+                        product_id: product.product_id,
+                        count: product.count,
+                        initial_count: product.initial_count,
+                        deltaCount: product.count - product.initial_count,
+                        discount: product.discount,
+                        price: product.price_per_item,
+                        ids: product?.ids || [],
+                    };
+                    products.push(productObject);
+                })
+
+                const payload = {
+                    products,
+                    deleted: this.deletedProducts,
+                    refreshDocs
+                };
+
+                const { data } = await axiosClient.patch(`/opt/admin/v1/order/products/${this.order.id}`, payload)
+                this.assignOrderFields(data);
+                this.$toast.success('Заказ успешно обновлен')
+            } catch (e) {
+                console.log(e);
+                this.$report(e);
+            } finally {
+                this.$loading.disable();
+            }
+        }, 500),
+        onProductDelete (index, product) {
+            if (product?.ids) {
+                this.deletedProducts.push(...product.ids);
+            }
+            this.orderProducts.splice(index, 1);
+        },
+        assignOrderFields (data) {
+            this.order = data.order;
+            this.statusId = this.order.status_id;
+            this.deliveryPrice = this.order.delivery_price;
+            this.waybill = this.order.waybill;
+            this.invoice = this.order.invoice;
+            this.statuses = data.statuses;
+            this.orderProducts = data.products;
+        }
     },
     computed: {
         getTitle() {
@@ -394,19 +562,14 @@ export default {
         this.$loading.enable();
         this.isReady = false;
         const { data } = await axiosClient.get('/opt/admin/v1/order/' + this.$route.params.id);
-        this.order = data.order;
-        this.statusId = this.order.status_id;
-        this.deliveryPrice = this.order.delivery_price;
-        this.waybill = this.order.waybill;
-        this.invoice = this.order.invoice;
-        this.statuses = data.statuses;
-        this.orderProducts = data.products;
+        this.assignOrderFields(data);
         this.$nextTick(() => {
             this.isReady = true;
             this.$loading.disable();
         });
     },
-    mixins: [product, product_search]
+    mixins: [product, product_search],
+    watch: {},
 };
 </script>
 

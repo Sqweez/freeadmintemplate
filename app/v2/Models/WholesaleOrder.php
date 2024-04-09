@@ -61,6 +61,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereCurrencyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereInvoice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrder whereWaybill($value)
+ * @property-read bool $is_editing_disabled
  */
 class WholesaleOrder extends Model
 {
@@ -109,9 +110,11 @@ class WholesaleOrder extends Model
     /**
      * @throws \Exception
      */
-    public function changeStatus($statusId): WholesaleOrder
+    public function changeStatus($statusId, $userId = null): WholesaleOrder
     {
-        // Проверьте, существует ли данный статус
+        if ($this->status->wholesale_status_id === $statusId) {
+            return $this;
+        }
         $status = WholesaleOrderStatus::find($statusId);
         if (!$status) {
             throw new \Exception('Неверный статус');
@@ -121,9 +124,15 @@ class WholesaleOrder extends Model
             'wholesale_order_id' => $this->id,
             'wholesale_status_id' => $statusId,
             'changed_at' => now(),
+            'user_id' => $userId,
         ]);
 
         return $this;
+    }
+
+    public function getIsEditingDisabledAttribute(): bool
+    {
+        return $this->status->wholesale_status_id > __hardcoded(2);
     }
 
     /**
@@ -141,7 +150,9 @@ class WholesaleOrder extends Model
 
     public function getTotalPriceAttribute()
     {
-        return $this->products->sum('price');
+        return $this->products->reduce(function ($a, WholesaleOrderProduct $c) {
+            return $a + $c->final_price;
+        },0);
     }
 
     public function getPositionCountAttribute()
@@ -159,7 +170,7 @@ class WholesaleOrder extends Model
 
     public function getWaybillURL(): ?string
     {
-        if ($this->status->status->id === 1) {
+        if (in_array($this->status->status->id, __hardcoded([1, 2]))) {
             return null;
         }
         return $this->waybill ? (url('/') . \Storage::url($this->waybill)) : null;
@@ -167,7 +178,7 @@ class WholesaleOrder extends Model
 
     public function getInvoiceURL(): ?string
     {
-        if ($this->status->status->id === 1) {
+        if (in_array($this->status->status->id, __hardcoded([1, 2]))) {
             return null;
         }
         return $this->invoice ? (url('/') . \Storage::url($this->invoice)) : null;
