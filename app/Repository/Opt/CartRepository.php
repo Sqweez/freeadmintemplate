@@ -76,7 +76,7 @@ class CartRepository
         ]);
         $this->cart->fresh();
         $total = $total * (1 - $this->cart->discount / 100);
-        $discountTotal += $total * ($this->cart->discount / 100);
+        //$discountTotal += $total * ($this->cart->discount / 100);
         return [
             'subTotal' => $subTotal,
             'discountTotal' => $discountTotal,
