@@ -23,12 +23,19 @@ class WholesaleOrderProductsResolver implements ProductsResolverInterface
         $orderProducts = $this->order->products
             ->groupBy('product_id')
             ->map(function ($items) {
-                return [
-                    'product' => $items->first(),
-                    'count' => $items->count(),
-                ];
+                return $items
+                    ->groupBy('discount')
+                    ->map(function ($items) {
+                        return [
+                            'product' => $items->first(),
+                            'count' => $items->count()
+                        ];
+                    })
+                    ->values();
             })
-            ->values();
+            ->values()
+            ->flatten(1);
+        \Log::info('Products', $orderProducts->toArray());
         $products = [];
         $totalCount = 0;
         $totalPrice = 0;
@@ -67,7 +74,7 @@ class WholesaleOrderProductsResolver implements ProductsResolverInterface
 
     private function getPrice(WholesaleOrderProduct $product): int
     {
-        return $product->price;
+        return $product->getFinalPriceAttribute();
     }
 
     private function formatPrice($price): string

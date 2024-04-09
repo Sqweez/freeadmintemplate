@@ -6,6 +6,8 @@ use App\Events\Opt\WholesaleOrderCreated;
 use App\Repository\ProductBatchRepository;
 use App\v2\Models\WholesaleClient;
 use App\v2\Models\WholesaleOrder;
+use App\v2\Models\WholesaleOrderProduct;
+use Exception;
 
 class OrderRepository
 {
@@ -58,7 +60,7 @@ class OrderRepository
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function createOrderProducts(WholesaleOrder $order, WholesaleClient $client)
     {
@@ -69,7 +71,7 @@ class OrderRepository
         foreach ($cartProducts as $cartProduct) {
             $existingQuantities = $this->productBatchRepository->getWholesaleProductsQuantity($cartProduct['product_id']);
             if ($existingQuantities < $cartProduct['count']) {
-                throw new \Exception('Некоторых товаров недостаточно на складе');
+                throw new Exception('Некоторых товаров недостаточно на складе');
             }
             for ($i = 0; $i < $cartProduct['count']; $i++) {
                 $batch = $this->productBatchRepository->changeWholesaleProductQuantity($cartProduct['product_id'], -1);
@@ -79,6 +81,7 @@ class OrderRepository
                         'currency_id' => $client->preferred_currency_id,
                         'purchase_price' => $batch->purchase_price,
                         'price' => $cartProduct->getPrice(),
+                        'product_batch_id' => $batch->id,
                     ]);
             }
         }
@@ -87,5 +90,89 @@ class OrderRepository
     private function clearCart(WholesaleClient $client)
     {
         return $client->cart->items()->delete();
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Throwable
+     */
+    public function updateOrder(WholesaleOrder $order, array $products, array $deleted = [])
+    {
+        \DB::transaction(function () use ($order, $products, $deleted) {
+            $this->deleteItemsFromOrder($deleted);
+            $this->processOrderProducts($order, $products);
+        });
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function deleteItemsFromOrder(array $deleted)
+    {
+        if (count($deleted) === 0) {
+            return ;
+        }
+        WholesaleOrderProduct::query()
+            ->whereIn('id', $deleted)
+            ->get()
+            ->groupBy('product_batch_id')
+            ->each(function ($batches, $key) {
+                $this->productBatchRepository->increaseBatchQuantity($key, $batches->count());
+            });
+
+        WholesaleOrderProduct::query()
+            ->whereIn('id', $deleted)
+            ->delete();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function processOrderProducts(WholesaleOrder $order, array $products)
+    {
+        foreach ($products as $product) {
+            if ($product['deltaCount'] < 0) {
+                $ids = collect($product['ids'])->take($product['deltaCount'] * -1)->toArray();
+                $this->deleteItemsFromOrder($ids);
+            }
+            else if ($product['deltaCount'] > 0) {
+                $this->addProductToOrder($order, $product);
+            } else {
+                $this->updateOrderProduct($order, $product);
+            }
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addProductToOrder(WholesaleOrder $order, array $product)
+    {
+        $existingQuantities = $this->productBatchRepository->getWholesaleProductsQuantity($product['product_id']);
+        if ($existingQuantities < $product['deltaCount']) {
+            throw new Exception('На складе недостаточно некоторых товаров');
+        }
+
+        for ($i = 0; $i < $product['deltaCount']; $i++) {
+            $batch = $this->productBatchRepository->changeWholesaleProductQuantity($product['product_id'], -1);
+            $order->products()
+                ->create([
+                    'product_id' => $product['product_id'],
+                    'currency_id' => $order->currency_id,
+                    'purchase_price' => $batch->purchase_price,
+                    'price' => $product['price'],
+                    'product_batch_id' => $batch->id,
+                    'discount' => $product['discount']
+                ]);
+        }
+    }
+
+    private function updateOrderProduct(WholesaleOrder $order, $product)
+    {
+        WholesaleOrderProduct::whereIn('id', $product['ids'])
+            ->update([
+                'price' => $product['price'],
+                'discount' => $product['discount'],
+            ]);
     }
 }

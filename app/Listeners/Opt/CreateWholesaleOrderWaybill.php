@@ -3,9 +3,10 @@
 namespace App\Listeners\Opt;
 
 use App\Events\Opt\WholesaleOrderCreated;
-use App\Service\Documents\WaybillDocumentService;
+use App\Jobs\Opt\CreateWaybillDocument;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CreateWholesaleOrderWaybill
+class CreateWholesaleOrderWaybill implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -26,14 +27,14 @@ class CreateWholesaleOrderWaybill
      */
     public function handle(WholesaleOrderCreated $event)
     {
-        try {
-            $service = new WaybillDocumentService($event->order);
-            $path = $service->create();
-            if ($path) {
-                $event->order->update(['waybill' => $path]);
+        if ($event->shouldQueue) {
+            CreateWaybillDocument::dispatch($event->order);
+        } else {
+            try {
+                CreateWaybillDocument::dispatch($event->order)->onConnection('sync');
+            } catch (\Exception $exception) {
+                \Log::error($exception);
             }
-        } catch (\Exception $exception) {
-            \Log::error($exception);
         }
     }
 }

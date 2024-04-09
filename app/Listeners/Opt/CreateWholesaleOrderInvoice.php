@@ -3,9 +3,10 @@
 namespace App\Listeners\Opt;
 
 use App\Events\Opt\WholesaleOrderCreated;
-use App\Service\Documents\InvoiceDocumentService;
+use App\Jobs\Opt\CreateInvoiceDocument;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CreateWholesaleOrderInvoice
+class CreateWholesaleOrderInvoice implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -25,14 +26,15 @@ class CreateWholesaleOrderInvoice
      */
     public function handle(WholesaleOrderCreated $event)
     {
-        try {
-            $service = new InvoiceDocumentService($event->order);
-            $path = $service->create();
-            if ($path) {
-                $event->order->update(['invoice' => $path]);
+        if ($event->shouldQueue) {
+            CreateInvoiceDocument::dispatch($event->order)->onConnection('database');
+        } else {
+            try {
+                CreateInvoiceDocument::dispatch($event->order)->onConnection('sync');
+            } catch (\Exception $exception) {
+                \Log::error($exception);
             }
-        } catch (\Exception $exception) {
-            \Log::error($exception);
         }
+
     }
 }

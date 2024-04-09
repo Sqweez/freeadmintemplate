@@ -28,6 +28,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrderProduct whereWholesaleOrderId($value)
  * @mixin \Eloquent
  * @property-read \App\v2\Models\ProductSku $product
+ * @property int $discount
+ * @property-read mixed $final_price
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrderProduct whereDiscount($value)
  */
 class WholesaleOrderProduct extends Model
 {
@@ -36,5 +39,10 @@ class WholesaleOrderProduct extends Model
     public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ProductSku::class, 'product_id');
+    }
+
+    public function getFinalPriceAttribute()
+    {
+        return $this->price * (1 - $this->discount / 100);
     }
 }

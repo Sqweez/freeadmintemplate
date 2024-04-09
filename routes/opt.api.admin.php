@@ -12,6 +12,8 @@ Route::prefix('admin')->group(function () {
         Route::prefix('order')->group(function () {
             Route::get('/', [OrderController::class, 'get']);
             Route::get('/{order}', [OrderController::class, 'show']);
+            Route::patch('/{order}', [OrderController::class, 'update']);
+            Route::patch('/products/{order}', [OrderController::class, 'updateOrderProducts']);
             Route::post('/{order}/waybill', [OrderController::class, 'uploadWaybill']);
             Route::post('/{order}/invoice', [OrderController::class, 'uploadInvoice']);
         });

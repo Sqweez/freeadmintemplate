@@ -57,7 +57,8 @@ class OrdersResource extends JsonResource
                     'label' => 'Город',
                     'value' => $this->client->city->name,
                 ],
-            ]
+            ],
+            'is_editing_disabled' => $this->getIsEditingDisabledAttribute()
         ];
     }
 }
