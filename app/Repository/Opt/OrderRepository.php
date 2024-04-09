@@ -55,6 +55,7 @@ class OrderRepository
         $wholesaleOrder->name = $payload['name'];
         $wholesaleOrder->comment = $payload['comment'];
         $wholesaleOrder->currency_id = $client->preferred_currency_id;
+        $wholesaleOrder->discount = $client->cart->discount;
         $wholesaleOrder->save();
         return $wholesaleOrder;
     }
