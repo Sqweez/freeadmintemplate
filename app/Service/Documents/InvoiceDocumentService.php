@@ -118,6 +118,8 @@ class InvoiceDocumentService extends BaseDocumentService
         }
 
         $activeSheet->setCellValue('AG' . (self::PRODUCT_ROW + count($products['products'])), 'Итого: ' . $products['totalPrice']);
+        $activeSheet->setCellValue('AG' . (self::PRODUCT_ROW + 1 + count($products['products'])), 'Без налога (НДС): ' . $products['totalPrice']);
+        $activeSheet->setCellValue('AG' . (self::PRODUCT_ROW + 2 + count($products['products'])), 'Всего к оплате: ' . $products['totalPrice']);
         $activeSheet->setCellValue('B' . (28 + count($products['products'])), 'Всего наименований ' . $products['totalCount'] . ', на сумму ' . $products['totalPriceText'] . '.');
     }
 }
