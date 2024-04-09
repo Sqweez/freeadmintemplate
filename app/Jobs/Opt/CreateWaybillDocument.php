@@ -39,8 +39,7 @@ class CreateWaybillDocument implements ShouldQueue
         if ($path) {
             if ($this->order->waybill) {
                 try {
-                    \Storage::delete($this->order->waybill);
-
+                    \Storage::disk('public')->delete($this->order->waybill);
                 } catch (\Exception $exception) {
 
                 } finally {
