@@ -5,28 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Jobs/Opt/CreateInvoiceDocument.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Jobs/Opt/CreateWaybillDocument.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2024_04_09_154846_alter_table_wholesale_order_products.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2024_04_09_163652_alter_table_wholesale_order_products_batch_id.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Opt/OrderBaseInfo.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Opt/OrderProducts.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Events/Opt/WholesaleOrderCreated.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Events/Opt/WholesaleOrderCreated.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/admin/v1/OrderController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/admin/v1/OrderController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/Admin/OrdersResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/Admin/OrdersResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderInvoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderInvoice.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderWaybill.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Listeners/Opt/CreateWholesaleOrderWaybill.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repository/Opt/OrderRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/Opt/OrderRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repository/ProductBatchRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/ProductBatchRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Service/Documents/InvoiceDocumentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Documents/InvoiceDocumentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Service/Documents/Products/WholesaleOrderProductsResolver.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Documents/Products/WholesaleOrderProductsResolver.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Service/Documents/WaybillDocumentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Documents/WaybillDocumentService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/v2/Models/WholesaleOrder.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/WholesaleOrder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/v2/Models/WholesaleOrderProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/WholesaleOrderProduct.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Opt/Orders/OrdersShow.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Opt/Orders/OrdersShow.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/opt.api.admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/opt.api.admin.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -341,8 +321,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.hot" />
         <item itemvalue="npm.prod" />
+        <item itemvalue="npm.hot" />
         <item itemvalue="npm.watch-poll" />
         <item itemvalue="npm.watch" />
         <item itemvalue="npm.dev" />
@@ -612,7 +592,7 @@
       <workItem from="1712309829965" duration="6499000" />
       <workItem from="1712519745094" duration="3445000" />
       <workItem from="1712569031783" duration="19367000" />
-      <workItem from="1712651401042" duration="16281000" />
+      <workItem from="1712651401042" duration="16866000" />
     </task>
     <servers />
   </component>

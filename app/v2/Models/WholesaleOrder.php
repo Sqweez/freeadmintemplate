@@ -112,7 +112,7 @@ class WholesaleOrder extends Model
      */
     public function changeStatus($statusId, $userId = null): WholesaleOrder
     {
-        if ($this->status->wholesale_status_id === $statusId) {
+        if ($this->status && $this->status->wholesale_status_id === $statusId) {
             return $this;
         }
         $status = WholesaleOrderStatus::find($statusId);
