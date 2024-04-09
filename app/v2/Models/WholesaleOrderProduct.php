@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $discount
  * @property-read mixed $final_price
  * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrderProduct whereDiscount($value)
+ * @property int|null $product_batch_id
+ * @method static \Illuminate\Database\Eloquent\Builder|WholesaleOrderProduct whereProductBatchId($value)
  */
 class WholesaleOrderProduct extends Model
 {
