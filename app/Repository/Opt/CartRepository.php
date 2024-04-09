@@ -70,6 +70,11 @@ class CartRepository
         }
 
         $total = $subTotal - $discountTotal;
+        // @TODO Move to separate method
+        $this->cart->update([
+            'discount' => $this->calculateDiscountByTotal($total)
+        ]);
+        $this->cart->fresh();
         $total = $total * (1 - $this->cart->discount / 100);
         $discountTotal += $total * ($this->cart->discount / 100);
         return [
@@ -78,6 +83,20 @@ class CartRepository
             'total' => $total,
             'itemsTotal' => $cartItems->sum('count')
         ];
+    }
+
+    private function calculateDiscountByTotal($total): int
+    {
+        if ($total >= 1_000_000) {
+            return 15;
+        }
+        if ($total >= 500_000) {
+            return 10;
+        }
+        if ($total >= 200_000) {
+            return 5;
+        }
+        return 0;
     }
 
     /**
