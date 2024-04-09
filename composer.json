@@ -23,7 +23,8 @@
         "phpoffice/phpspreadsheet": "^1.13",
         "spatie/laravel-backup": "^6.16",
         "ext-json": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+      "ext-intl": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "*",
