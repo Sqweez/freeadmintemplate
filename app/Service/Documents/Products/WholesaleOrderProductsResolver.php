@@ -62,7 +62,7 @@ class WholesaleOrderProductsResolver implements ProductsResolverInterface
             'totalPrice' => $this->formatPrice($totalPrice),
             'totalCount' => $this->formatPrice($totalCount),
             'totalCountText' => number2string($totalCount),
-            'totalPriceText' => number2string($totalPrice) . $this->order->currency->getDeclension($totalPrice),
+            'totalPriceText' => number2string($totalPrice) . " ". $this->order->currency->getDeclension($totalPrice),
         ];
     }
 
