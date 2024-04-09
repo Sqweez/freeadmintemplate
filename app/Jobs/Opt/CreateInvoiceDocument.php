@@ -39,7 +39,7 @@ class CreateInvoiceDocument implements ShouldQueue
         if ($path) {
             try {
                 if ($this->order->invoice) {
-                    \Storage::delete($this->order->invoice);
+                    \Storage::disk('public')->delete($this->order->invoice);
                 }
             } catch (\Exception $exception) {
 
