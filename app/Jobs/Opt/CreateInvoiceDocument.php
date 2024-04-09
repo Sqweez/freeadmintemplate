@@ -37,7 +37,15 @@ class CreateInvoiceDocument implements ShouldQueue
         $service = new InvoiceDocumentService($this->order);
         $path = $service->create();
         if ($path) {
-            $this->order->update(['invoice' => $path]);
+            try {
+                if ($this->order->invoice) {
+                    \Storage::delete($this->order->invoice);
+                }
+            } catch (\Exception $exception) {
+
+            } finally {
+                $this->order->update(['invoice' => $path]);
+            }
         }
     }
 }
