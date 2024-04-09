@@ -53,6 +53,8 @@ class WholesaleOrderProductsResolver implements ProductsResolverInterface
             ];
         }
 
+        $totalPrice = floatval($totalPrice);
+
         $totalPrice = $totalPrice * (1 - $this->order->discount / 100);
 
         return [
