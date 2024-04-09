@@ -15,8 +15,11 @@ if (!function_exists('now_format')) {
 }
 
 if (!function_exists('number2string')) {
-    function number2string ($number)
+    function number2string ($number): string
     {
+        $f = new NumberFormatter("ru", NumberFormatter::SPELLOUT);
+        return $f->format($number);
+
         // обозначаем словарь в виде статической переменной функции, чтобы
         // при повторном использовании функции его не определять заново
 
