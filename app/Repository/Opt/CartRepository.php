@@ -90,7 +90,8 @@ class CartRepository
     private function getNotifications(): ?array
     {
         $latestItem = UserCartItem::where('cart_id', $this->cart->id)->latest('updated_at')->first();
-        $latestItem->load('product.product:id,manufacturer_id');
+        $latestItem->load('product.product:id,manufacturer_id,category_id');
+        $notification = null;
         if ($latestItem->product->product->manufacturer_id === __hardcoded(608)) {
             $skus = $latestItem->product->relativeSku()->select(['id', 'product_id'])->get();
             $inCartSkuCount = UserCartItem::query()
@@ -98,13 +99,15 @@ class CartRepository
                 ->whereIn('product_id', $skus->pluck('id')->toArray())
                 ->get()
                 ->sum('count');
-            return [
-                'title' => 'Акция 7+1 на Nomad Nutrition',
-                'text' => 'При покупке 7 позиций, 8-ая будет бесплатной',
-                'skus' => $inCartSkuCount,
-            ];
+
+            if ($inCartSkuCount % 6 === 0) {
+                $notification = [
+                    'title' => 'Акция 7+1 на Nomad Nutrition',
+                    'text' => 'При покупке 7 позиций, 8-ая будет бесплатной',
+                ];
+            }
         }
-        return null;
+        return $notification;
     }
 
     private function getSpecialMessage($total): array
