@@ -51,7 +51,6 @@ class CartRepository
 
     public function getTotal(): array
     {
-        $this->cart->fresh(['items']);
         $cartItems = $this->cart->items()->with('product')->get();
         $prices = WholesalePrice::query()
             ->whereIn('product_id', $cartItems->pluck('product.product_id')->toArray())
@@ -147,6 +146,8 @@ class CartRepository
         ], [
             'count' => $inCartCount + $count,
         ]);
+
+        $this->cart = $this->retrieveCart();
 
         return [
             'inCart' => $inCartCount + $count,
