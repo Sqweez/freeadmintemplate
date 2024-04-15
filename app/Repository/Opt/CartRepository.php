@@ -145,6 +145,7 @@ class CartRepository
             }
             if ($totalCount >= 8) {
                 $sets = floor($totalCount / 8);
+                \Log::info('sets: ' . $sets);
                 $discount = $sets;  // Даем 1 бесплатный товар за каждые 8 купленных
                 if ($discount > 0) {
                     $item = UserCartItem::find($items->last()->id);
