@@ -143,11 +143,16 @@ class CartRepository
             $neededFreeItems = intdiv($totalCount, 8) - $freeItemCount; // Вычисляем сколько бесплатных товаров должно быть
 
             if ($neededFreeItems > 0) {
-                $item = $items->where('discount', '<', 100)->last(); // Предположим, что мы выбираем первый платный товар
-                $freeProduct = $item->replicate();
-                $freeProduct->count = $neededFreeItems;
-                $freeProduct->discount = 100;
-                $freeProduct->save();
+                $item = $items->where('discount', '<', 100)->last();
+                if ($freeItemCount > 0) {
+                    $freeProduct = $items->where('discount', 100)->first();
+                    $freeProduct->increment('count', $neededFreeItems);
+                } else {
+                    $freeProduct = $item->replicate();
+                    $freeProduct->count = $neededFreeItems;
+                    $freeProduct->discount = 100;
+                    $freeProduct->save();
+                }
                 $item->decrement('count', $neededFreeItems);
                 \Log::info("Продукт ID: $key - Применена акция '7+1'. Всего бесплатных товаров: $neededFreeItems");
             } elseif ($neededFreeItems < 0) {
