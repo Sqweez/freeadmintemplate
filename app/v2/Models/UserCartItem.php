@@ -45,7 +45,7 @@ class UserCartItem extends Model
 
     public function getPrice()
     {
-        $basePrice = $this->product->product->wholesale_prices->first()->price;
+        $basePrice = $this->getBasePrice();
         if (!$this->discount) {
             return $basePrice;
         }
@@ -54,6 +54,8 @@ class UserCartItem extends Model
 
     public function getBasePrice()
     {
-        return $this->product->product->wholesale_prices->first()->price;
+        $user = auth()->user();
+        $currencyId = $user ? $user->preferred_currency_id : __hardcoded(2);
+        return $this->product->product->wholesale_prices->where('currency_id', $currencyId)->first()->price;
     }
 }
