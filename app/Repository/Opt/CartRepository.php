@@ -133,7 +133,7 @@ class CartRepository
     private function applyPromotions()
     {
         // NOMAD 7+1
-        $products = $this->cart->items;
+        $products = $this->cart->items()->get();
         $products->load('product.product:id,manufacturer_id');
         $nomadProducts = $products->where('product.product.manufacturer_id', 608)->groupBy('product.product_id');
         foreach ($nomadProducts as $key => $items) {
