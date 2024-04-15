@@ -174,23 +174,36 @@ class CartRepository
     /**
      * @throws Exception
      */
-    public function addProductToCart(int $productId, int $count): array
+    public function addProductToCart(int $productId, int $count, ?int $cartProductId = null): array
     {
         $availableQuantity = $this->productBatchRepository->getProductQuantityInStore($productId, $this->store);
         $inCartCount = $this->getInCartProductCount($productId);
-
-        $quantityDelta = $availableQuantity - $count - $inCartCount;
-
-        if ($quantityDelta < 0) {
-            throw new Exception('Недостаточно товара');
+        if ($count > 0) {
+            $quantityDelta = $availableQuantity - $count - $inCartCount;
+            if ($quantityDelta < 0) {
+                throw new Exception('Недостаточно товара');
+            }
         }
 
+        if ($cartProductId) {
+            $item = UserCartItem::find($cartProductId);
+            $item->count += $count;
+            $item->save();
+        } else {
+            $this->cart->items()->create([
+                'product_id' => $productId,
+                'discount' => 0,
+                'count' => $count
+            ]);
+        }
+
+/*
         $this->cart->items()->updateOrCreate([
             'product_id' => $productId,
             'discount' => 0,
         ], [
             'count' => $inCartCount + $count,
-        ]);
+        ]);*/
 
 
         return [
