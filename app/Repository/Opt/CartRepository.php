@@ -140,9 +140,8 @@ class CartRepository
         foreach ($nomadProducts as $key => $items) {
             $totalCount = 0;
             foreach ($items as $item) {
-                if ($item['discount'] === 0) {
-                    $totalCount += $item['count'];
-                }
+                $totalCount += $item['count'];
+
             }
             if ($totalCount >= 8) {
                 $sets = floor($totalCount / 8);
