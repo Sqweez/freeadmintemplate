@@ -97,31 +97,33 @@ class CatalogueController extends BaseApiController
         }]);
         $variants =
             app(VariantRepository::class)->get($product, auth()->user());
-        $sameProducts = Product::query()
-            ->where('is_opt', true)
-            ->tap(function ($query) use ($productResolver) {
-                return $productResolver->attachAdditionalEntities($query);
-            })
-            ->with([
-                'wholesale_prices' => function ($query) use ($currency) {
-                    return $query->where('currency_id', $currency);
-                }
-            ])
-            ->with(['batches' => function ($q) {
-                $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
-                return $q
-                    ->where('store_id', $wholesaleStoreId)
-                    ->where('quantity', '>', 0);
-            }])
-            ->whereHas('batches', function ($q) {
-                $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
-                return $q
-                    ->where('store_id', $wholesaleStoreId)
-                    ->where('quantity', '>', 0);
-            })
-            ->whereKeyNot($product->id)
-            ->where('category_id', $product->category_id)
-            ->get();
+        $sameProducts = \Cache::remember('SAME_PRODUCTS-' . $product->id, 60 * 60, function () use ($productResolver, $currency, $product) {
+            return Product::query()
+                ->where('is_opt', true)
+                ->tap(function ($query) use ($productResolver) {
+                    return $productResolver->attachAdditionalEntities($query);
+                })
+                ->with([
+                    'wholesale_prices' => function ($query) use ($currency) {
+                        return $query->where('currency_id', $currency);
+                    }
+                ])
+                ->with(['batches' => function ($q) {
+                    $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
+                    return $q
+                        ->where('store_id', $wholesaleStoreId)
+                        ->where('quantity', '>', 0);
+                }])
+                ->whereHas('batches', function ($q) {
+                    $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
+                    return $q
+                        ->where('store_id', $wholesaleStoreId)
+                        ->where('quantity', '>', 0);
+                })
+                ->whereKeyNot($product->id)
+                ->where('category_id', $product->category_id)
+                ->get();
+        });
         return $this->respondSuccessNoReport([
             'product' => SingleProductResource::make($product),
             'variants' => VariantResource::collection(
