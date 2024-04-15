@@ -135,7 +135,7 @@ class CartRepository
         // NOMAD 7+1
         $products = $this->cart->items;
         $products->load('product.product:id,manufacturer_id');
-        $nomadProducts = $products->where('product.product.manufacturer_id', 608);
+        $nomadProducts = $products->where('product.product.manufacturer_id', 608)->groupBy('product.product_id');
         \Log::info('nomad', $nomadProducts->toArray());
     }
 
