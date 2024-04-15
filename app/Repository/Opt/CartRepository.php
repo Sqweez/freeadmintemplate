@@ -136,7 +136,19 @@ class CartRepository
         $products = $this->cart->items;
         $products->load('product.product:id,manufacturer_id');
         $nomadProducts = $products->where('product.product.manufacturer_id', 608)->groupBy('product.product_id');
-        \Log::info('nomad', $nomadProducts->toArray());
+        foreach ($nomadProducts as $key => $items) {
+            $totalCount = 0;
+            foreach ($items as $item) {
+                $totalCount += $item['count'];
+            }
+            if ($totalCount >= 8 && $totalCount % 8 === 0) {
+                $sets = floor($totalCount / 8);
+                $discount = $sets;  // Даем 1 бесплатный товар за каждые 8 купленных
+                \Log::info("Продукт ID: $key - Применена акция '7+1'. Всего бесплатных товаров: $discount");
+            } else {
+                \Log::info("Продукт ID: $key - Акция '7+1' не применена. Общее количество товаров: $totalCount");
+            }
+        }
     }
 
     private function calculateDiscountByTotal($total): int
