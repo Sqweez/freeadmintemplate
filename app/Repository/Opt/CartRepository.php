@@ -93,10 +93,14 @@ class CartRepository
         $latestItem->load('product.product:id,manufacturer_id');
         if ($latestItem->product->product->manufacturer_id === __hardcoded(608)) {
             $skus = $latestItem->product->relativeSku()->select(['id', 'product_id'])->get();
+            $inCartSku = UserCartItem::query()
+                ->where('cart_id', $this->cart->id)
+                ->whereIn('product_id', $skus->pluck('id')->toArray())
+                ->get();
             return [
                 'title' => 'Акция 7+1 на Nomad Nutrition',
                 'text' => 'При покупке 7 позиций, 8-ая будет бесплатной',
-                'skus' => $skus,
+                'skus' => $inCartSku,
             ];
         }
         return null;
