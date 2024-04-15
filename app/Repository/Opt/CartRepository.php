@@ -34,7 +34,8 @@ class CartRepository
 
     public function getCart(): Collection
     {
-        return $this->cart
+        $this->applyPromotions();
+        $products = $this->cart
             ->items
             ->load(['product.product.wholesale_prices' => function ($q) {
                 return $q->where('currency_id', $this->client->preferred_currency_id);
@@ -46,6 +47,9 @@ class CartRepository
             ->load(['product.batches' => function ($query) {
                 return $query->where('store_id', Store::whereTypeId(4)->first()->id)->where('quantity', '>', 0);
             }]);
+
+
+        return $products;
     }
 
     public function getTotal(): array
@@ -128,7 +132,11 @@ class CartRepository
 
     private function applyPromotions()
     {
-        // @TODO пока только одна захардкоженная акция, изменится в дальнейшем
+        // NOMAD 7+1
+        $products = $this->cart->items;
+        $products->load('product.product:id,manufacturer_id');
+        $nomadProducts = $products->where('product.product.manufacturer_id', 608);
+        \Log::info('nomad', $nomadProducts->toArray());
     }
 
     private function calculateDiscountByTotal($total): int
