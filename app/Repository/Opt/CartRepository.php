@@ -90,6 +90,9 @@ class CartRepository
     private function getNotifications(): ?array
     {
         $latestItem = UserCartItem::where('cart_id', $this->cart->id)->latest('updated_at')->first();
+        if (!$latestItem) {
+            return null;
+        }
         $latestItem->load('product.product:id,manufacturer_id,category_id');
         $notification = null;
         if ($latestItem->product->product->manufacturer_id === __hardcoded(608)) {
