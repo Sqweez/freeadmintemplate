@@ -140,10 +140,10 @@ class CartRepository
         foreach ($nomadProducts as $key => $items) {
             $totalCount = $items->sum('count'); // Исключаем уже бесплатные товары из подсчета
             $freeItemCount = $items->where('discount', 100)->sum('count');
-            $neededFreeItems = intdiv($totalCount, 8) - $freeItemCount; // Вычисляем сколько бесплатных товаров должно быть
-
+            $requiredItemCount = intdiv($totalCount, 8);
+            $neededFreeItems = $requiredItemCount - $freeItemCount; // Вычисляем сколько бесплатных товаров должно быть
+            $item = $items->where('discount', '<', 100)->last();
             if ($neededFreeItems > 0) {
-                $item = $items->where('discount', '<', 100)->last();
                 if ($freeItemCount > 0) {
                     $freeProduct = $items->where('discount', 100)->first();
                     $freeProduct->increment('count', $neededFreeItems);
@@ -156,7 +156,13 @@ class CartRepository
                 $item->decrement('count', $neededFreeItems);
                 \Log::info("Продукт ID: $key - Применена акция '7+1'. Всего бесплатных товаров: $neededFreeItems");
             } elseif ($neededFreeItems < 0) {
-                // Логика для удаления лишних бесплатных товаров, если они были добавлены ранее
+                $freeProduct = $items->where('discount', 100)->first();
+                if ($requiredItemCount === 0) {
+                    $freeProduct->delete();
+                } else {
+                    $freeProduct->increment('count', $neededFreeItems);
+                }
+                $item->increment('count', $neededFreeItems * -1);
             }
         }
     }
