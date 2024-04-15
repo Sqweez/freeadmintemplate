@@ -89,7 +89,9 @@ class CartRepository
 
     private function getNotifications()
     {
-
+        return [
+            'cart' => $this->cart,
+        ];
     }
 
     private function getSpecialMessage($total): array
