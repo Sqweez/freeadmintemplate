@@ -87,10 +87,17 @@ class CartRepository
         ];
     }
 
-    private function getNotifications()
+    private function getNotifications(): ?array
     {
         $latestItem = UserCartItem::where('cart_id', $this->cart->id)->latest('updated_at')->first();
-        return $latestItem;
+        $latestItem->load('product.product:id,manufacturer_id');
+        if ($latestItem->product->product->manufacturer_id === __hardcoded(608)) {
+            return [
+                'title' => 'Акция 7+1 на Nomad Nutrition',
+                'text' => 'При покупке 7 позиций, 8-ая будет бесплатной',
+            ];
+        }
+        return null;
     }
 
     private function getSpecialMessage($total): array
