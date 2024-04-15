@@ -187,6 +187,7 @@ class CartRepository
 
         $this->cart->items()->updateOrCreate([
             'product_id' => $productId,
+            'discount' => 0,
         ], [
             'count' => $inCartCount + $count,
         ]);
