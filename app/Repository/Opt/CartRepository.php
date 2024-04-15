@@ -85,6 +85,11 @@ class CartRepository
         ];
     }
 
+    private function applyPromotions()
+    {
+        // @TODO пока только одна захардкоженная акция, изменится в дальнейшем
+    }
+
     private function calculateDiscountByTotal($total): int
     {
         if ($total >= 1_000_000) {
