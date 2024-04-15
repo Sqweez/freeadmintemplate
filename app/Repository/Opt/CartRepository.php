@@ -144,7 +144,7 @@ class CartRepository
                     $totalCount += $item['count'];
                 }
             }
-            if ($totalCount >= 8 && $totalCount % 8 === 0) {
+            if ($totalCount >= 8) {
                 $sets = floor($totalCount / 8);
                 $discount = $sets;  // Даем 1 бесплатный товар за каждые 8 купленных
                 if ($discount > 0) {
