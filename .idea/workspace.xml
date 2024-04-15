@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/Repository/Opt/OrderRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/Opt/OrderRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/CatalogueController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/CatalogueController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resolvers/Opt/OptCatalogProductResolver.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resolvers/Opt/OptCatalogProductResolver.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -596,7 +598,8 @@
       <workItem from="1712916806910" duration="2077000" />
       <workItem from="1712926543667" duration="586000" />
       <workItem from="1712945397861" duration="3697000" />
-      <workItem from="1713177692362" duration="12298000" />
+      <workItem from="1713177692362" duration="13038000" />
+      <workItem from="1713219978194" duration="168000" />
     </task>
     <servers />
   </component>
