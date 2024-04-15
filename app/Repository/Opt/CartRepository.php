@@ -35,18 +35,17 @@ class CartRepository
     public function getCart(): Collection
     {
         return $this->cart
-            ->items()
-            ->with(['product.product.wholesale_prices' => function ($q) {
+            ->items
+            ->load(['product.product.wholesale_prices' => function ($q) {
                 return $q->where('currency_id', $this->client->preferred_currency_id);
             }])
-            ->with(['product.product.manufacturer:id,manufacturer_name'])
-            ->with(['product.product.product_thumbs'])
-            ->with(['product.product.attributes'])
-            ->with(['product.attributes'])
-            ->with(['product.batches' => function ($query) {
+            ->load(['product.product.manufacturer:id,manufacturer_name'])
+            ->load(['product.product.product_thumbs'])
+            ->load(['product.product.attributes'])
+            ->load(['product.attributes'])
+            ->load(['product.batches' => function ($query) {
                 return $query->where('store_id', Store::whereTypeId(4)->first()->id)->where('quantity', '>', 0);
-            }])
-            ->get();
+            }]);
     }
 
     public function getTotal(): array
@@ -166,6 +165,8 @@ class CartRepository
             'count' => $inCartCount + $count,
         ]);
 
+        $this->applyPromotions();
+
         return [
             'inCart' => $inCartCount + $count,
             'available' => $availableQuantity,
@@ -180,6 +181,7 @@ class CartRepository
     {
         if ($item) {
             $item->delete();
+            $this->applyPromotions();
         } else {
             throw new Exception('Товар не найден в корзине');
         }
