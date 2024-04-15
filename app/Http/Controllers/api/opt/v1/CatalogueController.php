@@ -123,7 +123,7 @@ class CatalogueController extends BaseApiController
             ->whereKeyNot($product->id)
             ->where('category_id', $product->category_id)
             ->get();
-        return $this->respondSuccess([
+        return $this->respondSuccessNoReport([
             'product' => SingleProductResource::make($product),
             'variants' => VariantResource::collection(
                 $variants
