@@ -82,8 +82,14 @@ class CartRepository
             'discountTotal' => $discountTotal,
             'total' => $total,
             'itemsTotal' => $cartItems->sum('count'),
-            'specialMessage' => $this->getSpecialMessage($total)
+            'specialMessage' => $this->getSpecialMessage($total),
+            'notifications' => $this->getNotifications()
         ];
+    }
+
+    private function getNotifications()
+    {
+
     }
 
     private function getSpecialMessage($total): array
@@ -165,7 +171,7 @@ class CartRepository
 
     private function retrieveCart(): UserCart
     {
-        return $this->client->cart()->firstOrCreate([]);
+        return $this->client->cart()->with(['items.product'])->firstOrCreate([]);
     }
 
     private function retrieveStore()
