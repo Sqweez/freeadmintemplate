@@ -175,7 +175,7 @@ class CartRepository
 
     private function retrieveCart(): UserCart
     {
-        return $this->client->cart()->with(['items.product'])->firstOrCreate([]);
+        return $this->client->cart()->with(['items.product.product:id,product_name,manufacturer_id'])->firstOrCreate([]);
     }
 
     private function retrieveStore()
