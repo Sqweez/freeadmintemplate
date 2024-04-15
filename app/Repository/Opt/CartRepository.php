@@ -89,9 +89,8 @@ class CartRepository
 
     private function getNotifications()
     {
-        return [
-            'cart' => $this->cart,
-        ];
+        $latestItem = UserCartItem::where('cart_id', $this->cart->id)->latest('updated_at')->first();
+        return $latestItem;
     }
 
     private function getSpecialMessage($total): array
