@@ -30,11 +30,17 @@ class CatalogueController extends BaseApiController
      */
     public function getCatalogEntities(): JsonResponse
     {
+        $favorites = [];
+        if (auth()->user()) {
+            $favorites = WholesaleFavorite::whereWholesaleClientId(auth()->user()->id)->pluck('product_id')->toArray();
+        }
+
         return $this->respondSuccess([
             'catalogue' => [
                 'brands' => app(BrandRepository::class)->get(),
                 'categories' => app(CategoryRepository::class)->get(),
                 'currencies' => Currency::all(),
+                'favorites' => $favorites
             ]
         ]);
     }

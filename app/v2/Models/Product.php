@@ -488,4 +488,22 @@ class Product extends Model
             'color' => '#2A972E',
         ];
     }
+
+    public function getChips(): array
+    {
+        $chips = [];
+        if (Carbon::parse($this->created_at)->gte(today()->subMonth())) {
+            $chips[] = [
+                'type' => 'new',
+                'text' => 'New'
+            ];
+        }
+        if ($this->manufacturer_id === 608) {
+            $chips[] = [
+                'type' => 'stock',
+                'text' => '7+1'
+            ];
+        }
+        return $chips;
+    }
 }

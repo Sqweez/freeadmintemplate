@@ -67,7 +67,7 @@ class WholesaleClient extends Model implements Authenticatable
     public function getFullNameAttribute(): string
     {
         return trim(
-            sprintf("%s %s %s", $this->first_name, $this->last_name, $this->patronymic)
+            sprintf("%s %s %s",  $this->last_name, $this->first_name, $this->patronymic)
         );
     }
 
