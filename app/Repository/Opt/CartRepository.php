@@ -81,8 +81,23 @@ class CartRepository
             'subTotal' => $subTotal,
             'discountTotal' => $discountTotal,
             'total' => $total,
-            'itemsTotal' => $cartItems->sum('count')
+            'itemsTotal' => $cartItems->sum('count'),
+            'specialMessage' => $this->getSpecialMessage($total)
         ];
+    }
+
+    private function getSpecialMessage($total): array
+    {
+        $messages = [];
+        // @TODO будет переработано в дальнейшем
+        if ($total >= 30_000) {
+            $messages[] = [
+                'type' => 'info',
+                'message' => 'Бесплатная доставка на первый заказ'
+            ];
+        }
+
+        return $messages;
     }
 
     private function applyPromotions()
