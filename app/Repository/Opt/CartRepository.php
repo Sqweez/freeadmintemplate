@@ -162,9 +162,6 @@ class CartRepository
                 } else {
                     $freeProduct->increment('count', $neededFreeItems);
                 }
-                if ($item) {
-                    $item->increment('count', $neededFreeItems * -1);
-                }
             }
         }
     }
