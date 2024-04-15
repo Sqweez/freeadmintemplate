@@ -30,7 +30,8 @@ class SingleProductResource extends JsonResource
             'product_images' => $this->product_images->count() > 0 ? $this->product_images->pluck('image')->map(function ($image) {
                 return url('/') . Storage::url($image);
             })->toArray() : [url('/') . Storage::url('products/product_image_default.jpg')],
-            'quantity_type' => $this->getWholesaleQuantityType($quantity)
+            'quantity_type' => $this->getWholesaleQuantityType($quantity),
+            'chips' => $this->getChips(),
         ];
     }
 }
