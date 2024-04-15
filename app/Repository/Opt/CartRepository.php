@@ -143,7 +143,7 @@ class CartRepository
             $neededFreeItems = intdiv($totalCount, 8) - $freeItemCount; // Вычисляем сколько бесплатных товаров должно быть
 
             if ($neededFreeItems > 0) {
-                $item = $items->where('discount', '<', 100)->first(); // Предположим, что мы выбираем первый платный товар
+                $item = $items->where('discount', '<', 100)->last(); // Предположим, что мы выбираем первый платный товар
                 $freeProduct = $item->replicate();
                 $freeProduct->count = $neededFreeItems;
                 $freeProduct->discount = 100;
