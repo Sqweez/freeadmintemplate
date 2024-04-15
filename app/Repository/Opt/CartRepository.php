@@ -34,7 +34,6 @@ class CartRepository
 
     public function getCart(): Collection
     {
-        $this->applyPromotions();
         $products = $this->cart
             ->items
             ->load(['product.product.wholesale_prices' => function ($q) {
@@ -54,6 +53,7 @@ class CartRepository
 
     public function getTotal(): array
     {
+        $this->applyPromotions();
         $cartItems = $this->cart->items()->with('product')->get();
         $prices = WholesalePrice::query()
             ->whereIn('product_id', $cartItems->pluck('product.product_id')->toArray())
@@ -173,7 +173,6 @@ class CartRepository
             'count' => $inCartCount + $count,
         ]);
 
-        $this->applyPromotions();
 
         return [
             'inCart' => $inCartCount + $count,
@@ -189,7 +188,6 @@ class CartRepository
     {
         if ($item) {
             $item->delete();
-            $this->applyPromotions();
         } else {
             throw new Exception('Товар не найден в корзине');
         }
