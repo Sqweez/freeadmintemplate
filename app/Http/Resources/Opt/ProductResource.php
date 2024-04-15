@@ -30,7 +30,7 @@ class ProductResource extends JsonResource
             'brand_id' => $this->manufacturer_id,
             'quantity_type' => $this->getWholesaleQuantityType($quantity),
             'quantity' => $quantity,
-            'quantity_merged' => $this->quantities->sum('quantity'),
+            //'quantity_merged' => $this->quantities->sum('quantity'),
             'chips' => $this->getChips(),
         ];
 
