@@ -36,6 +36,7 @@ class CartRepository
     {
         $products = $this->cart
             ->items
+            ->where('count', '>', 0)
             ->load(['product.product.wholesale_prices' => function ($q) {
                 return $q->where('currency_id', $this->client->preferred_currency_id);
             }])
@@ -144,14 +145,15 @@ class CartRepository
             if ($totalCount >= 8 && $totalCount % 8 === 0) {
                 $sets = floor($totalCount / 8);
                 $discount = $sets;  // Даем 1 бесплатный товар за каждые 8 купленных
-                $item = UserCartItem::find($items->last()->id);
-                $freeProduct = $item->replicate();
-                $item->decrement('count', $discount);
-                $freeProduct->count = $discount;
-                $freeProduct->discount = 100;
-                $freeProduct->save();
+                if ($discount > 0) {
+                    $item = UserCartItem::find($items->last()->id);
+                    $freeProduct = $item->replicate();
+                    $item->decrement('count', $discount);
+                    $freeProduct->count = $discount;
+                    $freeProduct->discount = 100;
+                    $freeProduct->save();
+                }
                 \Log::info("Продукт ID: $key - Применена акция '7+1'. Всего бесплатных товаров: $discount");
-                \Log::info("Товар для обновления", $item->toArray());
             } else {
                 \Log::info("Продукт ID: $key - Акция '7+1' не применена. Общее количество товаров: $totalCount");
             }
