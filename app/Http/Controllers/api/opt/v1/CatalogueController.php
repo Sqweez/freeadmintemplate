@@ -77,7 +77,7 @@ class CatalogueController extends BaseApiController
             return $productResolver->attachAdditionalEntities($query);
         });
         return $this->respondSuccessNoReport([
-            'products' => ProductResource::collection($products->paginate(16)),
+            'products' => ProductResource::collection($products->get()),
         ]);
     }
 
