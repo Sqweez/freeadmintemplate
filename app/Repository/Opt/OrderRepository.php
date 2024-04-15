@@ -83,6 +83,7 @@ class OrderRepository
                         'purchase_price' => $batch->purchase_price,
                         'price' => $cartProduct->getPrice(),
                         'product_batch_id' => $batch->id,
+                        'discount' => $cartProduct['discount'],
                     ]);
             }
         }
