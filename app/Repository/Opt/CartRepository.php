@@ -138,7 +138,7 @@ class CartRepository
         $products->load('product.product:id,manufacturer_id');
         $nomadProducts = $products->where('product.product.manufacturer_id', 608)->groupBy('product.product_id');
         foreach ($nomadProducts as $key => $items) {
-            $totalCount = $items->sum('count') - $items->where('discount', 100)->sum('count'); // Исключаем уже бесплатные товары из подсчета
+            $totalCount = $items->sum('count'); // Исключаем уже бесплатные товары из подсчета
             $freeItemCount = $items->where('discount', 100)->sum('count');
             $neededFreeItems = intdiv($totalCount, 8) - $freeItemCount; // Вычисляем сколько бесплатных товаров должно быть
 
