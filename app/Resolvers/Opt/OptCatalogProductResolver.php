@@ -52,9 +52,9 @@ class OptCatalogProductResolver
                 ->where('store_id', $wholesaleStoreIds)
                 ->where('quantity', '>', 0);
         }])
-        ->with(['quantities' => function ($q) use ($wholesaleStoreIds) {
+       /* ->with(['quantities' => function ($q) use ($wholesaleStoreIds) {
             return $q->whereIn('store_id', $wholesaleStoreIds);
-        }])
+        }])*/
         ->whereHas('batches', function ($q) use ($wholesaleStoreIds){
             return $q
                 ->where('store_id', $wholesaleStoreIds)
