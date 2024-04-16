@@ -16,7 +16,7 @@ class DebugbarMiddleware
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+/*        return $next($request);*/
         $response = $next($request);
 
         if (!config('debugbar.enabled')) {

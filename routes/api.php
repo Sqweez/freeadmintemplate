@@ -31,6 +31,7 @@ use App\Http\Controllers\api\v2\SiteController;
 use App\Http\Controllers\api\v2\StockController;
 use App\Http\Controllers\api\v2\TaskController;
 use App\Http\Controllers\api\v3\BarterBalanceController;
+use App\Http\Controllers\api\v3\RevisionController;
 use App\Http\Controllers\api\v3\WorkingScheduleController;
 use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\CronController;
@@ -491,6 +492,11 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
             Route::get('/filters', [\App\Http\Controllers\api\v3\Nomad\ProductController::class, 'getNomadFilters']);
             Route::post('/tickets', [\App\Http\Controllers\api\v3\Nomad\ProductController::class, 'createTicket']);
         });
+
+        Route::prefix('revision')->group(function () {
+            Route::post('/', [RevisionController::class, 'create']);
+            Route::post('/{revision}/process/{revisionFile}', [RevisionController::class, 'process']);
+        });
     });
 
     Route::prefix('dev')->group(function () {
@@ -498,6 +504,7 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
             Route::get('products/description', [TranslatorController::class, 'getProductsDescriptions']);
         });
     });
+
 });
 
 require __DIR__ . '/fit.api.php';
