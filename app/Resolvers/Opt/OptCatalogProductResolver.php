@@ -49,6 +49,10 @@ class OptCatalogProductResolver
             $query->whereIn('id', $filters['product_ids']);
         });
 
+        $query->whereHas('wholesale_prices', function ($q) use ($currencyId) {
+            return $q->where('currency_id', $currencyId);
+        });
+
         // Загрузка связей
         $query->with([
             'batches' => function ($q) use ($wholesaleStoreIds) {
