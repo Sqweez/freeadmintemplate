@@ -54,5 +54,9 @@ Route::group(['prefix' => 'fit'], function () {
     Route::get('/', 'VueController@fit')->where('any', '.*');
 });
 
+Route::get('debugbar', function () {
+    return view('debugbar');
+});
+
 
 Route::get('/{any}', 'VueController@index')->where('any', '.*');
