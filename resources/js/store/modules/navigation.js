@@ -96,6 +96,10 @@ const navigationModule = {
                         title: 'Товарные матрицы',
                         url: '/matrixes',
                     },
+                    {
+                        title: 'Ревизии',
+                        url: '/revision',
+                    },
                 ],
             },
             {
@@ -457,6 +461,10 @@ const navigationModule = {
                 url: '/reports',
                 icon: 'report',
             },
+            {
+                title: 'Ревизии',
+                url: '/revision',
+            },
         ],
         adminMenu: [
             {
@@ -565,6 +573,10 @@ const navigationModule = {
                     {
                         title: 'Товарные матрицы',
                         url: '/matrixes',
+                    },
+                    {
+                        title: 'Ревизии',
+                        url: '/revision',
                     },
                 ],
             },
@@ -894,6 +906,10 @@ const navigationModule = {
                         title: 'Сроки годности',
                         url: '/products/best-before',
                     },
+                    {
+                        title: 'Ревизии',
+                        url: '/revision',
+                    },
                 ],
             },
             {
@@ -1001,6 +1017,10 @@ const navigationModule = {
                     {
                         title: 'Сроки годности',
                         url: '/products/best-before',
+                    },
+                    {
+                        title: 'Ревизии',
+                        url: '/revision',
                     },
                 ],
             },
@@ -1250,6 +1270,10 @@ const navigationModule = {
                     {
                         title: 'Сроки годности',
                         url: '/products/best-before',
+                    },
+                    {
+                        title: 'Ревизии',
+                        url: '/revision',
                     },
                 ],
             },
