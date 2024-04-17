@@ -61,6 +61,9 @@ class RevisionController extends BaseApiController
     public function process(Revision $revision, Request $request, RevisionFile $revisionFile): string
     {
         $file = $request->file('file');
+        if (!\Storage::disk('public')->exists("revisions/uploaded/{$revision->id}")) {
+            \Storage::disk('public')->makeDirectory("revisions/uploaded/{$revision->id}");
+        }
         $path = $file->storeAs("revisions/uploaded/{$revision->id}", $file->getClientOriginalName(), ['disk' => 'public']);
         $revisionFile->uploaded_file_path = $path;
         $revisionFile->uploaded_at = now();
