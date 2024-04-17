@@ -220,3 +220,12 @@ if (!function_exists('_transliterate')) {
         return strtr($text, $translit);
     }
 }
+
+if (!function_exists('price_format')) {
+    function price_format($value, $currencyCode = '₸'): string
+    {
+        return number_format($value, 0, " ", " ") . $currencyCode;
+        $fmt = new NumberFormatter( 'ru_RU', NumberFormatter::CURRENCY );
+        return $fmt->formatCurrency($value, $currencyCode);
+    }
+}

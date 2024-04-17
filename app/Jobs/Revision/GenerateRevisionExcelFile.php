@@ -38,6 +38,7 @@ class GenerateRevisionExcelFile implements ShouldQueue
      *
      * @return void
      * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function handle()
     {
@@ -63,6 +64,7 @@ class GenerateRevisionExcelFile implements ShouldQueue
                 ],
             ],
         ];
+        $spreadsheet->getProperties()->setKeywords(sprintf('revision_%s_%s', $this->revision->id, $this->categoryId));
         $sheet->setCellValue('A1', 'Артикул');
         $sheet->setCellValue('B1', '№');
         $sheet->setCellValue('C1', 'Наименование');

@@ -32,6 +32,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|RevisionProduct whereRevisionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RevisionProduct whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $revision_file_id
+ * @method static \Illuminate\Database\Eloquent\Builder|RevisionProduct whereRevisionFileId($value)
+ * @property-read mixed $actual_count_price_total
+ * @property-read mixed $expected_count_price_total
  */
 class RevisionProduct extends Model
 {
@@ -54,11 +58,22 @@ class RevisionProduct extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(Product::class, 'product_id')
+            ->select(['id', 'product_name', 'category_id', 'manufacturer_id', 'product_price']);
     }
 
     public function getDifferenceCountAttribute(): ?int
     {
-        return $this->count_expected - $this->count_actual;
+        return $this->count_actual - $this->count_expected;
+    }
+
+    public function getExpectedCountPriceTotalAttribute()
+    {
+        return $this->product->product_price * $this->count_expected;
+    }
+
+    public function getActualCountPriceTotalAttribute()
+    {
+        return $this->product->product_price * $this->count_actual;
     }
 }

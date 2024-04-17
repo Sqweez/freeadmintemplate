@@ -87,6 +87,8 @@ import BankAccountCreate from '@/views/LegalEntity/BankAccountCreate';
 import WorkingScheduleIndex from '@/views/WorkingSchedule/WorkingScheduleIndex';
 import PromocodeClients from '@/views/Promocodes/PromocodeClients';
 import optRoutes from '@/router/opt.routes';
+import RevisionShow from '@/views/Revision/RevisionShow.vue';
+import RevisionTable from '@/views/Revision/RevisionTable.vue';
 
 const routes = [
     {
@@ -270,6 +272,30 @@ const routes = [
     {
         path: '/revision',
         component: Revision,
+        meta: {
+            CAN_ENTER: {
+                IS_SELLER: true,
+                IS_ADMIN: true,
+                IS_BOSS: true,
+                IS_SENIORSELLER: true,
+            },
+        },
+    },
+    {
+        path: '/revision/:id',
+        component: RevisionShow,
+        meta: {
+            CAN_ENTER: {
+                IS_SELLER: true,
+                IS_ADMIN: true,
+                IS_BOSS: true,
+                IS_SENIORSELLER: true,
+            },
+        },
+    },
+    {
+        path: '/revision/:id/table',
+        component: RevisionTable,
         meta: {
             CAN_ENTER: {
                 IS_SELLER: true,
