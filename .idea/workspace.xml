@@ -5,7 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Revision/RevisionFileResource.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Revision/RevisionProducts.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Revision/RevisionResource.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Revision/RevisionTable.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Revision/SingleRevisionResource.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/repositories/RevisionRepository.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/views/Revision/RevisionShow.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/views/Revision/RevisionTable.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Helpers/functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/functions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/CatalogueController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/CatalogueController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v3/RevisionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v3/RevisionController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/ProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/ProductResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Jobs/Revision/GenerateRevisionExcelFile.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Jobs/Revision/GenerateRevisionExcelFile.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Jobs/Revision/ProcessRevisionFile.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Jobs/Revision/ProcessRevisionFile.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Resolvers/Opt/OptCatalogProductResolver.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resolvers/Opt/OptCatalogProductResolver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/Revision.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Revision.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/RevisionFile.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/RevisionFile.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/RevisionProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/RevisionProduct.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2024_04_16_141407_create_table_v2_revision_products.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2024_04_16_141407_create_table_v2_revision_products.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/router/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/router/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Revision/Revision.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Revision/Revision.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -598,7 +621,9 @@
       <workItem from="1712945397861" duration="3697000" />
       <workItem from="1713177692362" duration="13038000" />
       <workItem from="1713219978194" duration="1348000" />
-      <workItem from="1713256794674" duration="17749000" />
+      <workItem from="1713256794674" duration="18519000" />
+      <workItem from="1713336356922" duration="16809000" />
+      <workItem from="1713356398951" duration="819000" />
     </task>
     <servers />
   </component>

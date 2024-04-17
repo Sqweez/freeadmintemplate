@@ -2,6 +2,7 @@
 
 namespace App\v2\Models;
 
+use App\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read string|null $original_file_full_path
  * @property-read string|null $uploaded_file_full_path
  * @property-read Revision $revision
+ * @property-read Category $category
  */
 class RevisionFile extends Model
 {
@@ -43,6 +45,11 @@ class RevisionFile extends Model
     public function revision(): BelongsTo
     {
         return $this->belongsTo(Revision::class, 'revision_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id')->select(['id', 'category_name']);
     }
 
     public function getOriginalFileFullPathAttribute(): ?string

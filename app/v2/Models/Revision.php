@@ -2,14 +2,13 @@
 
 namespace App\v2\Models;
 
-use App\Category;
-use App\Jobs\Revision\GenerateRevisionExcelFile;
 use App\Store;
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Carbon;
 
 /**
  * App\v2\Models\Revision
@@ -17,11 +16,11 @@ use Illuminate\Support\Facades\Bus;
  * @property int $id
  * @property int $store_id
  * @property int $user_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\RevisionFile[] $files
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|\App\v2\Models\RevisionFile[] $files
  * @property-read int|null $files_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\v2\Models\RevisionProduct[] $products
+ * @property-read Collection|\App\v2\Models\RevisionProduct[] $products
  * @property-read int|null $products_count
  * @property-read Store $store
  * @property-read User $user
@@ -36,6 +35,13 @@ use Illuminate\Support\Facades\Bus;
  * @mixin \Eloquent
  * @property string $status
  * @method static \Illuminate\Database\Eloquent\Builder|Revision whereStatus($value)
+ * @property-read string $percentage_completed
+ * @property-read string $status_text
+ * @property-read mixed $uploaded_files_count
+ * @property-read Collection|\App\v2\Models\RevisionFile[] $filesUploaded
+ * @property-read int|null $files_uploaded_count
+ * @property-read mixed $actual_total_price
+ * @property-read mixed $expected_total_price
  */
 class Revision extends Model
 {
@@ -50,30 +56,60 @@ class Revision extends Model
         return $this->hasMany(RevisionProduct::class, 'revision_id');
     }
 
+    public function getStatusTextAttribute(): string
+    {
+        switch ($this->status) {
+            case 'created':
+                return 'Создана';
+            case 'creating':
+                return 'Создается';
+            default:
+                return 'В процессе';
+        }
+    }
+
     public function files(): HasMany
     {
         return $this->hasMany(RevisionFile::class, 'revision_id');
     }
 
+    public function filesUploaded()
+    {
+        return $this->hasMany(RevisionFile::class, 'revision_id')->whereNotNull('uploaded_file_path');
+    }
+
     public function store(): BelongsTo
     {
-        return $this->belongsTo(Store::class, 'store_id');
+        return $this->belongsTo(Store::class, 'store_id')->select(['id', 'name']);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->select(['id', 'name', 'store_id']);
     }
 
-    public function init(array $payload)
+    public function getPercentageCompletedAttribute(): string
     {
-        $revision = $this->create(
-            $payload + ['status'  => 'creating']
-        );
-        $categories = Category::select(['id'])->get();
-        $jobs = $categories->map(function ($category) use ($revision) {
-            return new GenerateRevisionExcelFile($revision, $category->id);
-        });
-        Bus::chain($jobs->toArray())->dispatch();
+        if (!$this->files_count) {
+            return 0 . "%";
+        }
+        return number_format(
+            (100 * $this->files_uploaded_count / $this->files_count),
+            2
+        ) . "%";
+    }
+
+    public function getExpectedTotalPriceAttribute()
+    {
+        return $this->products->reduce(function ($a, RevisionProduct $c) {
+            return $a + $c->getExpectedCountPriceTotalAttribute();
+        }, 0);
+    }
+
+    public function getActualTotalPriceAttribute()
+    {
+        return $this->products->reduce(function ($a, RevisionProduct $c) {
+            return $a + $c->getActualCountPriceTotalAttribute();
+        }, 0);
     }
 }

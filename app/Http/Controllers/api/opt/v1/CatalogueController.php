@@ -54,11 +54,11 @@ class CatalogueController extends BaseApiController
         $filters = $filtersResolver->resolve($request->all());
         $client = auth()->user();
         $productQuery = $productResolver->getProductQuery($filters, $client);
-        $products = $productQuery->tap(function ($query) use ($productResolver) {
+       /* $products = $productQuery->tap(function ($query) use ($productResolver) {
             return $productResolver->attachAdditionalEntities($query);
-        });
+        });*/
         return $this->respondSuccessNoReport([
-            'products' => ProductResource::collection($products->get()),
+            'products' => ProductResource::collection($productQuery->get()),
             'meta' => $metaCatalogResolver->resolver($filters),
             'client' => $client,
             'filters' => $request->has('no-filters') ? null : $productResolver->getFilters($productQuery),

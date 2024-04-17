@@ -4,6 +4,7 @@ namespace App\Jobs\Revision;
 
 use App\v2\Models\ProductSku;
 use App\v2\Models\RevisionFile;
+use App\v2\Models\RevisionProduct;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -35,24 +36,44 @@ class ProcessRevisionFile implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     * @throws Exception
      */
     public function handle()
     {
-        $this->processFile();
-        $this->revisionFile->processed_at = now();
-        $this->revisionFile->save();
+        try {
+            $this->processFile();
+            $this->revisionFile->processed_at = now();
+            $this->revisionFile->save();
+        } catch (\Exception $exception) {
+            \Storage::disk('public')->delete($this->revisionFile->uploaded_file_path);
+            $this->revisionFile->uploaded_file_path = null;
+            $this->revisionFile->uploaded_at = null;
+            $this->revisionFile->save();
+            \Log::error($exception);
+        }
+
     }
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     private function processFile()
     {
         $file = $this->getFile();
+        $this->validateFile($file);
         $rows = $this->getFileRowsData($file);
         $skus = $this->getProductSkuWithExpectedCount($rows);
         $this->writeRevisionProducts($skus, $rows);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function validateFile(Spreadsheet $spreadsheet)
+    {
+        if ($spreadsheet->getProperties()->getKeywords() !== sprintf('revision_%s_%s', $this->revisionFile->revision_id, $this->revisionFile->category_id)) {
+            throw new \Exception('Загружен неверный файл');
+        }
     }
 
     /**
@@ -98,6 +119,7 @@ class ProcessRevisionFile implements ShouldQueue
 
     private function writeRevisionProducts($skus, $excelData)
     {
+        RevisionProduct::where('revision_file_id', $this->revisionFile->id)->delete();
         $revision = $this->revisionFile->revision;
         collect($skus)
             ->each(function ($sku) use ($excelData, $revision) {
@@ -106,7 +128,8 @@ class ProcessRevisionFile implements ShouldQueue
                     'product_sku_id' => $sku->id,
                     'product_id' => $sku->product_id,
                     'count_expected' => $sku->total_quantity,
-                    'count_actual' => $item['actual_count']
+                    'count_actual' => $item['actual_count'],
+                    'revision_file_id' => $this->revisionFile->id,
                 ]);
             });
     }

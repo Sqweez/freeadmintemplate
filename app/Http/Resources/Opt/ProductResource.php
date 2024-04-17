@@ -16,7 +16,7 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        //$quantity = $this->batches->sum('quantity');
+        $quantity = $this->batches->sum('quantity');
 
         $payload =  [
             'id' => $this->id,
@@ -28,8 +28,8 @@ class ProductResource extends JsonResource
             'has_stock' => false,
             'slug' => $this->getOptLink(),
             'brand_id' => $this->manufacturer_id,
-            'quantity_type' => $this->getWholesaleQuantityType($this->total_quantity),
-            'quantity' => $this->total_quantity,
+            'quantity_type' => $this->getWholesaleQuantityType($quantity),
+            'quantity' => $quantity,
             //'quantity_merged' => $this->quantities->sum('quantity'),
             'chips' => $this->getChips(),
         ];

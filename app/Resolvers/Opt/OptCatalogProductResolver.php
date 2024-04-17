@@ -53,6 +53,10 @@ class OptCatalogProductResolver
             return $q->where('currency_id', $currencyId);
         });
 
+        $query->whereHas('batches', function ($q) use ($wholesaleStoreIds) {
+            return $q->where('store_id', $wholesaleStoreIds)->where('quantity', '>', 0);
+        });
+
         // Загрузка связей
         $query->with([
             'batches' => function ($q) use ($wholesaleStoreIds) {
@@ -60,7 +64,10 @@ class OptCatalogProductResolver
             },
             'wholesale_prices' => function ($query) use ($currencyId) {
                 $query->where('currency_id', $currencyId)->with('currency');
-            }
+            },
+            'subcategory',
+            'product_thumbs',
+            'attributes'
         ]);
 
         return $query;

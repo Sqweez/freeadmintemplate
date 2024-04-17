@@ -494,8 +494,11 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
         });
 
         Route::prefix('revision')->group(function () {
+            Route::get('/', [RevisionController::class, 'index']);
+            Route::get('/{revision}', [RevisionController::class, 'show']);
             Route::post('/', [RevisionController::class, 'create']);
             Route::post('/{revision}/process/{revisionFile}', [RevisionController::class, 'process']);
+            Route::get('/{revision}/table', [RevisionController::class, 'getRevisionTable']);
         });
     });
 

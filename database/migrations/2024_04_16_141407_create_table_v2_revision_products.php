@@ -29,6 +29,8 @@ class CreateTableV2RevisionProducts extends Migration
                 ->on('products');
             $table->unsignedInteger('count_expected')->nullable();
             $table->unsignedInteger('count_actual')->nullable();
+            $table->unsignedBigInteger('revision_file_id');
+          
             $table->timestamps();
         });
     }
