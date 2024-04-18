@@ -4,20 +4,23 @@ namespace App\Resolvers\Opt;
 
 use App\Category;
 use App\Manufacturer;
-use App\Store;
 use App\Subcategory;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
 use App\v2\Models\WholesaleClient;
 
-class OptCatalogProductResolver
+class OptCatalogProductResolver extends BaseProductResolver
 {
 
     public function getProductQuery(array $filters, ?WholesaleClient $client)
     {
-        $wholesaleStoreIds = Store::wholesaleStore()->pluck('id')->toArray();
+        $wholesaleStoreIds = $this->getWholesaleStoreIds();
         $currencyId = $this->retrieveCurrency($client);
-        $query = Product::query()->OptProducts();
+        return $this
+            ->getBaseProductQuery($currencyId, $wholesaleStoreIds)
+            ->tap(function ($query) use ($filters, $currencyId) {
+                return $this->filterProducts($query, $filters, $currencyId);
+            });
 
         // Применение фильтров
         $query->when($filters[Product::FILTER_CATEGORIES] ?? null, function ($query) use ($filters) {
@@ -34,6 +37,44 @@ class OptCatalogProductResolver
                             'price',
                             $filters[Product::FILTER_PRICES]
                         );
+                });
+            }
+        )->when($filters[Product::FILTER_SEARCH] ?? null, function ($query) use ($filters) {
+            $query->ofTag($filters[Product::FILTER_SEARCH]);
+        })->when($filters[Product::FILTER_FILTERS] ?? null, function ($query) use ($filters) {
+            $query->whereHas('filters', function ($q) use ($filters) {
+                $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
+            });
+        });
+
+        // Дополнительные фильтры
+        $query->when($filters['product_ids'] ?? null, function ($query) use ($filters) {
+            $query->whereIn('id', $filters['product_ids']);
+        });
+        return $query;
+    }
+
+    public function oldgetProductQuery(array $filters, ?WholesaleClient $client)
+    {
+        $wholesaleStoreIds = $this->getWholesaleStoreIds();
+        $currencyId = $this->retrieveCurrency($client);
+        $query = Product::query()->OptProducts();
+
+        // Применение фильтров
+        $query->when($filters[Product::FILTER_CATEGORIES] ?? null, function ($query) use ($filters) {
+            $query->ofCategory($filters[Product::FILTER_CATEGORIES]);
+        })->when($filters[Product::FILTER_SUBCATEGORIES] ?? null, function ($query) use ($filters) {
+            $query->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
+        })->when($filters[Product::FILTER_BRANDS] ?? null, function ($query) use ($filters) {
+            $query->ofBrand($filters[Product::FILTER_BRANDS]);
+        })->when(
+            $filters[Product::FILTER_PRICES] ?? null && count($filters[Product::FILTER_PRICES]) === 2,
+            function ($query) use ($filters, $currencyId) {
+                $query->whereHas('wholesale_prices', function ($subQuery) use ($filters, $currencyId) {
+                    $subQuery->where('currency_id', $currencyId)->whereBetween(
+                        'price',
+                        $filters[Product::FILTER_PRICES]
+                    );
                 });
             }
         )->when($filters[Product::FILTER_SEARCH] ?? null, function ($query) use ($filters) {
@@ -167,10 +208,5 @@ class OptCatalogProductResolver
             'max' => $prices->max('price'),
             'currencySign' => Currency::find($prices->first()['currency_id'])->unicode_symbol
         ];
-    }
-
-    public function retrieveCurrency(?WholesaleClient $client)
-    {
-        return optional($client)->preferred_currency_id ?? __hardcoded(2);
     }
 }

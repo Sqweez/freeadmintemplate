@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\opt\v1\AuthController;
 use App\Http\Controllers\api\opt\v1\CartController;
 use App\Http\Controllers\api\opt\v1\CatalogueController;
+use App\Http\Controllers\api\opt\v1\HomeController;
 use App\Http\Controllers\api\opt\v1\OrderController;
 use App\Http\Middleware\OptAuthMiddleware;
 
@@ -13,6 +14,7 @@ Route::prefix('opt')->group(function () {
         Route::post('auth/login', [AuthController::class, 'login']);
         Route::patch('auth/profile', [AuthController::class, 'update'])->middleware([OptAuthMiddleware::class]);;
         Route::patch('auth/profile/password', [AuthController::class, 'updatePassword'])->middleware([OptAuthMiddleware::class]);;
+        Route::get('home', [HomeController::class, '__invoke']);
         Route::group(['middleware' => OptAuthMiddleware::class], function () {
             Route::prefix('/catalogue')->group(function () {
                 Route::get('favorites', [CatalogueController::class, 'getFavorites']);

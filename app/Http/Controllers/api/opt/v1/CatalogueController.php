@@ -15,6 +15,7 @@ use App\Resolvers\Opt\OptCatalogProductResolver;
 use App\Store;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
+use App\v2\Models\WholesaleClient;
 use App\v2\Models\WholesaleFavorite;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -53,6 +54,9 @@ class CatalogueController extends BaseApiController
     ): JsonResponse {
         $filters = $filtersResolver->resolve($request->all());
         $client = auth()->user();
+        if (!($client instanceof WholesaleClient)) {
+            $client = null;
+        }
         $productQuery = $productResolver->getProductQuery($filters, $client);
        /* $products = $productQuery->tap(function ($query) use ($productResolver) {
             return $productResolver->attachAdditionalEntities($query);
