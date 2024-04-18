@@ -10,7 +10,7 @@
 <body>
 <div id="apiResponse"></div>
 <script>
-    fetch('http://127.0.0.1:8000/api/opt/v1/catalogue/products?category=2')
+    fetch('http://127.0.0.1:8000/api/opt/v1/home')
     .then(res => res.json())
     .then(data => {
         document.querySelector('#apiResponse').innerHTML = JSON.stringify(data)

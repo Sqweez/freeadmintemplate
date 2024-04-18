@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Opt;
 
 use App\v2\Models\Product;
+use App\v2\Models\WholesalePrice;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /* @mixin Product */
@@ -27,9 +28,9 @@ class ProductResource extends JsonResource
             'product_image' => $this->retrieveProductThumb(),
             'has_stock' => false,
             'slug' => $this->getOptLink(),
-            'brand_id' => $this->manufacturer_id,
+            //'brand_id' => $this->manufacturer_id,
             'quantity_type' => $this->getWholesaleQuantityType($quantity),
-            'quantity' => $quantity,
+            //'quantity' => $quantity,
             //'quantity_merged' => $this->quantities->sum('quantity'),
             'chips' => $this->getChips(),
         ];
@@ -39,12 +40,14 @@ class ProductResource extends JsonResource
 
     private function getPrice(): array
     {
+        /* @var WholesalePrice $prices */
         $prices = $this->wholesale_prices->first();
         return [
             'currencySign' => optional($prices)->currency->unicode_symbol,
             'original_price' => null,
             'price' => optional($prices)->price,
-            'isPriceSet' => !empty($prices)
+            'price_formatted' => $prices->formatted_price
+            //'isPriceSet' => !empty($prices)
         ];
     }
 }

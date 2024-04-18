@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v3/RevisionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v3/RevisionController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/HomeController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Resolvers/Opt/BaseProductResolver.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Resolvers/Opt/NoveltyProductResolver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Helpers/functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/functions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/CatalogueController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/CatalogueController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/ProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/ProductResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resolvers/Opt/OptCatalogProductResolver.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resolvers/Opt/OptCatalogProductResolver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/WholesalePrice.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/WholesalePrice.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/debugbar.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/debugbar.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/opt.api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/opt.api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -600,7 +611,11 @@
       <workItem from="1713219978194" duration="1348000" />
       <workItem from="1713256794674" duration="18519000" />
       <workItem from="1713336356922" duration="16809000" />
-      <workItem from="1713356398951" duration="1782000" />
+      <workItem from="1713356398951" duration="2711000" />
+      <workItem from="1713360527726" duration="4000" />
+      <workItem from="1713377438641" duration="3560000" />
+      <workItem from="1713428239143" duration="757000" />
+      <workItem from="1713429016069" duration="3193000" />
     </task>
     <servers />
   </component>

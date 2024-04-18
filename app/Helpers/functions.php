@@ -222,9 +222,9 @@ if (!function_exists('_transliterate')) {
 }
 
 if (!function_exists('price_format')) {
-    function price_format($value, $currencyCode = '₸'): string
+    function price_format($value, $currencyCode = '₸', $decimals = 0): string
     {
-        return number_format($value, 0, " ", " ") . $currencyCode;
+        return number_format($value, $decimals, ".", " ") . $currencyCode;
         $fmt = new NumberFormatter( 'ru_RU', NumberFormatter::CURRENCY );
         return $fmt->formatCurrency($value, $currencyCode);
     }

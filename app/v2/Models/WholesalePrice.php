@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|WholesalePrice wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WholesalePrice whereProductId($value)
  * @mixin \Eloquent
+ * @property-read string $formatted_price
  */
 class WholesalePrice extends Model
 {
@@ -33,5 +34,10 @@ class WholesalePrice extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'currency_id');
+    }
+
+    public function getFormattedPriceAttribute(): string
+    {
+        return price_format($this->price, $this->currency->unicode_symbol, 2);
     }
 }
