@@ -27,9 +27,10 @@ use Illuminate\Support\Facades\Validator;
 use ProductService;
 
 class ProductController extends Controller {
-    public function index(Request $request, ProductRepository $productRepository): AnonymousResourceCollection
+    public function index(Request $request, ProductRepository $productRepository)
     {
-        return ProductsResource::collection(
+        //return $productRepository->getProducts($request->all());
+       return ProductsResource::collection(
             $productRepository->getProducts($request->all())
         );
     }

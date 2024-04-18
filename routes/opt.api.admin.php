@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\opt\admin\v1\ClientController;
+use App\Http\Controllers\api\opt\admin\v1\DailyDealController;
 use App\Http\Controllers\api\opt\admin\v1\OrderController;
 use App\Http\Middleware\AuthorizationMiddleware;
 
@@ -16,6 +17,12 @@ Route::prefix('admin')->group(function () {
             Route::patch('/products/{order}', [OrderController::class, 'updateOrderProducts']);
             Route::post('/{order}/waybill', [OrderController::class, 'uploadWaybill']);
             Route::post('/{order}/invoice', [OrderController::class, 'uploadInvoice']);
+        });
+
+
+        Route::prefix('daily-deal')->group(function () {
+            Route::get('/', [DailyDealController::class, 'index']);
+            Route::post('/', [DailyDealController::class, 'create']);
         });
     });
 });

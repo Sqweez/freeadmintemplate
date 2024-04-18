@@ -97,6 +97,9 @@ class ProductRepository
                     return $subQuery->where('is_opt', false);
                 });
             })
+            ->when(isset($payload['only_main']), function ($query) {
+                return $query->groupBy('product_id')->without('attributes');
+            })
             ->orderBy('product_id')
             ->orderBy('id')
             ->get()

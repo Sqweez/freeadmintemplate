@@ -27,21 +27,7 @@ class ProductsResource extends JsonResource
             'subcategory_id' => $this->product->subcategory_id,
             'manufacturer' => $this->manufacturer,
             'manufacturer_id' => $this->manufacturer->id,
-            'attributes' => collect($this->attributes)->map(function ($attribute) {
-                return [
-                    'attribute_value' => $attribute->attribute_value,
-                    'attribute_name' => $attribute->attribute_name->attribute_name,
-                    'is_main' => false
-                ];
-            })->merge(
-                collect($this->product->attributes)->map(function ($attribute) {
-                    return [
-                        'attribute_value' => $attribute->attribute_value,
-                        'attribute_name' => $attribute->attribute_name->attribute_name,
-                        'is_main' => true
-                    ];
-                })
-            ),
+            'attributes' => $this->retrieveAttributes(),
             'product_barcode' => $this->product_barcode,
             'product_price' => $this->product_price,
             'base_price' => $this->product_price,
@@ -80,5 +66,29 @@ class ProductsResource extends JsonResource
         }
 
         return true;
+    }
+
+    private function retrieveAttributes()
+    {
+        if ($this->relationLoaded('attributes')) {
+            $skuAttributes = collect($this->attributes)->map(function ($attribute) {
+                return [
+                    'attribute_value' => $attribute->attribute_value,
+                    'attribute_name' => $attribute->attribute_name->attribute_name,
+                    'is_main' => false
+                ];
+            });
+        } else {
+            $skuAttributes = collect([]);
+        }
+        $productAttributes = collect($this->product->attributes)->map(function ($attribute) {
+            return [
+                'attribute_value' => $attribute->attribute_value,
+                'attribute_name' => $attribute->attribute_name->attribute_name,
+                'is_main' => true
+            ];
+        });
+
+        return $skuAttributes->merge($productAttributes);
     }
 }

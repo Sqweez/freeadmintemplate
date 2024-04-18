@@ -5,7 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/HomeController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/admin/v1/DailyDealController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/DailyDeal/AdminDailyDealResource.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/v2/Models/OptDailyDeal.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/v2/Models/OptDailyDealProduct.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_04_18_161502_create_opt_daily_deals_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_04_18_161512_create_opt_daily_deal_products_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/repositories/DailyDealRepository.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/views/Opt/DailyDeals/DailyDealCreate.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/views/Opt/DailyDeals/DailyDealIndex.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/views/Opt/DailyDeals/DailyDealUpdate.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/v2/ProductController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/v2/Product/ProductsResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Repository/ProductRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/ProductRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/router/opt.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/router/opt.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/store/modules/navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/opt.api.admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/opt.api.admin.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -604,7 +621,7 @@
       <workItem from="1713360527726" duration="4000" />
       <workItem from="1713377438641" duration="3560000" />
       <workItem from="1713428239143" duration="757000" />
-      <workItem from="1713429016069" duration="4161000" />
+      <workItem from="1713429016069" duration="12658000" />
     </task>
     <servers />
   </component>
