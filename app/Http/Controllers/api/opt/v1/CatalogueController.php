@@ -139,13 +139,14 @@ class CatalogueController extends BaseApiController
 
     public function getFavorites(OptCatalogProductResolver $productResolver): JsonResponse
     {
-        $productIds = WholesaleFavorite::whereWholesaleClientId(auth()->user()->id)->pluck('product_id')->toArray();
-        $productQuery = $productResolver->getProductQuery(['product_ids' => $productIds], auth()->user());
-        $products = $productQuery->tap(function ($query) use ($productResolver) {
-            return $productResolver->attachAdditionalEntities($query);
-        });
+        $productQuery = $productResolver->getFavorites(auth()->user());
+        if (!$productQuery) {
+            return $this->respondError([
+                'message' => 'Вы не авторизованы'
+            ]);
+        }
         return $this->respondSuccessNoReport([
-            'favorites' => ProductResource::collection($products->get()),
+            'favorites' => ProductResource::collection($productQuery->get()),
         ]);
     }
 

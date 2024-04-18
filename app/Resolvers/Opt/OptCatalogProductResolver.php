@@ -8,6 +8,7 @@ use App\Subcategory;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
 use App\v2\Models\WholesaleClient;
+use App\v2\Models\WholesaleFavorite;
 
 class OptCatalogProductResolver extends BaseProductResolver
 {
@@ -21,37 +22,17 @@ class OptCatalogProductResolver extends BaseProductResolver
             ->tap(function ($query) use ($filters, $currencyId) {
                 return $this->filterProducts($query, $filters, $currencyId);
             });
+    }
 
-        // Применение фильтров
-        $query->when($filters[Product::FILTER_CATEGORIES] ?? null, function ($query) use ($filters) {
-            $query->ofCategory($filters[Product::FILTER_CATEGORIES]);
-        })->when($filters[Product::FILTER_SUBCATEGORIES] ?? null, function ($query) use ($filters) {
-            $query->ofSubcategory($filters[Product::FILTER_SUBCATEGORIES]);
-        })->when($filters[Product::FILTER_BRANDS] ?? null, function ($query) use ($filters) {
-            $query->ofBrand($filters[Product::FILTER_BRANDS]);
-        })->when(
-            $filters[Product::FILTER_PRICES] ?? null && count($filters[Product::FILTER_PRICES]) === 2,
-            function ($query) use ($filters, $currencyId) {
-                $query->whereHas('wholesale_prices', function ($subQuery) use ($filters, $currencyId) {
-                    $subQuery->where('currency_id', $currencyId)->whereBetween(
-                            'price',
-                            $filters[Product::FILTER_PRICES]
-                        );
-                });
-            }
-        )->when($filters[Product::FILTER_SEARCH] ?? null, function ($query) use ($filters) {
-            $query->ofTag($filters[Product::FILTER_SEARCH]);
-        })->when($filters[Product::FILTER_FILTERS] ?? null, function ($query) use ($filters) {
-            $query->whereHas('filters', function ($q) use ($filters) {
-                $q->whereIn('id', $filters[Product::FILTER_FILTERS]);
-            });
-        });
-
-        // Дополнительные фильтры
-        $query->when($filters['product_ids'] ?? null, function ($query) use ($filters) {
-            $query->whereIn('id', $filters['product_ids']);
-        });
-        return $query;
+    public function getFavorites(?WholesaleClient $client)
+    {
+        if (!$client) {
+            return null;
+        }
+        $productIds = WholesaleFavorite::whereWholesaleClientId($client->id)->pluck('product_id')->toArray();
+        return $this
+            ->getBaseProductQuery($this->retrieveCurrency($client), $this->getWholesaleStoreIds())
+            ->whereIn('id', $productIds);
     }
 
     public function oldgetProductQuery(array $filters, ?WholesaleClient $client)
