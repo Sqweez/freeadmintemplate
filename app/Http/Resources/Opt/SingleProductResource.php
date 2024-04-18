@@ -18,7 +18,11 @@ class SingleProductResource extends JsonResource
     public function toArray($request)
     {
         $quantity = $this->batches->sum('quantity');
-
+        $originalPrice = $this->wholesale_prices->first()->price;
+        $price = $originalPrice;
+        if ($this->optDailyDeals && $this->optDailyDeals->discount > 0) {
+            $price = $originalPrice * (1 - $this->optDailyDeals->discount / 100);
+        }
         return [
             'id' => $this->id,
             'product_name' => $this->product_name,
@@ -26,12 +30,15 @@ class SingleProductResource extends JsonResource
             'manufacturer' => $this->manufacturer->only(['id', 'manufacturer_name']),
             'description' => $this->product_description,
             'attributes' => $this->attributes->pluck('attribute_value')->join(','),
-            'price' => $this->wholesale_prices->first()->price,
+            'price' => $price,
             'product_images' => $this->product_images->count() > 0 ? $this->product_images->pluck('image')->map(function ($image) {
                 return url('/') . Storage::url($image);
             })->toArray() : [url('/') . Storage::url('products/product_image_default.jpg')],
             'quantity_type' => $this->getWholesaleQuantityType($quantity),
             'chips' => $this->getChips(),
+            'daily_deals' => $this->when('optDailyDeals', $this->optDailyDeals),
+            'has_stock' => $price !== $originalPrice,
+            'original_price' => $originalPrice
         ];
     }
 }

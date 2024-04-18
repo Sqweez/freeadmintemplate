@@ -33,6 +33,7 @@ class ProductResource extends JsonResource
             //'quantity' => $quantity,
             //'quantity_merged' => $this->quantities->sum('quantity'),
             'chips' => $this->getChips(),
+            'daily_deals' => $this->when('optDailyDeals', $this->optDailyDeals)
         ];
 
         return array_merge($payload, $this->getPrice());
@@ -42,10 +43,16 @@ class ProductResource extends JsonResource
     {
         /* @var WholesalePrice $prices */
         $prices = $this->wholesale_prices->first();
+        $originalPrice = optional($prices)->price;
+        $price = $originalPrice;
+        if ($this->optDailyDeals && $this->optDailyDeals->discount > 0) {
+            $price = $originalPrice * (1 - $this->optDailyDeals->discount / 100);
+        }
         return [
             'currencySign' => optional($prices)->currency->unicode_symbol,
-            'original_price' => null,
-            'price' => optional($prices)->price,
+            'original_price' => $originalPrice,
+            'price' => $price,
+            'has_stock' => $price !== $originalPrice,
             'price_formatted' => $prices->formatted_price
             //'isPriceSet' => !empty($prices)
         ];

@@ -30,6 +30,9 @@
                         <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                 </router-link>
+                <v-btn icon color="error" @click="onDelete(item.id)">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
             </template>
         </v-data-table>
     </i-card-page>
@@ -69,7 +72,18 @@ export default {
         ],
         items: [],
     }),
-    methods: {},
+    methods: {
+        async onDelete(itemId) {
+            try {
+                await this.dailyDealRepository.delete(itemId);
+                this.items = this.items.filter(i => i.id !== itemId);
+            } catch (e) {
+                this.$report(e);
+            } finally {
+                this.$loading.disable();
+            }
+        }
+    },
     computed: {},
     async mounted () {
         try {

@@ -4,6 +4,7 @@ namespace App\Repository\Opt;
 
 use App\Repository\ProductBatchRepository;
 use App\Store;
+use App\v2\Models\Product;
 use App\v2\Models\UserCart;
 use App\v2\Models\UserCartItem;
 use App\v2\Models\WholesaleClient;
@@ -194,6 +195,15 @@ class CartRepository
             }
         }
 
+        $product = Product::whereHas('sku', function ($q) use ($productId) {
+            return $q->whereKey($productId);
+        })->first();
+        $product->loadActiveDailyDeals();
+        $discount = 0;
+        if ($product->optDailyDeals) {
+            $discount = $product->optDailyDeals->discount;
+        }
+
         if ($cartProductId) {
             $item = UserCartItem::find($cartProductId);
             $item->count += $count;
@@ -201,7 +211,7 @@ class CartRepository
         } else {
             $this->cart->items()->create([
                 'product_id' => $productId,
-                'discount' => 0,
+                'discount' => $discount,
                 'count' => $count
             ]);
         }

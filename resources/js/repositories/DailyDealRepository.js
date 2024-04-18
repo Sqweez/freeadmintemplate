@@ -12,6 +12,9 @@ const DailyDealRepository = () => ({
     async update(dealId, payload) {
         return axiosClient.patch(baseURL + `/${dealId}`, payload);
     },
+    async delete(dealId) {
+        return axiosClient.delete(baseURL + `/${dealId}`);
+    },
 });
 
 export default DailyDealRepository();

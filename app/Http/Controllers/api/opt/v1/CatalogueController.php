@@ -96,6 +96,7 @@ class CatalogueController extends BaseApiController
         $product->load('category');
         $product->load('attributes');
         $product->load('product_images');
+        $product->loadActiveDailyDeals();
         $currency = $productResolver->retrieveCurrency(auth()->user());
         $product->load(['wholesale_prices' => function ($query) use ($currency) {
             return $query->where('currency_id', $currency);

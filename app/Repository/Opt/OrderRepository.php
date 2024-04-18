@@ -81,7 +81,7 @@ class OrderRepository
                         'product_id' => $cartProduct['product_id'],
                         'currency_id' => $client->preferred_currency_id,
                         'purchase_price' => $batch->purchase_price,
-                        'price' => $cartProduct->getPrice(),
+                        'price' => $cartProduct->getBasePrice(),
                         'product_batch_id' => $batch->id,
                         'discount' => $cartProduct['discount'],
                     ]);

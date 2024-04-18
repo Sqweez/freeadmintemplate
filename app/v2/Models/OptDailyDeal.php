@@ -57,4 +57,10 @@ class OptDailyDeal extends Model
             'syntax' => CarbonInterface::DIFF_ABSOLUTE
         ]);
     }
+
+    public function getRawRemainingTimeAttribute()
+    {
+        $to = Carbon::parse($this->active_to);
+        return $to->diffInSeconds(now());
+    }
 }

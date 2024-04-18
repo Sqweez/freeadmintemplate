@@ -8,12 +8,12 @@
     <title>Document</title>
 </head>
 <body>
-<div id="apiResponse"></div>
+<pre id="apiResponse"></pre>
 <script>
     fetch('http://127.0.0.1:8000/api/opt/v1/home')
     .then(res => res.json())
     .then(data => {
-        document.querySelector('#apiResponse').innerHTML = JSON.stringify(data)
+        document.querySelector('#apiResponse').innerHTML = JSON.stringify(data.dailies)
     })
 </script>
 </body>
