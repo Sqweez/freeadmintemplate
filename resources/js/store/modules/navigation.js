@@ -395,6 +395,11 @@ const navigationModule = {
                 icon: 'dashboard',
                 url: '/opt/orders',
             },
+            {
+                title: 'Товары дня',
+                icon: 'dashboard',
+                url: '/opt/daily-deals',
+            },
         ],
         moderatorMenu: [
             {
