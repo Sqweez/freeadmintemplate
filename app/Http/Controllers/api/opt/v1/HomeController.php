@@ -12,7 +12,7 @@ class HomeController extends BaseApiController
 {
     public function __invoke(Request $request, NoveltyProductResolver $noveltyProductResolver): JsonResponse
     {
-        return $this->respondSuccess([
+        return $this->respondSuccessNoReport([
             'banners' => [],
             'daily_products' => [],
             'novelties' => ProductResource::collection(
