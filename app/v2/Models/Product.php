@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -505,5 +506,30 @@ class Product extends Model
             ];
         }
         return $chips;
+    }
+
+    public function optDailyDeals(): HasOne
+    {
+        return $this->hasOne(OptDailyDealProduct::class, 'product_id');
+    }
+
+    public function scopeWithActiveDailyDeals($query)
+    {
+        return $query->with(['optDailyDeals' => function ($query) {
+            $query->whereHas('dailyDeal', function ($subQuery) {
+                $subQuery->where('active_from', '<=', now())
+                    ->where('active_to', '>=', now());
+            });
+        }]);
+    }
+
+    public function loadActiveDailyDeals()
+    {
+        $this->load(['optDailyDeals' => function ($query) {
+            $query->whereHas('dailyDeal', function ($subQuery) {
+                $subQuery->where('active_from', '<=', now())
+                    ->where('active_to', '>=', now());
+            });
+        }]);
     }
 }

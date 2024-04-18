@@ -36,7 +36,13 @@ abstract class BaseProductResolver
                 return $q->where('currency_id', $currencyId);
             })->whereHas('batches', function ($q) use ($wholesaleStoreIds) {
                 return $q->where('store_id', $wholesaleStoreIds)->where('quantity', '>', 0);
-            });
+            })
+            ->with(['optDailyDeals' => function ($query) {
+                return $query->whereHas('dailyDeal', function ($subQuery) {
+                    $subQuery->where('active_from', '<=', now())
+                        ->where('active_to', '>=', now());
+                });
+            }]);
     }
 
     public function filterProducts(Builder $builder, array $filters, $currencyId)

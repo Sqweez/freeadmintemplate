@@ -23,6 +23,7 @@ Route::prefix('admin')->group(function () {
         Route::prefix('daily-deal')->group(function () {
             Route::get('/', [DailyDealController::class, 'index']);
             Route::post('/', [DailyDealController::class, 'create']);
+            Route::delete('/{deal}', [DailyDealController::class, 'delete']);
         });
     });
 });

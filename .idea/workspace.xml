@@ -5,7 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/resources/js/views/Opt/DailyDeals/DailyDealCreate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Opt/DailyDeals/DailyDealCreate.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Resolvers/Opt/DailyProductResolver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/admin/v1/DailyDealController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/admin/v1/DailyDealController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/CatalogueController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/CatalogueController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/opt/v1/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/DailyDeal/AdminDailyDealResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/DailyDeal/AdminDailyDealResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/ProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/ProductResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Opt/SingleProductResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Opt/SingleProductResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Repository/Opt/CartRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/Opt/CartRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Repository/Opt/OrderRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/Opt/OrderRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resolvers/Opt/BaseProductResolver.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resolvers/Opt/BaseProductResolver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/OptDailyDeal.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/OptDailyDeal.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/OptDailyDealProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/OptDailyDealProduct.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/v2/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/v2/Models/Product.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/repositories/DailyDealRepository.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/repositories/DailyDealRepository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/views/Opt/DailyDeals/DailyDealIndex.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/views/Opt/DailyDeals/DailyDealIndex.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/debugbar.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/debugbar.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/opt.api.admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/opt.api.admin.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,6 +218,9 @@
       <path value="$PROJECT_DIR$/vendor/psr/container" />
       <path value="$PROJECT_DIR$/vendor/psr/http-client" />
     </include_path>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -604,7 +625,7 @@
       <workItem from="1713360527726" duration="4000" />
       <workItem from="1713377438641" duration="3560000" />
       <workItem from="1713428239143" duration="757000" />
-      <workItem from="1713429016069" duration="12970000" />
+      <workItem from="1713429016069" duration="16597000" />
     </task>
     <servers />
   </component>

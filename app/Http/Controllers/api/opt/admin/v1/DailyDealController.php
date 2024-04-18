@@ -35,4 +35,13 @@ class DailyDealController extends BaseApiController
             'message' => 'Успешно создана'
         ]);
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function delete(OptDailyDeal $deal): \Illuminate\Http\JsonResponse
+    {
+        $deal->delete();
+        return $this->respondSuccess();
+    }
 }

@@ -36,4 +36,9 @@ class OptDailyDealProduct extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+
+    public function dailyDeal(): BelongsTo
+    {
+        return $this->belongsTo(OptDailyDeal::class, 'opt_daily_deal_id');
+    }
 }
