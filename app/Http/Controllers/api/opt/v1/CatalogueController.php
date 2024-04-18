@@ -140,11 +140,6 @@ class CatalogueController extends BaseApiController
     public function getFavorites(OptCatalogProductResolver $productResolver): JsonResponse
     {
         $productQuery = $productResolver->getFavorites(auth()->user());
-        if (!$productQuery) {
-            return $this->respondError([
-                'message' => 'Вы не авторизованы'
-            ]);
-        }
         return $this->respondSuccessNoReport([
             'favorites' => ProductResource::collection($productQuery->get()),
         ]);
