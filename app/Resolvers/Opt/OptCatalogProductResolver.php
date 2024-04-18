@@ -27,7 +27,7 @@ class OptCatalogProductResolver extends BaseProductResolver
     public function getFavorites(?WholesaleClient $client)
     {
         if (!$client) {
-            return null;
+            throw new \Exception('Вы не авторизованы');
         }
         $productIds = WholesaleFavorite::whereWholesaleClientId($client->id)->pluck('product_id')->toArray();
         return $this
