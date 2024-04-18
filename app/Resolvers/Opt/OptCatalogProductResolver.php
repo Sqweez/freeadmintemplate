@@ -24,6 +24,9 @@ class OptCatalogProductResolver extends BaseProductResolver
             });
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getFavorites(?WholesaleClient $client)
     {
         if (!$client) {
