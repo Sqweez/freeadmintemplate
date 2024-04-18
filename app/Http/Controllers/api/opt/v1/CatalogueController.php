@@ -17,6 +17,7 @@ use App\v2\Models\Currency;
 use App\v2\Models\Product;
 use App\v2\Models\WholesaleClient;
 use App\v2\Models\WholesaleFavorite;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
@@ -137,6 +138,9 @@ class CatalogueController extends BaseApiController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getFavorites(OptCatalogProductResolver $productResolver): JsonResponse
     {
         $productQuery = $productResolver->getFavorites(auth()->user());
