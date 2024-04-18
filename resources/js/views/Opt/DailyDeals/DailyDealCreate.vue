@@ -106,6 +106,12 @@ export default {
                 align: ' fz-18'
             },
             {
+                text: 'Производитель',
+                value: 'manufacturer.manufacturer_name',
+                sortable: false,
+                align: ' fz-18'
+            },
+            {
                 text: 'Атрибуты',
                 value: 'attributes',
                 align: ''
