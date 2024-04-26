@@ -14,7 +14,7 @@ class CartResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'product_sku_id' => $this->product_id,
@@ -31,7 +31,8 @@ class CartResource extends JsonResource
             'link' => $this->product->product->getOptLink(),
             'is_editing_blocked' => $this->getPrice() === 0,
             'base_price' => $this->getBasePrice(),
-            'manufacturer' => $this->product->product->manufacturer->manufacturer_name
+            'manufacturer' => $this->product->product->manufacturer->manufacturer_name,
+            'salt' => \Str::random(16),
         ];
     }
 }

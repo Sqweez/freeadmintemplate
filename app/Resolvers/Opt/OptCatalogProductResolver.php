@@ -24,6 +24,14 @@ class OptCatalogProductResolver extends BaseProductResolver
             });
     }
 
+    public function getSameProductsQuery(int $baseProductId, int $categoryId)
+    {
+        return $this
+            ->getBaseProductQuery($this->retrieveCurrency(auth()->user()), $this->getWholesaleStoreIds())
+            ->where('category_id', $categoryId)
+            ->whereKeyNot($baseProductId);
+    }
+
     /**
      * @throws \Exception
      */

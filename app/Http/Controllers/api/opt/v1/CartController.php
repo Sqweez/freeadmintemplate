@@ -19,20 +19,20 @@ class CartController extends BaseApiController
     public function get(): JsonResponse
     {
         $cartRepository = new CartRepository(auth()->user());
+        $cart = $cartRepository->getCart();
         return $this->respondSuccessNoReport([
-            'cart' => CartResource::collection($cartRepository->getCart()),
+            'cart' => CartResource::collection($cart['products']),
+            'total' => $cart['total'],
+            'stockChangedProducts' => $cart['stockChangedProducts']
         ]);
     }
 
     /**
      * @throws Exception
      */
-    public function getTotal(): array
+    public function getTotal(): JsonResponse
     {
-        $cartRepository = new CartRepository(auth()->user());
-        return [
-            'total' => $cartRepository->getTotal(),
-        ];
+        return $this->get();
     }
 
     /**
@@ -42,10 +42,12 @@ class CartController extends BaseApiController
     {
         $cartRepository = new CartRepository(auth()->user());
         $cartRepository->addProductToCart($request->get('product_id'), $request->get('count'), $request->get('cart_product_id'));
-        $result = $cartRepository->getTotal();
+        $cart = $cartRepository->getCart();
         return $this->respondSuccess([
-            'cart' => $result,
-            'message' => 'Корзина обновлена'
+            'cart' => CartResource::collection($cart['products']),
+            'total' => $cart['total'],
+            'message' => 'Товар успешно добавлен в корзину',
+            'stockChangedProducts' => $cart['stockChangedProducts']
         ]);
     }
 
@@ -56,11 +58,7 @@ class CartController extends BaseApiController
     {
         $cartRepository = new CartRepository(auth()->user());
         $cartRepository->removeProductFromCart($product);
-        $result = $cartRepository->getTotal();
-        return $this->respondSuccess([
-            'cart' => $result,
-            'message' => 'Корзина обновлена'
-        ]);
+        return $this->get();
     }
 
     public function update(Request $request)

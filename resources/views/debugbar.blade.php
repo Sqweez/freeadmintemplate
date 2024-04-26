@@ -10,10 +10,14 @@
 <body>
 <pre id="apiResponse"></pre>
 <script>
-    fetch('http://127.0.0.1:8000/api/opt/v1/home')
+    fetch('http://127.0.0.1:8000/api/opt/v1/cart', {
+        headers: {
+            'Authorization': 'Bearer 6OXeLLtR6vpsNkR6jPuByIQhq6ZFm5Xs5kcjesOP50NdaTk5OM1jGxekFKNn',
+        }
+    })
     .then(res => res.json())
     .then(data => {
-        document.querySelector('#apiResponse').innerHTML = JSON.stringify(data.dailies)
+        document.querySelector('#apiResponse').innerHTML = JSON.stringify(data)
     })
 </script>
 </body>

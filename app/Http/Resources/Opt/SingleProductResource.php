@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Opt;
 
+use App\Http\Resources\Opt\Product\PriceResource;
 use App\v2\Models\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
@@ -38,7 +39,11 @@ class SingleProductResource extends JsonResource
             'chips' => $this->getChips(),
             'daily_deals' => $this->when('optDailyDeals', $this->optDailyDeals),
             'has_stock' => $price !== $originalPrice,
-            'original_price' => $originalPrice
-        ];
-    }
+            'original_price' => $originalPrice,
+            'prices' => PriceResource::collection($this->wholesale_prices)
+                ->map(function ($resource) {
+                    return new PriceResource($resource, $this->retrieveActiveDiscountPercent());
+                }),
+            ];
+     }
 }

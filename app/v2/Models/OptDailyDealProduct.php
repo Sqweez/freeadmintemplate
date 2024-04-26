@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|OptDailyDealProduct whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OptDailyDealProduct whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\v2\Models\OptDailyDeal $dailyDeal
  */
 class OptDailyDealProduct extends Model
 {

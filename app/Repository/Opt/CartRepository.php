@@ -18,6 +18,7 @@ class CartRepository
     private UserCart $cart;
     private Store $store;
     private ProductBatchRepository $productBatchRepository;
+    private DailyProductsRepository $dailyProductsRepository;
 
     /**
      * @throws Exception
@@ -31,36 +32,189 @@ class CartRepository
         $this->cart = $this->retrieveCart();
         $this->store = $this->retrieveStore();
         $this->productBatchRepository = new ProductBatchRepository();
+        $this->dailyProductsRepository = app(DailyProductsRepository::class);
     }
 
-    public function getCart(): Collection
+    public function getCart(): array
     {
-        $products = $this->cart
-            ->items
-            ->where('count', '>', 0)
-            ->load(['product.product.wholesale_prices' => function ($q) {
-                return $q->where('currency_id', $this->client->preferred_currency_id);
-            }])
-            ->load(['product.product.manufacturer:id,manufacturer_name'])
-            ->load(['product.product.product_thumbs'])
-            ->load(['product.product.attributes'])
-            ->load(['product.attributes'])
-            ->load(['product.batches' => function ($query) {
-                return $query->where('store_id', Store::whereTypeId(4)->first()->id)->where('quantity', '>', 0);
-            }]);
-
-
-        return $products;
+        // @TODO переписать на пайпы
+        $products = $this->retrieveCartProducts();
+        $result = $this->checkQuantities($products);
+        $products = $result['products'];
+        $stockChangedProducts = $result['stockChangedProducts'];
+        $products = $this->checkPromotionDailyInactivity($products);
+        $products = $this->applyPromotions($products);
+        return [
+            'products' => $products,
+            'total' => $this->getTotal($products),
+            'stockChangedProducts' => $stockChangedProducts
+        ];
     }
 
-    public function getTotal(): array
+    private function checkQuantities(Collection $products): array
+    {
+        $stockChangedProducts = collect([]);
+        $products = $products->map(function ($product) use (&$stockChangedProducts, $products) {
+            $stockQuantity = $product->product->batches->sum('quantity');
+            $totalCartQuantity = $products->where('product_id', $product->product_id)->sum('count');
+            if ($stockChangedProducts->where('product_id', $product->product_id)->count()) {
+                return $product;
+            }
+            if ($stockQuantity < $totalCartQuantity) {
+                $stockChangedProducts->push([
+                    'id' => $product->id,
+                    'product_id' => $product->product_id
+                ]);
+                $product->update([
+                    'count' => min($stockQuantity, $totalCartQuantity),
+                ]);
+            }
+            return $product;
+        });
+        return [
+            'products' => $products,
+            'stockChangedProducts' => $stockChangedProducts,
+        ];
+    }
+
+    private function checkPromotionDailyInactivity(Collection $products): Collection
+    {
+        $dailyProducts = $this->dailyProductsRepository->getProductIds();
+        return $products->map(function ($product) use ($dailyProducts) {
+            if ($product->discount === 100) {
+                return $product;
+            }
+            $needleProduct = $dailyProducts->where('product_id', $product->product->product_id)->first();
+            if (!$needleProduct) {
+                $product->update(['discount' => 0]);
+            }
+            if ($needleProduct && $needleProduct->discount !== $product->discount) {
+                $product->update([
+                    'discount' => $needleProduct->discount
+                ]);
+            }
+            return $product;
+        });
+    }
+
+    private function retrieveCartProducts(): Collection
+    {
+        $storeTypeId = Store::whereTypeId(4)->select(['id'])->value('id');
+
+        return $this->cart->items()->where('count', '>', 0)->with([
+            'product.product' => function ($query) use ($storeTypeId) {
+                $query->with([
+                    'wholesale_prices',
+                    'manufacturer:id,manufacturer_name',
+                    'product_thumbs',
+                    'attributes',
+                ])
+                ->select('id', 'product_name', 'category_id', 'manufacturer_id');
+            },
+            'product' => function ($query) use ($storeTypeId) {
+                $query->with([
+                    'batches' => function ($query) use ($storeTypeId) {
+                        $query
+                            ->where('store_id', $storeTypeId)
+                            ->where('quantity', '>', 0);
+                    },
+                    'attributes'
+                ]);
+            }
+        ])
+        ->get();
+    }
+
+    public function getTotal(Collection $products): array
+    {
+        $subTotal = 0;
+        $discountTotal = 0;
+        /* @var UserCartItem $product */
+        foreach ($products as $product) {
+            $needlePrice = $product->product->product->wholesale_prices->where(
+                'currency_id',
+                $this->client->preferred_currency_id
+            )->first()->price;
+            $price = $product->count * $needlePrice;
+            $subTotal += $price;
+            if ($product->discount !== 0) {
+                $discountAmount = $price * ($product->discount / 100);
+                $discountTotal += $discountAmount;
+            }
+        }
+        $total = $subTotal - $discountTotal;
+        $discountPercentByTotal = $this->calculateDiscountByTotal($total);
+        $this->cart->update([
+            'discount' => $discountPercentByTotal
+        ]);
+        $discountTotal += $total * ($discountPercentByTotal / 100);
+        $total = $total * (1 - $discountPercentByTotal / 100);
+        return [
+            'subTotal' => $subTotal,
+            'discountTotal' => $discountTotal,
+            'total' => $total,
+            'itemsTotal' => $products->sum('count'),
+            'specialMessage' => $this->getSpecialMessage($total),
+            'notifications' => $this->getNotifications()
+        ];
+    }
+
+    private function applyPromotions(Collection $products): Collection
+    {
+        $toDelete = [];
+        $toUpdate = [];
+        $nomadProducts = $products
+            ->where('product.product.manufacturer_id', __hardcoded(608))
+            ->groupBy('product.product_id');
+        foreach ($nomadProducts as $key => $items) {
+            $totalCount = $items->sum('count');
+            $freeItemCount = $items->where('discount', 100)->sum('count');
+            $requiredItemCount = intdiv($totalCount, 8);
+            $neededFreeItems = $requiredItemCount - $freeItemCount;
+            $item = $items->where('discount', '<', 100)->last();
+            if ($neededFreeItems > 0) {
+                if ($freeItemCount > 0) {
+                    $freeProduct = $items->where('discount', 100)->first();
+                    $freeProduct->increment('count', $neededFreeItems);
+                    $toUpdate[] = ['id' => $freeProduct->id, 'delta' => $neededFreeItems];
+                } else {
+                    $freeProduct = $item->replicate();
+                    $freeProduct->count = $neededFreeItems;
+                    $freeProduct->discount = 100;
+                    $freeProduct->save();
+                    $products->push($freeProduct);
+                }
+                $item->decrement('count', $neededFreeItems);
+                $toUpdate[] = ['id' => $item->id, 'delta' => $neededFreeItems * - 1];
+            } elseif ($neededFreeItems < 0) {
+                $freeProduct = $items->where('discount', 100)->first();
+                if ($requiredItemCount === 0) {
+                    $freeProduct->delete();
+                    $toDelete[] = $freeProduct->id;
+                } else {
+                    $freeProduct->increment('count', $neededFreeItems);
+                    $toUpdate[] = ['id' => $freeProduct->id, 'delta' => $neededFreeItems];
+                }
+            }
+        }
+
+        \Log::info('to_update', $toUpdate);
+        \Log::info('to_delete', $toDelete);
+
+        return $products
+            ->reject(function ($product) use ($toDelete) {
+                return in_array($product->id, $toDelete);
+            });
+    }
+
+    public function old_getTotal(): array
     {
         $this->applyPromotions();
         $cartItems = $this->cart->items()->with('product')->get();
-        $prices = WholesalePrice::query()
-            ->whereIn('product_id', $cartItems->pluck('product.product_id')->toArray())
-            ->where('currency_id', $this->client->preferred_currency_id)
-            ->get();
+        $prices = WholesalePrice::query()->whereIn(
+            'product_id',
+            $cartItems->pluck('product.product_id')->toArray()
+        )->where('currency_id', $this->client->preferred_currency_id)->get();
         $subTotal = 0;
         $discountTotal = 0;
         foreach ($cartItems as $cartItem) {
@@ -102,11 +256,10 @@ class CartRepository
         $notification = null;
         if ($latestItem->product->product->manufacturer_id === __hardcoded(608)) {
             $skus = $latestItem->product->relativeSku()->select(['id', 'product_id'])->get();
-            $inCartSkuCount = UserCartItem::query()
-                ->where('cart_id', $this->cart->id)
-                ->whereIn('product_id', $skus->pluck('id')->toArray())
-                ->get()
-                ->sum('count');
+            $inCartSkuCount = UserCartItem::query()->where('cart_id', $this->cart->id)->whereIn(
+                'product_id',
+                $skus->pluck('id')->toArray()
+            )->get()->sum('count');
 
             if ($inCartSkuCount % 6 === 0) {
                 $notification = [
@@ -132,7 +285,7 @@ class CartRepository
         return $messages;
     }
 
-    private function applyPromotions()
+    private function old_applyPromotions()
     {
         // NOMAD 7+1
         $products = $this->cart->items()->get();
@@ -209,20 +362,25 @@ class CartRepository
             $item->count += $count;
             $item->save();
         } else {
-            $this->cart->items()->create([
-                'product_id' => $productId,
-                'discount' => $discount,
-                'count' => $count
-            ]);
+            $cartItem = $this->cart->items()->where('product_id', $productId)->where('discount', $discount)->first();
+            if ($cartItem) {
+                $cartItem->increment('count', $count);
+            } else {
+                $this->cart->items()->create([
+                    'product_id' => $productId,
+                    'discount' => $discount,
+                    'count' => $count
+                ]);
+            }
         }
 
-/*
-        $this->cart->items()->updateOrCreate([
-            'product_id' => $productId,
-            'discount' => 0,
-        ], [
-            'count' => $inCartCount + $count,
-        ]);*/
+        /*
+                $this->cart->items()->updateOrCreate([
+                    'product_id' => $productId,
+                    'discount' => 0,
+                ], [
+                    'count' => $inCartCount + $count,
+                ]);*/
 
 
         return [
@@ -256,7 +414,6 @@ class CartRepository
 
     private function retrieveStore()
     {
-        return Store::whereTypeId(4)
-            ->first();
+        return Store::whereTypeId(4)->first();
     }
 }

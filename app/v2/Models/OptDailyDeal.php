@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|OptDailyDeal whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OptDailyDeal whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read mixed $raw_remaining_time
+ * @property-read string $remaining_time
  */
 class OptDailyDeal extends Model
 {
