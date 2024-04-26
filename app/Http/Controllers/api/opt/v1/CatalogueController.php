@@ -12,7 +12,6 @@ use App\Repository\Opt\VariantRepository;
 use App\Resolvers\Meta\OptMetaCatalogResolver;
 use App\Resolvers\Opt\OptCatalogFiltersResolver;
 use App\Resolvers\Opt\OptCatalogProductResolver;
-use App\Store;
 use App\v2\Models\Currency;
 use App\v2\Models\Product;
 use App\v2\Models\WholesaleClient;
@@ -97,22 +96,15 @@ class CatalogueController extends BaseApiController
         $product->load('attributes');
         $product->load('product_images');
         $product->loadActiveDailyDeals();
-        $currency = $productResolver->retrieveCurrency(auth()->user());
-        $product->load(['wholesale_prices' => function ($query) use ($currency) {
-            return $query->where('currency_id', $currency);
-        }]);
+        $product->load('wholesale_prices.currency');
         $variants =
             app(VariantRepository::class)->get($product, auth()->user());
-        $sameProducts = Product::query()
+        /*$sameProducts = Product::query()
             ->where('is_opt', true)
             ->tap(function ($query) use ($productResolver) {
                 return $productResolver->attachAdditionalEntities($query);
             })
-            ->with([
-                'wholesale_prices' => function ($query) use ($currency) {
-                    return $query->where('currency_id', $currency);
-                }
-            ])
+            ->with(['wholesale_prices.currency'])
             ->with(['batches' => function ($q) {
                 $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
                 return $q
@@ -127,14 +119,15 @@ class CatalogueController extends BaseApiController
             })
             ->whereKeyNot($product->id)
             ->where('category_id', $product->category_id)
-            ->get();
+            ->get();*/
+        $sameProducts2 = $productResolver->getSameProductsQuery($product->id, $product->category_id)->get();
         return $this->respondSuccessNoReport([
             'product' => SingleProductResource::make($product),
             'variants' => VariantResource::collection(
                 $variants
             ),
             'in_stock' => $variants->count() > 0,
-            'same_products' => ProductResource::collection($sameProducts),
+            'same_products' => ProductResource::collection($sameProducts2),
             'user' => auth()->user(),
         ]);
     }

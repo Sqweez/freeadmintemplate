@@ -8,12 +8,12 @@ use App\v2\Models\WholesaleClient;
 use App\v2\Models\WholesaleOrder;
 use App\v2\Models\WholesaleOrderProduct;
 use Exception;
+use Illuminate\Support\Collection;
 
 class OrderRepository
 {
 
     private ProductBatchRepository $productBatchRepository;
-
     public function __construct()
     {
         $this->productBatchRepository = new ProductBatchRepository();
@@ -38,7 +38,7 @@ class OrderRepository
     {
         return WholesaleOrder::query()
             ->byClient($client->id)
-            ->with('products:id,product_id,price,wholesale_order_id')
+            ->with('products:id,product_id,price,wholesale_order_id,discount')
             ->with('status.status')
             ->orderByDesc('created_at')
             ->get();
@@ -65,15 +65,13 @@ class OrderRepository
      */
     private function createOrderProducts(WholesaleOrder $order, WholesaleClient $client)
     {
-        $cartProducts = $client->cart->items;
-        $cartProducts->load(['product.product.wholesale_prices' => function ($query) use ($client) {
-            return $query->where('currency_id', $client->preferred_currency_id);
-        }]);
+        $cartRepository = new CartRepository($client);
+        $result = $cartRepository->getCart();
+        $cartProducts = $result['products'];
+        if (count($result['stockChangedProducts']) > 0) {
+            throw new Exception('Количество некоторых позиций изменилось, перепроверьте заказ');
+        }
         foreach ($cartProducts as $cartProduct) {
-            $existingQuantities = $this->productBatchRepository->getWholesaleProductsQuantity($cartProduct['product_id']);
-            if ($existingQuantities < $cartProduct['count']) {
-                throw new Exception('Некоторых товаров недостаточно на складе');
-            }
             for ($i = 0; $i < $cartProduct['count']; $i++) {
                 $batch = $this->productBatchRepository->changeWholesaleProductQuantity($cartProduct['product_id'], -1);
                 $order->products()
@@ -89,9 +87,14 @@ class OrderRepository
         }
     }
 
-    private function clearCart(WholesaleClient $client)
+    private function checkCartQuantities(Collection $products)
     {
-        return $client->cart->items()->delete();
+
+    }
+
+    private function clearCart(WholesaleClient $client): void
+    {
+        $client->cart->items()->delete();
     }
 
     /**

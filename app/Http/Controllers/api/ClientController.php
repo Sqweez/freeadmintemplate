@@ -361,6 +361,10 @@ class ClientController extends Controller {
                     'amount' => $request->get('sum'),
                     'sale_id' => -1
                 ]);
+
+            $client = Client::find($client);
+            $client->cached_balance += $request->get('sum');
+            $client->save();
         }
     }
 }

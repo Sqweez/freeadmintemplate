@@ -23,7 +23,7 @@
                     <tr v-for="order of orders" :key="order.id">
                         <td>{{ order.id }}</td>
                         <td>{{ order.client.name }}</td>
-                        <td>{{ order.total_price | priceFilters}}</td>
+                        <td>{{ order.total_price | priceFiltersRub}}</td>
                         <td>{{ order.position_count }} шт.</td>
                         <td>{{ order.products_count }} шт.</td>
                         <td>{{ order.created_at }}</td>

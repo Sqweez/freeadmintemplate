@@ -52,7 +52,9 @@ class OrderController extends BaseApiController
                        'product_name' => $product->product->product->product_name,
                        'manufacturer' => $product->product->product->manufacturer->manufacturer_name,
                        'product_sub_name' => $product->product->product->attributes->pluck('attribute_value')->join(' '),
-                       'total_price' => $items->sum('price'),
+                       'total_price' => $items->reduce(function ($a, $c) {
+                           return $a + $c->getFinalPriceAttribute();
+                       }, 0),
                        'link' => $product->product->product->getOptLink(),
                        'items' => $items
                             ->groupBy('product_id')

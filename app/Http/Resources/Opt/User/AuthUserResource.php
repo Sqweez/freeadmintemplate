@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Opt\User;
 
-use App\Repository\Opt\CartRepository;
 use App\v2\Models\WholesaleClient;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,31 +19,22 @@ class AuthUserResource extends JsonResource
      */
     public function toArray($request): array
     {
-        try {
-            $cartData = (new CartRepository(auth()->user()))->getTotal();
-        } catch (Exception $exception) {
-            $cartData =  [
-                'subTotal' => 0,
-                'discountTotal' => 0,
-                'total' => 0,
-                'itemsTotal' => 0
-            ];
-        }
         return [
-                'id' => $this->id,
-                'name' => $this->getFullNameAttribute(),
-                'access_token' => $this->access_token,
-                'phone' => $this->phone,
-                'has_russian_passport' => $this->has_russian_passport,
-                'patronymic' => $this->patronymic,
-                'first_name' => $this->first_name,
-                'last_name' => $this->last_name,
-                'legal_type_id' => $this->legal_type_id,
-                'iin' => $this->iin,
-                'passport' => $this->passport,
-                'delivery_address' => $this->delivery_address,
-                'city' => $this->city->only(['id', 'name']),
-                'email' => $this->email,
-            ] + $cartData;
+            'id' => $this->id,
+            'name' => $this->getFullNameAttribute(),
+            'access_token' => $this->access_token,
+            'phone' => $this->phone,
+            'has_russian_passport' => $this->has_russian_passport,
+            'patronymic' => $this->patronymic,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'legal_type_id' => $this->legal_type_id,
+            'iin' => $this->iin,
+            'passport' => $this->passport,
+            'delivery_address' => $this->delivery_address,
+            'city' => $this->city->only(['id', 'name']),
+            'email' => $this->email,
+            'preferred_currency_id' => $this->preferred_currency_id,
+        ];
     }
 }

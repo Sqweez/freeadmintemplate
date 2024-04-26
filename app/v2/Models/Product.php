@@ -157,6 +157,8 @@ use Illuminate\Support\Facades\Storage;
  * @property-read int|null $wholesale_favorite_count
  * @property-read Collection|\App\v2\Models\ProductAvailability[] $quantities
  * @property-read int|null $quantities_count
+ * @property-read \App\v2\Models\OptDailyDealProduct|null $optDailyDeals
+ * @method static Builder|Product withActiveDailyDeals()
  */
 class Product extends Model
 {
@@ -531,5 +533,13 @@ class Product extends Model
                     ->where('active_to', '>=', now());
             });
         }]);
+    }
+
+    public function retrieveActiveDiscountPercent(): int
+    {
+        if ($this->optDailyDeals && $this->optDailyDeals->discount > 0) {
+            return $this->optDailyDeals->discount;
+        }
+        return 0;
     }
 }

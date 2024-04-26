@@ -20,7 +20,7 @@ class OrderController extends BaseApiController
         return $this->respondSuccess([
             'orders' => OrdersResource::collection(
                 WholesaleOrder::query()
-                    ->with('products:id,product_id,price,wholesale_order_id')
+                    ->with('products:id,product_id,price,wholesale_order_id,discount')
                     ->with('status.status')
                     ->with('client.city')
                     ->orderByDesc('created_at')
