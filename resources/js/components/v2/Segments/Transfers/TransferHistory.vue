@@ -304,6 +304,7 @@ export default {
             } else {
                 this.filterMapQuery.set(key, value);
             }
+            this.filterMapQuery.set('page', 1)
             this.getTransfers();
         },
         onPaginate (pagination) {
