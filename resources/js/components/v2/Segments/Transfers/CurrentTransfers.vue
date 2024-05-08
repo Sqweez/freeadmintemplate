@@ -317,6 +317,7 @@ export default {
             } else {
                 this.filterMapQuery.delete('search')
             }
+            this.filterMapQuery.set('page', 1)
             this.getTransfers();
         }, 500),
         setFilter (key, value) {
@@ -325,6 +326,7 @@ export default {
             } else {
                 this.filterMapQuery.set(key, value);
             }
+            this.filterMapQuery.set('page', 1)
             this.getTransfers();
         },
         onPaginate (pagination) {
@@ -360,6 +362,7 @@ export default {
             } else {
                 this.filterMapQuery.delete('created_at_max')
             }
+            this.filterMapQuery.set('page', 1)
             await this.getTransfers();
         },
         async cancelTransfer() {
