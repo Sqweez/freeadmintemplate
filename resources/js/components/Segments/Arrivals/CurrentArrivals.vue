@@ -8,12 +8,15 @@
                     label="Поиск по поступлениям"
                     append-icon="search"
                     clearable
+                    v-if="false"
                     v-model="search"
                 />
                 <v-data-table
-                    :search="search"
+                    :server-items-length="meta.total"
                     :headers="headers"
+                    :page="meta.current_page"
                     :items="arrivals"
+                    @pagination="onPaginate"
                 >
                     <template v-slot:item.common_info="{ item }">
                         <v-list>
@@ -224,18 +227,19 @@
 </template>
 
 <script>
-import {editArrival} from "@/api/arrivals";
-import ArrivalInfoModal from "@/components/Modal/ArrivalInfoModal";
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-import axios from "axios";
-import {TOAST_TYPE} from "@/config/consts";
-import BookingModal from "@/components/Modal/BookingModal";
-import ACTIONS from "@/store/actions";
-import {mapActions} from 'vuex';
+import { editArrival } from '@/api/arrivals';
+import ArrivalInfoModal from '@/components/Modal/ArrivalInfoModal';
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
+import axios from 'axios';
+import { TOAST_TYPE } from '@/config/consts';
+import BookingModal from '@/components/Modal/BookingModal';
+import { mapActions } from 'vuex';
+import ArrivalRepository from '@/repositories/ArrivalRepository';
 
 export default {
     components: {BookingModal, ConfirmationModal, ArrivalInfoModal},
     data: () => ({
+        initialLoad: true,
         search: '',
         loading: false,
         editArrivalMode: false,
@@ -249,16 +253,35 @@ export default {
         paymentCost: 0,
         arrivedAt: null,
         comment: '',
+        arrivals: [],
+        arrivalRepository: ArrivalRepository,
+        filterMapQuery: new Map(),
+        meta: {},
     }),
     methods: {
         ...mapActions({
             '$getNotCompletedArrivals': 'getNotCompletedArrivals',
             '$deleteArrival': 'deleteArrival',
         }),
+        onPaginate (pagination) {
+            if (this.initialLoad) {
+                return ;
+            }
+            this.filterMapQuery.set('per_page', pagination.itemsPerPage);
+            this.filterMapQuery.set('page', pagination.page);
+            this.getArrivals();
+        },
         async getArrivals() {
+            this.initialLoad = true;
+            this.arrivals = [];
             this.$loading.enable('Данные загружаются...');
-            await this.$getNotCompletedArrivals();
+            const { data } = await this.arrivalRepository.get(Object.fromEntries(this.filterMapQuery));
+            this.arrivals = data.data;
+            this.meta = data.meta;
             this.$loading.disable();
+            this.$nextTick(() => {
+                this.initialLoad = false;
+            })
         },
         async onBookingSubmit() {
             await this.getArrivals();
@@ -306,9 +329,6 @@ export default {
         }
     },
     computed: {
-        arrivals () {
-            return this.$store.getters.ARRIVALS;
-        },
         headers() {
             return [
                 {
@@ -351,8 +371,8 @@ export default {
         }
     },
     async mounted() {
+        this.filterMapQuery.set('is_completed', 0);
         await this.getArrivals();
-        await this.$store.dispatch(ACTIONS.GET_CLIENTS);
     }
 }
 </script>

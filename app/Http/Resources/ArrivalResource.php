@@ -2,10 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\ArrivalProducts;
-use App\Product;
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Arrival;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Class Arrival
@@ -23,9 +21,10 @@ class ArrivalResource extends JsonResource
     public function toArray($request)
     {
 
-        $products = collect(ArrivalProductResource::collection($this->products))->map(function ($product) {
-            return $product;
-        });
+        $products = collect(ArrivalProductResource::collection($this->products))
+            ->map(function ($product) {
+                return $product;
+            });
 
         return [
             'id' => $this->id,
