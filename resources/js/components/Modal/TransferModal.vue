@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import {acceptTransfer, getTransferInfo} from "@/api/transfers";
+import { acceptTransfer, getTransferInfo } from '@/api/transfers';
 
 export default {
     props: {
@@ -147,6 +147,7 @@ export default {
                     p.initial_count = p.count;
                     return p;
                 }).filter(p => {
+                    return p;
                     if (!this.search) {
                         return p;
                     }
