@@ -137,6 +137,7 @@
             :server-items-length="meta.total"
             v-if="!loading"
             :items-per-page="10"
+            :page="meta.current_page"
             class="background-iron-grey fz-18 mt-2"
             no-results-text="Нет результатов"
             no-data-text="Нет данных"

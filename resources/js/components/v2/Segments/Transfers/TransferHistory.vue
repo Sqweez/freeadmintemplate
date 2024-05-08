@@ -141,6 +141,7 @@
             no-results-text="Нет результатов"
             no-data-text="Нет данных"
             :headers="headers"
+            :page="meta.current_page"
             :items="transfers"
             @pagination="onPaginate"
             :footer-props="{
