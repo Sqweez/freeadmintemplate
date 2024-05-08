@@ -1152,7 +1152,11 @@ const navigationModule = {
                 url: '/arrivals',
                 icon: 'moped',
             },
-
+            {
+                title: 'Перемещения',
+                url: '/transfer',
+                icon: 'moped',
+            },
             {
                 icon: 'dashboard',
                 title: 'Теги',

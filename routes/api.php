@@ -509,6 +509,10 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
         Route::prefix('transfers')->group(function () {
             Route::get('/', [\App\Http\Controllers\api\v2\TransferController::class, 'index']);
         });
+
+        Route::prefix('arrivals')->group(function () {
+            Route::get('/', [\App\Http\Controllers\api\v2\ArrivalController::class, 'index']);
+        });
     });
 
     Route::prefix('dev')->group(function () {

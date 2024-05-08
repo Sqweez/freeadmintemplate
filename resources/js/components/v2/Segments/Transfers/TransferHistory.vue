@@ -236,7 +236,7 @@
         <TransferModal
             :state="infoModal"
             :id="transferId"
-            :confirm-mode="true"
+            :confirm-mode="false"
             v-on:cancel="transferId = null; infoModal = false"
             v-on:confirmed="onConfirm"
             :search="search"

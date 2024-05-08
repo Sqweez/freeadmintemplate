@@ -1,27 +1,20 @@
 <template>
     <div>
-        <v-overlay :value="overlay">
-            <v-progress-circular indeterminate size="64"></v-progress-circular>
-        </v-overlay>
         <v-card>
             <v-card-text>
                 <v-text-field
                     label="Поиск по поступлениям"
                     append-icon="search"
                     clearable
+                    v-if="false"
                     v-model="search"
                 />
                 <v-data-table
-                    :search="search"
-                    class="background-tooman-grey fz-18 mt-2"
-                    no-results-text="Нет результатов"
-                    no-data-text="Нет данных"
+                    :server-items-length="meta.total"
                     :headers="headers"
+                    :page="meta.current_page"
                     :items="arrivals"
-                    :footer-props="{
-                        'items-per-page-options': [10, 15, {text: 'Все', value: -1}],
-                        'items-per-page-text': 'Записей на странице',
-                    }"
+                    @pagination="onPaginate"
                 >
                     <template v-slot:item.common_info="{ item }">
                         <v-list>
@@ -105,7 +98,7 @@
                                         {{ item.total_cost | priceFilters }}
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
-                                        Общая сумма
+                                        Общая закупочная сумма
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
@@ -156,99 +149,180 @@
                             </v-list-item>
                         </v-list>
                     </template>
-                    <template slot="footer.page-text" slot-scope="{pageStart, pageStop, itemsLength}">
-                        {{ pageStart }}-{{ pageStop }} из {{ itemsLength }}
-                    </template>
                 </v-data-table>
             </v-card-text>
         </v-card>
         <ArrivalInfoModal
             :state="arrivalModal"
-            :arrivalProp="current_arrival"
-            :confirm-mode="false"
+            :arrival-prop="current_arrival"
+            :edit-mode="editArrivalMode"
             @cancel="arrivalModal = false; current_arrival = {}"
             :search="search"
         />
         <ConfirmationModal
             :state="confirmationModal"
-            message="Вы действительно хотите отменить поставку?"
-            :on-confirm="cancelArrival"
-            @cancel="confirmationModal = false; current_arrival = {}"
+            message="Вы действительно хотите удалить выбранную поставку?"
+            :on-confirm="deleteArrival"
+            v-on:cancel="current_arrival = {}; confirmationModal = false"
+        />
+        <BookingModal
+            :state="bookingModal"
+            :arrival="current_arrival"
+            @cancel="bookingModal = false; current_arrival = {}"
+            @submit="onBookingSubmit"
         />
     </div>
 </template>
 
 <script>
-import {cancelArrival, getArrivals} from "@/api/arrivals";
-import ArrivalInfoModal from "@/components/Modal/ArrivalInfoModal";
-import axios from "axios";
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import { editArrival } from '@/api/arrivals';
+import ArrivalInfoModal from '@/components/Modal/ArrivalInfoModal';
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
+import axios from 'axios';
+import { TOAST_TYPE } from '@/config/consts';
+import BookingModal from '@/components/Modal/BookingModal';
+import ACTIONS from '@/store/actions';
+import { mapActions } from 'vuex';
+import ArrivalRepository from '@/repositories/ArrivalRepository';
 
 export default {
-    components: {ConfirmationModal, ArrivalInfoModal},
+    components: {BookingModal, ConfirmationModal, ArrivalInfoModal},
     data: () => ({
+        initialLoad: true,
         search: '',
-        overlay: true,
         loading: false,
-        confirmationModal: false,
-        arrivals: [],
+        editArrivalMode: false,
         current_arrival: {},
         arrivalModal: false,
-        headers: [
-            {
-                text: 'Общая информация',
-                value: 'common_info'
-            },
-            {
-                text: 'Общая информация',
-                value: 'economy_info'
-            },
-            {
-                text: 'Комментарий',
-                value: 'comment',
-                align: ' d-none'
-            },
-            {
-                text: 'Действие',
-                value: 'actions',
-                sortable: false
-            },
-            {
-                text: 'Поиск',
-                value: 'search',
-                align: ' d-none'
-            }
-        ],
+        confirmationModal: false,
+        editMode: false,
+        storeId: null,
+        arrivalId: null,
+        bookingModal: false,
+        paymentCost: 0,
+        arrivedAt: null,
+        comment: '',
+        arrivals: [],
+        arrivalRepository: ArrivalRepository,
+        filterMapQuery: new Map(),
+        meta: {},
     }),
     methods: {
+        ...mapActions({
+            '$getNotCompletedArrivals': 'getNotCompletedArrivals',
+            '$deleteArrival': 'deleteArrival',
+        }),
+        onPaginate (pagination) {
+            if (this.initialLoad) {
+                return ;
+            }
+            this.filterMapQuery.set('per_page', pagination.itemsPerPage);
+            this.filterMapQuery.set('page', pagination.page);
+            this.getArrivals();
+        },
+        async getArrivals() {
+            this.initialLoad = true;
+            this.arrivals = [];
+            this.$loading.enable('Данные загружаются...');
+            const { data } = await this.arrivalRepository.get(Object.fromEntries(this.filterMapQuery));
+            this.arrivals = data.data;
+            this.meta = data.meta;
+            this.$loading.disable();
+            this.$nextTick(() => {
+                this.initialLoad = false;
+            })
+        },
+        async onBookingSubmit() {
+            await this.getArrivals();
+            this.arrival = {};
+            this.bookingModal = false;
+        },
+        async deleteArrival() {
+            this.confirmationModal = false;
+            this.$loading.enable();
+            await this.$deleteArrival(this.current_arrival.id);
+            this.$loading.disable();
+            this.current_arrival = {}
+        },
         async printWaybill(id) {
             this.loading = true;
-            const { data } = await axios.get(`/api/excel/transfer/waybill?arrival=${id}`)
+            const {data} = await axios.get(`/api/excel/transfer/waybill?arrival=${id}`)
             const link = document.createElement('a');
             link.href = data.path;
             link.click();
             this.loading = false;
         },
-        async cancelArrival() {
-            this.confirmationModal = false;
-            this.loading = true;
-            await cancelArrival(this.current_arrival.id);
-            this.arrivals = this.arrivals.filter(s => s.id !== this.current_arrival.id);
-            this.current_arrival = {};
-            this.loading = false;
-            this.$toast.success('Поставка отменена!');
+        async editArrival() {
+            try {
+                const {data} = await editArrival({
+                    id: this.arrivalId,
+                    store_id: this.storeId,
+                    payment_cost: this.paymentCost,
+                    arrived_at: this.arrivedAt,
+                    comment: this.comment,
+                });
+                this.arrivals = this.arrivals.map(s => {
+                    if (s.id === data.data.id) {
+                        s = data.data;
+                    }
+                    return s;
+                })
+                this.editMode = false;
+                this.arrivalId = null;
+                this.storeId = null;
+                this.arrivedAt = null;
+                this.$toast.success('Поступление отредактировано!')
+            } catch (e) {
+                this.$toast.error('Произошла ошибка', TOAST_TYPE.ERROR)
+            }
         }
     },
-    computed: {},
+    computed: {
+        headers() {
+            return [
+                {
+                    text: 'Общая информация',
+                    value: 'common_info'
+                },
+                {
+                    text: 'Общая информация',
+                    value: 'economy_info'
+                },
+                {
+                    text: 'Комментарий',
+                    value: 'comment',
+                    align: ' d-none'
+                },
+                {
+                    text: 'Действие',
+                    value: 'actions',
+                    sortable: false
+                },
+                {
+                    text: 'Поиск',
+                    value: 'search',
+                    align: ' d-none'
+                }
+            ];
+        },
+        totalPurchasePrice() {
+            return this.arrivals.reduce((a, c) => {
+                return a + +c.total_cost;
+            }, 0);
+        },
+        totalProductPrice() {
+            return this.arrivals.reduce((a, c) => {
+                return a + +c.total_sale_cost;
+            }, 0);
+        },
+        stores() {
+            return this.$store.getters.stores;
+        }
+    },
     async mounted() {
-        const { data } = await getArrivals(true);
-        this.arrivals = data.map(arrival => {
-            arrival.search = arrival.products.map(product => {
-                return `${product.product_name} ${product.manufacturer.manufacturer_name} ${product.attributes.map(a => a.attribute_value).join(' ')}`
-            }).join(' ')
-            return arrival
-        });
-        this.overlay = false;
+        this.filterMapQuery.set('is_completed', 1);
+        await this.getArrivals();
+        await this.$store.dispatch(ACTIONS.GET_CLIENTS);
     }
 }
 </script>
@@ -256,3 +330,4 @@ export default {
 <style scoped>
 
 </style>
+
