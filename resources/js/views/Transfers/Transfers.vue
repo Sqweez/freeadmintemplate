@@ -34,12 +34,12 @@
 </template>
 
 <script>
-    import TransferHistory from "@/components/Segments/Transfers/TransferHistory";
-    import NewTransferSegment from "@/components/Segments/Transfers/NewTransferSegment";
-    import CurrentTransfers from "@/components/Segments/Transfers/CurrentTransfers";
-    import OnAcceptionTransfers from "@/components/Segments/Transfers/OnAcceptionTransfers";
+import TransferHistory from '@/components/v2/Segments/Transfers/TransferHistory';
+import NewTransferSegment from '@/components/v2/Segments/Transfers/NewTransferSegment';
+import CurrentTransfers from '@/components/v2/Segments/Transfers/CurrentTransfers';
+import OnAcceptionTransfers from '@/components/v2/Segments/Transfers/OnAcceptionTransfers';
 
-    export default {
+export default {
         components: {TransferHistory, NewTransferSegment, CurrentTransfers, OnAcceptionTransfers},
         data: () => ({
             loading: false,

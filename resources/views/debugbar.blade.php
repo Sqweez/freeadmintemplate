@@ -10,7 +10,7 @@
 <body>
 <pre id="apiResponse"></pre>
 <script>
-    fetch('http://127.0.0.1:8000/api/opt/v1/cart', {
+    fetch('http://127.0.0.1:8000/api/v3/clients?search=Арай', {
         headers: {
             'Authorization': 'Bearer 6OXeLLtR6vpsNkR6jPuByIQhq6ZFm5Xs5kcjesOP50NdaTk5OM1jGxekFKNn',
         }

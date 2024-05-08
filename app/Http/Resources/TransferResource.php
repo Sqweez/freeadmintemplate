@@ -20,7 +20,7 @@ class TransferResource extends JsonResource
      */
     public function toArray($request)
     {
-        try {
+        /*try {
             $search = $this->batches
                 ->groupBy('product_id')
                 ->map(function($batch) {
@@ -41,13 +41,13 @@ class TransferResource extends JsonResource
                 }, '');
         } catch (\Exception $exception) {
             $search = '';
-        }
+        }*/
 
         return [
             'id' => $this->id,
             'parent_store' => $this->parent_store->name,
             'child_store' => $this->child_store->name,
-            'child_store_id' => intval($this->child_store->id),
+            'child_store_id' => $this->child_store->id,
             'parent_store_id' => $this->parent_store_id,
             'user' => $this->whenLoaded('user') ? $this->user->name : 'Администратор',
             'product_count' => $this->batches->count(),
@@ -57,14 +57,14 @@ class TransferResource extends JsonResource
                 return $a + ($cost - ($cost * $c->discount / 100));
             }, 0),
             'total_purchase_cost' => $this->batches->reduce(function ($a, $c) {
-                $cost = intval($c->productBatch->purchase_price ?? 0);
+                $cost = $c->productBatch->purchase_price ?? 0;
                 return $a + ($cost - ($cost * $c->discount / 100));
             }, 0),
             'photos' => json_decode($this->photos, true),
             'date' => Carbon::parse($this->created_at)->format('d.m.Y'),
             'date_updated' => $this->updated_at ? Carbon::parse($this->updated_at)->format('d.m.Y') : null,
             'is_consignment' => $this->companionSale->is_consignment,
-            'search' => trim($search),
+            'search' => '',
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'is_accepted' => $this->is_accepted,

@@ -508,7 +508,6 @@
                     </template>
                 </v-simple-table>
                 <div class="background-iron-grey pa-10">
-                    {{ stockId }}
                     <v-btn depressed color="error" block style="font-size: 16px" @click="clientCartModal = true"
                            v-if="!client">
                         Выбрать клиента
@@ -695,26 +694,26 @@
 </template>
 
 <script>
-import ClientCart from "@/components/Modal/ClientCart";
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-import WayBillModal from "@/components/Modal/WayBillModal";
-import {TOAST_TYPE} from "@/config/consts";
-import ACTIONS from "@/store/actions";
-import {mapActions} from 'vuex';
-import CheckModal from "@/components/Modal/CheckModal";
-import axios from "axios";
-import product from "@/mixins/product";
-import product_search from "@/mixins/product_search";
-import cart from "@/mixins/cart";
-import CertificateModal from "@/components/Modal/CertificateModal";
-import PreordersListModal from "@/components/Modal/PreordersListModal";
+import ClientCart from '@/components/Modal/ClientCart';
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
+import WayBillModal from '@/components/Modal/WayBillModal';
+import { TOAST_TYPE } from '@/config/consts';
+import ACTIONS from '@/store/actions';
+import { mapActions } from 'vuex';
+import CheckModal from '@/components/Modal/CheckModal';
+import axios from 'axios';
+import product from '@/mixins/product';
+import product_search from '@/mixins/product_search';
+import cart from '@/mixins/cart';
+import CertificateModal from '@/components/Modal/CertificateModal';
+import PreordersListModal from '@/components/Modal/PreordersListModal';
 import moment from 'moment';
 import DocumentsPage from '@/components/Documents/DocumentsPage';
 import InvoiceModal from '@/components/Modal/InvoiceModal';
 import InvoicePaymentModal from '@/components/Modal/InvoicePaymentModal';
 import ProductCheckModal from '@/components/Modal/ProductCheckModal';
 import axiosClient from '@/utils/axiosClient';
-import {__hardcoded} from '@/utils/helpers';
+import { __hardcoded } from '@/utils/helpers';
 
 export default {
     extends: DocumentsPage,
@@ -738,8 +737,8 @@ export default {
             this.$store.dispatch('GET_CERTIFICATES'),
             this.$store.dispatch('GET_PREORDERS'),
             this.$store.dispatch('getLegalEntities'),
+            this.$store.dispatch(ACTIONS.GET_STORES)
         ]);
-        await this.$store.dispatch(ACTIONS.GET_STORES);
         this.storeFilter = this.IS_SUPERUSER ? this.stores[0].id : this.$user.store_id;
         if (this.IS_STOREKEEPER) {
             this.payment_type = 4;
@@ -754,7 +753,6 @@ export default {
             barter_balance_amount: 0,
         } : null;
         this.$loading.disable();
-        await this.$store.dispatch(ACTIONS.GET_CLIENTS);
         this.loading = false;
     },
     watch: {

@@ -123,11 +123,12 @@
 </template>
 
 <script>
-    import GENDERS from "@/common/enums/genders";
-    import InputMask from 'inputmask';
-    import ACTIONS from '@/store/actions/index';
-    import uploadFile from "@/api/upload";
-    export default {
+import GENDERS from '@/common/enums/genders';
+import InputMask from 'inputmask';
+import ACTIONS from '@/store/actions/index';
+import uploadFile from '@/api/upload';
+
+export default {
         data: () => ({
             client: {},
             loading: false,
@@ -163,8 +164,9 @@
                 this.client.client_discount = Math.min(Math.max(this.client.client_discount, 0), 100) || 0;
                 this.client.photo = this.photo ? this.photo : '';
                 if(this.id === null) {
-                    await this.createClient();
+                    const client = await this.createClient();
                     this.$emit('cancel');
+                    this.$emit('clientCreated', client);
                 } else {
                     await this.editClient();
                 }
@@ -172,9 +174,9 @@
             },
             async createClient() {
                 try {
-                    await this.$store.dispatch(ACTIONS.CREATE_CLIENT, this.client);
+                    const client = await this.$store.dispatch(ACTIONS.CREATE_CLIENT, this.client);
                     this.$toast.success('Клиент успешно добавлен');
-                    return this.client;
+                    return client;
                 } catch (e) {
                     console.log(e);
                 } finally {
@@ -217,14 +219,16 @@
             id: {
                 type: Number,
                 default: null
-            }
+            },
+            currentClient: {
+                type: Object,
+            },
         },
         watch: {
             state() {
                 this.client = {};
                 if (this.id !== null) {
-                    const client = JSON.parse(JSON.stringify(this.$store.getters.client(this.id)))
-                    this.client = {...client};
+                    this.client = JSON.parse(JSON.stringify(this.currentClient));
                     this.client.client_discount = client.client_initial_discount;
                     this.photo = this.client.photo;
                 }/* else {

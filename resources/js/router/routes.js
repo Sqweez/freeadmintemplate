@@ -2,7 +2,6 @@ import Dashboard from '@/views/Dashboard/Dashboard';
 import Users from '@/views/Users/Users';
 import Stores from '@/views/Stores/Stores';
 import Control from '@/views/Control/Control';
-import Clients from '@/views/Clients/Clients';
 import Transfers from '@/views/Transfers/Transfers';
 import Hits from '@/views/Hits/Hits';
 import Login from '@/views/Login/Login';
@@ -89,6 +88,7 @@ import PromocodeClients from '@/views/Promocodes/PromocodeClients';
 import optRoutes from '@/router/opt.routes';
 import RevisionShow from '@/views/Revision/RevisionShow.vue';
 import RevisionTable from '@/views/Revision/RevisionTable.vue';
+import Clients_v2 from '@/views/v2/Clients/Clients.vue';
 
 const routes = [
     {
@@ -127,7 +127,7 @@ const routes = [
     },
     {
         path: '/clients',
-        component: Clients,
+        component: Clients_v2,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
