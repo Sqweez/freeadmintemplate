@@ -327,7 +327,8 @@
                             <v-pagination
                                 v-model="pagination.page"
                                 :total-visible="10"
-                                :length="pageCount"></v-pagination>
+                                :length="pageCount"
+                            />
                         </div>
                     </v-col>
                 </v-row>
@@ -362,13 +363,13 @@
 </template>
 
 <script>
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-import UserModal from "@/components/Modal/UserModal";
-import ACTIONS from "@/store/actions";
-import ClientModal from "@/components/Modal/ClientModal";
-import BalanceModal from "@/components/Modal/BalanceModal";
-import ExportClientsModal from "@/components/Modal/Export/ExportClientsModal";
-import GENDERS from "@/common/enums/genders";
+import ConfirmationModal from '@/components/Modal/ConfirmationModal';
+import UserModal from '@/components/Modal/UserModal';
+import ACTIONS from '@/store/actions';
+import ClientModal from '@/components/Modal/ClientModal';
+import BalanceModal from '@/components/Modal/BalanceModal';
+import ExportClientsModal from '@/components/Modal/Export/ExportClientsModal';
+import GENDERS from '@/common/enums/genders';
 import axiosClient from '@/utils/axiosClient';
 import BarterBalanceModal from '@/components/v2/Modal/BarterBalanceModal';
 

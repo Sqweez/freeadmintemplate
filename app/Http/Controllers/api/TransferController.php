@@ -82,42 +82,6 @@ class TransferController extends Controller {
             })
             ->orderByDesc('created_at');
 
-        /*if ($mode === 'current') {
-            $transfersQuery = $transfersQuery
-                ->where('is_confirmed', false)
-                ->where('is_accepted', true);
-        }
-        if ($mode === 'history') {
-            $transfersQuery = $transfersQuery
-                ->where('is_confirmed', true)
-                ->where('is_accepted', true)
-                ->whereDate('updated_at', '>=', today()->subDays(30)->startOfDay());
-        }*/
-        /*	if ($mode === 'not_accepted') {
-                $transfersQuery = $transfersQuery->where('is_accepted', false);
-            }*/
-
-        /*	if ($request->has('partners')) {
-                $transfersQuery = $transfersQuery->whereHas('child_store', function ($q) {
-                    return $q->where('type_id', Transfer::PARTNER_SELLER_ID);
-                });
-            }*/
-
-        /*if ($user && $user->isSeller()) {
-            $transfersQuery = $transfersQuery
-                ->where('child_store_id', $user->store_id)
-                ->orWhere('parent_store_id', $user->store_id);
-        }
-
-        if ($user && $user->isFranchise()) {
-            $store = Store::find($user->store_id);
-            $city_id = $store->city_id;
-            $store_ids = Store::where('city_id', $city_id)->get()->pluck('id');
-            $transfersQuery = $transfersQuery
-                ->whereIn('child_store_id', $store_ids->toArray())
-                ->orWhereIn('parent_store_id', $store_ids->toArray());
-        }*/
-
         return TransferResource::collection($transfersQuery->get());
     }
 

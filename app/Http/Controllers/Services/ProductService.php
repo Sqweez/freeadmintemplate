@@ -126,6 +126,7 @@ class ProductService
             $productSku = ProductSku::find($productSku->id);
             $productSku->load('product');
             $productSku->load('product.wholesale_prices.currency');
+            $productSku->load('attributes');
             return new ProductsResource($productSku);
         } catch (Exception $e) {
             DB::rollBack();

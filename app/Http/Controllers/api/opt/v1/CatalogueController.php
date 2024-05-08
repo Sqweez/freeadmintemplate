@@ -64,8 +64,7 @@ class CatalogueController extends BaseApiController
         return $this->respondSuccessNoReport([
             'products' => ProductResource::collection($productQuery->get()),
             'meta' => $metaCatalogResolver->resolver($filters),
-            'client' => $client,
-            'filters' => $request->has('no-filters') ? null : $productResolver->getFilters($productQuery),
+            'filters' => $request->has('no-filters') ? null : $productResolver->getFilters($productQuery, $client),
             'no_filters' => $request->has('no-filters')
         ]);
     }
@@ -99,36 +98,14 @@ class CatalogueController extends BaseApiController
         $product->load('wholesale_prices.currency');
         $variants =
             app(VariantRepository::class)->get($product, auth()->user());
-        /*$sameProducts = Product::query()
-            ->where('is_opt', true)
-            ->tap(function ($query) use ($productResolver) {
-                return $productResolver->attachAdditionalEntities($query);
-            })
-            ->with(['wholesale_prices.currency'])
-            ->with(['batches' => function ($q) {
-                $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
-                return $q
-                    ->where('store_id', $wholesaleStoreId)
-                    ->where('quantity', '>', 0);
-            }])
-            ->whereHas('batches', function ($q) {
-                $wholesaleStoreId = Store::wholesaleStore()->pluck('id')->toArray();
-                return $q
-                    ->where('store_id', $wholesaleStoreId)
-                    ->where('quantity', '>', 0);
-            })
-            ->whereKeyNot($product->id)
-            ->where('category_id', $product->category_id)
-            ->get();*/
-        $sameProducts2 = $productResolver->getSameProductsQuery($product->id, $product->category_id)->get();
+        $sameProducts = $productResolver->getSameProductsQuery($product->id, $product->category_id)->get();
         return $this->respondSuccessNoReport([
             'product' => SingleProductResource::make($product),
             'variants' => VariantResource::collection(
                 $variants
             ),
             'in_stock' => $variants->count() > 0,
-            'same_products' => ProductResource::collection($sameProducts2),
-            'user' => auth()->user(),
+            'same_products' => ProductResource::collection($sameProducts),
         ]);
     }
 

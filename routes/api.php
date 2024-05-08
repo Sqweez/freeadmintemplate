@@ -500,6 +500,15 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
             Route::post('/{revision}/process/{revisionFile}', [RevisionController::class, 'process']);
             Route::get('/{revision}/table', [RevisionController::class, 'getRevisionTable']);
         });
+
+        Route::prefix('clients')->group(function () {
+            Route::get('/', [\App\Http\Controllers\api\v3\ClientController::class, 'index']);
+            Route::get('/search', [\App\Http\Controllers\api\v3\ClientController::class, 'search']);
+        });
+
+        Route::prefix('transfers')->group(function () {
+            Route::get('/', [\App\Http\Controllers\api\v2\TransferController::class, 'index']);
+        });
     });
 
     Route::prefix('dev')->group(function () {

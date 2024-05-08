@@ -90,6 +90,7 @@ const clientModule = {
         async [ACTIONS.CREATE_CLIENT]({ commit }, payload) {
             const client = await createClient(payload);
             await commit(MUTATIONS.CREATE_CLIENT, client);
+            return client;
         },
         async [ACTIONS.EDIT_CLIENT]({ commit }, payload) {
             const client = await editClient(payload);
