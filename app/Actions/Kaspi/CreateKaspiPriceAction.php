@@ -3,28 +3,27 @@
 namespace App\Actions\Kaspi;
 
 use App\Repository\ProductRepository;
-use App\Service\Kaspi\KaspiProductXMLGenerator;
+use App\Service\Ecommerce\ProductXMLGenerator;
 use App\v2\Models\KaspiEntity;
 use Illuminate\Http\Response;
 
 class CreateKaspiPriceAction
 {
 
-    const BASE_NAME = 'kaspi\xml\kaspi_products_';
-    const FILE_EXT = '.xml';
+    public const FILE_EXT = '.xml';
 
     private KaspiEntity $kaspiEntity;
     private ProductRepository $productRepository;
-    private KaspiProductXMLGenerator $kaspiProductXMLGenerator;
+    private ProductXMLGenerator $productXMLGenerator;
 
     public function __construct(
         KaspiEntity $kaspiEntity,
         ProductRepository $productRepository,
-        KaspiProductXMLGenerator $kaspiProductXMLGenerator
+        ProductXMLGenerator $productXMLGenerator
     ) {
         $this->kaspiEntity = $kaspiEntity;
         $this->productRepository = $productRepository;
-        $this->kaspiProductXMLGenerator = $kaspiProductXMLGenerator;
+        $this->productXMLGenerator = $productXMLGenerator;
     }
 
     public function handle(): Response
@@ -40,7 +39,7 @@ class CreateKaspiPriceAction
 
     private function getFileName(): string
     {
-        return sprintf("%s%s%s", self::BASE_NAME, $this->kaspiEntity->id, self::FILE_EXT);
+        return sprintf("%s%s%s", $this->productXMLGenerator->getBaseName(), $this->kaspiEntity->id, self::FILE_EXT);
     }
 
     private function storeFile($content, $path): Response
@@ -52,6 +51,6 @@ class CreateKaspiPriceAction
     private function getProductsXML(): string
     {
         $products = $this->productRepository->getVisibleProductsForKaspiEntity($this->kaspiEntity->id);
-        return $this->kaspiProductXMLGenerator->generate($products, $this->kaspiEntity);
+        return $this->productXMLGenerator->generate($products, $this->kaspiEntity);
     }
 }

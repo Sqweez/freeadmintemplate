@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Console\Commands\Kaspi;
+namespace App\Console\Commands\EcommercePriceList\Forte;
 
 use App\Builder\CreateKaspiActionBuilder;
 use App\v2\Models\KaspiEntity;
+use Exception;
 use Illuminate\Console\Command;
 
-class CreateKaspiPriceCommand extends Command
+class CreateFortePriceCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'kaspi:price';
+    protected $signature = 'forte:price';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Генерирует прайс для каспи-магазинов';
+    protected $description = 'Генерирует прайс-лист для форте-маркета';
 
     /**
      * Create a new command instance.
@@ -32,7 +33,13 @@ class CreateKaspiPriceCommand extends Command
         parent::__construct();
     }
 
-    protected function memory () {
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    protected function memory (): int
+    {
         return 512;
     }
 
@@ -40,15 +47,14 @@ class CreateKaspiPriceCommand extends Command
      * Execute the console command.
      *
      * @return void
+     * @throws Exception
      */
     public function handle()
     {
         ini_set('memory_limit', '512M');
-        $kaspiEntities = KaspiEntity::query()->get();
-        foreach ($kaspiEntities as $kaspiEntity) {
-            $action = CreateKaspiActionBuilder::build($kaspiEntity);
-            $action->handle();
-            $this->line('OK');
-        }
+        $kaspiEntity = KaspiEntity::whereKey(1)->first();
+        $action = CreateKaspiActionBuilder::build($kaspiEntity, 'FORTE');
+        $action->handle();
+        $this->line('OK');
     }
 }
