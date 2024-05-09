@@ -130,7 +130,7 @@ class Sale extends Model
             'name' => 'Наличные'
         ],
         1 => [
-            'name' => 'Безналичная оплата'
+            'name' => 'Безналичная оплата Kaspi'
         ],
         2 => [
             'name' => 'Kaspi RED/PayDa!'
@@ -153,6 +153,9 @@ class Sale extends Model
         8 => [
             'name' => 'Kaspi Магазин (ИП Соловьева)'
         ],
+        9 => [
+            'name' => 'Безналичная оплата Jysan'
+        ]
     ];
 
     public function client() {

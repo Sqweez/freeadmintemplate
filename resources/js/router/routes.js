@@ -502,6 +502,7 @@ const routes = [
             CAN_ENTER: {
                 IS_ADMIN: true,
                 IS_BOSS: true,
+                IS_MARKETOLOG: true,
             },
         },
     },
