@@ -48,8 +48,8 @@ class ForteProductXMLGenerator implements ProductXMLGenerator
         foreach ($product['availabilities'] as $availability) {
             $this->addPickupOption($XMLWriter, $availability);
         }
-        $XMLWriter->writeElement('price', $product['price']);
         $XMLWriter->endElement();
+        $XMLWriter->writeElement('price', $product['price']);
         $XMLWriter->endElement();
     }
 
