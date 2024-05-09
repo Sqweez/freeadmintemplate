@@ -42,7 +42,7 @@ class ForteProductXMLGenerator implements ProductXMLGenerator
         }
         $XMLWriter->startElement('offer');
         $XMLWriter->writeAttribute('sku', $product['sku']);
-        $XMLWriter->writeElement('name', $product['product_name']);
+        $XMLWriter->writeElement('name', $this->escapeXML($product['product_name']));
         $XMLWriter->writeElement('vendor', $product['brand']);
         $XMLWriter->startElement('pickup-options');
         foreach ($product['availabilities'] as $availability) {
@@ -66,5 +66,14 @@ class ForteProductXMLGenerator implements ProductXMLGenerator
         $XMLWriter->startElement('pickup-option');
         $XMLWriter->writeAttribute('id', $availability['storeId']);
         $XMLWriter->endElement();
+    }
+
+    private function escapeXML($string) {
+        $string = str_replace("&", "&amp;", $string);
+        $string = str_replace("<", "&lt;", $string);
+        $string = str_replace(">", "&gt;", $string);
+        $string = str_replace('"', "&quot;", $string);
+        $string = str_replace("'", "&apos;", $string);
+        return $string;
     }
 }
