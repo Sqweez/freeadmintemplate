@@ -253,12 +253,12 @@
 </template>
 
 <script>
-import moment from "moment";
-import ACTIONS from "@/store/actions";
-import {mapGetters} from 'vuex';
-import product_search from "@/mixins/product_search";
-import cart from "@/mixins/cart";
-import axiosClient from "@/utils/axiosClient";
+import moment from 'moment';
+import ACTIONS from '@/store/actions';
+import { mapGetters } from 'vuex';
+import product_search from '@/mixins/product_search';
+import cart from '@/mixins/cart';
+import axiosClient from '@/utils/axiosClient';
 
 export default {
     data: () => ({
@@ -306,9 +306,9 @@ export default {
     async mounted() {
         this.$loading.enable();
         await Promise.all([
-            this.$store.dispatch('GET_PRODUCTS_v2'),
+            this.$store.dispatch(ACTIONS.GET_CATEGORIES),
             this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
-            this.$store.dispatch(ACTIONS.GET_CATEGORIES)
+            this.$store.dispatch('GET_PRODUCTS_v2')
         ]);
         this.$loading.disable();
     },
