@@ -1113,12 +1113,44 @@ const navigationModule = {
                         url: '/analytics/sales/brands',
                     },
                     {
+                        url: '/analytics/sales/schedule',
+                        title: 'График продаж',
+                    },
+                    {
                         url: '/analytics/sales/brands/sellers',
                         title: 'Аналитика продаж продавцы',
                     },
+                ],
+            },
+            {
+                title: 'Экономика',
+                url: '#',
+                hasDropdown: true,
+                icon: 'account_balance_wallet',
+                children: [
                     {
-                        url: '/analytics/sales/schedule',
-                        title: 'График продаж',
+                        title: 'Список смен',
+                        url: '/shifts/index',
+                    },
+                    {
+                        title: 'Настройки смен',
+                        url: '/shifts/settings',
+                    },
+                    {
+                        title: 'Штрафы/Вознаграждения',
+                        url: '/shifts/penalty',
+                    },
+                    {
+                        title: 'План продаж',
+                        url: '/plan',
+                    },
+                    {
+                        title: 'Проценты от продаж',
+                        url: '/economy/seller/earnings',
+                    },
+                    {
+                        title: 'Типы маржинальности',
+                        url: '/economy/margin/types',
                     },
                 ],
             },

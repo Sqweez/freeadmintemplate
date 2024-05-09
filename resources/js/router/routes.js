@@ -183,6 +183,7 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_BOSS: true,
+                IS_MARKETOLOG: true,
             },
         },
     },
@@ -688,6 +689,7 @@ const routes = [
         meta: {
             CAN_ENTER: {
                 IS_BOSS: true,
+                IS_MARKETOLOG: true,
             },
         },
     },

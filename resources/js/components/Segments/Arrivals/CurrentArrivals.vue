@@ -8,8 +8,8 @@
                     label="Поиск по поступлениям"
                     append-icon="search"
                     clearable
-                    v-if="false"
                     v-model="search"
+                    @input="onSearchInput"
                 />
                 <v-data-table
                     :server-items-length="meta.total"
@@ -209,7 +209,6 @@
             :arrival-prop="current_arrival"
             :edit-mode="editArrivalMode"
             @cancel="arrivalModal = false; current_arrival = {}"
-            :search="search"
         />
         <ConfirmationModal
             :state="confirmationModal"
@@ -235,6 +234,7 @@ import { TOAST_TYPE } from '@/config/consts';
 import BookingModal from '@/components/Modal/BookingModal';
 import { mapActions } from 'vuex';
 import ArrivalRepository from '@/repositories/ArrivalRepository';
+import _ from 'lodash';
 
 export default {
     components: {BookingModal, ConfirmationModal, ArrivalInfoModal},
@@ -263,6 +263,17 @@ export default {
             '$getNotCompletedArrivals': 'getNotCompletedArrivals',
             '$deleteArrival': 'deleteArrival',
         }),
+        onSearchInput: _.debounce(function(value) {
+            if (value.length >= 3) {
+                this.filterMapQuery.set('page', 1);
+                this.filterMapQuery.set('search', value)
+            }
+            if (value.length === 0) {
+                this.filterMapQuery.set('page', 1);
+                this.filterMapQuery.delete('search')
+            }
+            this.getArrivals();
+        }, 500),
         onPaginate (pagination) {
             if (this.initialLoad) {
                 return ;

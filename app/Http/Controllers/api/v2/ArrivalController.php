@@ -27,6 +27,15 @@ class ArrivalController extends BaseApiController
                     'user', 'store', 'bookings', 'bookings.products',
                     'products.bookingProducts'
                 ])
+                ->when($request->has('search'), function ($query) use ($request) {
+                    return $query->whereHas('products', function ($query) use ($request) {
+                        return $query->whereHas('product', function ($query) use ($request) {
+                            return $query->whereHas('product', function ($query) use ($request) {
+                                return $query->where('product_name', 'like', '%' . $request->get('search') . '%');
+                            });
+                        });
+                    });
+                })
                 ->orderByDesc('created_at')
                 ->paginate(10)
         );
