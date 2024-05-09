@@ -5,17 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Console/Commands/EcommercePriceList/Forte/CreateFortePriceCommand.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Service/Ecommerce/ForteProductXMLGenerator.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Service/Ecommerce/ProductXMLGenerator.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/ecommerce.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Actions/Kaspi/CreateKaspiPriceAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Actions/Kaspi/CreateKaspiPriceAction.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Builder/CreateKaspiActionBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Builder/CreateKaspiActionBuilder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/Kaspi/CreateKaspiPriceCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/EcommercePriceList/Kaspi/CreateKaspiPriceCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repository/ProductRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/ProductRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Service/Kaspi/KaspiProductXMLGenerator.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Ecommerce/KaspiProductXMLGenerator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Service/Ecommerce/ForteProductXMLGenerator.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Service/Ecommerce/ForteProductXMLGenerator.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -633,7 +624,7 @@
       <workItem from="1715154933661" duration="14586000" />
       <workItem from="1715178700628" duration="261000" />
       <workItem from="1715238800166" duration="3000" />
-      <workItem from="1715239315676" duration="3734000" />
+      <workItem from="1715239315676" duration="4375000" />
     </task>
     <servers />
   </component>

@@ -50,6 +50,7 @@ class ForteProductXMLGenerator implements ProductXMLGenerator
         }
         $XMLWriter->writeElement('price', $product['price']);
         $XMLWriter->endElement();
+        $XMLWriter->endElement();
     }
 
     public function getBaseName(): string
