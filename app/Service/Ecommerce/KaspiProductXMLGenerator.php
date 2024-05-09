@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\Kaspi;
+namespace App\Service\Ecommerce;
 
 use App\v2\Models\KaspiEntity;
 
-class KaspiProductXMLGenerator
+class KaspiProductXMLGenerator implements ProductXMLGenerator
 {
     public function generate(array $products, KaspiEntity $kaspiEntity): string
     {
@@ -24,8 +24,8 @@ class KaspiProductXMLGenerator
                 $this->addOffer($xmlWriter, $product);
             }
 
-            $xmlWriter->endElement(); // offers
-            $xmlWriter->endElement(); // kaspi_catalog
+            $xmlWriter->endElement();
+            $xmlWriter->endElement();
             $xmlWriter->endDocument();
             return $xmlWriter->outputMemory();
         } catch (\Exception $e) {
@@ -48,7 +48,7 @@ class KaspiProductXMLGenerator
         $this->addAvailabilities($xmlWriter, $product['availabilities']);
 
         $xmlWriter->writeElement('price', $product['price']);
-        $xmlWriter->endElement(); // offer
+        $xmlWriter->endElement(); 
     }
 
     private function addAvailabilities(\XMLWriter $xmlWriter, $availabilities)
@@ -58,8 +58,13 @@ class KaspiProductXMLGenerator
             $xmlWriter->startElement('availability');
             $xmlWriter->writeAttribute('available', $availability['available']);
             $xmlWriter->writeAttribute('storeId', $availability['storeId']);
-            $xmlWriter->endElement(); // availability
+            $xmlWriter->endElement();
         }
-        $xmlWriter->endElement(); // availabilities
+        $xmlWriter->endElement();
+    }
+
+    public function getBaseName(): string
+    {
+        return 'kaspi\xml\kaspi_products_';
     }
 }

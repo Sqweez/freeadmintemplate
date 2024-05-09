@@ -4,7 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
-use App\Console\Commands\Kaspi\CreateKaspiPriceCommand;
+use App\Console\Commands\EcommercePriceList\Kaspi\CreateKaspiPriceCommand;
 use App\Console\Commands\Products\UpdateProductAvailabilitiesCommand;
 use App\Console\Commands\Trainers\CollectCashback;
 use App\Console\Commands\Utils\ClearClientCarts;

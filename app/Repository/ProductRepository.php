@@ -51,9 +51,11 @@ class ProductRepository
                 'attributes' => collect($product['attributes'])->mergeRecursive($product['product']['attributes']),
                 'images' => $product['product']['product_images'],
                 'availabilities' => collect($stores)->map(function ($store) use ($product) {
-                    return ['available' => collect($product['batches'])->filter(function ($item) use ($store) {
-                        return $item['store_id'] === $store['store_id'];
-                    })->count() > 0 ? 'yes' : 'no', 'storeId' => 'PP' . ($store['kaspi_store_id'])];
+                    return [
+                        'available' => collect($product['batches'])->filter(function ($item) use ($store) {
+                            return $item['store_id'] === $store['store_id'];
+                        })->count() > 0 ? 'yes' : 'no',
+                        'storeId' => 'PP' . ($store['kaspi_store_id'])];
                 })];
         })->toArray();
     }
@@ -99,6 +101,9 @@ class ProductRepository
             })
             ->when(isset($payload['only_main']), function ($query) {
                 return $query->groupBy('product_id')->without('attributes');
+            })
+            ->when(isset($payload['per_page']), function ($q) {
+                return $q->limit(10);
             })
             ->orderBy('product_id')
             ->orderBy('id')
