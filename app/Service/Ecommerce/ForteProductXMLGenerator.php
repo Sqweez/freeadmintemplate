@@ -24,8 +24,8 @@ class ForteProductXMLGenerator implements ProductXMLGenerator
             $xmlWriter->endElement();
             $xmlWriter->endElement();
             $xmlWriter->endElement();
-            $xmlDocument = $xmlWriter->outputMemory();
-            return \Str::replaceFirst('<script/>', '', $xmlDocument);
+            $xmlWriter->endDocument();
+            return $xmlWriter->outputMemory();
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             throw new \RuntimeException('Ошибка при генерации XML: ' . $e->getMessage(), 0, $e);
