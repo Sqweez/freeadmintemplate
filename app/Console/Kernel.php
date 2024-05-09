@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
+use App\Console\Commands\EcommercePriceList\Forte\CreateFortePriceCommand;
 use App\Console\Commands\EcommercePriceList\Kaspi\CreateKaspiPriceCommand;
 use App\Console\Commands\Products\UpdateProductAvailabilitiesCommand;
 use App\Console\Commands\Trainers\CollectCashback;
@@ -47,6 +48,8 @@ class Kernel extends ConsoleKernel
         $schedule->command(CollectCashback::class)
             ->weeklyOn(7, '10:00');
         $schedule->command(CreateKaspiPriceCommand::class)
+            ->everyThirtyMinutes();
+        $schedule->command(CreateFortePriceCommand::class)
             ->everyThirtyMinutes();
         $schedule->command(UpdateProductAvailabilitiesCommand::class)
             ->everyMinute()->withoutOverlapping();
