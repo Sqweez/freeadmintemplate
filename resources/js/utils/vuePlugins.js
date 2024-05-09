@@ -116,6 +116,7 @@ export default {
                         'boss',
                         'kamercel',
                         'ilya',
+                        'dasha',
                     ].includes(this.$user.login);
                 },
             },

@@ -176,22 +176,20 @@
 </template>
 
 <script>
-    import ACTIONS from "@/store/actions";
-    import {mapActions} from 'vuex';
-    import axios from "axios";
-    import product from "@/mixins/product";
-    import product_search from "@/mixins/product_search";
-    import cart from "@/mixins/cart";
-    import shiftModule from "@/store/modules/shifts";
-    import store from "@/store";
+import ACTIONS from '@/store/actions';
+import { mapActions } from 'vuex';
+import axios from 'axios';
+import product from '@/mixins/product';
+import product_search from '@/mixins/product_search';
+import cart from '@/mixins/cart';
 
-    export default {
+export default {
         components: {
         },
         async created() {
             this.loading = this.products.length === 0 || false;
             await this.$store.dispatch('GET_PRODUCTS_v2');
-            const store_id = (this.is_admin || this.IS_BOSS) ? null : this.user.store_id;
+            const store_id = (this.is_admin || this.IS_BOSS || this.IS_MARKETOLOG) ? null : this.user.store_id;
             await this.$store.dispatch(ACTIONS.GET_STORES, store_id);
             await this.$store.dispatch(ACTIONS.GET_PRODUCT_SALE_EARNINGS);
             await this.$store.dispatch(ACTIONS.GET_SHIFT_TAXES);

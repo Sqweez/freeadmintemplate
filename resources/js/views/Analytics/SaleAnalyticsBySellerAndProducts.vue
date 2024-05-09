@@ -113,11 +113,24 @@
                             <td>{{ item.user.name }}</td>
                             <td>{{ item.amount | priceFilters }}</td>
                             <td>
-                                <ul>
-                                    <li v-for="(product, key) of item.products">
-                                        {{ key + 1 }}. {{ product.product_name }} | {{ product.attributes }} - {{ product.count }} шт. | <b>{{ product.product_price | priceFilters }}</b>
-                                    </li>
-                                </ul>
+                                <v-expansion-panels>
+                                    <v-expansion-panel
+                                    >
+                                        <v-expansion-panel-header>
+                                            Список товаров
+                                        </v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <ul>
+                                                <li v-for="(product, key) of item.products">
+                                                    {{ key + 1 }}. {{ product.product_name }} | {{ product.attributes }}
+                                                    - {{ product.count }} шт. |
+                                                    <b>{{ product.product_price | priceFilters }}</b>
+                                                </li>
+                                            </ul>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                </v-expansion-panels>
+
                             </td>
                         </tr>
                         <tr>
@@ -125,11 +138,23 @@
                             <td>Итого</td>
                             <td>{{ totalCost | priceFilters }}</td>
                             <td>
-                                <ul>
-                                    <li v-for="(product, key) of totalProducts">
-                                        {{ key + 1 }}. {{ product.product_name }} | {{ product.attributes }} - {{ product.count }} шт. | <b>{{ product.product_price | priceFilters }}</b>
-                                    </li>
-                                </ul>
+                                <v-expansion-panels>
+                                    <v-expansion-panel
+                                    >
+                                        <v-expansion-panel-header>
+                                            Список товаров
+                                        </v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <ul>
+                                                <li v-for="(product, key) of totalProducts">
+                                                    {{ key + 1 }}. {{ product.product_name }} | {{ product.attributes }} -
+                                                    {{ product.count }} шт. | <b>{{ product.product_price | priceFilters }}</b>
+                                                </li>
+                                            </ul>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                </v-expansion-panels>
+
                             </td>
                         </tr>
                         </tbody>
@@ -208,7 +233,8 @@
                     </v-col>
                     <v-col cols="12" xl="4">
                         <v-btn color="success" @click="chooseAllProduct">
-                            Выбрать все товары <v-icon>mdi-plus</v-icon>
+                            Выбрать все товары
+                            <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -232,7 +258,8 @@
                                         {{ item.product_name }}
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
-                                        {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} | {{ item.attributes.map(a => a.attribute_value).join(', ') }}
+                                        {{ item.manufacturer.manufacturer_name }} | {{ item.category.category_name }} |
+                                        {{ item.attributes.map(a => a.attribute_value).join(', ') }}
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
@@ -253,11 +280,10 @@
 </template>
 
 <script>
-import months from '@/common/enums/months.ru';
-import moment from "moment";
-import ACTIONS from "@/store/actions";
+import moment from 'moment';
+import ACTIONS from '@/store/actions';
 import { mapGetters } from 'vuex';
-import product_search from "@/mixins/product_search";
+import product_search from '@/mixins/product_search';
 
 export default {
     data: () => ({
@@ -299,13 +325,15 @@ export default {
         categoryId: -1,
         manufacturerId: -1,
         currentManufacturerId: -1,
-        cart: [],
+        cart: []
     }),
     async mounted() {
         this.$loading.enable();
-        await this.$store.dispatch('GET_PRODUCTS_v2');
-        await this.$store.dispatch(ACTIONS.GET_MANUFACTURERS);
-        await this.$store.dispatch(ACTIONS.GET_CATEGORIES);
+        await Promise.all([
+            this.$store.dispatch('GET_PRODUCTS_v2'),
+            this.$store.dispatch(ACTIONS.GET_MANUFACTURERS),
+            this.$store.dispatch(ACTIONS.GET_CATEGORIES)
+        ]);
         this.$loading.disable();
     },
     methods: {
@@ -313,7 +341,7 @@ export default {
             this.$refs.startMenu.save(this.start);
             this.$refs.finishMenu.save(this.finish);
         },
-        getFiltered (e) {
+        getFiltered(e) {
             return this.filtered = [...e];
         },
         async loadReports() {
@@ -353,7 +381,7 @@ export default {
                 this.$loading.disable();
                 this.addingToCart = false;
             }, 3000);
-        },
+        }
     },
     computed: {
         ...mapGetters(['SALE_ANALYTICS_SELLERS']),
@@ -382,7 +410,7 @@ export default {
                 }, ...this.$store.getters.categories
             ];
         },
-        totalCost () {
+        totalCost() {
             return this.SALE_ANALYTICS_SELLERS.reduce((a, c) => {
                 return a + c.amount;
             }, 0);
@@ -399,15 +427,15 @@ export default {
                         products[findIndex].product_price += p.product_price;
                     }
                 });
-            })
+            });
             return products;
-        },
+        }
 
     },
     mixins: [
         product_search
     ]
-}
+};
 </script>
 
 <style scoped>
