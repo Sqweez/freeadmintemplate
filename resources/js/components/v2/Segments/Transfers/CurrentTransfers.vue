@@ -251,7 +251,7 @@
         </v-data-table>
         <ConfirmationModal
             :on-confirm="cancelTransfer"
-            v-on:cancel="transferId = null; cancelModal = false;"
+            v-on:cancel="transferId = null; cancelModal = false; getTransfers();"
             message="Вы действительно хотите отменить выбранное перемещение?"
             :state="cancelModal"
         />
@@ -259,7 +259,7 @@
             :state="infoModal"
             :id="transferId"
             :confirm-mode="true"
-            v-on:cancel="transferId = null; infoModal = false"
+            v-on:cancel="transferId = null; infoModal = false; getTransfers();"
             v-on:confirmed="onConfirm"
             :search="search"
         />

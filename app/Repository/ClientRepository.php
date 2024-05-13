@@ -9,7 +9,7 @@ class ClientRepository
 {
     public function query(ClientFilterDTO $filters)
     {
-        return Client::query()
+        $query =  Client::query()
             ->orderByDesc('created_at')
             ->with([/*'sales', 'transactions', */'city', 'loyalty'])
             ->when($filters->wholesales, function ($query) {
@@ -20,20 +20,20 @@ class ClientRepository
             ->tap(function ($query) use ($filters) {
                 return $this->search($query, $filters->search);
             })
-            ->when($filters->partner, function ($query) {
+            ->when($filters->partner !== null, function ($query) {
                 return $query
                     ->where('is_partner', true);
             })
-            ->when($filters->is_partner !== null, function ($query) use ($filters) {
-                return $query->where('is_partner', $filters->is_partner);
-            })
-            ->when($filters->loyalty_id, function ($query) use ($filters) {
+            /*  ->when($filters->is_partner !== null, function ($query) use ($filters) {
+                  return $query->where('is_partner', $filters->is_partner);
+              })*/
+            ->when($filters->loyalty_id !== null, function ($query) use ($filters) {
                 return $query->where('loyalty_id', $filters->loyalty_id);
             })
-            ->when($filters->gender, function ($query) use ($filters) {
+            ->when($filters->gender !== null, function ($query) use ($filters) {
                 return $query->where('gender', $filters->gender);
             })
-            ->when($filters->client_city, function ($query) use ($filters) {
+            ->when($filters->client_city !== null, function ($query) use ($filters) {
                 return $query->where('client_city', $filters->client_city);
             })
             ->when($filters->is_wholesale_buyer !== null, function ($query) use ($filters) {
@@ -45,16 +45,17 @@ class ClientRepository
             ->with(['barter_balance' => function ($query) {
                 return $query->where('is_active', true);
             }]);
+        return $query;
     }
 
     public function search($query, $search)
     {
-        return $query
-            ->when($search, function ($subQuery) use ($search) {
-                return $subQuery
-                    ->where('client_name', 'like', '%' . $search. '%')
+        return $query->when($search, function ($subQuery) use ($search) {
+            return $subQuery->where(function ($query) use ($search) {
+                $query->where('client_name', 'like', '%' . $search . '%')
                     ->orWhere('client_card', $search)
                     ->orWhere('client_phone', 'like', '%' . $search . '%');
             });
+        });
     }
 }
