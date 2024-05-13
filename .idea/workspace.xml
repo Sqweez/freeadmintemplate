@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ed8e6ac-8c59-4b55-af55-708db8b7ad89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repository/ClientRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/ClientRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/CurrentArrivals.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/CurrentArrivals.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Segments/Transfers/CurrentTransfers.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Segments/Transfers/CurrentTransfers.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/ArrivalHistory.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Segments/Arrivals/ArrivalHistory.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/v2/Segments/Transfers/TransferHistory.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/v2/Segments/Transfers/TransferHistory.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -628,6 +626,7 @@
       <workItem from="1715238800166" duration="3000" />
       <workItem from="1715239315676" duration="11133000" />
       <workItem from="1715612436699" duration="2179000" />
+      <workItem from="1715615571218" duration="256000" />
     </task>
     <servers />
   </component>
