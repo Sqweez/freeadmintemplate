@@ -208,13 +208,13 @@
             :state="arrivalModal"
             :arrival-prop="current_arrival"
             :edit-mode="editArrivalMode"
-            @cancel="arrivalModal = false; current_arrival = {}"
+            @cancel="arrivalModal = false; current_arrival = {}; getArrivals();"
         />
         <ConfirmationModal
             :state="confirmationModal"
             message="Вы действительно хотите удалить выбранную поставку?"
             :on-confirm="deleteArrival"
-            v-on:cancel="current_arrival = {}; confirmationModal = false"
+            v-on:cancel="current_arrival = {}; confirmationModal = false; getArrivals();"
         />
         <BookingModal
             :state="bookingModal"
