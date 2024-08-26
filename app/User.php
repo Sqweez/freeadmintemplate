@@ -123,7 +123,7 @@ class User extends Authenticatable
 
     public function getShouldOpenShift(): bool
     {
-        return true;
+        return false;
         if (!$this->isSeller()) {
             return false;
         }
