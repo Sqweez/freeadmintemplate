@@ -112,4 +112,21 @@ class User extends Authenticatable
         return $q->whereIn('role_id', [1, 2, 9]);
     }
 
+    public function hasWorkingAccess(): bool
+    {
+        return true;
+        if (!$this->isSeller()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getShouldOpenShift(): bool
+    {
+        return true;
+        if (!$this->isSeller()) {
+            return false;
+        }
+        return true;
+    }
 }

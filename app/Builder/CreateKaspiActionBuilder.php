@@ -5,6 +5,8 @@ namespace App\Builder;
 use App\Actions\Kaspi\CreateKaspiPriceAction;
 use App\Repository\ProductRepository;
 use App\Service\Ecommerce\ForteProductXMLGenerator;
+use App\Service\Ecommerce\HalykProductExcelGenerator;
+use App\Service\Ecommerce\HalykProductXMLGenerator;
 use App\Service\Ecommerce\KaspiProductXMLGenerator;
 use App\Service\Ecommerce\ProductXMLGenerator;
 use App\v2\Models\KaspiEntity;
@@ -12,6 +14,12 @@ use Exception;
 
 class CreateKaspiActionBuilder
 {
+
+    public const FORTE = 'FORTE';
+    public const KASPI = 'KASPI';
+    public const HALYK_XML = 'HALYK_XML';
+    public const HALYK_EXCEL = 'HALYK_EXCEL';
+
     /**
      * @throws Exception
      */
@@ -19,7 +27,11 @@ class CreateKaspiActionBuilder
     {
         $productXMLGenerator = self::getXMLGenerator($generatorType);
         $productRepository = new ProductRepository();
-        return new CreateKaspiPriceAction($kaspiEntity, $productRepository, $productXMLGenerator);
+        $extension = '.xml';
+        if ($generatorType === self::HALYK_EXCEL) {
+            $extension = '.xlsx';
+        }
+        return new CreateKaspiPriceAction($kaspiEntity, $productRepository, $productXMLGenerator, $extension);
     }
 
     /**
@@ -28,10 +40,14 @@ class CreateKaspiActionBuilder
     private static function getXMLGenerator(string $type = 'KASPI'): ProductXMLGenerator
     {
         switch ($type) {
-            case 'KASPI':
+            case self::KASPI:
                 return new KaspiProductXMLGenerator();
-            case 'FORTE':
+            case self::FORTE:
                 return new ForteProductXMLGenerator();
+            case self::HALYK_XML:
+                return new HalykProductXMLGenerator();
+            case self::HALYK_EXCEL:
+                return new HalykProductExcelGenerator();
             default:
                 throw new Exception('Неизвестный тип площадки');
         }

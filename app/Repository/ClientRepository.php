@@ -12,18 +12,18 @@ class ClientRepository
         $query =  Client::query()
             ->orderByDesc('created_at')
             ->with([/*'sales', 'transactions', */'city', 'loyalty'])
-            ->when($filters->wholesales, function ($query) {
+            /*->when($filters->wholesales, function ($query) {
                 return $query
                     ->where('is_wholesale_buyer', true)
                     ->orderBy('wholesale_status');
-            })
+            })*/
             ->tap(function ($query) use ($filters) {
                 return $this->search($query, $filters->search);
             })
-            ->when($filters->partner !== null, function ($query) {
+            /*->when($filters->partner !== null, function ($query) {
                 return $query
                     ->where('is_partner', true);
-            })
+            })*/
             /*  ->when($filters->is_partner !== null, function ($query) use ($filters) {
                   return $query->where('is_partner', $filters->is_partner);
               })*/
@@ -36,9 +36,9 @@ class ClientRepository
             ->when($filters->client_city !== null, function ($query) use ($filters) {
                 return $query->where('client_city', $filters->client_city);
             })
-            ->when($filters->is_wholesale_buyer !== null, function ($query) use ($filters) {
+           /* ->when($filters->is_wholesale_buyer !== null, function ($query) use ($filters) {
                 return $query->where('is_wholesale_buyer', $filters->is_wholesale_buyer);
-            })
+            })*/
             ->when($filters->is_kaspi !== null, function ($query) use ($filters) {
                 return $query->where('is_kaspi', $filters->is_kaspi);
             })

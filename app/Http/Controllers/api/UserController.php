@@ -28,6 +28,7 @@ class UserController extends Controller
                     ->when((optional($user)->isFranchise()), function ($query) use ($user) {
                         return $query->where('store_id', $user->store_id);
                     })
+                    ->has('store')
                     ->with(['store.city_name', 'role'])
                     ->get()
             );

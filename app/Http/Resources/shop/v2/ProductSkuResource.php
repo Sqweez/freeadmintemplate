@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\shop\v2;
 
-use App\v2\Models\Product;
 use App\v2\Models\ProductSku;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
@@ -18,9 +17,9 @@ class ProductSkuResource extends JsonResource
      */
     public function toArray($request)
     {
-        $store_id = intval($request->get('store_id', 16));
-        if ($store_id === 0) {
-            $store_id = 16;
+        $store_id = intval($request->get('store_id', 31));
+        if ($store_id === 0 || $store_id === 16) {
+            $store_id = 31;
         }
         $batches = $store_id === -1 ? $this->batches->whereIn('store_id', [1, 6]) : $this->batches->where('store_id', $store_id);
         $quantity = $this->getQuantity($batches, intval($request->get('store_id')));

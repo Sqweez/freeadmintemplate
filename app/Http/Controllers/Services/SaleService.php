@@ -116,11 +116,19 @@ class SaleService {
             $store = Sale::find($sale_id)->store;
 
             #$partnerSalesAmount = $this->getPartnerSalesAmount($partner, $sale_id);
+
+
+            $partnerIDS = [16292, 12952, 11966, 12604, 14072, 12780, 12569];
+
             $partnerCashback = collect($cart)
-                ->reduce(function ($a, $c) use ($store, $discount) {
+                ->reduce(function ($a, $c) use ($store, $discount, $partner, $partnerIDS) {
                     $price = $c['product_price'] * $c['count'];
                     $finalPrice = $price - ($price * max($discount, $c['discount']) / 100);
-                    $cashbackPercent = floatval($store->partner_cashback_percent) / 100;
+                    $cashbackPercent = 0.05;
+                    if (in_array($partner->id, $partnerIDS)) {
+                        $cashbackPercent = 0.1;
+                    }
+                    //$cashbackPercent = floatval($store->partner_cashback_percent) / 100;
                     return $a + ($finalPrice * $cashbackPercent);
                 });
             #$partnerCashback = $this->calculatePartnerCashback($cart, $partnerSalesAmount, $discount);

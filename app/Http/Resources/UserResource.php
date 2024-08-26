@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\User;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+/* @mixin User */
 class UserResource extends JsonResource
 {
     /**
@@ -27,6 +28,8 @@ class UserResource extends JsonResource
             'store_slug' => Str::slug($this->store->city_name->name),
             // 'token' => $this->token,
             'store' => $this->store,
+            'has_access' => $this->hasWorkingAccess(),
+            'should_open_shift' => $this->getShouldOpenShift()
         ];
     }
 }
