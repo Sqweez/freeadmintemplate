@@ -61,6 +61,7 @@ class ClientResource extends JsonResource
             'barter_balance_amount' => $this->barter_balance->reduce(function ($a, $c) {
                 return $a + $c->amount;
             }, 0),
+            'test' => false,
             //'last_mailing_date' => $this->lastMailing ? format_datetime($this->lastMailing->created_at) : 'Никогда'
         ];
     }
