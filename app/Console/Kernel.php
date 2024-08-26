@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
+use App\Console\Commands\Clients\FlushInactiveClientsBalanceCommand;
 use App\Console\Commands\EcommercePriceList\Forte\CreateFortePriceCommand;
 use App\Console\Commands\EcommercePriceList\Kaspi\CreateKaspiPriceCommand;
 use App\Console\Commands\Products\UpdateProductAvailabilitiesCommand;
@@ -53,6 +54,8 @@ class Kernel extends ConsoleKernel
             ->everyThirtyMinutes();
         $schedule->command(UpdateProductAvailabilitiesCommand::class)
             ->everyMinute()->withoutOverlapping();
+        $schedule->command(FlushInactiveClientsBalanceCommand::class)
+            ->dailyAt('10:00');
         // $schedule->command('inspire')
         //          ->hourly();
     }
