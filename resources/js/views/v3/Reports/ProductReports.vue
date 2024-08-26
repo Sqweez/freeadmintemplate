@@ -2,7 +2,7 @@
     <div>
         <v-card>
             <v-card-title>
-                Отчет по продажам выбранных товаров
+                Отчет по продажам выбранных товаров v2
             </v-card-title>
             <v-card-text>
                 <v-simple-table v-if="isReportLoaded" v-slot:default>
@@ -188,7 +188,7 @@
                     label="Поиск товара"
                 />
                 <v-row class="d-flex align-center">
-                    <v-col cols="12" xl="4">
+                    <v-col cols="12" xl="3">
                         <v-autocomplete
                             :items="categories"
                             item-text="name"
@@ -197,7 +197,16 @@
                             label="Категория"
                         />
                     </v-col>
-                    <v-col cols="12" xl="4">
+                    <v-col cols="12" xl="3">
+                        <v-autocomplete
+                            :items="subcategories"
+                            item-text="subcategory_name"
+                            v-model="subcategoryId"
+                            item-value="id"
+                            label="Подкатегория"
+                        />
+                    </v-col>
+                    <v-col cols="12" xl="3">
                         <v-autocomplete
                             :items="manufacturers"
                             item-text="manufacturer_name"
@@ -206,7 +215,7 @@
                             label="Бренд"
                         />
                     </v-col>
-                    <v-col cols="12" xl="4">
+                    <v-col cols="12" xl="3">
                         <v-btn color="success" @click="chooseAllProduct">
                             Выбрать все товары <v-icon>mdi-plus</v-icon>
                         </v-btn>
@@ -303,6 +312,11 @@ export default {
         filtered: [],
         reports: [],
     }),
+    watch: {
+        categoryId (value) {
+            this.subcategoryId = -1;
+        },
+    },
     async mounted() {
         this.$loading.enable();
         await Promise.all([
@@ -368,6 +382,32 @@ export default {
     },
     computed: {
         ...mapGetters(['SALE_ANALYTICS', 'SALE_ANALYTIC_LABELS']),
+        subcategories() {
+            if (this.categoryId !== -1) {
+                const category = this.categories.find(
+                    (c) => c.id === this.categoryId,
+                );
+                if (category) {
+                    return [
+                        {
+                            subcategory_name: 'Все',
+                            id: -1,
+                        },
+                        ...category.subcategories,
+                    ];
+                } else {
+                    return [ {
+                        subcategory_name: 'Все',
+                        id: -1,
+                    }];
+                }
+            } else {
+                return [ {
+                    subcategory_name: 'Все',
+                    id: -1,
+                }];
+            }
+        },
         products() {
             let products = this.$store.getters.PRODUCTS_v2;
             if (this.manufacturerId !== -1) {
@@ -375,6 +415,9 @@ export default {
             }
             if (this.categoryId !== -1) {
                 products = products.filter(product => product.category.id === this.categoryId);
+            }
+            if (this.subcategoryId !== -1) {
+                products = products.filter(product => product.subcategory_id === this.subcategoryId);
             }
             return products;
         },
