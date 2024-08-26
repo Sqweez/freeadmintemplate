@@ -38,19 +38,47 @@ class FlushInactiveClientsBalanceCommand extends Command
      */
     public function handle()
     {
-        $clients = Client::query()
+        $clients = $this->getClients();
+        $this->line($clients->count());
+        $this->line($clients->max('cached_balance') ?? '0');
+        $this->backupClientBalances($clients);
+        Client::whereIn('id', $clients->pluck('id'))->update([
+            'cached_balance' => 0,
+        ]);
+        return 0;
+    }
+
+    private function getClients()
+    {
+        return Client::query()
             ->where('cached_balance', '>', 0)
-            ->whereDoesntHave('purchases', function ($query) {
-                return $query->where('created_at', '>=', today()->subYear());
+            ->whereDoesntHave('sales', function ($query) {
+                $query->where('created_at', '>=', today()->subYear());
             })
-            ->with(['purchases' => function ($query) {
-                $query->latest()->take(1);
+            ->with(['sales' => function ($q) {
+                return $q->latest('created_at');
             }])
             ->get();
+    }
 
-        $this->line($clients->count());
-        $this->line($clients->max('cached_balance'));
+    private function backupClientBalances($clients)
+    {
+        $mappedClients = $clients->map(function (Client $client) {
+            $lastPurchasedAt = optional($client->sales->first())->created_at;
+            if ($lastPurchasedAt) {
+                $lastPurchasedAt = format_datetime($lastPurchasedAt);
+            }
+            return [
+                'id' => $client->id,
+                'name' => $client->client_name,
+                'balance' => $client->cached_balance,
+                'last_purchased_at' => $lastPurchasedAt
+            ];
+        })->toArray();
 
-        return 0;
+        $jsonContent = json_encode($mappedClients, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $storagePath = 'json/clients-balance-backup_' . now()->unix() . '.json';
+        \Storage::disk('local')->put($storagePath, $jsonContent);
+        $this->info('Backup has been created');
     }
 }
