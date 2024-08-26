@@ -43,10 +43,13 @@ class FlushInactiveClientsBalanceCommand extends Command
             ->whereDoesntHave('purchases', function ($query) {
                 return $query->where('created_at', '>=', today()->subYear());
             })
-            ->with('purchases')
+            ->with(['purchases' => function ($query) {
+                $query->latest()->take(1);
+            }])
             ->get();
 
         $this->line($clients->count());
+        $this->line($clients->max('cached_balance'));
 
         return 0;
     }
