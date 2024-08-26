@@ -15,15 +15,18 @@ class CreateKaspiPriceAction
     private KaspiEntity $kaspiEntity;
     private ProductRepository $productRepository;
     private ProductXMLGenerator $productXMLGenerator;
+    private string $extension;
 
     public function __construct(
         KaspiEntity $kaspiEntity,
         ProductRepository $productRepository,
-        ProductXMLGenerator $productXMLGenerator
+        ProductXMLGenerator $productXMLGenerator,
+        string $extension = '.xml'
     ) {
         $this->kaspiEntity = $kaspiEntity;
         $this->productRepository = $productRepository;
         $this->productXMLGenerator = $productXMLGenerator;
+        $this->extension = $extension;
     }
 
     public function handle(): Response
@@ -39,7 +42,7 @@ class CreateKaspiPriceAction
 
     private function getFileName(): string
     {
-        return sprintf("%s%s%s", $this->productXMLGenerator->getBaseName(), $this->kaspiEntity->id, self::FILE_EXT);
+        return sprintf("%s%s%s", $this->productXMLGenerator->getBaseName(), $this->kaspiEntity->id, $this->extension);
     }
 
     private function storeFile($content, $path): Response

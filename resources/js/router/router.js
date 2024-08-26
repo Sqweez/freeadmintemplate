@@ -1,8 +1,8 @@
-import Vue from 'vue'
-import VueRouter from "vue-router";
-import routes from "./routes";
-import store from "@/store";
-import ToastService from "@/utils/toastService";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import routes from './routes';
+import store from '@/store';
+import ToastService from '@/utils/toastService';
 
 const $toast = new ToastService();
 
@@ -13,8 +13,8 @@ const Router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
     scrollBehavior(to, from, savePos) {
-        return {x: 0, y: 0};
-    }
+        return { x: 0, y: 0 };
+    },
 });
 
 Router.beforeEach(async (to, from, next) => {
@@ -25,15 +25,13 @@ Router.beforeEach(async (to, from, next) => {
     const CURRENT_ROLE = `IS_${store.getters.CURRENT_ROLE.toUpperCase()}`;
     const IS_GUEST = store.getters.IS_GUEST;
     const BASE_ROUTE = IS_GUEST ? '/login' : '/';
-    const GUEST_PAGES = !!(to.meta?.CAN_ENTER?.IS_GUEST);
+    const GUEST_PAGES = !!to.meta?.CAN_ENTER?.IS_GUEST;
 
     const HAS_CAN_ENTER = (() => {
         return !!(
             to.meta.CAN_ENTER && Object.keys(to.meta.CAN_ENTER).length > 0
         );
     })();
-
-
 
     if (IS_GUEST && !GUEST_PAGES) {
         next(BASE_ROUTE);
@@ -45,11 +43,30 @@ Router.beforeEach(async (to, from, next) => {
         const CAN_ENTER = !!CAN_ENTER_ROLES[CURRENT_ROLE];
         if (!CAN_ENTER) {
             next(BASE_ROUTE);
-            $toast.error('Доступ запрещен!')
+            $toast.error('Доступ запрещен!');
             return;
         }
     }
 
+    const USER = store.getters.USER;
+    if (USER) {
+        if (
+            USER.has_access &&
+            ['/open-shift', '/work-forbidden'].includes(to.path)
+        ) {
+            return next('/');
+        }
+        if (!USER.has_access && USER.should_open_shift) {
+            if (to.path !== '/open-shift') {
+                return next('/open-shift');
+            }
+        }
+        if (!USER.has_access && !USER.should_open_shift) {
+            if (to.path !== '/work-forbidden') {
+                return next('/work-forbidden');
+            }
+        }
+    }
 
     next();
 });

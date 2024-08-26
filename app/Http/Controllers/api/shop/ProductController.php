@@ -29,9 +29,9 @@ class ProductController extends Controller {
 
     public function getProducts(Request $request) {
         $query = $request->except('store_id');
-        $store_id = intval($request->get('store_id', 16));
+        $store_id = intval($request->get('store_id', 31));
         if ($store_id === 0) {
-            $store_id = 16;
+            $store_id = 31;
         }
         /*if ($store_id === 16) {
             $request->merge(['store_id' => 31]);

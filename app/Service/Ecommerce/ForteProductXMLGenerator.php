@@ -15,7 +15,6 @@ class ForteProductXMLGenerator implements ProductXMLGenerator
             $xmlWriter->startDocument('1.0', 'UTF-8');
             $xmlWriter->startElement('fm_catalog');
             $xmlWriter->writeAttribute('date', now()->format('Y-m-d H:i'));
-            $xmlWriter->writeElement('company', 'IRON-ADDICTS KZ');
             $xmlWriter->startElement('shop');
             $xmlWriter->writeElement('merchant-id', config('ecommerce.forte_merchant_id'));
             $xmlWriter->startElement('offers');

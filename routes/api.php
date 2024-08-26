@@ -33,6 +33,7 @@ use App\Http\Controllers\api\v2\TaskController;
 use App\Http\Controllers\api\v3\BarterBalanceController;
 use App\Http\Controllers\api\v3\RevisionController;
 use App\Http\Controllers\api\v3\WorkingScheduleController;
+use App\Http\Controllers\api\v3\WorkShiftController;
 use App\Http\Controllers\api\WaybillController;
 use App\Http\Controllers\CronController;
 use App\Http\Middleware\AuthorizationMiddleware;
@@ -512,6 +513,12 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
 
         Route::prefix('arrivals')->group(function () {
             Route::get('/', [\App\Http\Controllers\api\v2\ArrivalController::class, 'index']);
+        });
+
+        Route::prefix('work-shift')->group(function () {
+            Route::get('/check', [WorkShiftController::class, 'check']);
+            Route::get('/open', [WorkShiftController::class, 'open']);
+            Route::get('/{shift}/close', [WorkShiftController::class, 'close']);
         });
     });
 
