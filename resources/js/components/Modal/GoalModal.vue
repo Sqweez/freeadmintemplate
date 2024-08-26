@@ -70,7 +70,7 @@
                                     item-value="id"
                                     item-text="subcategory_name"
                                     label="Подкатегория"
-                                    class="ml-3"></v-autocomplete>
+                                    class="ml-3" />
                             </div>
                             <div class="d-flex align-center" v-for="(product, idx) of goal.parts[key].products">
                                 <v-autocomplete
@@ -111,11 +111,11 @@
 </template>
 
 <script>
-    import uploadFile, {deleteFile} from "../../api/upload";
-    import { VueEditor } from "vue2-editor";
-    import ACTIONS from "../../store/actions";
+import uploadFile, { deleteFile } from '../../api/upload';
+import { VueEditor } from 'vue2-editor';
+import ACTIONS from '../../store/actions';
 
-    export default {
+export default {
         components: {
             VueEditor
         },
