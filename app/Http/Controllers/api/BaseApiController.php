@@ -10,6 +10,12 @@ class BaseApiController extends Controller
 {
     use ReturnsJsonResponse;
 
+    protected ?User $user;
+
+    public function __construct() {
+        $this->user = $this->retrieveAnyUser();
+    }
+
     public function retrieveAnyUser(): ?User
     {
         if (request()->has('logged_user_id')) {
