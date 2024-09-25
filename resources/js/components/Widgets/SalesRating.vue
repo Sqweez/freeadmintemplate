@@ -50,6 +50,18 @@
                         <v-list-item-content>
                             <v-list-item-title>
                                 <div class="d-flex justify-space-between">
+                                    <span>ProVan</span>
+                                    <span>
+                                        {{ getAmount(7777) | priceFilters}}
+                                    </span>
+                                </div>
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item class="darken-3 black" v-if="IS_ADMIN || IS_BOSS || IS_OBSERVER || IS_MARKETOLOG">
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                <div class="d-flex justify-space-between">
                                     <span>Оптовые продажи</span>
                                     <span>
                                         {{ getAmount(7845) | priceFilters}}
@@ -89,11 +101,10 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters} from 'vuex';
-    import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
 
-
-    const DATE_FORMAT = 'YYYY-MM-DD';
+const DATE_FORMAT = 'YYYY-MM-DD';
 
     export default {
         data: () => ({
