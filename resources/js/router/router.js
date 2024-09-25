@@ -2,9 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from './routes';
 import store from '@/store';
+import ToastService from '@/utils/toastService';
 
-const $toast = new Toas();
-tService();
+const $toast = new ToastService();
 
 Vue.use(VueRouter);
 
