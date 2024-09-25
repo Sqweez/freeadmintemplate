@@ -41,6 +41,7 @@ class SaleController extends BaseApiController {
 
     public function store(Request $request, SaleService $saleService) {
         try {
+            // @TODO 2024-08-26T15:50 rework controller, move it to lvl 2 api
             \DB::beginTransaction();
             $cart = $request->get('cart');
             $paid_by_barter = $request->get('paid_by_barter', 0);
@@ -56,7 +57,6 @@ class SaleController extends BaseApiController {
             $preorder = $request->get('preorder', null);
             $sale = $saleService->createSale($request->except(['cart', 'certificate', 'used_certificate', 'preorder', 'paid_by_barter', 'barter_balance']));
             $client = Client::find($client_id);
-
             // @TODO 2023-08-02T14:23:33 rework sale controller
             if ($paid_by_barter) {
                 $barterBalance = $request->get('barter_balance', 0);
@@ -194,7 +194,7 @@ class SaleController extends BaseApiController {
                          - SUM(sales.promocode_fixed_amount)
                     ) as total_final_price'
                 )
-                // Добавить сертификат - закуп, т.е. сертификат - финальная стоимость товара 
+                // Добавить сертификат - закуп, т.е. сертификат - финальная стоимость товара
                 ->leftJoinSub($saleProductsSubQuery, 'sps', function ($join) {
                     $join->on('sales.id', '=', 'sps.sale_id'); // Убедитесь, что это условие соединения корректно, так как подзапрос не содержит sale_id
                 })
@@ -240,7 +240,9 @@ class SaleController extends BaseApiController {
         $sales = Sale::query()
             ->where('created_at', '>=', Carbon::parse($dateFilter)->startOfDay())
             ->where('is_confirmed', true)
-            ->with(['products'])
+            ->with(['products' => function ($subQuery) {
+                return $subQuery->whereHas('product', fn ($q) => $q->where('manufacturer_id', __hardcoded(698)));
+            }])
             ->with(['certificate'])
             ->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
                 return $query->where('store_id', $store_id);
@@ -351,7 +353,8 @@ class SaleController extends BaseApiController {
             })->values()->sortBy('product_name');
     }
 
-    private function calculateTotalAmount($sales) {
+    private function calculateTotalAmount($sales): Collection
+    {
         $kaspiSales = collect($sales)->filter(function ($i) {
             return $i['payment_type'] === 4;
         })->values();

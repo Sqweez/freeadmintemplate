@@ -260,6 +260,11 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
             Route::post('client/list', [WaybillController::class, 'getClientList']);
         });
 
+        //SaleController
+        Route::prefix('sales')->group(function () {
+            Route::post('/', [SaleController::class, 'store']);
+        });
+
         Route::prefix('products')->group(function () {
             Route::get('search/{search}', [ProductController::class, 'search']);
             Route::post('mass-iherb', [ProductController::class, 'updateIherbProducts']);
