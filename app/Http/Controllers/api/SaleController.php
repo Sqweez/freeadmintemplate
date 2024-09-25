@@ -249,6 +249,18 @@ class SaleController extends BaseApiController {
             })
             ->get();
 
+        $farmaSalesQuery = Sale::query()
+            ->where('created_at', '>=', Carbon::parse($dateFilter)->startOfDay())
+            ->where('is_confirmed', true)
+            ->with(['products' => function ($subQuery) {
+                return $subQuery->whereHas('product.product', fn ($q) => $q->where('manufacturer_id', __hardcoded(698)));
+            }])
+            ->with(['certificate'])
+            ->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
+                return $query->where('store_id', $store_id);
+            })
+            ->get();
+
         $bookingSales = collect([
             9999 => [
                 'store_id' => 9999,
@@ -256,8 +268,16 @@ class SaleController extends BaseApiController {
             ]
         ]);
 
+        $farmaSales = collect([
+            7777 => [
+                'store_id' => 7777,
+                'amount' => $this->getTotalAmount($farmaSalesQuery)
+            ]
+        ]);
+
         return $this->calculateTotalAmount($sales)
             ->mergeRecursive($bookingSales)
+            ->mergeRecursive($farmaSales)
             ->groupBy('store_id')
             ->map(function ($item) {
                 return collect($item)->first();
