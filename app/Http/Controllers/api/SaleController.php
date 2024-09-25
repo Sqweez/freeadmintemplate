@@ -241,7 +241,7 @@ class SaleController extends BaseApiController {
             ->where('created_at', '>=', Carbon::parse($dateFilter)->startOfDay())
             ->where('is_confirmed', true)
             ->with(['products' => function ($subQuery) {
-                return $subQuery->whereHas('product.product', fn ($q) => $q->where('manufacturer_id', __hardcoded(698)));
+                return $subQuery->whereHas('product.product', fn ($q) => $q->where('manufacturer_id', '!=', __hardcoded(698)));
             }])
             ->with(['certificate'])
             ->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
