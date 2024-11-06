@@ -44,6 +44,15 @@
                                 <v-list-item-title>{{ totalRedCommission | priceFilters }}</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-list-item v-if="IS_BOSS">
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    <v-btn small color="primary" @click="downloadExcelReport">
+                                        Выгрузить товарный отчет
+                                    </v-btn>
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
                     </v-list>
                 </v-col>
                 <v-col cols="12" xl="3">
@@ -242,6 +251,7 @@
                 clearable
             />
             <v-data-table
+                v-if="!isTableBusy"
                 no-results-text="Нет результатов"
                 no-data-text="Нет данных"
                 :headers="headers"
@@ -643,7 +653,8 @@ import axios from 'axios';
 import SaleEditModal from '@/components/Modal/SaleEditModal';
 import WholeSaleConfirmation from '@/components/Modal/WholeSaleConfirmation';
 import DocumentsPage from '@/components/Documents/DocumentsPage';
-import {__deepClone} from '@/utils/helpers';
+import { __deepClone, fileDownload } from '@/utils/helpers';
+import ReportRepository from '@/repositories/ReportRepository';
 
 const DATE_FILTERS = {
     ALL_TIME: 1,
@@ -659,6 +670,7 @@ export default {
     extends: DocumentsPage,
     components: {WholeSaleConfirmation, SaleEditModal, ReportCancelModal, ConfirmationModal},
     data: () => ({
+        isTableBusy: false,
         promocode_ids: [],
         searchPromocode: '',
         showOnlyUnconfirmed: false,
@@ -837,6 +849,51 @@ export default {
         printCheck(id) {
             window.open(`/check/${id}`, '_blank');
         },
+       async downloadExcelReport () {
+           if (this.currentDate === DATE_FILTERS.CUSTOM_FILTER) {
+               if (!(this.start || this.finish)) {
+                   return;
+               }
+           }
+           this.overlay = true;
+           this.loading = true;
+           const params = {
+               start: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.start : this.currentDate[0],
+               finish: this.currentDate === DATE_FILTERS.CUSTOM_FILTER ? this.finish : this.currentDate[1],
+           };
+           if (this.manufacturerId !== -1) {
+               params.manufacturer_id = this.manufacturerId;
+           }
+
+           if (this.promocode_ids.length > 0) {
+               params.promocode_ids = this.promocode_ids;
+           }
+
+           if (this.currentType !== -1) {
+               params.payment_type = this.currentType;
+           }
+
+           if (this.currentCity !== -1) {
+               params.store_id = this.currentCity;
+           }
+
+           try {
+               this.$loading.enable();
+               const { data } = await ReportRepository.getExcelReport(params);
+               fileDownload(data);
+              /* const link = document.createElement('a');
+               link.href = `${data}`;
+               link.click();
+               link.download = true;
+               link.remove();*/
+           } catch (e) {
+               console.error(e);
+           } finally {
+               this.overlay = false;
+               this.loading = false;
+               this.$loading.disable();
+           }
+       },
         async loadReport() {
             if (this.currentDate === DATE_FILTERS.CUSTOM_FILTER) {
                 if (!(this.start || this.finish)) {
@@ -997,6 +1054,66 @@ export default {
             return [...this.$store.getters.REPORTS, ...this.$store.getters.PREORDERS] || [];
         },
         _salesReport() {
+            try {
+                this.isTableBusy = true;
+                return this.salesReport
+                .filter(s => {
+                    // Фильтрация по комментарию
+                    const matchesComment = s.comment.toLowerCase().includes(this.searchComment.toLowerCase());
+
+                    // Фильтрация по продавцу
+                    const matchesSeller = this.currentSeller === -1 || s.user.id === this.currentSeller;
+
+                    // Фильтрация по городу
+                    const matchesCity = this.currentCity === -1 || s.store.id === this.currentCity;
+
+                    // Фильтрация по типу
+                    let matchesType = true;
+                    if (this.currentType !== -1) {
+                        if (this.currentType === -2) {
+                            matchesType = s.certificate;
+                        } else if (this.currentType === 5 && s.payment_type === 5) {
+                            matchesType = true;
+                        } else if (s.split_payment !== null) {
+                            matchesType = s.split_payment.some(payment => payment.payment_type === this.currentType);
+                        } else {
+                            matchesType = s.payment_type === this.currentType;
+                        }
+                    }
+
+                    // Фильтрация по типу магазина
+                    const matchesStoreType = this.currentStoreType === -1 || s.store_type === this.currentStoreType;
+
+                    // Фильтрация по скидке
+                    const matchesDiscount = (this.discountFrom === 0 && this.discountTo === 100) ||
+                        s.products.some(product => product.discount >= this.discountFrom && product.discount <= this.discountTo);
+
+                    // Фильтрация по подтверждению
+                    const matchesUnconfirmed = !this.showOnlyUnconfirmed || !s.is_confirmed;
+
+                    // Фильтрация по промокоду
+                    const matchesPromocode = this.searchPromocode.length < 3 ||
+                        (s.promocode && s.promocode.promocode.toLowerCase().includes(this.searchPromocode.toLowerCase()));
+
+                    // Возвращаем результат всех фильтров
+                    return matchesComment && matchesSeller && matchesCity && matchesType && matchesStoreType &&
+                        matchesDiscount && matchesUnconfirmed && matchesPromocode;
+                })
+                .map(s => {
+                    // Фильтрация продуктов внутри объекта
+                    s.products = this.search
+                        ? s._products.filter(p => p.product_name.toLowerCase().includes(this.search.toLowerCase()))
+                        : [...s._products];
+                    return s;
+                });
+            } catch (e) {
+                console.log(e);
+                return [];
+            } finally {
+                this.isTableBusy = false;
+            }
+        },
+        __salesReport() {
             try {
                 return this.salesReport
                     .filter(s => {

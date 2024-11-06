@@ -182,6 +182,7 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
     });
 
     //ReportController
+    Route::get('reports/excel', 'api\SaleController@downloadReportExcel');
     Route::patch('reports/{report}', 'api\SaleController@update');
     Route::get('reports', 'api\SaleController@reports');
     Route::get('reports/plan', 'api\SaleController@getPlanReports');

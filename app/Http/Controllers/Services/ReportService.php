@@ -8,16 +8,27 @@ use App\DTO\Reports\ReportOptionsDTO;
 use App\Http\Resources\v2\Report\ReportsResource;
 use App\Sale;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ReportService {
     /**
      */
-    public static function getReports(ReportOptionsDTO $reportOptionsDTO): AnonymousResourceCollection {
-        $sales = Sale::query()
+    public function getReportsQuery(ReportOptionsDTO $reportOptionsDTO): Builder {
+        return Sale::query()
             ->when($reportOptionsDTO->user, function ($query) use ($reportOptionsDTO) {
                 return $query->where('store_id', $reportOptionsDTO->user->store_id);
+            })
+            ->when($reportOptionsDTO->payment_type, function ($query) use ($reportOptionsDTO) {
+                return $query->where('payment_type', $reportOptionsDTO->payment_type);
             })
             ->when($reportOptionsDTO->store_id, function ($query) use ($reportOptionsDTO) {
                 return $query->where('store_id', $reportOptionsDTO->store_id);
@@ -38,12 +49,130 @@ class ReportService {
             })
             ->with('products')
             ->report()
-            ->reportDate([$reportOptionsDTO->start, $reportOptionsDTO->finish])
-        ;
+            ->reportDate([$reportOptionsDTO->start, $reportOptionsDTO->finish]);
+    }
 
-        \Log::info($sales->toSql());
+    /**
+     * @throws Exception
+     */
+    public function getExcelProductReport(Builder $builder): string
+    {
+        $sales = $builder->get();
+        $skuSales = $sales
+            ->flatMap(function ($sale) {
+                return $sale['products'];
+            })
+            ->groupBy('product_id')
+            ->map(function ($products, $productId) {
+                $realProduct = $products->first()['product'];
+                $skuProduct = $realProduct['product'];
+                $fullProductSkuName = sprintf(
+                    "%s %s %s",
+                    $realProduct['product_name'],
+                    $realProduct['manufacturer']['manufacturer_name'],
+                    collect($realProduct['attributes'])
+                        ->mergeRecursive($skuProduct['attributes'])
+                        ->pluck('attribute_value')
+                        ->join(' ')
+                );
+                return [
+                    'product_id' => $productId,
+                    'product_name' => $fullProductSkuName,
+                    '_product_name' => sprintf(
+                        "%s %s %s",
+                        $realProduct['product_name'],
+                        $realProduct['manufacturer']['manufacturer_name'],
+                        collect($skuProduct['attributes'])
+                            ->pluck('attribute_value')
+                            ->join(' ')
+                    ),
+                    'total_quantity' => $products->count(),
+                    'price' => $products->reduce(function ($a, $c) {
+                        return $a + ceil($c->final_price);
+                    }, 0),
+                    '_product_id' => $skuProduct['id']
+                ];
+            })
+            ->values();
 
-        return ReportsResource::collection($sales->get());
+        $productSales = $skuSales
+            ->groupBy('_product_id')
+            ->map(function ($products, $productId) {
+                $product = $products->first();
+                return [
+                    'product_id' => $productId,
+                    'product_name' => $product['_product_name'],
+                    'total_quantity' => $products->sum('total_quantity'),
+                    'price' => $products->sum('price'),
+                ];
+            });
+
+        return $this->generateExcelFile($skuSales, $productSales);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    private function generateExcelFile(Collection $skuCollection, Collection $productCollection): string
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Товарные предложения');
+        $this->writeSheet($sheet, $skuCollection);
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Товары');
+        $this->writeSheet($sheet2, $productCollection);
+        $spreadsheet->setActiveSheetIndex(0);
+        // Сохраняем Excel файл в локальное хранилище
+        $fileName = sprintf("%s_%s_report.xlsx", now()->format('Y-m-d_H-i-s'), uniqid());
+        $path = "excel/reports";
+        if (!\Storage::disk('public')->exists($path)) {
+            \Storage::disk('public')->makeDirectory($path);
+        }
+        $filePath = Storage::path("public/{$path}/{$fileName}");
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($filePath);
+        return "storage/{$path}/{$fileName}";
+    }
+
+    private function writeSheet($sheet, Collection $collection)
+    {
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Наименование');
+        $sheet->setCellValue('C1', 'Количество');
+        $sheet->setCellValue('D1', 'Общая стоимость');
+
+
+        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:D1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:D1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFE0B2');
+
+        // Добавляем данные
+        $row = 2;
+        foreach ($collection as $item) {
+            $sheet->setCellValue("A{$row}", $item['product_id']);
+            $sheet->setCellValue("B{$row}", $item['product_name']);
+            $sheet->setCellValue("C{$row}", $item['total_quantity']);
+            $sheet->setCellValue("D{$row}", $item['price']);
+            $row++;
+        }
+
+        $sheet->getStyle('D2:D' . ($row - 1))
+            ->getNumberFormat()
+            ->setFormatCode('#,##0.00₸');
+
+        // Выравнивание и авторазмер для колонок
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $sheet->setAutoFilter("A1:D" . ($row - 1));
+    }
+
+    public function toResource(Builder $query): AnonymousResourceCollection
+    {
+        return ReportsResource::collection($query->get());
     }
 
     public function getReportsTotal($startDate, $endDate)
