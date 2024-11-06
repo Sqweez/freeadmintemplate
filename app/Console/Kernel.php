@@ -6,6 +6,7 @@ use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
 use App\Console\Commands\Clients\FlushInactiveClientsBalanceCommand;
 use App\Console\Commands\EcommercePriceList\Forte\CreateFortePriceCommand;
+use App\Console\Commands\EcommercePriceList\Halyk\CreateHalykExcelPriceCommand;
 use App\Console\Commands\EcommercePriceList\Kaspi\CreateKaspiPriceCommand;
 use App\Console\Commands\Products\UpdateProductAvailabilitiesCommand;
 use App\Console\Commands\Trainers\CollectCashback;
@@ -52,6 +53,8 @@ class Kernel extends ConsoleKernel
             ->everyThirtyMinutes();
         $schedule->command(CreateFortePriceCommand::class)
             ->everyThirtyMinutes();
+        $schedule->command(CreateHalykExcelPriceCommand::class)
+        ->twiceDaily();
         $schedule->command(UpdateProductAvailabilitiesCommand::class)
             ->everyMinute()->withoutOverlapping();
         $schedule->command(FlushInactiveClientsBalanceCommand::class)

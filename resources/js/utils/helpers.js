@@ -43,6 +43,7 @@ export function fileDownload(path) {
     const link = document.createElement('a');
     link.href = `${window.location.origin}/${path}`;
     link.click();
+    link.download = true;
     link.remove();
 }
 

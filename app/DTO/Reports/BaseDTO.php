@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 
 abstract class BaseDTO
 {
-    public static function fromRequest(Request $request): self {
+    public static function fromRequest(Request $request): BaseDTO
+    {
         $data = static::mapDataFromRequest($request);
         return new static($data);
     }
