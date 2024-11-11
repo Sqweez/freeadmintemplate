@@ -613,7 +613,7 @@
         />
         <SaleEditModal
             :state="editModal"
-            :report="report"
+            :report="{...report, products: report._products}"
             @cancel="editModal = false; report = {}"
         />
         <WholeSaleConfirmation
