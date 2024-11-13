@@ -118,7 +118,7 @@ class SaleService {
             #$partnerSalesAmount = $this->getPartnerSalesAmount($partner, $sale_id);
 
 
-            $partnerIDS = [16292, 12952, 11966, 12604, 14072, 12780, 12569];
+            $partnerIDS = [16292, 12952, 11966, 12604, 14072, 12780, 12569, 14308];
 
             $partnerCashback = collect($cart)
                 ->reduce(function ($a, $c) use ($store, $discount, $partner, $partnerIDS) {
