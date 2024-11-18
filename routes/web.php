@@ -5,7 +5,7 @@ use App\Service\Kaspi\KaspiOrdersApiService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('kaspi-orders', function (KaspiOrdersApiService $apiService) {
-    $response = $apiService->getOrders(pageNumber: 2, searchKey: 'eyJwYWdlIjp7Im51bWJlciI6MSwic2l6ZSI6MTB9LCJmaWx0ZXIiOnsib3JkZXJzIjp7ImNyZWF0aW9uRGF0ZSI6eyIkZ2UiOjE3MzEzNTE2MDAwMDAsIiRsZSI6MTczMTQyMTEzODAwMH0sInN0YXRlIjoiTkVXIn19fQ==');
+    $response = $apiService->getOrders(pageNumber: 0);
     return $response;
     collect($response['data'])->each(function ($item) {
         \App\Models\Kaspi\KaspiOrder::create([
