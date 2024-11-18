@@ -19,12 +19,18 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntityStore whereKaspiStoreId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntityStore whereStoreId($value)
  * @mixin \Eloquent
+ * @property string $kaspi_external_id
+ * @property array $address
+ * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntityStore whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntityStore whereKaspiExternalId($value)
  */
 class KaspiEntityStore extends Model
 {
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'address' => 'json'
+    ];
+
     public $timestamps = false;
-
-
 }
