@@ -48,10 +48,12 @@ class KaspiController extends BaseApiController
                 $kaspiEntityStore = KaspiEntityStore::query()
                     ->where('kaspi_store_id', substr($data['attributes']['displayName'], 2))
                     ->first();
-                $kaspiEntityStore?->update([
-                    'kaspi_external_id' => $data['id'],
-                    'address' => $data['attributes']['address'],
-                ]);
+                if ($kaspiEntityStore) {
+                    $kaspiEntityStore->update([
+                        'kaspi_external_id' => $data['id'],
+                        'address' => $data['attributes']['address'],
+                    ]);
+                }
             }
             $pickupPoints = KaspiEntityStore::whereIn('kaspi_external_id', $pickupPointIds->toArray())->get();;
         }
