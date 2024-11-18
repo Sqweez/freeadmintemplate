@@ -8,6 +8,12 @@ use Psr\Http\Message\ResponseInterface;
 
 class BaseKaspiApiService
 {
+
+    protected const DEFAULT_PAGE_SIZE = 10;
+    private const HEADERS = [
+        'Accept' => 'application/vnd.api+json',
+        'Content-Type' => 'application/vnd.api+json',
+    ];
     private ?string $kaspiToken;
     private ?string $kaspiBaseURL;
 
@@ -23,11 +29,9 @@ class BaseKaspiApiService
     {
         return new Client([
             'base_uri' => $this->kaspiBaseURL,
-            'headers' => [
+            'headers' => array_merge(self::HEADERS, [
                 'X-Auth-Token' => $this->kaspiToken,
-                'Accept' => 'application/vnd.api+json',
-                'Content-Type' => 'application/vnd.api+json',
-            ],
+            ]),
         ]);
     }
 
@@ -36,7 +40,7 @@ class BaseKaspiApiService
         return $this->client;
     }
 
-    public function get(string $endpoint, array $queryParams = []): ?array
+    protected function get(string $endpoint, array $queryParams = []): ?array
     {
         try {
             $response = $this->client->get($endpoint, [
@@ -49,7 +53,7 @@ class BaseKaspiApiService
     }
 
     // Метод для выполнения POST-запроса
-    public function post(string $endpoint, array $data = []): ?array
+    protected function post(string $endpoint, array $data = []): ?array
     {
         try {
             $response = $this->client->post($endpoint, [
@@ -74,10 +78,6 @@ class BaseKaspiApiService
             $responseData['meta']['current_page'] = $currentPage;
             $responseData['meta']['next_page'] = ($currentPage + 1) === $responseData['meta']['pageCount'] ? null : $currentPage + 1;
             $responseData['meta']['prev_page'] = $currentPage === 0 ? null : $currentPage - 1;
-        }
-        $responseData['search_key'] = null;
-        if (count($params)) {
-            $responseData['search_key'] = base64_encode(json_encode($params));
         }
         return $responseData;
     }

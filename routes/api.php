@@ -488,6 +488,9 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
 
         Route::prefix('kaspi')->group(function () {
             Route::get('/entity', [\App\Http\Controllers\api\v3\KaspiController::class, 'getEntities']);
+            Route::get('/orders', [\App\Http\Controllers\api\v3\KaspiController::class, 'retrieveOrders']);
+            Route::get('/orders/{kaspiId}', [\App\Http\Controllers\api\v3\KaspiController::class, 'retrieveOrderById']);
+            Route::get('/point-of-service/{id}', [\App\Http\Controllers\api\v3\KaspiController::class, 'retrievePointOfService']);
         });
 
         Route::prefix('report')->group(function () {
