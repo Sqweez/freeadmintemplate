@@ -24,8 +24,8 @@ class KaspiController extends BaseApiController
     public function retrieveOrders(Request $request, KaspiOrdersApiService $apiService): JsonResponse
     {
         $response = $apiService->getOrders(
-            pageNumber: $request->get('page', 0),
-            filters: json_decode($request->get('filters'), true) ?: []
+            $request->get('page', 0),
+            json_decode($request->get('filters'), true) ?: []
         );
         $pickupPoints = $this->checkPickupPointExisting($response['included'], $apiService);
         $stores = Store::whereIn('id', $pickupPoints->values()->pluck('store_id')->toArray())->select(['id', 'name'])->get();
