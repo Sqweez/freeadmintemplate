@@ -491,6 +491,10 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
             Route::get('/orders', [\App\Http\Controllers\api\v3\KaspiController::class, 'retrieveOrders']);
             Route::get('/orders/{kaspiId}', [\App\Http\Controllers\api\v3\KaspiController::class, 'retrieveOrderById']);
             Route::get('/point-of-service/{id}', [\App\Http\Controllers\api\v3\KaspiController::class, 'retrievePointOfService']);
+            Route::get('cabinet/orders', function () {
+                $service = new \App\Service\v2\Kaspi\BaseKaspiApiService();
+                return $service->get('orderTabs/active');
+            });
         });
 
         Route::prefix('report')->group(function () {
