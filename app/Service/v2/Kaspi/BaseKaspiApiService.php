@@ -35,7 +35,7 @@ class BaseKaspiApiService
         $this->client = new Client([
             'base_uri' => 'https://mc.shop.kaspi.kz/mc/api/',
             'timeout'  => 10.0, // Таймаут в секундах
-            'proxy' => 'https://ironadmin.ariesdev.kz:80'
+            'proxy' => 'http://ironadmin.ariesdev.kz:80'
         ]);
     }
 
