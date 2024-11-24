@@ -15,6 +15,7 @@ use App\v2\Models\ProductSku;
 use App\v2\Models\Thumb;
 use App\v2\Models\WholesalePrice;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -67,15 +68,10 @@ class ProductService
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage(), 500);
-            return response()->json([
-                'message' => $e->getMessage(),
-                'stack' => $e->getTrace(),
-                'stacktrace' => $e->getTraceAsString()
-            ], 412);
         }
     }
 
-    public function attachTags($products, $tags)
+    public function attachTags($products, $tags): void
     {
         $_tags = collect($tags)->map(function ($i) {
             unset($i['id']);
@@ -86,7 +82,7 @@ class ProductService
         });
     }
 
-    private function createTags(Product $product)
+    private function createTags(Product $product): array
     {
         $tags = [];
         $tags[] = ['name' => $product->product_name];
@@ -99,29 +95,28 @@ class ProductService
         return $tags;
     }
 
-    public function updateProduct(Product $product, array $_attributes, array $fields)
+    public function updateProduct(Product $product, array $_attributes, array $fields): void
     {
         try {
             DB::beginTransaction();
             $product->update($_attributes);
             $this->updateProductRelations($product, $fields);
+            $product->sku->each(function (ProductSku $sku) {
+                $sku->updateSkuName();
+            });
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => $e->getMessage(),
-                'stack' => $e->getTrace(),
-                'stacktrace' => $e->getTraceAsString()
-            ], 412);
         }
     }
 
-    public function createSku(Product $product, array $_attributes)
+    public function createSku(Product $product, array $_attributes): JsonResponse|ProductsResource
     {
         try {
             DB::beginTransaction();
             $productSku = $this->createProductSku($product, $_attributes);
             $this->updateProductSkuRelations($productSku, $_attributes, $product->grouping_attribute_id);
+            $productSku->updateSkuName();
             DB::commit();
             $productSku = ProductSku::find($productSku->id);
             $productSku->load('product');
@@ -147,6 +142,7 @@ class ProductService
                 'margin_type_id' => $_attributes['margin_type_id']
             ]);
             $this->updateProductSkuRelations($productSku, $_attributes, $productSku->grouping_attribute_id);
+            $productSku->updateSkuName();
             DB::commit();
             $productSku->fresh();
             $productSku->load('product.wholesale_prices.currency');
@@ -188,7 +184,7 @@ class ProductService
         $product->push();
     }
 
-    private function syncKaspiPrices(Product $product, array $prices)
+    private function syncKaspiPrices(Product $product, array $prices): void
     {
         foreach ($prices as $price) {
             KaspiEntityProduct::query()
@@ -202,12 +198,12 @@ class ProductService
         }
     }
 
-    private function syncAdditionalSubcategories(Product $product, array $subcategories)
+    private function syncAdditionalSubcategories(Product $product, array $subcategories): void
     {
         $product->additionalSubcategories()->sync($subcategories);
     }
 
-    private function updateProductSkuRelations(ProductSku $productSku, array $fields, $attribute_id)
+    private function updateProductSkuRelations(ProductSku $productSku, array $fields, $attribute_id): void
     {
         $this->syncProductImages($productSku, $fields[ProductSku::PRODUCT_SKU_IMAGES]);
         $this->syncProductThumbs($productSku, $fields[ProductSku::PRODUCT_SKU_THUMBS]);
@@ -228,14 +224,14 @@ class ProductService
             })->values()->all();
     }
 
-    private function getProductSkuAttributes($id, array $attributes)
+    private function getProductSkuAttributes($id, array $attributes): array
     {
         return collect($attributes)->filter(function ($attr) use ($id) {
                 return $attr['attribute_id'] === $id;
             })->values()->all();
     }
 
-    private function syncTags(Product $product, $tags)
+    private function syncTags(Product $product, $tags): void
     {
         $tags = collect($tags)->map(function ($i) {
             unset($i['id']);
@@ -245,7 +241,7 @@ class ProductService
         $product->tags()->sync($tags);
     }
 
-    private function syncAttributes($product, array $attributes)
+    private function syncAttributes($product, array $attributes): void
     {
         $attributes = collect($attributes)->map(function ($i) {
             $attributeValueQuery = AttributeValue::query();
@@ -260,7 +256,7 @@ class ProductService
         $product->attributes()->sync($attributes);
     }
 
-    private function syncProductFilters(Product $product, array $filters)
+    private function syncProductFilters(Product $product, array $filters): void
     {
         $attributes = collect($filters)->map(function ($i) {
             $attributeValueQuery = AttributeValue::query();
@@ -282,7 +278,7 @@ class ProductService
         }
     }
 
-    private function syncProductImages($product, array $images)
+    private function syncProductImages($product, array $images): void
     {
         $images = collect($images)->map(function ($i) {
             return Image::whereImage($i['image'])->firstOrCreate($i)->id;
@@ -291,7 +287,7 @@ class ProductService
         $product->product_images()->sync($images);
     }
 
-    private function syncProductThumbs($product, array $images)
+    private function syncProductThumbs($product, array $images): void
     {
         $images = collect($images)->map(function ($i) {
             return Thumb::whereImage($i['image'])->firstOrCreate($i)->id;
@@ -300,7 +296,7 @@ class ProductService
         $product->product_thumbs()->sync($images);
     }
 
-    private function syncProductPrices(Product $product, array $prices)
+    private function syncProductPrices(Product $product, array $prices): void
     {
         Price::where('product_id', $product->id)->delete();
         $product_id = $product->id;

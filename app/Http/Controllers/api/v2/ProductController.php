@@ -20,6 +20,7 @@ use App\v2\Models\Product;
 use App\v2\Models\ProductSaleEarning;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -57,7 +58,8 @@ class ProductController extends Controller {
     * Получение одного товара
     */
 
-    public function store(ProductCreateRequest $request) {
+    public function store(ProductCreateRequest $request): JsonResponse|ProductsResource
+    {
         $product = ProductService::getProductFields($request);
         $product_attributes = ProductService::getRelationFields($request);
         $product_sku_attributes = ProductService::getSkuFields($request);
@@ -65,7 +67,8 @@ class ProductController extends Controller {
         return ProductService::createSku($product, $product_sku_attributes);
     }
 
-    public function createProductSku(Product $product, Request $request) {
+    public function createProductSku(Product $product, Request $request): JsonResponse|ProductsResource
+    {
         $product_sku_attributes = ProductService::getSkuFields($request);
         return ProductService::createSku($product, $product_sku_attributes);
     }
@@ -75,7 +78,8 @@ class ProductController extends Controller {
         return ProductService::updateSku($sku, $product_sku_attributes);
     }
 
-    public function getProductsQuantity($store) {
+    public function getProductsQuantity($store): Collection|\Illuminate\Support\Collection|array
+    {
         if (intval($store) > 0) {
             return ProductBatch::query()->quantitiesOfStore($store)->get();
         }
@@ -134,7 +138,8 @@ class ProductController extends Controller {
         return RelatedProductsResource::collection(Category::with(['relatedProducts', 'relatedProducts.product', 'relatedProducts.product.manufacturer', 'relatedProducts.product.category'])->get());
     }
 
-    public function relatedCreate(Request $request) {
+    public function relatedCreate(Request $request): RelatedProductsResource
+    {
         $products = $request->get('products');
         $category = $request->get('category_id');
         $category = Category::find($category);
@@ -150,7 +155,8 @@ class ProductController extends Controller {
         ProductService::delete($id);
     }
 
-    public function getProductBalance() {
+    public function getProductBalance(): array
+    {
 
         $userRole = auth()->user()->role ?? null;
         $isFranchise = $userRole && $userRole->role_name === 'Франшиза';
@@ -180,11 +186,13 @@ class ProductController extends Controller {
         return ['purchase_prices' => $purchasePrices, 'product_prices' => $productPrices];
     }
 
-    public function moderatorProducts() {
+    public function moderatorProducts(): AnonymousResourceCollection
+    {
         return ModeratorProducts::collection(ProductSku::query()->with(ProductSku::PRODUCT_SKU_MODERATOR_LIST)->orderBy('product_id')->orderBy('id')->get()->sortBy('product_name'));
     }
 
-    public function outOfStockProducts(Request $request) {
+    public function outOfStockProducts(Request $request): Collection|\Illuminate\Support\Collection|array
+    {
         $store_id = $request->get('store_id');
         $date = now()->subDays(60);
         return ProductBatch::whereStoreId($store_id)->get()->groupBy('product_id')->map(function ($batch, $key) use ($date) {

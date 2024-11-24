@@ -2,8 +2,10 @@
 
 namespace App\v2\Models;
 
+use App\ProductBatch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -129,14 +131,20 @@ class ProductSku extends Model
     }
 
     public function batches() {
-        $batches = $this->hasMany('App\ProductBatch', 'product_id');
+        $batches = $this->hasMany(ProductBatch::class, 'product_id');
         if (is_null($batches)) {
             return [];
         }
         return $batches;
     }
 
-    public function relativeSku() {
+    public function positive_batches(): HasMany
+    {
+        return $this->hasMany(ProductBatch::class, 'product_id')->where('quantity', '>', 0);
+    }
+
+    public function relativeSku(): HasMany
+    {
         return $this->hasMany('App\v2\Models\ProductSku', 'product_id', 'product_id');
     }
 
@@ -278,5 +286,17 @@ class ProductSku extends Model
             $this['product_name'],
             $attributes
         );
+    }
+
+    public function updateSkuName(): void
+    {
+        $this->load('product.attributes');
+        $this->load('attributes');
+        $baseName = $this->product->product_name;
+        $skuAttributes = collect($this['attributes'])->pluck('attribute_value')->join(' ');
+        $productAttributes = collect($this->product['attributes'])->pluck('attribute_value')->join(' ');
+        $skuName = trim(sprintf("%s %s %s", $baseName, $productAttributes, $skuAttributes));
+        $this->sku_name = $skuName;
+        $this->save();
     }
 }

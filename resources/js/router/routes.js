@@ -17,7 +17,7 @@ import Promocodes from '@/views/Promocodes/Promocodes';
 import PartnersStats from '@/views/PartnersStats/PartnersStats';
 import ProductsV2 from '@/views/v2/Products/Products';
 import ProductsV3 from '@/views/v3/Products/Products';
-import CartV3 from '@/views/v3/Cart/Cart';
+import CartV4 from '@/views/v4/Cart/Cart';
 import CartPartner from '@/views/v3/Cart/CartPartner';
 import Banner from '@/views/Banners/Banner';
 import ReportsV3 from '@/views/v3/Reports/Reports';
@@ -423,7 +423,7 @@ const routes = [
     },
     {
         path: '/cart',
-        component: CartV3,
+        component: CartV4,
         meta: {
             CAN_ENTER: {
                 IS_ADMIN: true,
