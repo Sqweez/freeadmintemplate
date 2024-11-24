@@ -200,7 +200,6 @@ class KaspiController extends Controller {
                 ],
                 'headers' => [
                     'Content-Type' => 'application/vnd.api+json',
-                    'X-Auth-Token' => 'ULDaKPxr8fZzzxHBSj8HLc9YZ0x+VKhYdAd6vQ1NgnI='
                 ]]
         );
         return $response->getStatusCode();
