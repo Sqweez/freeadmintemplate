@@ -6,7 +6,7 @@ use Symfony\Component\Process\Process;
 
 class KaspiCookiesResolver
 {
-    public function resolve(): bool|string
+    public function resolve()
     {
         return \Cache::remember('KASPI_COOKIES', now()->addMinutes(30), function () {
             $login = config('kaspi.KASPI_MERCHANT_LOGIN');
