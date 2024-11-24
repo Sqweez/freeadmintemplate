@@ -13,6 +13,7 @@ use App\Console\Commands\Trainers\CollectCashback;
 use App\Console\Commands\Utils\ClearClientCarts;
 use App\Console\Commands\Utils\ReformatMarginTypes;
 use App\Console\Commands\Utils\UnlinkOldPriceLists;
+use App\Service\v2\Kaspi\KaspiCookiesResolver;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -59,6 +60,8 @@ class Kernel extends ConsoleKernel
             ->everyMinute()->withoutOverlapping();
         $schedule->command(FlushInactiveClientsBalanceCommand::class)
             ->dailyAt('10:00');
+        $schedule->command(KaspiCookiesResolver::class)
+            ->everyTenMinutes();
         // $schedule->command('inspire')
         //          ->hourly();
     }
