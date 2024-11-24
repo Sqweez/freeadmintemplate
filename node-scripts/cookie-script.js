@@ -6,7 +6,10 @@ const password = process.argv[3];
 
 (async () => {
     // Запускаем браузер
-    const browser = await puppeteer.launch({ headless: true }); // Отключаем headless для визуализации
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
 
     // Переходим на указанный адрес
