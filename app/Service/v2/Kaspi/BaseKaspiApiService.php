@@ -27,13 +27,23 @@ class BaseKaspiApiService
             'sec-fetch-dest' => 'empty',
             'sec-fetch-mode' => 'cors',
             'sec-fetch-site' => 'same-site',
-            'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
             'x-auth-version' => '3',
         ];
+
+        $this->headers['user-agent'] = $this->generateRandomUserAgent();
+
         $this->client = new Client([
             'base_uri' => 'https://mc.shop.kaspi.kz/mc/api/',
             'timeout'  => 10.0, // Таймаут в секундах
         ]);
+    }
+
+    private function generateRandomUserAgent(): string
+    {
+        $versions = ['130', '131', '132'];
+        return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/'
+            . $versions[array_rand($versions)]
+            . '.0.0.0 Safari/537.36';
     }
 
     /**
