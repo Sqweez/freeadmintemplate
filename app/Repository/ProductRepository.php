@@ -54,7 +54,7 @@ class ProductRepository
                     return [
                         'available' => collect($product['batches'])->filter(function ($item) use ($store) {
                             return $item['store_id'] === $store['store_id'];
-                        })->sum('quantity')
+                        })->sum('quantity'),
                         'storeId' => 'PP' . ($store['kaspi_store_id'])];
                 }),
                 'quantities' => collect($stores)->map(function ($store) use ($product) {
