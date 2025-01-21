@@ -6,9 +6,7 @@ use App\Http\Controllers\api\v2\CommentController;
 use App\v2\Models\ProductSku;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/**
- * Class User
- *
+/***
  * @mixin ProductSku
  * */
 
@@ -20,7 +18,7 @@ class ProductResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,
@@ -82,6 +80,8 @@ class ProductResource extends JsonResource
                     ];
                 }),
             'wholesale_prices' => $this->product->wholesale_prices,
+            'extra' => $this->product->extra,
+            'is_free_elite_gift' => $this->product->isFreeEliteGift(),
         ];
     }
 }

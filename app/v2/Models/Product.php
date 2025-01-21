@@ -237,12 +237,14 @@ class Product extends Model
         'is_iherb' => 'boolean',
         'is_iherb_hit' => 'boolean',
         'is_dubai' => 'boolean',
-        'is_opt' => 'boolean'
+        'is_opt' => 'boolean',
+        'extra' => 'json'
     ];
 
     public $timestamps = true;
 
-    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    public function comments(): HasMany
+    {
         return $this->hasMany('App\v2\Models\ProductComment')
             ->orderByDesc('created_at');
     }
@@ -446,6 +448,16 @@ class Product extends Model
         return $query->where('is_opt', true);
     }
 
+    public function scopeFreeEliteGift(Builder $query): void
+    {
+        $query->whereJsonContains('extra->is_free_elite_gift', true);
+    }
+
+    public function isFreeEliteGift()
+    {
+        return data_get($this->extra, 'is_free_elite_gift', false);
+    }
+
     public function getPackaging($attributes)
     {
         $packagingIds = [2, 5, 6];
@@ -525,7 +537,7 @@ class Product extends Model
         }]);
     }
 
-    public function loadActiveDailyDeals()
+    public function loadActiveDailyDeals(): void
     {
         $this->load(['optDailyDeals' => function ($query) {
             $query->whereHas('dailyDeal', function ($subQuery) {

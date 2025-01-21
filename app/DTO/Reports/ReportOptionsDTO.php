@@ -17,6 +17,8 @@ class ReportOptionsDTO extends BaseDTO
     public $payment_type;
     public ?User $currentUser;
 
+    public ?bool $isElite;
+
     public function __construct(array $data)
     {
         $this->start = (Carbon::parse($data['start'] ?? today()))->startOfDay()->toDateTimeString();
@@ -26,6 +28,7 @@ class ReportOptionsDTO extends BaseDTO
         $this->manufacturer_id = $data['manufacturer_id'] ?? null;
         $this->promocode_id = data_get($data,'promocode_id') ? json_decode($data['promocode_id']) : null;
         $this->payment_type = data_get($data, 'payment_type');
+        $this->isElite = data_get($data, 'is_elite', null);
 
         if ($this->promocode_id !== null && json_last_error() !== JSON_ERROR_NONE) {
             $this->promocode_id = null;

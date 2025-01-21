@@ -13,7 +13,10 @@ use Illuminate\Queue\SerializesModels;
 
 class SendWholesaleOrderNotificationJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private Sale $sale;
 
@@ -32,7 +35,7 @@ class SendWholesaleOrderNotificationJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(NotificationService $notificationService, GetWholeSaleMessageAction $action)
+    public function handle(NotificationService $notificationService, GetWholeSaleMessageAction $action): void
     {
         $message = $action->handle($this->sale);
         $notificationService->sendNotificationMessage($message);

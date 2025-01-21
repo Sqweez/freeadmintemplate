@@ -19,13 +19,6 @@ class ClientResource extends JsonResource
      * @return array
      */
     public function toArray($request): array {
-
-        /*$last_sale = $this->sales->sortByDesc('created_at')->first();
-        $last_sale_date = null;
-        if ($last_sale) {
-            $last_sale_date = Carbon::parse($last_sale['created_at'])->format('d.m.Y H:i:s');
-        }*/
-
         return [
             'id' => $this->id,
             'client_name' => $this->client_name,
@@ -62,6 +55,7 @@ class ClientResource extends JsonResource
                 return $a + $c->amount;
             }, 0),
             'test' => false,
+            'can_take_elite_gift' => $this->canTakeEliteGift()
             //'last_mailing_date' => $this->lastMailing ? format_datetime($this->lastMailing->created_at) : 'Никогда'
         ];
     }

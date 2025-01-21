@@ -5,6 +5,7 @@ export default {
         categoryId: -1,
         subcategoryId: -1,
         hideNotInStock: true,
+        isShowEliteClubGifts: false,
     }),
     watch: {
         stores() {
@@ -49,7 +50,7 @@ export default {
                     ...item,
                     count: 1,
                     product_price: this.getPrice(item, this.storeFilter),
-                    discount: 0,
+                    discount: this.isShowEliteClubGifts ? 100 : 0,
                     uuid: Math.random(),
                     initial_price: this.getPrice(item, this.storeFilter),
                 });
@@ -113,6 +114,11 @@ export default {
             if (this.categoryId !== -1) {
                 products = products.filter(
                     (product) => product.category.id === this.categoryId,
+                );
+            }
+            if (this.isShowEliteClubGifts === true) {
+                products = products.filter(
+                    (product) => product.is_free_elite_gift === true,
                 );
             }
             return products;

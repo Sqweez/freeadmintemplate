@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Console\Commands\Clients\CollectPlatinumClientsInformation;
+use App\Console\Commands\Clients\CheckEliteClientStatusCommand;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
 use App\Console\Commands\Clients\FlushInactiveClientsBalanceCommand;
 use App\Console\Commands\EcommercePriceList\Forte\CreateFortePriceCommand;
@@ -35,10 +35,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command(CollectPlatinumClientsInformation::class)
-            ->monthlyOn(6, '10:00');
-        $schedule->command(CollectPlatinumClientsInformation::class)
-            ->monthlyOn(23, '10:00');
+        $schedule->command(CheckEliteClientStatusCommand::class)
+            ->monthlyOn(1, '10:00');
         $schedule->command(ClearClientCarts::class)
             ->hourly();
         $schedule->command(DeactivateBarterBalance::class)

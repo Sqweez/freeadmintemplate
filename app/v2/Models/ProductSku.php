@@ -78,7 +78,7 @@ class ProductSku extends Model
     protected $table = 'product_sku';
 
     const PRODUCT_SKU_WITH_ADMIN_LIST =  [
-        'product:id,product_name,product_price,is_opt,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_name_web,is_kaspi_visible,is_iherb,product_price_rub,is_dubai',
+        'product:id,product_name,extra,product_price,is_opt,category_id,subcategory_id,manufacturer_id,grouping_attribute_id,product_name_web,is_kaspi_visible,is_iherb,product_price_rub,is_dubai',
         'product.category', 'product.manufacturer', 'product.attributes', 'product.price',
         'product.attributes.attribute_name', 'attributes', 'attributes.attribute_name', 'margin_type',
     ];

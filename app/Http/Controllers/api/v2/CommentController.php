@@ -38,7 +38,7 @@ class CommentController extends Controller
                 })->values();
                 if ($children->count() > 0) {
                     foreach ($children->toArray() as $item) {
-                        array_push($childComments, $item);
+                        $childComments[] = $item;
                     }
                     $parent_ids = $children->pluck('id')->toArray();
                 } else {

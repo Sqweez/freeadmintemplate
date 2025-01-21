@@ -47,6 +47,11 @@ class ReportService {
                     return $subQuery->where('manufacturer_id', $reportOptionsDTO->manufacturer_id);
                 });
             })
+            ->when($reportOptionsDTO->isElite, function ($query) use ($reportOptionsDTO) {
+                return $query->whereHas('client', function ($subQuery) use ($reportOptionsDTO) {
+                    return $subQuery->where('loyalty_id', __hardcoded(2));
+                });
+            })
             ->with('products')
             ->report()
             ->reportDate([$reportOptionsDTO->start, $reportOptionsDTO->finish]);
@@ -148,7 +153,6 @@ class ReportService {
         $sheet->getStyle('A1:D1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A1:D1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFE0B2');
 
-        // Добавляем данные
         $row = 2;
         foreach ($collection as $item) {
             $sheet->setCellValue("A{$row}", $item['product_id']);
@@ -244,4 +248,6 @@ class ReportService {
 
         return ReportsResource::collection($saleQuery->get());
     }
+
+
 }

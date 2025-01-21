@@ -2,7 +2,7 @@
     <v-dialog v-model="SHOW_MODAL" :max-width="1200" persistent>
         <v-card>
             <v-card-title class="headline justify-space-between">
-                <span class="white--text">{{ getModalTitle }} товара v2</span>
+                <span class="white--text">{{ getModalTitle }} товара</span>
                 <v-btn icon text class="float-right" @click="$emit('cancel')">
                     <v-icon color="white">
                         mdi-close
@@ -269,6 +269,10 @@
                         <v-checkbox
                             label="Хит продаж"
                             v-model="is_hit"
+                        />
+                        <v-checkbox
+                            label="Подарок для клуба Elite"
+                            v-model="is_free_elite_gift"
                         />
                         <v-checkbox
                             label="IHerb"
@@ -724,6 +728,7 @@ export default {
         additionalSubcategories: [],
         margin_type_id: null,
         kaspi_price: [],
+        is_free_elite_gift: false,
     }),
     methods: {
         async generateBarcode() {
@@ -802,6 +807,7 @@ export default {
             this.kaspi_price = [];
             this.filters = [];
             this.is_opt = false;
+            this.is_free_elite_gift = false;
         },
         assignFields() {
             this.margin_type_id = this.product.margin_type_id;
@@ -872,6 +878,7 @@ export default {
             }))
 
             this.filters = this.product.filters;
+            this.is_free_elite_gift = this.product.is_free_elite_gift;
 
         },
         getPriceStores(idx) {
@@ -1000,6 +1007,9 @@ export default {
                 kaspi_price: this.kaspi_price,
                 filters: this.filters.filter(f => f.attribute_value),
                 is_opt: this.is_opt,
+                extra: {
+                    is_free_elite_gift: this.is_free_elite_gift
+                }
             };
         },
         validate(product) {
