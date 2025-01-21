@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="12">
+            <v-col cols="12" v-if="!customDatesOnly">
                 <v-select
                     :items="dateFilters"
                     item-text="name"
@@ -12,7 +12,7 @@
                 />
             </v-col>
             <v-col v-show="currentDate === 4" cols="12">
-                <label>Произвольная дата</label>
+                <label>Дата</label>
                 <v-menu
                     ref="startMenu"
                     v-model="startMenu"
@@ -110,6 +110,7 @@
 
 <script>
 import moment from 'moment/moment';
+
 const DATE_FORMAT = 'YYYY-MM-DD';
 const DATE_FILTERS = {
     ALL_TIME: 1,
@@ -120,6 +121,12 @@ const DATE_FILTERS = {
 };
 export default {
     name: 'IDatePicker',
+    props: {
+        customDatesOnly: {
+            default: false,
+            type: Boolean
+        }
+    },
     data: () => ({
         dateFilters: [
             {
@@ -185,6 +192,11 @@ export default {
         },
         updateValue (value) {
             //console.log(value);
+        }
+    },
+    mounted() {
+        if (this.customDatesOnly) {
+            this.currentDate = DATE_FILTERS.CUSTOM_FILTER
         }
     },
     watch: {

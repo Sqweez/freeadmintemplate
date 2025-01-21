@@ -92,6 +92,11 @@ import _ from 'lodash';
 
 export default {
     components: { ClientModal },
+    watch: {
+        state () {
+            this.clients = [];
+        }
+    },
     data: () => ({
         search: '',
         loading: false,

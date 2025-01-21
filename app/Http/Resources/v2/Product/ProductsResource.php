@@ -46,6 +46,8 @@ class ProductsResource extends JsonResource
             'iherb_price' => $this->iherb_price,
             'is_dubai' => $this->product->is_dubai,
             'is_opt' => $this->product->is_opt,
+            'extra' => $this->product->extra,
+            'is_free_elite_gift' => $this->product->isFreeEliteGift()
         ];
 
         if ( $this->isNestedRelationLoaded($this, ['product', 'wholesale_prices'])) {

@@ -232,7 +232,7 @@ class Sale extends Model
     }
 
     public function scopeReport($q) {
-        return $q->with(['client:id,client_name,is_wholesale_buyer', 'fit_client:id,name','user:id,name,store_id', 'store:id,name,type_id','products.product', 'products'])
+        return $q->with(['client:id,client_name,is_wholesale_buyer', 'fit_client:id,name','user:id,name,store_id', 'store:id,name,type_id,city_id', 'store.city_name', 'products.product', 'products'])
             ->with(['products.product.product:id,product_name,manufacturer_id'])
             ->with(['certificate', 'preorder'])
             ->with('promocode')

@@ -54,7 +54,6 @@ const password = process.argv[3];
         .join('; ');
 
     console.log(formatCookies(cookieHeader));
-
     // Закрываем браузер
     await browser.close();
 })();

@@ -156,6 +156,15 @@
                                 color="white darken-2"
                             />
                         </div>
+                        <div>
+                            <v-checkbox
+                                :disabled="!isEliteGiftGiveawayEnabled"
+                                label="Выдача подарка Elite Club"
+                                v-model="is_elite_gift_giveaway"
+                                class="ml-2 margin-28"
+                                color="white darken-2"
+                            />
+                        </div>
                     </div>
                     <div class="cart__parameters">
                         <div v-if="!isFree">
@@ -579,11 +588,14 @@
                         <v-icon>mdi-refresh</v-icon>
                     </v-btn>
                 </v-row>
-                <v-row>
+                <v-row class="my-4">
                     <v-btn depressed color="success" class="float-right ml-2 mt-2" @click="certificateModal = true;">
                         Добавить сертификат +
                     </v-btn>
-                    <v-btn depressed color="success" class="float-right ml-2 mt-2" @click="preorderModal = true;">
+                    <v-btn depressed color="primary" class="ml-2 mt-2" v-if="is_elite_gift_giveaway" @click="showEliteClubGifts">
+                        Выдача подарка elite club
+                    </v-btn>
+                    <v-btn v-if="false" depressed color="success" class="float-right ml-2 mt-2" @click="preorderModal = true;">
                         По предоплате
                     </v-btn>
                 </v-row>
@@ -855,6 +867,15 @@ export default {
             } else {
                 await this._getAvailableStocks();
             }
+        },
+        isEliteGiftGiveawayEnabled (value) {
+            this.is_elite_gift_giveaway = false;
+        },
+        cart: {
+            deep: true,
+            handler: function() {
+                this.isShowEliteClubGifts = false;
+            }
         }
     },
     mixins: [product, product_search, cart],
@@ -953,6 +974,8 @@ export default {
         availableStocks: [],
         stockId: -1,
         fixedDiscountAmount: 0,
+        is_elite_gift_giveaway: false,
+        isShowEliteClubGifts: false,
     }),
     methods: {
         ...mapActions([
@@ -960,6 +983,13 @@ export default {
             ACTIONS.GET_CLIENTS,
             ACTIONS.GET_STORES,
         ]),
+        showEliteClubGifts () {
+            this.$loading.enable();
+            setTimeout(() => {
+                this.isShowEliteClubGifts = true;
+                this.$loading.disable();
+            }, 1500)
+        },
         _deselectStock () {
             this.$nextTick(() => {
                 this.stockId = -1;
@@ -1127,7 +1157,13 @@ export default {
             }
             const sale = {
                 cart: this.cart.map(c => {
-                    return {id: c.id, product_price: c.product_price, count: c.count, discount: c.discount};
+                    return {
+                        id: c.id,
+                        product_price: c.product_price,
+                        count: c.count,
+                        discount: c.discount,
+                        is_free_elite_gift: c.is_free_elite_gift,
+                    };
                 }),
                 store_id: this.storeFilter,
                 user_id: !this.isDelivery ? this.user.id : 1,
@@ -1149,6 +1185,7 @@ export default {
                 paid_by_barter: this.isPaidByBarter,
                 barter_balance: this.barterBalance,
                 promocode_fixed_amount: this.fixedDiscountAmount,
+                is_elite_gift_giveaway: this.is_elite_gift_giveaway
             };
 
             if (!this.isTodaySale && this.customSaleDate) {
@@ -1205,6 +1242,7 @@ export default {
                 this.isPaidByBarter = false;
                 this.stockId = -1;
                 this.fixedDiscountAmount = 0;
+                this.is_elite_gift_giveaway = false;
             } catch (e) {
                 throw e;
             }
@@ -1372,6 +1410,9 @@ export default {
         },
     },
     computed: {
+        isEliteGiftGiveawayEnabled () {
+            return !!this.client && this.client?.can_take_elite_gift === true;
+        },
         displayedStocks () {
             return [
                 {

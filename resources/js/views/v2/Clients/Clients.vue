@@ -10,8 +10,12 @@
                                 Добавить клиента
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
-                            <v-btn class="mt-2" color="success" @click="exportModal = true;" v-if="!IS_MARKETOLOG">
+                            <v-btn class="mt-2" color="success" @click="exportModal = true;" v-if="!IS_MARKETOLOG && false">
                                 Экспорт клиентов
+                                <v-icon>mdi-file-excel-box</v-icon>
+                            </v-btn>
+                            <v-btn class="mt-2" color="success" @click="showExportEliteClubSalesModal = true;" >
+                                Экспорт покупок Elite Club
                                 <v-icon>mdi-file-excel-box</v-icon>
                             </v-btn>
                             <v-btn
@@ -236,17 +240,6 @@
                                             </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
-                                    <v-list-item v-if="item.loyalty_id == 2">
-                                        <v-list-item-content>
-                                            <v-list-item-title>
-                                                {{ item.until_platinum | priceFilters }} |
-                                                {{ item.until_platinum_percent }}%
-                                            </v-list-item-title>
-                                            <v-list-item-subtitle>
-                                                Платиновый остаток
-                                            </v-list-item-subtitle>
-                                        </v-list-item-content>
-                                    </v-list-item>
                                 </v-list>
                             </template>
                             <template v-slot:item.actions="{ item }" v-if="IS_MARKETOLOG">
@@ -380,6 +373,10 @@
             @cancel="barterBalanceModal = false"
             @submit="_handleBarterBalanceSubmit"
         />
+        <ExportEliteClubSales
+            :state="showExportEliteClubSalesModal"
+            @close="showExportEliteClubSalesModal = false"
+        />
     </v-card>
 </template>
 
@@ -395,9 +392,11 @@ import axiosClient from '@/utils/axiosClient';
 import BarterBalanceModal from '@/components/v2/Modal/BarterBalanceModal.vue';
 import ClientRepository from '@/repositories/ClientRepository';
 import _ from 'lodash';
+import ExportEliteClubSales from '@/components/Modal/Export/ExportEliteClubSales.vue';
 
 export default {
     components: {
+        ExportEliteClubSales,
         BarterBalanceModal,
         ExportClientsModal,
         BalanceModal,
@@ -493,7 +492,8 @@ export default {
                 text: 'Действие'
             }
         ],
-        barterBalanceModal: false
+        barterBalanceModal: false,
+        showExportEliteClubSalesModal: false,
     }),
     computed: {
         loyalties() {

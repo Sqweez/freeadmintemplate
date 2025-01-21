@@ -3,6 +3,7 @@
 namespace App;
 
 use App\v2\Models\BarterBalance;
+use App\v2\Models\EliteGiftGiveaway;
 use App\v2\Models\MailingRecepient;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -202,6 +203,21 @@ class Client extends Model
         return $this->belongsTo('App\v2\Models\City', 'client_city')->withDefault([
             'name' => 'Город не указан'
         ]);
+    }
+
+    public function gift_giveaway(): HasMany
+    {
+        return $this->hasMany(EliteGiftGiveaway::class, 'client_id');
+    }
+
+    public function latest_gift_giveaway(): HasMany|\Illuminate\Database\Query\Builder
+    {
+        return $this->gift_giveaway()->whereDate('created_at', '>=', now()->subMonths(2));
+    }
+
+    public function canTakeEliteGift(): bool
+    {
+        return $this->loyalty_id === __hardcoded(2) && $this->latest_gift_giveaway->count() === 0;
     }
 
     public function loyalty(): BelongsTo

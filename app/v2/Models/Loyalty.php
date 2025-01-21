@@ -30,6 +30,8 @@ class Loyalty extends Model
         'id'
     ];
 
+    public const MONTHLY_ELITE_SUM_THRESHOLD = 30_000;
+
     protected $casts = [
         'id' => 'integer',
         'discount' => 'integer',

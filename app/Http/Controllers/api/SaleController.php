@@ -14,18 +14,21 @@ use App\Http\Resources\ReportResource;
 use App\Http\Resources\v2\Report\ReportsResource;
 use App\Jobs\Notifications\SendDeliveryNotificationJob;
 use App\Jobs\Notifications\SendWholesaleOrderNotificationJob;
+use App\Jobs\Sale\CheckEliteClubSaleJob;
 use App\Manufacturer;
 use App\Product;
 use App\ProductBatch;
 use App\Promocode;
 use App\Sale;
 use App\SaleProduct;
+use App\Service\Sales\EliteClubSaleReportService;
 use App\User;
 use App\UserRole;
 use App\v2\Models\BarterBalance;
 use App\v2\Models\Booking;
 use App\v2\Models\BrandMotivation;
 use App\v2\Models\Certificate;
+use App\v2\Models\EliteGiftGiveaway;
 use App\v2\Models\Preorder;
 use App\v2\Models\ProductSku;
 use Carbon\Carbon;
@@ -34,6 +37,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -59,7 +63,7 @@ class SaleController extends BaseApiController
             $preorder = $request->get('preorder', null);
             $sale = $saleService->createSale(
                 $request->except(
-                    ['cart', 'certificate', 'used_certificate', 'preorder', 'paid_by_barter', 'barter_balance']
+                    ['cart', 'certificate', 'used_certificate', 'preorder', 'paid_by_barter', 'barter_balance', 'is_elite_gift_giveaway']
                 )
             );
             $client = Client::find($client_id);
@@ -78,9 +82,9 @@ class SaleController extends BaseApiController
 
                 while ($barterBalance > 0) {
                     $barterBalanceEntity = BarterBalance::whereClientId($client_id)->where('amount', '>', 0)->where(
-                            'is_active',
-                            true
-                        )->first();
+                        'is_active',
+                        true
+                    )->first();
 
                     if (!$barterBalanceEntity) {
                         $barterBalance = 0;
@@ -127,17 +131,31 @@ class SaleController extends BaseApiController
                 $_preorder->sale_id = $sale->id;
                 $_preorder->save();
             }
+            // @TODO rework later
+            if ($request->get('is_elite_gift_giveaway') === true && $client_id !== -1) {
+                $gift = collect($cart)->where('is_free_elite_gift', true)->where('discount', 100)->first();
+                if ($gift) {
+                    EliteGiftGiveaway::create([
+                        'client_id' => $client_id,
+                        'sale_id' => $sale->id,
+                        'gift_id' => $gift['id']
+                    ]);
+                }
+            }
             \DB::commit();
             if ($sale->is_opt) {
                 SendWholesaleOrderNotificationJob::dispatch($sale);
             }
+            if ($client_id !== -1) {
+                CheckEliteClubSaleJob::dispatch($sale);
+            }
             return [
                 'product_quantities' => ProductBatch::query()->whereIn(
-                        'product_id',
-                        collect($cart)->pluck('id')
-                    )->whereStoreId($store_id)->groupBy('product_id')->select('product_id')->selectRaw(
-                        'sum(quantity) as quantity'
-                    )->get(),
+                    'product_id',
+                    collect($cart)->pluck('id')
+                )->whereStoreId($store_id)->groupBy('product_id')->select('product_id')->selectRaw(
+                    'sum(quantity) as quantity'
+                )->get(),
                 'client' => $client_id !== -1 ? new ClientResource(Client::find($client_id)) : [],
                 'sale_id' => $sale->id
             ];
@@ -167,8 +185,9 @@ class SaleController extends BaseApiController
     }
 
     /**
+     * @throws Exception
      */
-    public function downloadReportExcel(Request $request, ReportService $reportService)
+    public function downloadReportExcel(Request $request, ReportService $reportService): string
     {
         $user = $this->retrieveAnyUser();
         abort_if(!$user, 403);
@@ -178,20 +197,36 @@ class SaleController extends BaseApiController
         return $reportService->getExcelProductReport($reportsQuery);
     }
 
-    public function getSummaryReports(Request $request)
+    /**
+     */
+    public function downloadEliteReportExcel(
+        Request $request,
+        ReportService $reportService,
+        EliteClubSaleReportService $eliteClubSaleReportService):
+        string
+    {
+        $user = $this->retrieveAnyUser();
+        abort_if(!$user, 403);
+        $reportOptionsDTO = new ReportOptionsDTO($request->all());
+        $reportOptionsDTO->setUser($user);
+        $reportsQuery = $reportService->getReportsQuery($reportOptionsDTO);
+        return $eliteClubSaleReportService->getEliteExcelReport($reportsQuery);
+    }
+
+    public function getSummaryReports(Request $request): array|string
     {
         try {
             $start = today()->subDays(3)->startOfDay();
             $finish = today()->subDay()->endOfDay();
 
             $saleProductsSubQuery = DB::table('sale_products')->select(
-                    'sale_id',
-                    DB::raw('SUM(product_price - (discount / 100 * product_price)) as total_product_price'),
-                    DB::raw('SUM(purchase_price) as total_purchase_price'),
-                    DB::raw(
-                        'SUM(CASE WHEN discount = 100 THEN 0 ELSE (product_price - (discount / 100 * product_price)) - purchase_price END) as total_margin'
-                    )
-                )->groupBy('sale_id');
+                'sale_id',
+                DB::raw('SUM(product_price - (discount / 100 * product_price)) as total_product_price'),
+                DB::raw('SUM(purchase_price) as total_purchase_price'),
+                DB::raw(
+                    'SUM(CASE WHEN discount = 100 THEN 0 ELSE (product_price - (discount / 100 * product_price)) - purchase_price END) as total_margin'
+                )
+            )->groupBy('sale_id');
 
             $results = DB::table('sales')/*->selectRaw('
                     SUM(sps.total_product_price) as total_product_price,
@@ -207,7 +242,7 @@ class SaleController extends BaseApiController
                         - SUM(sales.balance)
                     ) * AVG(CASE WHEN sales.kaspi_red THEN 0.89 ELSE 1 END) as total_final_price
                 ')*/ ->selectRaw(
-                    '
+                '
                     SUM(sps.total_product_price) as total_product_price,
                     SUM(sps.total_purchase_price) as total_purchase_price,
                     SUM(sps.total_margin) as total_margin,
@@ -220,7 +255,7 @@ class SaleController extends BaseApiController
                          + SUM(purchased_certs.amount)
                          - SUM(sales.promocode_fixed_amount)
                     ) as total_final_price'
-                )
+            )
                 // Добавить сертификат - закуп, т.е. сертификат - финальная стоимость товара
                 ->leftJoinSub($saleProductsSubQuery, 'sps', function ($join) {
                     $join->on(
@@ -230,12 +265,12 @@ class SaleController extends BaseApiController
                     ); // Убедитесь, что это условие соединения корректно, так как подзапрос не содержит sale_id
                 })->selectRaw('COUNT(*) as sales_count')->leftJoin('certificates as purchased_certs', function ($join) {
                     $join->on('sales.id', '=', 'purchased_certs.sale_id')->where(function ($query) {
-                            $query->whereNull('purchased_certs.used_sale_id')->orWhere(
-                                    'purchased_certs.used_sale_id',
-                                    '=',
-                                    0
-                                );
-                        });
+                        $query->whereNull('purchased_certs.used_sale_id')->orWhere(
+                            'purchased_certs.used_sale_id',
+                            '=',
+                            0
+                        );
+                    });
                 })->leftJoin(
                     'certificates as used_certificates',
                     'sales.id',
@@ -276,34 +311,32 @@ class SaleController extends BaseApiController
         $store_id = $request->get('store_id');
 
         $sales = Sale::query()->where('created_at', '>=', Carbon::parse($dateFilter)->startOfDay())->where(
-                'is_confirmed',
-                true
-            )->with([
-                'products' => function ($subQuery) {
-                    return $subQuery->whereHas(
-                        'product.product',
-                        fn($q) => $q->where('manufacturer_id', '!=', __hardcoded(698))
-                    );
-                }
-            ])->with(['certificate'])->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
-                return $query->where('store_id', $store_id);
-            })->get();
+            'is_confirmed',
+            true
+        )->with([
+            'products' => function ($subQuery) {
+                return $subQuery->whereHas(
+                    'product.product', fn($q) => $q->where('manufacturer_id', '!=', __hardcoded(698))
+                );
+            }
+        ])->with(['certificate'])->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
+            return $query->where('store_id', $store_id);
+        })->get();
 
         $farmaSalesQuery = Sale::query()->where('created_at', '>=', Carbon::parse($dateFilter)->startOfDay())->where(
-                'is_confirmed',
-                true
-            )->whereHas('products', function ($subQuery) {
-                return $subQuery->whereHas('product.product', fn($q) => $q->where('manufacturer_id', __hardcoded(698)));
-            })->with([
-                'products' => function ($subQuery) {
-                    return $subQuery->whereHas(
-                        'product.product',
-                        fn($q) => $q->where('manufacturer_id', __hardcoded(698))
-                    );
-                }
-            ])->with(['certificate'])->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
-                return $query->where('store_id', $store_id);
-            })->get();
+            'is_confirmed',
+            true
+        )->whereHas('products', function ($subQuery) {
+            return $subQuery->whereHas('product.product', fn($q) => $q->where('manufacturer_id', __hardcoded(698)));
+        })->with([
+            'products' => function ($subQuery) {
+                return $subQuery->whereHas(
+                    'product.product', fn($q) => $q->where('manufacturer_id', __hardcoded(698))
+                );
+            }
+        ])->with(['certificate'])->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
+            return $query->where('store_id', $store_id);
+        })->get();
 
         $bookingSales = collect([
             9999 => [
@@ -320,10 +353,10 @@ class SaleController extends BaseApiController
         ]);
 
         return $this->calculateTotalAmount($sales)->mergeRecursive($bookingSales)->mergeRecursive($farmaSales)->groupBy(
-                'store_id'
-            )->map(function ($item) {
-                return collect($item)->first();
-            });
+            'store_id'
+        )->map(function ($item) {
+            return collect($item)->first();
+        });
     }
 
     public function getPlanReports(Request $request): array
@@ -332,11 +365,11 @@ class SaleController extends BaseApiController
         $startOfMonth = $today->startOf('month')->toDateString();
 
         $monthlySales = Sale::whereDate('created_at', '>=', $startOfMonth)->where(
-                'store_id',
-                $request->get('store_id', 1)
-            )->where('user_id', '!=', 2)->where('payment_type', '!=', 4)->with(
-                ['products:product_price,discount,sale_id']
-            )->select(['id', 'store_id', 'kaspi_red', 'balance', 'created_at'])->get();
+            'store_id',
+            $request->get('store_id', 1)
+        )->where('user_id', '!=', 2)->where('payment_type', '!=', 4)->with(
+            ['products:product_price,discount,sale_id']
+        )->select(['id', 'store_id', 'kaspi_red', 'balance', 'created_at'])->get();
 
 
         $weeklySales = $monthlySales->filter(function ($i) {
@@ -364,54 +397,53 @@ class SaleController extends BaseApiController
         $store_id = $request->has('store_id') ? $request->get('store_id') : null;
 
         return SaleProduct::query()->whereIn('product_id', $products_id)->whereHas(
-                'sale',
-                function ($q) use ($date_start, $date_finish, $user_id, $store_id) {
-                    if ($user_id) {
-                        $q->whereUserId($user_id);
-                    }
-                    if ($store_id) {
-                        $q->whereStoreId($store_id);
-                    }
+            'sale', function ($q) use ($date_start, $date_finish, $user_id, $store_id) {
+            if ($user_id) {
+                $q->whereUserId($user_id);
+            }
+            if ($store_id) {
+                $q->whereStoreId($store_id);
+            }
 
-                    $q->whereDate('created_at', '>=', $date_start)->whereDate('created_at', '<=', $date_finish);
+            $q->whereDate('created_at', '>=', $date_start)->whereDate('created_at', '<=', $date_finish);
+        }
+        )->with('sale')->with([
+            'product',
+            'product.product:id,product_name,product_price,manufacturer_id',
+            'product.product.attributes:attribute_value',
+            'product.attributes:attribute_value',
+            'product.product.manufacturer'
+        ])->get()->map(function ($sale) {
+            $sale['main_product_id'] = $sale['product']['id'];
+            return $sale;
+        })->groupBy('main_product_id')->map(function ($sale, $key) {
+            $totalPurchasePrice = (collect($sale)->reduce(function ($a, $c) {
+                return $a + $c['purchase_price'];
+            }, 0));
+            $totalProductPrice = ceil(collect($sale)->reduce(function ($a, $c) {
+                $currentPrice = $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
+                if ($c['sale']['kaspi_red']) {
+                    $currentPrice -= $currentPrice * Sale::KASPI_RED_PERCENT;
                 }
-            )->with('sale')->with([
-                'product',
-                'product.product:id,product_name,product_price,manufacturer_id',
-                'product.product.attributes:attribute_value',
-                'product.attributes:attribute_value',
-                'product.product.manufacturer'
-            ])->get()->map(function ($sale) {
-                $sale['main_product_id'] = $sale['product']['id'];
-                return $sale;
-            })->groupBy('main_product_id')->map(function ($sale, $key) {
-                $totalPurchasePrice = (collect($sale)->reduce(function ($a, $c) {
-                    return $a + $c['purchase_price'];
-                }, 0));
-                $totalProductPrice = ceil(collect($sale)->reduce(function ($a, $c) {
-                    $currentPrice = $c['product_price'] - ($c['product_price'] * intval($c['discount']) / 100);
-                    if ($c['sale']['kaspi_red']) {
-                        $currentPrice -= $currentPrice * Sale::KASPI_RED_PERCENT;
-                    }
-                    if ($c['sale']['balance'] > 0) {
-                        $currentPrice -= $c['balance'];
-                    }
-                    return $a + $currentPrice;
-                }, 0));
-                return [
-                    'product_id' => $sale[0]['product']['id'],
-                    'product_name' => $sale[0]['product']['product']['product_name'],
-                    'attributes' => collect($sale[0]['product']['attributes'])->pluck('attribute_value')->merge(
-                        collect($sale[0]['product']['product']['attributes'])->pluck('attribute_value')
-                    )->join(', '),
-                    'manufacturer' => $sale[0]['product']['product']['manufacturer']['manufacturer_name'],
-                    'manufacturer_id' => $sale[0]['product']['product']['manufacturer']['id'],
-                    'count' => count($sale),
-                    'total_purchase_price' => $totalPurchasePrice,
-                    'total_product_price' => $totalProductPrice,
-                    'margin' => $totalProductPrice > 0 ? $totalProductPrice - $totalPurchasePrice : 0,
-                ];
-            })->values()->sortBy('product_name');
+                if ($c['sale']['balance'] > 0) {
+                    $currentPrice -= $c['balance'];
+                }
+                return $a + $currentPrice;
+            }, 0));
+            return [
+                'product_id' => $sale[0]['product']['id'],
+                'product_name' => $sale[0]['product']['product']['product_name'],
+                'attributes' => collect($sale[0]['product']['attributes'])->pluck('attribute_value')->merge(
+                    collect($sale[0]['product']['product']['attributes'])->pluck('attribute_value')
+                )->join(', '),
+                'manufacturer' => $sale[0]['product']['product']['manufacturer']['manufacturer_name'],
+                'manufacturer_id' => $sale[0]['product']['product']['manufacturer']['id'],
+                'count' => count($sale),
+                'total_purchase_price' => $totalPurchasePrice,
+                'total_product_price' => $totalProductPrice,
+                'margin' => $totalProductPrice > 0 ? $totalProductPrice - $totalPurchasePrice : 0,
+            ];
+        })->values()->sortBy('product_name');
     }
 
     private function calculateTotalAmount($sales): Collection
@@ -428,17 +460,17 @@ class SaleController extends BaseApiController
         $otherSales = collect($sales)->diff($kaspiAndWebSales)->all();
 
         $retailSales = collect($otherSales)->filter(function ($sale) {
-                return !$sale['is_opt'];
-            })->values()->groupBy('store_id')->map(function ($sale, $store_id) {
-                return [
-                    'store_id' => $store_id,
-                    'amount' => $this->getTotalAmount($sale)
-                ];
-            });
+            return !$sale['is_opt'];
+        })->values()->groupBy('store_id')->map(function ($sale, $store_id) {
+            return [
+                'store_id' => $store_id,
+                'amount' => $this->getTotalAmount($sale)
+            ];
+        });
 
         $optSales = collect($otherSales)->filter(function ($sale) {
-                return $sale['is_opt'];
-            })->values();
+            return $sale['is_opt'];
+        })->values();
 
         $optSales = collect([
             7845 => [
@@ -462,10 +494,10 @@ class SaleController extends BaseApiController
         ]);
 
         return $kaspiSales->mergeRecursive($retailSales)->mergeRecursive($internetSales)->mergeRecursive(
-                $optSales
-            )->groupBy('store_id')->map(function ($item) {
-                return collect($item)->first();
-            });
+            $optSales
+        )->groupBy('store_id')->map(function ($item) {
+            return collect($item)->first();
+        });
     }
 
     private function getTotalAmount($sales)
@@ -616,27 +648,26 @@ class SaleController extends BaseApiController
         $date_start = now()->startOfMonth();
         $date_finish = now()->endOfMonth();
         return SaleProduct::query()->whereIn('product_id', $products_id)->whereHas(
-                'sale',
-                function ($q) use ($date_start, $date_finish) {
-                    $q->whereDate('created_at', '>=', $date_start)->whereDate(
-                            'created_at',
-                            '<=',
-                            $date_finish
-                        )->physicalSales();
-                }
-            )->with('sale')->get()->map(function ($sale) {
-                $sale['user_id'] = $sale['sale']['user_id'];
-                $sale['discount'] = $sale['sale']['discount'];
-                return $sale;
-            })->groupBy('user_id')->map(function ($sale, $key) {
-                $totalSum = ceil(collect($sale)->reduce(function ($a, $c) use ($key) {
-                    return $a + $c['product_price'] - $c['product_price'] * ($c['discount'] / 100);
-                }, 0));
-                return [
-                    'sum' => $totalSum,
-                    'user_id' => $key
-                ];
-            })->values()->all();
+            'sale', function ($q) use ($date_start, $date_finish) {
+            $q->whereDate('created_at', '>=', $date_start)->whereDate(
+                'created_at',
+                '<=',
+                $date_finish
+            )->physicalSales();
+        }
+        )->with('sale')->get()->map(function ($sale) {
+            $sale['user_id'] = $sale['sale']['user_id'];
+            $sale['discount'] = $sale['sale']['discount'];
+            return $sale;
+        })->groupBy('user_id')->map(function ($sale, $key) {
+            $totalSum = ceil(collect($sale)->reduce(function ($a, $c) use ($key) {
+                return $a + $c['product_price'] - $c['product_price'] * ($c['discount'] / 100);
+            }, 0));
+            return [
+                'sum' => $totalSum,
+                'user_id' => $key
+            ];
+        })->values()->all();
     }
 
     public function getSaleTypes(): Collection

@@ -69,9 +69,7 @@ class BaseKaspiApiService
         }
     }
 
-    /**
-     * Выполняет POST-запрос.
-     *
+    /***
      * @param string $endpoint
      * @param array $queryParams
      * @param array $data

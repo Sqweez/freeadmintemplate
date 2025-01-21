@@ -9,9 +9,9 @@ class ClientRepository
 {
     public function query(ClientFilterDTO $filters)
     {
-        $query =  Client::query()
+        return Client::query()
             ->orderByDesc('created_at')
-            ->with([/*'sales', 'transactions', */'city', 'loyalty'])
+            ->with([/*'sales', 'transactions', */'city', 'loyalty', 'latest_gift_giveaway'])
             /*->when($filters->wholesales, function ($query) {
                 return $query
                     ->where('is_wholesale_buyer', true)
@@ -27,6 +27,7 @@ class ClientRepository
             /*  ->when($filters->is_partner !== null, function ($query) use ($filters) {
                   return $query->where('is_partner', $filters->is_partner);
               })*/
+
             ->when($filters->loyalty_id !== null, function ($query) use ($filters) {
                 return $query->where('loyalty_id', $filters->loyalty_id);
             })
@@ -45,7 +46,6 @@ class ClientRepository
             ->with(['barter_balance' => function ($query) {
                 return $query->where('is_active', true);
             }]);
-        return $query;
     }
 
     public function search($query, $search)
