@@ -213,7 +213,7 @@ class SaleController extends BaseApiController
         return $eliteClubSaleReportService->getEliteExcelReport($reportsQuery);
     }
 
-    public function getSummaryReports(Request $request): array|string
+    public function getSummaryReports(Request $request)
     {
         try {
             $start = today()->subDays(3)->startOfDay();
