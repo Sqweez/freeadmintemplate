@@ -210,7 +210,7 @@ class Client extends Model
         return $this->hasMany(EliteGiftGiveaway::class, 'client_id');
     }
 
-    public function latest_gift_giveaway(): HasMany|\Illuminate\Database\Query\Builder
+    public function latest_gift_giveaway()
     {
         return $this->gift_giveaway()->whereDate('created_at', '>=', now()->subMonths(2));
     }
