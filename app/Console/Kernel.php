@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(CreateFortePriceCommand::class)
             ->everyThirtyMinutes();
         $schedule->command(CreateHalykExcelPriceCommand::class)
-        ->twiceDaily();
+        ->everyThirtyMinutes();
         $schedule->command(UpdateProductAvailabilitiesCommand::class)
             ->everyMinute()->withoutOverlapping();
         $schedule->command(FlushInactiveClientsBalanceCommand::class)
