@@ -56,6 +56,9 @@ class HalykProductExcelGenerator implements ProductXMLGenerator
             }
             $quantity = collect($product['quantities'])->where('real_store_id', __hardcoded(1))->first();
             $quantity = $quantity['quantity'] ?? '';
+            if (in_array($product['sku'], [205, 2247])) {
+                \Log::info($quantity);
+            }
             $contentArray[] = [
                 $product['sku'],
                 $product['product_name'],
