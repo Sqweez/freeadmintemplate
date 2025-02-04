@@ -65,7 +65,7 @@ class HalykProductExcelGenerator implements ProductXMLGenerator
                 '',
                 $product['price'],
                 24,
-                $quantity
+                500
             ];
         }
         $sheet->fromArray($contentArray, null, 'A2');
