@@ -51,13 +51,15 @@ class HalykProductExcelGenerator implements ProductXMLGenerator
     {
         $contentArray = [];
         foreach ($products as $product) {
+            $quantity = collect($product['quantities'])->where('store_id', __hardcoded(1))->first();
+            $quantity = $quantity ?: '';
             $contentArray[] = [
                 $product['sku'],
                 $product['product_name'],
                 '',
                 $product['price'],
                 24,
-                $product['quantities'][0]['quantity']
+                $quantity
             ];
         }
         $sheet->fromArray($contentArray, null, 'A2');

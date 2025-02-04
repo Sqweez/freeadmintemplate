@@ -4,7 +4,6 @@ namespace App\Console;
 
 use App\Console\Commands\Clients\CheckEliteClientStatusCommand;
 use App\Console\Commands\Clients\DeactivateBarterBalance;
-use App\Console\Commands\Clients\FlushInactiveClientsBalanceCommand;
 use App\Console\Commands\EcommercePriceList\Forte\CreateFortePriceCommand;
 use App\Console\Commands\EcommercePriceList\Halyk\CreateHalykExcelPriceCommand;
 use App\Console\Commands\EcommercePriceList\Kaspi\CreateKaspiPriceCommand;
@@ -55,8 +54,8 @@ class Kernel extends ConsoleKernel
         ->everyThirtyMinutes();
         $schedule->command(UpdateProductAvailabilitiesCommand::class)
             ->everyMinute()->withoutOverlapping();
-        $schedule->command(FlushInactiveClientsBalanceCommand::class)
-            ->dailyAt('10:00');
+        /*$schedule->command(FlushInactiveClientsBalanceCommand::class)
+            ->dailyAt('10:00');*/
        # $schedule->command(KaspiCookiesResolver::class)
        #     ->everyTenMinutes();
         // $schedule->command('inspire')
