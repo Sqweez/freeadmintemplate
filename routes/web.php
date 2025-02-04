@@ -8,7 +8,25 @@ Route::get('/test', function () {
    Artisan::call(\App\Console\Commands\EcommercePriceList\Halyk\CreateHalykExcelPriceCommand::class);
 });
 
+Route::get('halyk/price', function () {
+    $path = storage_path("app/public/halyk/excel/halyk_products_1.xlsx");
 
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->streamDownload(function () use ($path) {
+        readfile($path);
+    }, "halyk_products_1.xlsx", [
+        'Content-Type' => mime_content_type($path),
+        'Content-Disposition' => 'attachment; filename="halyk_products_1.xlsx"',
+        'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma' => 'no-cache',
+        'Expires' => '0',
+        'Last-Modified' => gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT',
+        'Etag' => Str::random(32),
+    ]);
+});
 
 Route::get('without-reviews', function () {
     $products =  \App\v2\Models\Product::query()

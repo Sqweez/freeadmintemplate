@@ -51,6 +51,9 @@ class HalykProductExcelGenerator implements ProductXMLGenerator
     {
         $contentArray = [];
         foreach ($products as $product) {
+            if (\Str::contains($product['product_name'], ['Каспи', 'КАСПИ', 'каспи'])) {
+                continue;
+            }
             $quantity = collect($product['quantities'])->where('real_store_id', __hardcoded(1))->first();
             $quantity = $quantity['quantity'] ?? '';
             $contentArray[] = [
