@@ -51,21 +51,15 @@ class HalykProductExcelGenerator implements ProductXMLGenerator
     {
         $contentArray = [];
         foreach ($products as $product) {
-            if (in_array($product['sku'], [205, 2247])) {
-                \Log::info('PRODUCT', $product);
-            }
             $quantity = collect($product['quantities'])->where('real_store_id', __hardcoded(1))->first();
             $quantity = $quantity['quantity'] ?? '';
-            if (in_array($product['sku'], [205, 2247])) {
-                \Log::info($quantity);
-            }
             $contentArray[] = [
                 $product['sku'],
                 $product['product_name'],
                 '',
                 $product['price'],
                 24,
-                500
+                $quantity
             ];
         }
         $sheet->fromArray($contentArray, null, 'A2');
