@@ -15,27 +15,12 @@ Route::get('halyk/price', function () {
         abort(404);
     }
 
-    return response()->stream(function () use ($path) {
-        readfile($path);
-    }, 200, [
-        'Content-Type' => mime_content_type($path),
-        'Content-Length' => filesize($path),
-        'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
-        'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
-        'Pragma' => 'no-cache',
-        'Expires' => '0',
-    ]);
-
-    return response()->streamDownload(function () use ($path) {
-        readfile($path);
-    }, "halyk_products_1.xlsx", [
-        'Content-Type' => mime_content_type($path),
-        'Content-Disposition' => 'attachment; filename="halyk_products_1.xlsx"',
-        'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
-        'Pragma' => 'no-cache',
-        'Expires' => '0',
-        'Last-Modified' => gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT',
-        'Etag' => Str::random(32),
+    return response()->file($path, [
+        'Content-Type'        => mime_content_type($path),
+        'Cache-Control'       => 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma'              => 'no-cache',
+        'Expires'             => '0',
+        'Last-Modified'       => gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT',
     ]);
 });
 
