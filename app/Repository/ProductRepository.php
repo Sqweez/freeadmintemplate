@@ -60,6 +60,7 @@ class ProductRepository
                 'quantities' => collect($stores)->map(function ($store) use ($product) {
                     return [
                         'store_id' => $store->id,
+                        'real_store_id' => $store->store_id,
                         'quantity' => collect($product['batches'])->filter(function ($item) use ($store) {
                             return $item['store_id'] === $store['store_id'];
                         })->sum('quantity')
