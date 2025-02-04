@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 Route::get('/test', function () {
@@ -9,6 +10,24 @@ Route::get('/test', function () {
 });
 
 Route::get('halyk/price', function () {
+    $disk = Storage::disk('public');
+    $filename = 'halyk/excel/halyk_products_1.xlsx';
+
+    if (!$disk->exists($filename)) {
+        abort(404);
+    }
+
+    return new StreamedResponse(function () use ($disk, $filename) {
+        $stream = $disk->readStream($filename);
+        fpassthru($stream);
+        fclose($stream);
+    }, 200, [
+        'Content-Type'        => $disk->mimeType($filename),
+        'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
+        'Cache-Control'       => 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma'              => 'no-cache',
+        'Expires'             => '0',
+    ]);
     $path = storage_path("app/public/halyk/excel/halyk_products_1.xlsx");
 
     if (!file_exists($path)) {
