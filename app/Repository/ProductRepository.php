@@ -62,7 +62,7 @@ class ProductRepository
                         'store_id' => $store->id,
                         'quantity' => collect($product['batches'])->filter(function ($item) use ($store) {
                             return $item['store_id'] === $store['store_id'];
-                        })->count()
+                        })->sum('quantity')
                     ];
                 })];
         })->toArray();
