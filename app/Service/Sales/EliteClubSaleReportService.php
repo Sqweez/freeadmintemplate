@@ -15,6 +15,9 @@ class EliteClubSaleReportService
 {
     public function getEliteExcelReport(Builder $builder): string
     {
+        $builder = $builder->whereHas('client', function ($subQuery) {
+            return $subQuery->where('loyalty_id', __hardcoded(2));
+        });
         $sales = $builder->get();
         $sales = $sales
             ->groupBy('client_id')
