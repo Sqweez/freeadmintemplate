@@ -38,13 +38,14 @@ export default {
         async onSubmit () {
             const params = {
                 start: this.dates[0],
-                finish: this.dates[1]
+                finish: this.dates[1],
+                is_elite: 1
             };
             this.$loading.enable();
             const { data } = await ReportRepository.getExcelEliteClientReport(params);
             fileDownload(data);
             this.$loading.disable();
-            //this.$emit('close');
+            this.$emit('close');
         }
     },
     computed: {}
