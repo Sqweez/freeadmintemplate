@@ -43,6 +43,27 @@ Route::get('halyk/price', function () {
     ]);
 });
 
+Route::get('kaspi/price/{entity}', function ($entity) {
+    $disk = Storage::disk('public');
+    $filename = 'kaspi/xml/kaspi_products_' . $entity . '.xml';
+
+    if (!$disk->exists($filename)) {
+        abort(404);
+    }
+
+    return new StreamedResponse(function () use ($disk, $filename) {
+        $stream = $disk->readStream($filename);
+        fpassthru($stream);
+        fclose($stream);
+    }, 200, [
+        'Content-Type'        => $disk->mimeType($filename),
+        'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
+        'Cache-Control'       => 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma'              => 'no-cache',
+        'Expires'             => '0',
+    ]);
+});
+
 Route::get('without-reviews', function () {
     $products =  \App\v2\Models\Product::query()
         ->whereHas('sku', function ($q) {
