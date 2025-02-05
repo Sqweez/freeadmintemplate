@@ -9,7 +9,7 @@ const ReportRepository = () => ({
         });
     },
     async getExcelEliteClientReport(params = {}) {
-        return axiosClient.get(BASE_URL + '/elite/excel', params);
+        return axiosClient.get(BASE_URL + '/elite/excel', { params });
     },
 });
 
