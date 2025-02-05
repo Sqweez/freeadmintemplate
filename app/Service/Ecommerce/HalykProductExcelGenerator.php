@@ -55,7 +55,7 @@ class HalykProductExcelGenerator implements ProductXMLGenerator
                 continue;
             }
             $quantity = collect($product['quantities'])->where('real_store_id', __hardcoded(1))->first();
-            $quantity = $quantity['quantity'] ?? '';
+            $quantity = $quantity['quantity'] ?? 0;
             $contentArray[] = [
                 $product['sku'],
                 $product['product_name'],
