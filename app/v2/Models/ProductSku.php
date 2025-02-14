@@ -279,4 +279,16 @@ class ProductSku extends Model
             $attributes
         );
     }
+
+    public function updateSkuName(): void
+    {
+        $this->load('product.attributes');
+        $this->load('attributes');
+        $baseName = $this->product->product_name;
+        $skuAttributes = collect($this['attributes'])->pluck('attribute_value')->join(' ');
+        $productAttributes = collect($this->product['attributes'])->pluck('attribute_value')->join(' ');
+        $skuName = trim(sprintf("%s %s %s", $baseName, $productAttributes, $skuAttributes));
+        $this->sku_name = $skuName;
+        $this->save();
+    }
 }
