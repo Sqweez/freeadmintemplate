@@ -122,6 +122,7 @@ class ProductService
             DB::beginTransaction();
             $productSku = $this->createProductSku($product, $_attributes);
             $this->updateProductSkuRelations($productSku, $_attributes, $product->grouping_attribute_id);
+            $productSku->updateSkuName();;
             DB::commit();
             $productSku = ProductSku::find($productSku->id);
             $productSku->load('product');
@@ -147,6 +148,7 @@ class ProductService
                 'margin_type_id' => $_attributes['margin_type_id']
             ]);
             $this->updateProductSkuRelations($productSku, $_attributes, $productSku->grouping_attribute_id);
+            $productSku->updateSkuName();;
             DB::commit();
             $productSku->fresh();
             $productSku->load('product.wholesale_prices.currency');
@@ -185,6 +187,9 @@ class ProductService
                 ]);
             }
         }
+        $product->sku->each(function (ProductSku $sku) {
+            $sku->updateSkuName();
+        });
         $product->push();
     }
 
@@ -212,6 +217,7 @@ class ProductService
         $this->syncProductImages($productSku, $fields[ProductSku::PRODUCT_SKU_IMAGES]);
         $this->syncProductThumbs($productSku, $fields[ProductSku::PRODUCT_SKU_THUMBS]);
         $this->syncAttributes($productSku, $this->getProductSkuAttributes($attribute_id, $fields[Product::ATTRIBUTES]));
+        $productSku->updateSkuName();;
         $productSku->push();
     }
 
