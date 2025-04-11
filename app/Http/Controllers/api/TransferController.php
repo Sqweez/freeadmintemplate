@@ -233,7 +233,7 @@ class TransferController extends Controller {
     }
 
     private function makeTransfer(Transfer $transfer, $products) {
-        $batches = $transfer->batches;
+        $batches = $transfer->batches->where('is_transferred', 0);
         $companionSale = CompanionSale::where('transfer_id', $transfer->id)->first();
         $grouped_batches = $this->groupBatches($batches);
         foreach ($products as $product) {
