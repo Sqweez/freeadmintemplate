@@ -55,12 +55,12 @@ class Transfer extends Model
 
     public function parent_store(): BelongsTo
     {
-        return $this->belongsTo('App\Store', 'parent_store_id');
+        return $this->belongsTo('App\Store', 'parent_store_id')->withTrashed();;
     }
 
     public function child_store(): BelongsTo
     {
-        return $this->belongsTo('App\Store', 'child_store_id');
+        return $this->belongsTo('App\Store', 'child_store_id')->withTrashed();;
     }
 
     public function batches(): HasMany
