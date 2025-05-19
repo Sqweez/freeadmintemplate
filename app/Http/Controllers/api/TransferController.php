@@ -32,6 +32,8 @@ class TransferController extends Controller {
             ->whereHas('batches.product')
             ->whereHas('batches.product.product')
             ->with(['parent_store', 'child_store', 'companionSale'])
+            ->has('parent_store')
+            ->has('child_store')
             ->with(['user:id,name'])
             ->with(
                 [
