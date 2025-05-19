@@ -46,7 +46,7 @@ class TransferResource extends JsonResource
         return [
             'id' => $this->id,
             'parent_store' => optional($this->parent_store)->name ?? 'Удаленный магазин',
-            'child_store' => optional($this->child_store)->name? ? 'Удаленный магазин',
+            'child_store' => optional($this->child_store)->name ?? 'Удаленный магазин',
             'child_store_id' => $this->child_store->id,
             'parent_store_id' => $this->parent_store_id,
             'user' => $this->whenLoaded('user') ? $this->user->name : 'Администратор',
