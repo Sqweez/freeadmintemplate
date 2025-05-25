@@ -534,6 +534,10 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
             Route::get('/open', [WorkShiftController::class, 'open']);
             Route::get('/{shift}/close', [WorkShiftController::class, 'close']);
         });
+
+        Route::prefix('bot')->group(function () {
+            Route::post('/product/{sku}', [\App\Http\Controllers\api\v3\BotController::class, 'updatePrice']);
+        });
     });
 
     Route::prefix('dev')->group(function () {
