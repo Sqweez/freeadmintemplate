@@ -10,6 +10,12 @@ class BotController extends BaseApiController
 {
     public function updatePrice(ProductSku $sku, Request $request)
     {
+        $authToken = $request->header('X-BOT-AUTH-TOKEN');
+        if ($authToken !== config('app.bot_auth_token')) {
+            return $this->respondError([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
         $price = $request->get('price');
         if (!$price) {
             return $this->respondError([
