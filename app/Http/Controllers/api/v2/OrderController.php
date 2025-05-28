@@ -41,6 +41,9 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function restoreOrder(Order $order) {
         $sale = Sale::whereOrderId($order->id)->first();
         if (!$sale) {

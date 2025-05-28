@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="414c111f-e9ac-439c-9e46-2e0dfa3333d3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../database/migrations/2024_03_02_003636_add_indexes_to_sale_products.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/c86d0892-4e42-4450-a76b-d981d275a83a.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/c86d0892-4e42-4450-a76b-d981d275a83a.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Http/Controllers/Services/ReportService.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Controllers/Services/ReportService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Http/Controllers/api/SaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Controllers/api/SaleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Http/Controllers/api/shop/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Controllers/api/shop/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Sale.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/SaleProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/SaleProduct.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/../composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/../config/app.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/api.php" afterDir="false" />
-    </list>
+    <list default="true" id="414c111f-e9ac-439c-9e46-2e0dfa3333d3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

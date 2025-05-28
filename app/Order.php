@@ -85,7 +85,7 @@ class Order extends Model
         'is_paid' => 'boolean'
     ];
 
-    const ORDER_STATUS = [
+    public const ORDER_STATUS = [
         0 => [
             'text' => 'В обработке'
         ],
@@ -97,7 +97,7 @@ class Order extends Model
         ],
     ];
 
-    const ORDER_DELIVERY = [
+    public const ORDER_DELIVERY = [
         0 => [
             'text' => 'Доставка курьером'
         ],
@@ -106,7 +106,7 @@ class Order extends Model
         ]
     ];
 
-    const ORDER_PAYMENT = [
+    public const ORDER_PAYMENT = [
         0 => [
             'text' => 'Оплата наличными'
         ],
@@ -118,25 +118,29 @@ class Order extends Model
         ]
     ];
 
-    const ORDER_PAYMENT_CASH = 0;
-    const ORDER_PAYMENT_CARD = 1;
-    const ORDER_PAYMENT_ONLINE = 2;
+    public const ORDER_PAYMENT_CASH = 0;
+    public const ORDER_PAYMENT_CARD = 1;
+    public const ORDER_PAYMENT_ONLINE = 2;
 
-    public function items() {
+    public function items()
+    {
         return $this->hasMany('App\OrderProduct', 'order_id');
     }
 
-    public function store() {
-        return $this->belongsTo('App\Store','store_id')->withDefault([
+    public function store()
+    {
+        return $this->belongsTo('App\Store', 'store_id')->withDefault([
             'name' => 'Iron Addicts | Казахстан'
         ]);
     }
 
-    public function city_text() {
+    public function city_text()
+    {
         return $this->belongsTo('App\v2\Models\City', 'city');
     }
 
-    public function image() {
+    public function image()
+    {
         return $this->morphToMany('App\v2\Models\Image', 'imagable', 'imagable');
     }
 
