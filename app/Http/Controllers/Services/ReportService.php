@@ -27,7 +27,7 @@ class ReportService {
             ->when($reportOptionsDTO->user, function ($query) use ($reportOptionsDTO) {
                 return $query->where('store_id', $reportOptionsDTO->user->store_id);
             })
-            ->when($reportOptionsDTO->payment_type, function ($query) use ($reportOptionsDTO) {
+            ->when($reportOptionsDTO->payment_type !== null, function ($query) use ($reportOptionsDTO) {
                 return $query->where('payment_type', $reportOptionsDTO->payment_type);
             })
             ->when($reportOptionsDTO->store_id, function ($query) use ($reportOptionsDTO) {
