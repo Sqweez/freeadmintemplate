@@ -537,7 +537,7 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
         });
 
         Route::group(['prefix' => 'bot'], function () {
-            Route::patch('product/{sku}', [KaspiBotController::class, 'updatePrice']);
+            Route::post('product/{sku}', [KaspiBotController::class, 'updatePrice']);
         });
     });
 
