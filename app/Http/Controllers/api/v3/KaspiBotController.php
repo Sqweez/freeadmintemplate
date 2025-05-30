@@ -6,7 +6,7 @@ use App\Http\Controllers\api\BaseApiController;
 use App\v2\Models\ProductSku;
 use Illuminate\Http\Request;
 
-class BotController extends BaseApiController
+class KaspiBotController extends BaseApiController
 {
     public function updatePrice(ProductSku $sku, Request $request)
     {
