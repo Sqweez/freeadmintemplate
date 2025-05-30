@@ -116,7 +116,6 @@ class ProductRepository
             })
             ->orderBy('product_id')
             ->orderBy('id')
-            ->limit(10)
             ->get()
             ->sortBy('product_name');
     }
