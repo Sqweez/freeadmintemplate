@@ -246,4 +246,6 @@ return [
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
     ],
 
+    'bot_auth_token' => env('X_BOT_AUTH_TOKEN', 'default_token'),
+
 ];

@@ -27,7 +27,7 @@ class ReportOptionsDTO extends BaseDTO
         $this->store_id = $data['store_id'] ?? null;
         $this->manufacturer_id = $data['manufacturer_id'] ?? null;
         $this->promocode_id = data_get($data,'promocode_id') ? json_decode($data['promocode_id']) : null;
-        $this->payment_type = data_get($data, 'payment_type');
+        $this->payment_type = data_get($data, 'payment_type', null);
         $this->isElite = data_get($data, 'is_elite', null);
 
         if ($this->promocode_id !== null && json_last_error() !== JSON_ERROR_NONE) {
