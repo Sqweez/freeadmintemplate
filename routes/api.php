@@ -31,6 +31,7 @@ use App\Http\Controllers\api\v2\SiteController;
 use App\Http\Controllers\api\v2\StockController;
 use App\Http\Controllers\api\v2\TaskController;
 use App\Http\Controllers\api\v3\BarterBalanceController;
+use App\Http\Controllers\api\v3\KaspiBotController;
 use App\Http\Controllers\api\v3\RevisionController;
 use App\Http\Controllers\api\v3\WorkingScheduleController;
 use App\Http\Controllers\api\v3\WorkShiftController;
@@ -535,8 +536,8 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
             Route::get('/{shift}/close', [WorkShiftController::class, 'close']);
         });
 
-        Route::prefix('bot')->group(function () {
-            Route::post('/product/{sku}', [\App\Http\Controllers\api\v3\BotController::class, 'updatePrice']);
+        Route::group(['prefix' => 'bot'], function () {
+            Route::patch('product/{sku}', [KaspiBotController::class, 'updatePrice']);
         });
     });
 
