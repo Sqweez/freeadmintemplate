@@ -19,10 +19,11 @@ class KaspiOrderResource extends JsonResource
         self::$stores = $stores;
     }
 
-    public function toArray($request): array
+    public function toArray($request)
     {
         $order = $this->resource;
         $attributes = $order['attributes'];
+        return self::$stores;
         return [
                 'kaspi_id' => $order['id'],
                 'client' => $this->getClientInfo($order),

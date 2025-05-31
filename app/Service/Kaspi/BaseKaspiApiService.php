@@ -51,8 +51,6 @@ class BaseKaspiApiService
             return $this->handleException($e);
         }
     }
-
-    // Метод для выполнения POST-запроса
     protected function post(string $endpoint, array $data = []): ?array
     {
         try {

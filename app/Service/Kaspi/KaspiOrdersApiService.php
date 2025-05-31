@@ -16,7 +16,7 @@ class KaspiOrdersApiService extends BaseKaspiApiService
                 'orders' => $queryFilters
             ],
             'included' => [
-                'orders' => 'entries',
+                'orders' => 'user',
             ]
         ]);
     }

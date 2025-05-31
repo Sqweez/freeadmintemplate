@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v3;
 
 use App\Http\Controllers\api\BaseApiController;
 use App\Http\Resources\Kaspi\KaspiOrderResource;
+use App\Integrations\Kaspi\OrderListTransformer;
 use App\Service\Kaspi\KaspiOrdersApiService;
 use App\Store;
 use App\v2\Models\KaspiEntity;
@@ -21,19 +22,21 @@ class KaspiController extends BaseApiController
         ]);
     }
 
-    public function retrieveOrders(Request $request, KaspiOrdersApiService $apiService): JsonResponse
+    public function retrieveOrders(Request $request, KaspiOrdersApiService $apiService)
     {
         $response = $apiService->getOrders(
             $request->get('page', 0),
             json_decode($request->get('filters'), true) ?: []
         );
-        $pickupPoints = $this->checkPickupPointExisting($response['included'], $apiService);
-        $stores = Store::whereIn('id', $pickupPoints->values()->pluck('store_id')->toArray())->select(['id', 'name'])->get();
-        KaspiOrderResource::setAdditionalData($pickupPoints, collect($response['included']), $stores);
+        return $response;
+        #$pickupPoints = $this->checkPickupPointExisting($response['included'], $apiService);
+        #$stores = Store::whereIn('id', $pickupPoints->values()->pluck('store_id')->toArray())->select(['id', 'name'])->get();
+        #KaspiOrderResource::setAdditionalData($pickupPoints, collect($response['included']), $stores);
+        $orderTransformer = new OrderListTransformer();
         return $this->respondSuccess([
             'success' => $response['success'],
             'meta' => $response['meta'],
-            'data' => KaspiOrderResource::collection($response['data']),
+            'data' => $orderTransformer->transform($response),
         ]);
     }
 
