@@ -35,9 +35,9 @@ class RemoveStoreCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle(): mixed
+    public function handle(): int
     {
         $store = Store::find($this->argument('store_id'));
         if (!$store) {
