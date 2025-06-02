@@ -149,6 +149,7 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
     Route::prefix('stores')->group(function () {
         Route::get('types', 'api\StoreController@types');
         Route::patch('/{store}', 'api\StoreController@update');
+        Route::delete('/{store}', [StoreController::class, 'destroy']);
         Route::resource('/', 'api\StoreController');
         Route::post('balance/{store}', [CompanionController::class, 'addBalance']);
     });

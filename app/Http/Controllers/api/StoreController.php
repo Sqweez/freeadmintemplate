@@ -63,8 +63,9 @@ class StoreController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Store $store
+     * @param  Store  $store
      * @return void
+     * @throws \Exception
      */
     public function destroy(Store $store)
     {
