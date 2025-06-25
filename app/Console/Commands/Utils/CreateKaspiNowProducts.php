@@ -52,7 +52,6 @@ class CreateKaspiNowProducts extends Command
             $kaspi = KaspiEntityProduct::query()
                 ->whereKaspiEntityId(2)
                 ->whereProductId($product->id)
-                ->where('price', '>', 0)
                 ->first();
             if ($kaspi) {
                 $this->line('Updating product: ' . $product->id);
