@@ -55,9 +55,11 @@ class CreateKaspiNowProducts extends Command
                 ->where('price', '>', 0)
                 ->first();
             if ($kaspi) {
+                $this->line('Updating product: ' . $product->id);
                 $kaspi->is_visible = true;
                 $kaspi->save();
             } else {
+                $this->line('Creating product: ' . $product->id);
                 $kaspi = new KaspiEntityProduct();
                 $kaspi->kaspi_entity_id = 2;
                 $kaspi->product_id = $product;
