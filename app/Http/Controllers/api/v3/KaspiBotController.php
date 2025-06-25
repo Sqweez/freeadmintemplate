@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class KaspiBotController extends BaseApiController
 {
-    public function updatePrice(ProductSku $sku, Request $request)
+    public function updatePrice(ProductSku $sku, Request $request): \Illuminate\Database\Eloquent\Collection|\LaravelIdea\Helper\App\_IH_ProductBatch_C|\Illuminate\Http\JsonResponse|\Illuminate\Support\Collection|array
     {
         $authToken = $request->header('X-BOT-AUTH-TOKEN');
         if ($authToken !== config('app.bot_auth_token')) {
@@ -23,7 +23,13 @@ class KaspiBotController extends BaseApiController
             ]);
         }
         $product = $sku->product;
-        $kaspiPrice = $product->kaspi_price()->where('kaspi_entity_id', __hardcoded(1))->first();
+        $kaspiPrice = $product->kaspi_price()
+            ->where(
+                'kaspi_entity_id',
+                $request->get('entity_id', 1)
+            )
+            ->first();
+
         if (!$kaspiPrice) {
             return $this->respondError([
                 'message' => 'Kaspi price is not set'
