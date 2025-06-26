@@ -4,11 +4,14 @@ namespace App\Http\Controllers\api\v3;
 
 use App\Http\Controllers\api\BaseApiController;
 use App\v2\Models\ProductSku;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use LaravelIdea\Helper\App\_IH_ProductBatch_C;
 
 class KaspiBotController extends BaseApiController
 {
-    public function updatePrice(ProductSku $sku, Request $request): \Illuminate\Database\Eloquent\Collection|\LaravelIdea\Helper\App\_IH_ProductBatch_C|\Illuminate\Http\JsonResponse|\Illuminate\Support\Collection|array
+    public function updatePrice(ProductSku $sku, Request $request)
     {
         $authToken = $request->header('X-BOT-AUTH-TOKEN');
         if ($authToken !== config('app.bot_auth_token')) {
