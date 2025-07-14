@@ -48,6 +48,7 @@ class CreateKaspiPriceCommand extends Command
         ini_set('memory_limit', '512M');
         $kaspiEntities = KaspiEntity::query()->active()->get();
         foreach ($kaspiEntities as $kaspiEntity) {
+            $this->line(sprintf('Генерируем прайс для %s', $kaspiEntity->name));
             $action = CreateKaspiActionBuilder::build($kaspiEntity, 'KASPI');
             $action->handle();
             $this->line('OK');
