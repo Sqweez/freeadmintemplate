@@ -34,7 +34,7 @@ class KaspiProductXMLGenerator implements ProductXMLGenerator
         }
     }
 
-    private function addOffer(\XMLWriter $xmlWriter, $product)
+    private function addOffer(\XMLWriter $xmlWriter, $product): void
     {
         if (!isset($product['sku'], $product['product_name'], $product['brand'], $product['availabilities'], $product['price'])) {
             throw new \InvalidArgumentException('Некоторые обязательные поля продукта отсутствуют');
@@ -48,10 +48,10 @@ class KaspiProductXMLGenerator implements ProductXMLGenerator
         $this->addAvailabilities($xmlWriter, $product['availabilities']);
 
         $xmlWriter->writeElement('price', $product['price']);
-        $xmlWriter->endElement(); 
+        $xmlWriter->endElement();
     }
 
-    private function addAvailabilities(\XMLWriter $xmlWriter, $availabilities)
+    private function addAvailabilities(\XMLWriter $xmlWriter, $availabilities): void
     {
         $xmlWriter->startElement('availabilities');
         foreach ($availabilities as $availability) {
