@@ -46,7 +46,7 @@ class CreateKaspiPriceCommand extends Command
     public function handle()
     {
         ini_set('memory_limit', '512M');
-        $kaspiEntities = KaspiEntity::query()->get();
+        $kaspiEntities = KaspiEntity::query()->active()->get();
         foreach ($kaspiEntities as $kaspiEntity) {
             $action = CreateKaspiActionBuilder::build($kaspiEntity, 'KASPI');
             $action->handle();

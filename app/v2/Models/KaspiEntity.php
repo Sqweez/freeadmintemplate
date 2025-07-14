@@ -26,4 +26,10 @@ class KaspiEntity extends Model
 
     public $timestamps = false;
 
+    public function scopeActive($q)
+    {
+        return $q->whereNotNull('company_name')
+            ->whereNotNull('merchant_id');
+    }
+
 }
