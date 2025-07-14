@@ -58,6 +58,7 @@ class KaspiProductXMLGenerator implements ProductXMLGenerator
             $xmlWriter->startElement('availability');
             $xmlWriter->writeAttribute('available', $availability['available']);
             $xmlWriter->writeAttribute('storeId', $availability['storeId']);
+            $xmlWriter->writeAttribute('stockCount', $availability['stockCount']);
             $xmlWriter->endElement();
         }
         $xmlWriter->endElement();

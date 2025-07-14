@@ -57,7 +57,7 @@ class ProductRepository
                     return [
                         'available' => $availabilities->count() > 0 ? 'yes': 'no',
                         'storeId' => 'PP' . ($store['kaspi_store_id']),
-                        'quantity' => $availabilities->sum('quantity')
+                        'stockCount' => $availabilities->sum('quantity')
                     ];
                 }),
                 'quantities' => collect($stores)->map(function ($store) use ($product) {
