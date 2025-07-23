@@ -20,13 +20,13 @@ class CreateKaspiNowProducts extends Command
     public function handle(): void
     {
         $manufacturerId = 608;
-        $categoriesId = [6, 3, 10];
+        $categoriesId = [7, 11, 9, 15, 18, 16];
         $kaspiEntityId = 2;
 
         /** @var Collection|Product[] $products */
         $products = Product::query()
-            ->where('manufacturer_id', $manufacturerId)
-            ->orWhereIn('category_id', $categoriesId)
+            #->where('manufacturer_id', $manufacturerId)
+            ->WhereIn('category_id', $categoriesId)
             ->get();
 
         if ($products->isEmpty()) {
