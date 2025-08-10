@@ -13,7 +13,7 @@ class CreateKaspiPriceCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'kaspi:price';
+    protected $signature = 'kaspi:price {id? : ID каспи-магазина}';
 
     /**
      * The console command description.
@@ -40,18 +40,32 @@ class CreateKaspiPriceCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int
      * @throws \Exception
      */
     public function handle()
     {
         ini_set('memory_limit', '512M');
-        $kaspiEntities = KaspiEntity::query()->active()->get();
+        $id = $this->argument('id');
+        $kaspiEntities = KaspiEntity::query()
+            ->active()
+            ->when($id, function ($query) use ($id) {
+                return $query->whereKey('id', $id);
+            })
+            ->get();
+
+        if ($id !== null && $kaspiEntities->isEmpty()) {
+            $this->error("Магазин #{$id} не найден или не активен");
+            return 1;
+        }
+
         foreach ($kaspiEntities as $kaspiEntity) {
             $this->line(sprintf('Генерируем прайс для %s', $kaspiEntity->name));
             $action = CreateKaspiActionBuilder::build($kaspiEntity, 'KASPI');
             $action->handle();
             $this->line('OK');
         }
+
+        return 0;
     }
 }

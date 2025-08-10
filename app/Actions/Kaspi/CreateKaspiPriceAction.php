@@ -11,7 +11,6 @@ class CreateKaspiPriceAction
 {
 
     public const FILE_EXT = '.xml';
-
     private KaspiEntity $kaspiEntity;
     private ProductRepository $productRepository;
     private ProductXMLGenerator $productXMLGenerator;
