@@ -63,7 +63,15 @@ class SaleController extends BaseApiController
             $preorder = $request->get('preorder', null);
             $sale = $saleService->createSale(
                 $request->except(
-                    ['cart', 'certificate', 'used_certificate', 'preorder', 'paid_by_barter', 'barter_balance', 'is_elite_gift_giveaway']
+                    [
+                        'cart',
+                        'certificate',
+                        'used_certificate',
+                        'preorder',
+                        'paid_by_barter',
+                        'barter_balance',
+                        'is_elite_gift_giveaway'
+                    ]
                 )
             );
             $client = Client::find($client_id);
@@ -202,9 +210,8 @@ class SaleController extends BaseApiController
     public function downloadEliteReportExcel(
         Request $request,
         ReportService $reportService,
-        EliteClubSaleReportService $eliteClubSaleReportService):
-        string
-    {
+        EliteClubSaleReportService $eliteClubSaleReportService
+    ): string {
         $user = $this->retrieveAnyUser();
         abort_if(!$user, 403);
         $reportOptionsDTO = new ReportOptionsDTO($request->all());
@@ -316,7 +323,8 @@ class SaleController extends BaseApiController
         )->with([
             'products' => function ($subQuery) {
                 return $subQuery->whereHas(
-                    'product.product', fn($q) => $q->where('manufacturer_id', '!=', __hardcoded(698))
+                    'product.product',
+                    fn($q) => $q->where('manufacturer_id', '!=', __hardcoded(698))
                 );
             }
         ])->with(['certificate'])->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
@@ -331,7 +339,8 @@ class SaleController extends BaseApiController
         })->with([
             'products' => function ($subQuery) {
                 return $subQuery->whereHas(
-                    'product.product', fn($q) => $q->where('manufacturer_id', __hardcoded(698))
+                    'product.product',
+                    fn($q) => $q->where('manufacturer_id', __hardcoded(698))
                 );
             }
         ])->with(['certificate'])->when($role === UserRole::ROLE_FRANCHISE, function ($query) use ($store_id) {
@@ -397,7 +406,8 @@ class SaleController extends BaseApiController
         $store_id = $request->has('store_id') ? $request->get('store_id') : null;
 
         return SaleProduct::query()->whereIn('product_id', $products_id)->whereHas(
-            'sale', function ($q) use ($date_start, $date_finish, $user_id, $store_id) {
+            'sale',
+            function ($q) use ($date_start, $date_finish, $user_id, $store_id) {
             if ($user_id) {
                 $q->whereUserId($user_id);
             }
@@ -648,7 +658,8 @@ class SaleController extends BaseApiController
         $date_start = now()->startOfMonth();
         $date_finish = now()->endOfMonth();
         return SaleProduct::query()->whereIn('product_id', $products_id)->whereHas(
-            'sale', function ($q) use ($date_start, $date_finish) {
+            'sale',
+            function ($q) use ($date_start, $date_finish) {
             $q->whereDate('created_at', '>=', $date_start)->whereDate(
                 'created_at',
                 '<=',
