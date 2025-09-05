@@ -36,7 +36,7 @@ class KaspiEntity extends Model
         return $q->whereNotNull('company_name')->whereNotNull('merchant_id');
     }
 
-    public function stores(): Builder|HasMany|KaspiEntity
+    public function stores(): HasMany
     {
         return $this->hasMany(KaspiEntityStore::class, 'kaspi_entity_id', 'id');
     }
