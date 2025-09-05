@@ -2,7 +2,9 @@
 
 namespace App\v2\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -10,16 +12,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id
  * @property string $name
- * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntity newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntity newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntity query()
- * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntity whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntity whereName($value)
+ * @method static Builder|KaspiEntity newModelQuery()
+ * @method static Builder|KaspiEntity newQuery()
+ * @method static Builder|KaspiEntity query()
+ * @method static Builder|KaspiEntity whereId($value)
+ * @method static Builder|KaspiEntity whereName($value)
  * @mixin \Eloquent
  * @property string|null $company_name
  * @property string|null $merchant_id
- * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntity whereCompanyName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|KaspiEntity whereMerchantId($value)
+ * @method static Builder|KaspiEntity whereCompanyName($value)
+ * @method static Builder|KaspiEntity whereMerchantId($value)
  */
 class KaspiEntity extends Model
 {
@@ -34,4 +36,8 @@ class KaspiEntity extends Model
         return $q->whereNotNull('company_name')->whereNotNull('merchant_id');
     }
 
+    public function stores(): Builder|HasMany|KaspiEntity
+    {
+        return $this->hasMany(KaspiEntityStore::class, 'kaspi_entity_id', 'id');
+    }
 }

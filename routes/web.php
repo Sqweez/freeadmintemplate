@@ -9,6 +9,20 @@ Route::get('/test', function () {
    Artisan::call(\App\Console\Commands\EcommercePriceList\Halyk\CreateHalykExcelPriceCommand::class);
 });
 
+Route::get('/entities', function () {
+    $k = new \App\v2\Models\KaspiEntity();
+    $k->name = 'Магазин Илья';
+    $k->company_name = 'Здоровый Выбор 1';
+    $k->merchant_id = '30384613';
+    $k->save();
+
+    $k->stores()
+        ->create([
+            'store_id' => 31,
+            'kaspi_store_id' => 1,
+        ]);
+});
+
 Route::get('halyk/price', function () {
     $disk = Storage::disk('public');
     $filename = 'halyk/excel/halyk_products_1.xlsx';
