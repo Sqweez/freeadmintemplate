@@ -3,6 +3,7 @@
 namespace App\v2\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\v2\Models\KaspiEntity
@@ -22,14 +23,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class KaspiEntity extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = ['id'];
 
     public $timestamps = false;
 
     public function scopeActive($q)
     {
-        return $q->whereNotNull('company_name')
-            ->whereNotNull('merchant_id');
+        return $q->whereNotNull('company_name')->whereNotNull('merchant_id');
     }
 
 }
