@@ -50,7 +50,7 @@ class CreateKaspiPriceCommand extends Command
         $kaspiEntities = KaspiEntity::query()
             ->active()
             ->when($id, function ($query) use ($id) {
-                return $query->whereKey('id', $id);
+                return $query->whereKey($id);
             })
             ->get();
 
