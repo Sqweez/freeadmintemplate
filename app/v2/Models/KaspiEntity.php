@@ -40,4 +40,9 @@ class KaspiEntity extends Model
     {
         return $this->hasMany(KaspiEntityStore::class, 'kaspi_entity_id', 'id');
     }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(KaspiEntityProduct::class, 'kaspi_entity_id', 'id');
+    }
 }
