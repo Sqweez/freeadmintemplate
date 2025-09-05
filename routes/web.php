@@ -10,17 +10,7 @@ Route::get('/test', function () {
 });
 
 Route::get('/entities', function () {
-    $k = new \App\v2\Models\KaspiEntity();
-    $k->name = 'Магазин Илья';
-    $k->company_name = 'Здоровый Выбор 1';
-    $k->merchant_id = '30384613';
-    $k->save();
-
-    $k->stores()
-        ->create([
-            'store_id' => 31,
-            'kaspi_store_id' => 1,
-        ]);
+    return true;
 });
 
 Route::get('halyk/price', function () {
