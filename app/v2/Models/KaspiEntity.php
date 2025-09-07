@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * App\v2\Models\KaspiEntity
@@ -44,5 +45,20 @@ class KaspiEntity extends Model
     public function products(): HasMany
     {
         return $this->hasMany(KaspiEntityProduct::class, 'kaspi_entity_id', 'id');
+    }
+
+    public function setKaspiTokenAttribute($value): void
+    {
+        $this->attributes['kaspi_token'] = $value ? Crypt::encryptString($value) : null;
+    }
+
+    public function getKaspiTokenAttribute($value): ?string
+    {
+        if (!$value) return null;
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Exception $e) {
+            return $value; // если не удалось расшифровать, вернуть как есть
+        }
     }
 }
