@@ -11,6 +11,7 @@ use App\ProductBatch;
 use App\Promocode;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use ProductService;
 
@@ -112,6 +113,17 @@ class CronController extends Controller
     }
 
     public function storePriceList(Request $request) {
+        $waybillDirectory = storage_path('excel/waybills');
+        if (File::exists($waybillDirectory)) {
+            collect(File::files($waybillDirectory))
+                ->filter(function ($file) {
+                    return Str::startsWith($file->getFilename(), 'ПРАЙС_ЛИСТ');
+                })
+                ->each(function ($file) {
+                    File::delete($file->getPathname());
+                });
+        }
+
         $products = ProductsResource::collection(ProductService::all($request))->toArray($request);
         $batches = ProductBatch::query()
             ->whereIn('store_id', [1, 6])
@@ -143,6 +155,7 @@ class CronController extends Controller
         })->values()->filter(function ($i) {
             return $i['quantity'] > 0;
         })->values()->sortBy('manufacturer_id')->values();
+
 
 
         return (new WaybillController())->getPriceList(new Request(), $products);
