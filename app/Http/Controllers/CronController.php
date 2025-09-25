@@ -113,16 +113,24 @@ class CronController extends Controller
     }
 
     public function storePriceList(Request $request) {
-        $waybillDirectory = storage_path('excel/waybills');
-        if (File::exists($waybillDirectory)) {
-            collect(File::files($waybillDirectory))
-                ->filter(function ($file) {
-                    return Str::startsWith($file->getFilename(), 'ПРАЙС_ЛИСТ');
-                })
-                ->each(function ($file) {
-                    File::delete($file->getPathname());
-                });
-        }
+        $directories = [
+            base_path('storage/excel/waybills'),
+            storage_path('app/public/excel/waybills'),
+        ];
+
+        collect($directories)
+            ->filter(function ($path) {
+                return File::exists($path);
+            })
+            ->each(function ($directory) {
+                collect(File::files($directory))
+                    ->filter(function ($file) {
+                        return Str::startsWith($file->getFilename(), 'ПРАЙС_ЛИСТ');
+                    })
+                    ->each(function ($file) {
+                        File::delete($file->getPathname());
+                    });
+            });
 
         $products = ProductsResource::collection(ProductService::all($request))->toArray($request);
         $batches = ProductBatch::query()
