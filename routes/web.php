@@ -17,7 +17,7 @@ Route::get('/entities', function () {
 Route::get('/kaspi', function () {
     $entities = KaspiEntity::query()
         ->select(['id', 'name', 'company_name', 'merchant_id'])
-        ->orderBy('name')
+        ->orderBy('id')
         ->get();
 
     return view('kaspi-entities', compact('entities'));
