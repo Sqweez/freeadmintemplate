@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PrintController;
+use App\v2\Models\KaspiEntity;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -11,6 +12,15 @@ Route::get('/test', function () {
 
 Route::get('/entities', function () {
     return true;
+});
+
+Route::get('/kaspi-entities', function () {
+    $entities = KaspiEntity::query()
+        ->select(['id', 'name', 'company_name', 'merchant_id'])
+        ->orderBy('name')
+        ->get();
+
+    return view('kaspi-entities', compact('entities'));
 });
 
 Route::get('halyk/price', function () {

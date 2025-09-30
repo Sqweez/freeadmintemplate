@@ -1,31 +1,21 @@
 # Repository Guidelines
 
+This guide captures the conventions we follow in the iron-crm codebase so updates stay consistent and easy to review.
+
 ## Project Structure & Module Organization
-- `app/` holds Laravel services, jobs, and HTTP layer; keep domain logic in dedicated service classes under `app/Services` when adding features.
-- `routes/api.php` drives most endpoints; pair API additions with request validation and resource transformers in `app/Http`.
-- Frontend assets live in `resources/js` (Vue 2) and `resources/sass`; compiled bundles land in `public/` via Laravel Mix.
-- Data scaffolding sits in `database/migrations` and `database/seeds`; seeders should be idempotent for repeatable docker-compose spins.
-- PHPUnit suites reside in `tests/Feature` and `tests/Unit`; mirror the namespace of the code under test.
+Core Laravel code lives under `app/`; keep domain logic in dedicated service classes within `app/Services` instead of controllers. API endpoints are declared in `routes/api.php` and should pair with request validators and resource transformers under `app/Http`. Vue 2 assets reside in `resources/js` with styles in `resources/sass`; Laravel Mix outputs compiled bundles to `public/`. Database migrations and idempotent seeders are in `database/migrations` and `database/seeds`. Tests mirror the app structure in `tests/Feature` and `tests/Unit`.
 
 ## Build, Test, and Development Commands
-- `composer install` / `npm install` bootstraps PHP and JS dependencies.
-- `php artisan migrate --seed` syncs the schema and loads baseline fixtures.
-- `php artisan serve --host=0.0.0.0 --port=8000` runs the API locally; docker users can instead run `docker-compose up web`.
-- `npm run dev` builds assets once; `npm run watch` hot-rebuilds during frontend work; `npm run prod` emits minified bundles.
-- `vendor/bin/phpunit` (or `vendor/bin/phpunit --filter …`) executes the test suite; integrate it into CI jobs.
+Run `composer install` and `npm install` after pulling new dependencies. `php artisan migrate --seed` synchronizes schema and baseline fixtures. For local API work use `php artisan serve --host=0.0.0.0 --port=8000`; docker users can run `docker-compose up web`. Frontend bundles: `npm run dev` (single build), `npm run watch` (hot reload), and `npm run prod` (optimized build). Execute the suite with `vendor/bin/phpunit` or filter with `vendor/bin/phpunit --filter TestName`.
 
 ## Coding Style & Naming Conventions
-- Follow PSR-12 for PHP with 4-space indentation; prefer typed properties and return types when Laravel 6 allows them.
-- Vue/JS files use 2-space indentation and single quotes; run `npx prettier resources/js/**/*.js --write` before large diffs.
-- Controllers end with `Controller`, jobs with `Job`, events with `Event`; align filenames and namespaces accordingly.
-- Use snake_case for DB columns, camelCase for request payload keys, and kebab-case for Vue component files.
+Follow PSR-12 with 4-space indentation in PHP, typed properties where Laravel 6 allows, and descriptive method names. Vue/JS files use 2-space indentation, single quotes, and Prettier via `npx prettier resources/js/**/*.js --write` before large diffs. Name controllers `*Controller`, jobs `*Job`, events `*Event`; use snake_case for columns, camelCase for JSON payloads, and kebab-case for Vue component files.
 
 ## Testing Guidelines
-- Co-locate factories in `database/factories` and reference them via Laravel model factories for deterministic seeds.
-- Name tests `<Subject>Test.php` and use `@group` annotations when exercising external services.
-- Provide HTTP JSON fixtures in `tests/Fixtures` if mocking integrations; clean them up after changes.
+Feature and unit tests should use Laravel model factories from `database/factories`. Name classes `<Subject>Test.php`, add `@group` for external integrations, and keep JSON fixtures in `tests/Fixtures`. Make sure new behavior is covered before submitting PRs.
 
 ## Commit & Pull Request Guidelines
-- Follow the existing short prefix pattern (`feature:`, `fix:`, `refactor:`) and write present-tense summaries.
-- Reference tracker items in the body (e.g., `Refs CRM-123`) and list any migrations or breaking API changes.
-- Pull requests need: purpose statement, testing notes (`vendor/bin/phpunit` output), and screenshots/GIFs for UI-visible updates.
+Commits follow short prefixes such as `feature:`, `fix:`, or `refactor:` and stay in present tense. Reference tracker IDs in the body (e.g., `Refs CRM-123`) and call out migrations or breaking API changes. Pull requests should include a purpose statement, testing notes with `vendor/bin/phpunit` output, and UI screenshots or GIFs when applicable.
+
+## Environment & Configuration Tips
+Copy `.env.example` to `.env`, update service credentials, then run `php artisan key:generate`. Cache config with `php artisan config:cache` before deploying, and keep secrets out of version control.
