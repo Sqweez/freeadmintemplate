@@ -86,10 +86,10 @@ class ClientRepositoryTest extends TestCase
         $listQuery = $repository->query($filters);
         $exportQuery = $repository->queryForExport($filters);
 
-        $this->assertSame(
-            explode(' where ', $listQuery->toSql(), 2)[1],
-            explode(' where ', $exportQuery->toSql(), 2)[1]
-        );
+        $listWhereSql = explode(' order by ', explode(' where ', $listQuery->toSql(), 2)[1], 2)[0];
+        $exportWhereSql = explode(' where ', $exportQuery->toSql(), 2)[1];
+
+        $this->assertSame($listWhereSql, $exportWhereSql);
         $this->assertSame($listQuery->getBindings(), $exportQuery->getBindings());
         $this->assertSame(
             ['id', 'client_name', 'client_phone', 'client_city', 'cached_total_sale_amount'],
@@ -97,5 +97,19 @@ class ClientRepositoryTest extends TestCase
         );
         $this->assertArrayHasKey('city', $exportQuery->getEagerLoads());
         $this->assertArrayNotHasKey('loyalty', $exportQuery->getEagerLoads());
+    }
+
+    public function testExportQueryDoesNotKeepListOrderingBeforeChunkingById(): void
+    {
+        $repository = new ClientRepository();
+
+        $listQuery = $repository->query(new ClientFilterDTO([]));
+        $exportQuery = $repository->queryForExport(new ClientFilterDTO([]));
+
+        $this->assertSame(
+            [['column' => 'created_at', 'direction' => 'desc']],
+            $listQuery->getQuery()->orders
+        );
+        $this->assertNull($exportQuery->getQuery()->orders);
     }
 }

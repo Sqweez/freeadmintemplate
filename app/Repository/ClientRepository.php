@@ -11,6 +11,7 @@ class ClientRepository
     public function query(ClientFilterDTO $filters): Builder
     {
         return $this->filteredQuery($filters)
+            ->orderByDesc('created_at')
             ->with([/*'sales', 'transactions', */'city', 'loyalty', 'latest_gift_giveaway'])
             ->with(['barter_balance' => function ($query) {
                 return $query->where('is_active', true);
@@ -27,7 +28,6 @@ class ClientRepository
     private function filteredQuery(ClientFilterDTO $filters): Builder
     {
         return Client::query()
-            ->orderByDesc('created_at')
             ->tap(function ($query) use ($filters) {
                 return $this->search($query, $filters->search);
             })
