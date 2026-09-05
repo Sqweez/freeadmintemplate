@@ -6,17 +6,19 @@ use App\DTO\Filters\ClientFilterDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClientResource;
 use App\Repository\ClientRepository;
+use App\Services\Clients\ClientExportService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ClientController extends Controller
 {
 
     private ClientRepository $clientRepository;
 
-    public function __construct()
+    public function __construct(ClientRepository $clientRepository)
     {
-        $this->clientRepository = app(ClientRepository::class);
+        $this->clientRepository = $clientRepository;
     }
 
     public function index(Request $request): AnonymousResourceCollection
@@ -31,5 +33,14 @@ class ClientController extends Controller
     public function search()
     {
 
+    }
+
+    public function export(Request $request, ClientExportService $service): StreamedResponse
+    {
+        $query = $this->clientRepository->queryForExport(
+            new ClientFilterDTO($request->all())
+        );
+
+        return $service->download($query);
     }
 }

@@ -519,6 +519,7 @@ Route::group(['middleware' => [AuthorizationMiddleware::class, ExceptionHandling
         });
 
         Route::prefix('clients')->group(function () {
+            Route::get('/export', [\App\Http\Controllers\api\v3\ClientController::class, 'export']);
             Route::get('/', [\App\Http\Controllers\api\v3\ClientController::class, 'index']);
             Route::get('/search', [\App\Http\Controllers\api\v3\ClientController::class, 'search']);
         });

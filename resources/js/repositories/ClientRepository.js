@@ -8,6 +8,12 @@ const ClientRepository = () => ({
             params,
         });
     },
+    async export(params = {}) {
+        return axiosClient.get(`${baseURL}/export`, {
+            params,
+            responseType: 'blob',
+        });
+    },
 });
 
 export default ClientRepository();

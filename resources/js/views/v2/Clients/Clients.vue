@@ -10,7 +10,13 @@
                                 Добавить клиента
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
-                            <v-btn class="mt-2" color="success" @click="exportModal = true;" v-if="!IS_MARKETOLOG && false">
+                            <v-btn
+                                class="mt-2"
+                                color="success"
+                                :loading="exportingClients"
+                                :disabled="exportingClients"
+                                @click="exportClients"
+                            >
                                 Экспорт клиентов
                                 <v-icon>mdi-file-excel-box</v-icon>
                             </v-btn>
@@ -364,10 +370,6 @@
             @cancel="userId = null; balanceModal = false; isMassBalanceEnabled = false;"
             @submit="addBalance"
         />
-        <ExportClientsModal
-            @cancel="exportModal = false;"
-            :state="exportModal"
-        />
         <BarterBalanceModal
             :state="barterBalanceModal"
             @cancel="barterBalanceModal = false"
@@ -386,7 +388,6 @@ import UserModal from '@/components/Modal/UserModal.vue';
 import ACTIONS from '@/store/actions';
 import ClientModal from '@/components/Modal/ClientModal.vue';
 import BalanceModal from '@/components/Modal/BalanceModal.vue';
-import ExportClientsModal from '@/components/Modal/Export/ExportClientsModal.vue';
 import GENDERS from '@/common/enums/genders';
 import axiosClient from '@/utils/axiosClient';
 import BarterBalanceModal from '@/components/v2/Modal/BarterBalanceModal.vue';
@@ -398,7 +399,6 @@ export default {
     components: {
         ExportEliteClubSales,
         BarterBalanceModal,
-        ExportClientsModal,
         BalanceModal,
         ClientModal,
         ConfirmationModal,
@@ -423,7 +423,7 @@ export default {
         isKaspiClient: false,
         isWholesaleBuyer: false,
         withoutBarcode: false,
-        exportModal: false,
+        exportingClients: false,
         confirmationModal: false,
         clientModal: false,
         userId: null,
@@ -557,18 +557,44 @@ export default {
     },
     methods: {
         applyFilter(key, value) {
-            if (value === -1) {
+            const isUncheckedCheckbox = ['is_kaspi', 'is_wholesale_buyer', 'without_code'].includes(key) && !value;
+            const shouldRemove = value === -1 || (key === 'client_city' && value === 0) || isUncheckedCheckbox;
+
+            if (shouldRemove) {
                 this.queryMap.delete(key);
+            } else if (key === 'is_partner') {
+                this.queryMap.set(key, value === 2);
             } else {
                 this.queryMap.set(key, value);
             }
-            if (key === 'is_partner') {
-                this.queryMap.set(key, value === 2);
-            }
-            if (['is_kaspi', 'is_wholesale_buyer'].includes(key) && !value) {
-                this.queryMap.delete(key);
-            }
             this.retrieveClients();
+        },
+        async exportClients() {
+            this.exportingClients = true;
+
+            try {
+                const params = Object.fromEntries(this.queryMap);
+                delete params.page;
+                delete params.per_page;
+
+                const response = await this.clientRepository.export(params);
+                const disposition = response.headers['content-disposition'] || '';
+                const fileNameMatch = disposition.match(/filename="?([^";]+)"?/i);
+                const fileName = fileNameMatch ? fileNameMatch[1] : 'clients.xlsx';
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (e) {
+                this.$toast.error('Не удалось экспортировать клиентов');
+            } finally {
+                this.exportingClients = false;
+            }
         },
         async retrieveClients() {
             this.loading = true;
