@@ -383,12 +383,6 @@ class WaybillController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function createPaymentInvoice(Request $request) {
-        \Log::info('invoice-payment', [
-            'content_type' => $request->header('Content-Type'),
-            'content_length' => $request->header('Content-Length'),
-            'body_length' => strlen($request->getContent()),
-            'keys' => array_keys($request->all()),
-        ]);
         $customer = $request->get('customer');
         $legalEntityResolver = new LegalEntityResolver($request->get('entityId'));
         $legalEntityResolver = $legalEntityResolver->setBankAccount($request->get('bankAccountId'));
