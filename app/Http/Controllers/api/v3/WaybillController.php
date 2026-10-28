@@ -383,6 +383,7 @@ class WaybillController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function createPaymentInvoice(Request $request) {
+        $t0 = microtime(true);
         $customer = $request->get('customer');
         $legalEntityResolver = new LegalEntityResolver($request->get('entityId'));
         $legalEntityResolver = $legalEntityResolver->setBankAccount($request->get('bankAccountId'));
@@ -391,6 +392,7 @@ class WaybillController extends Controller
         $excelService = new ExcelService();
         $excelTemplate = $excelService->loadFile('invoice_payment_doc_template', 'xlsx');
         $excelSheet = $excelTemplate->getActiveSheet();
+        $t1 = microtime(true);
         $documentNumber = $this->getDocumentNumber($documentType);
         $documentName = 'Счет № ' . $documentNumber . ' от ' . now()->format('d.m.Y');
         $excelSheet->setCellValue('B15', $documentName);
@@ -454,15 +456,24 @@ class WaybillController extends Controller
         $excelSheet->setCellValue('AG' . ($INITIAL_PRODUCT_ROW + $PRODUCT_COUNT), 'Итого: ' . $TOTAL_COST);
         $excelSheet->setCellValue('B' . (28 + $PRODUCT_COUNT), 'Всего наименований ' . $TOTAL_COUNT . ', на сумму ' . $TOTAL_COST . ' ' . $request->get('currency', 'тенге') . '.');
 
+        $t2 = microtime(true);
         $excelWriter = new Xlsx($excelTemplate);
         $fileName =  Document::DOCUMENT_TYPES[$documentType] . "_" . Carbon::today()->toDateString() . "_" . Str::random(10) . '.xlsx';
         $fullPath = 'storage/excel/invoices/' . $fileName;
         $excelWriter->save($fullPath);
+        $t3 = microtime(true);
 
         Document::create([
             'document' => $fullPath,
             'document_type' => $documentType,
             'document_number' => $documentNumber
+        ]);
+        \Log::info('invoice-payment timing', [
+            'items' => count($cart),
+            'load_template' => round($t1 - $t0, 3),
+            'rows_loop' => round($t2 - $t1, 3),
+            'save' => round($t3 - $t2, 3),
+            'total' => round(microtime(true) - $t0, 3),
         ]);
         return response()->json([
             'path' => $fullPath
